@@ -175,10 +175,9 @@ fn result_main() -> Result<(), bloguen::Error> {
                                       &descriptor.scripts)?;
             }
 
-            let mut formatted_buffer = vec![];
             let mut center_buffer = vec![];
             for link in p.generate(&opts.output_dir,
-                          descriptor.index.as_ref().map(|_| &mut formatted_buffer as &mut Write),
+                          None,
                           index_center.as_ref().map(|ic| (&ic[..], &mut center_buffer as &mut Write)),
                           &post_header,
                           &post_footer,
@@ -205,7 +204,7 @@ fn result_main() -> Result<(), bloguen::Error> {
             }
 
             if descriptor.index.is_some() {
-                idx_sender.send((p.number.clone(), index_machine_json, formatted_buffer, center_buffer))
+                idx_sender.send((p.number.clone(), index_machine_json, center_buffer))
                     .map_err(|e| {
                         bloguen::Error::Io {
                             desc: format!("post {} JSON metadata ", p.number.1).into(),
