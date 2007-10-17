@@ -21,6 +21,7 @@ use std::cmp;
 /// assert_eq!(out_1, "Бenlo".as_bytes());
 /// assert_eq!(out_2, "Бenlo".as_bytes());
 /// ```
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct PolyWrite<Wr1: Write, Wr2: Write>(pub Wr1, pub Wr2);
 
 
