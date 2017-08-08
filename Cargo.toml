@@ -1,0 +1,20 @@
+[package]
+name = "bloguen"
+description = "Generate a blogue from Markdown (again)"
+repository = "https://github.com/nabijaczleweli/bloguen"
+documentation = "https://cdn.rawgit.com/nabijaczleweli/bloguen/doc/bloguen/index.html"
+readme = "README.md"
+keywords = ["generate", "blog", "markdown"]
+license = "MIT"
+# Remember to also update in appveyor.yml
+version = "0.1.0"
+# Remember to also update in bloguen.md
+authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
+
+[dependencies]
+
+
+[[bin]]
+name = "bloguen"
+test = false
+doc = false

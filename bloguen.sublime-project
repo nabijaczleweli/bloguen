@@ -1,0 +1,53 @@
+{
+	"build_systems":
+	[
+		{
+			"working_dir": "$project_path",
+			"shell_cmd": "cargo build && cargo test",
+			"name": "Build and test bloguen"
+		},
+		{
+			"working_dir": "$project_path",
+			"cmd": "cargo doc",
+			"name": "Document bloguen"
+		}
+	],
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"name": "Source",
+			"path": "src"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Tests",
+			"path": "tests"
+		},
+		{
+			"follow_symlinks": true,
+			"name": "Assets",
+			"path": "assets"
+		},
+		/*{
+			"follow_symlinks": true,
+			"name": "Examples",
+			"path": "examples"
+		},*/
+		{
+			"file_include_patterns":
+			[
+				"*Makefile*",
+				"*.yml",
+				"Cargo.*"
+			],
+			"folder_exclude_patterns":
+			[
+				"*"
+			],
+			"follow_symlinks": true,
+			"name": "Build files",
+			"path": "."
+		}
+	]
+}

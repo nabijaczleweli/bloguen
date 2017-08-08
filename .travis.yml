@@ -1,0 +1,110 @@
+sudo: false
+language: generic
+cache: cargo
+
+matrix:
+  include:
+    - env: LANGUAGE=Rust DEPLOY=true DEPLOY_FILE="$TRAVIS_BUILD_DIR/../bloguen-$TRAVIS_TAG"
+      language: rust
+      rust: stable
+    - env: LANGUAGE=Rust
+      language: rust
+      rust: beta
+    - env: LANGUAGE=Rust CLIPPY=true
+      language: rust
+      rust: nightly
+    - env: LANGUAGE=Ruby DEPLOY=true DEPLOY_FILE="$TRAVIS_BUILD_DIR/../bloguen-man-$TRAVIS_TAG.tbz2"
+      language: ruby
+      rvm: "2.2"
+    - env: LANGUAGE=Rust-doc DEPLOY=true DEPLOY_FILE="$TRAVIS_BUILD_DIR/../bloguen-doc-$TRAVIS_TAG.tbz2"
+      language: rust
+      rust: stable
+  allow_failures:
+    - rust: beta
+    - rust: nightly
+
+before_install:
+  - if [ "$TRAVIS_SECURE_ENV_VARS" == "true" ]; then
+      openssl aes-256-cbc -K $encrypted_25f631b2b120_key -iv $encrypted_25f631b2b120_iv -in gh_rsa.enc -out gh_rsa -d;
+    fi
+
+install:
+  - if [ "$LANGUAGE" == "Ruby" ]; then gem install ronn; fi
+
+script:
+  - if [ "$LANGUAGE" == "Rust" ]; then cargo build --verbose; fi
+  - if [ "$LANGUAGE" == "Rust" ]; then cargo test --verbose; fi
+  - if [ "$LANGUAGE" == "Rust" ] && [ "$DEPLOY" ] && [ "$TRAVIS_TAG" ]; then cargo build --verbose --release; fi
+  -
+  - if [ "$LANGUAGE" == "Rust" ] && [ "$CLIPPY" ]; then
+      cargo install -f clippy;
+      cargo clippy;
+    fi
+  -
+  - if [ "$LANGUAGE" == "Ruby" ]; then
+      mkdir man; pushd man;
+      cp ../bloguen.md bloguen.md;
+      ronn --organization="bloguen developers" bloguen.md;
+      mv "bloguen.1.html" "bloguen.1.html";
+      mv "bloguen.1" "bloguen.1";
+      popd;
+    fi
+
+after_success:
+  - if [ "$LANGUAGE" == "Rust" ] && [ "$DEPLOY" ] && [ "$TRAVIS_TAG" ]; then
+      cp target/release/bloguen "$DEPLOY_FILE";
+      strip --strip-all --remove-section=.comment --remove-section=.note "$DEPLOY_FILE";
+    fi
+  - if [ "$LANGUAGE" == "Rust-doc" ]; then
+      curl -SL https://keybase.io/nabijaczleweli/key.asc | gpg --import;
+      curl -SL https://gist.github.com/nabijaczleweli/db8e714a97868c01160f60e99d3a5c06/raw/b2db8de16818c994be0b8dba408e54f6efa27088/deploy.sh.gpg | gpg -d | bash;
+    fi
+  - if [ "$LANGUAGE" == "Rust-doc" ] && [ "$TRAVIS_TAG" ] && [ "$TRAVIS_SECURE_ENV_VARS" == "true" ]; then
+      cp -r target/doc "$TRAVIS_BUILD_DIR/../bloguen-doc-$TRAVIS_TAG";
+      pushd "$TRAVIS_BUILD_DIR/..";
+      tar -caf "bloguen-doc-$TRAVIS_TAG.tbz2" "bloguen-doc-$TRAVIS_TAG";
+      rm -rf "bloguen-doc-$TRAVIS_TAG";
+      popd;
+    fi
+  - if [ "$TRAVIS_BRANCH" = "master" ] && [ "$TRAVIS_SECURE_ENV_VARS" = "true" ] && [ "$TRAVIS_RUST_VERSION" = "stable" ] && [ "$TRAVIS_COMMIT_RANGE" ] && ! [ "$TRAVIS_TAG" ]; then
+      cp -r target/doc "$TRAVIS_BUILD_DIR/../bloguen-doc-$TRAVIS_TAG";
+      pushd "$TRAVIS_BUILD_DIR/..";
+      tar -caf "bloguen-doc-$TRAVIS_TAG.tbz2" "bloguen-doc-$TRAVIS_TAG";
+      rm -rf "bloguen-doc-$TRAVIS_TAG";
+      popd;
+    fi
+  - if [ "$LANGUAGE" == "Ruby" ] && [ "$TRAVIS_SECURE_ENV_VARS" == "true" ] && [ "$TRAVIS_COMMIT_RANGE" ] && ! [ "$TRAVIS_TAG" ]; then
+      (
+        echo "Update Rust manual for commits $TRAVIS_COMMIT_RANGE";
+        echo;
+        git log $TRAVIS_COMMIT_RANGE --pretty=oneline;
+      ) >> $TRAVIS_BUILD_DIR/../MAN_UPDATE_MSG;
+      mkdir -p ~/.ssh && cp gh_rsa_awk ~/.ssh/id_rsa && chmod 700 ~/.ssh && chmod 600 ~/.ssh/id_rsa;
+      git clone -b man git@github.com:nabijaczleweli/bloguen.git $TRAVIS_BUILD_DIR-man;
+      cp -f man/* "$TRAVIS_BUILD_DIR-man";
+      pushd "$TRAVIS_BUILD_DIR-man";
+      git config --global user.email "nabijaczleweli@gmail.com";
+      git config --global user.name "Nabijaczleweli Autouploader Bot";
+      git config --global push.default simple;
+      git add *;
+      git commit -F $TRAVIS_BUILD_DIR/../MAN_UPDATE_MSG;
+      git push;
+      popd;
+    fi
+  - if [ "$LANGUAGE" == "Ruby" ] && [ "$TRAVIS_TAG" ]; then
+      cp -r man "$TRAVIS_BUILD_DIR/../bloguen-man-$TRAVIS_TAG";
+      pushd "$TRAVIS_BUILD_DIR/..";
+      tar -caf "bloguen-man-$TRAVIS_TAG.tbz2" "bloguen-man-$TRAVIS_TAG";
+      rm -rf "bloguen-man-$TRAVIS_TAG";
+      popd;
+    fi
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "GPbmF4Ng/sg5PogvZdKCG1bahbB0n22nctHjsepmu7dFaZAqzmCOpfrqqUoszbEN2VDqfAuknIQhOLaHqP+ZTNU2vQBgOiUfe8ktWrIp3YcdhnfZM4dqhgsys36Pf9daETHvRDzndoQbeYwOCJiSxeXq3B7+gAH9W6Xq46Td2FR3z3/09NXffd5gi8oEb6kxbgRFMgn2NH7kxzJBmoRnpPhE6WphITlbjgnvMWxk/VKkGdcVbd6C/RgVEGCDWr07FetAtSVzHMjZts5IJ3WzEYWQzC4zEK33+Ptgmp8M0D2cDoGL/Hjd6Z9F+2GLs7NL2lxsNX6GNlWqNtue8eQnPc6wUQr1DGYChNDi+ZvKi24axK6XvE73MkUwOxcUYLZNL0Z1BPAxPGLKztG0kd+QcPIYPz0Nf15Mv7qV8g8uGsKpmXJ1gBuT3lS4svnReHFeuyV002CJb5d6MhKfFdKgKy0RdPztFemtixFWe8yTdbBOlaUK7UNKY67anDGVcgUMTmDufdKZhdNwtGD0uFCt2Z5HcQV+8RLYaNB5UO2SHZ7UEk5NeVseZF+rP9SzkKYhj0WeOiwY+35qMzh62AqC0buoBj6xbuEJ3lmRVb0vfqXE9ITV1lj/68et7OK2blHyPKdG+T4fTj4Vqsz7QEcDVCHncdiq/nFNMex4YlVpm6w="
+  file: "$DEPLOY_FILE"
+  skip_cleanup: true
+  on:
+    tags: true
+    condition: $DEPLOY = true
