@@ -55,17 +55,15 @@ impl Options {
         }
         if p.exists() {
             Err(format!("Output directory \"{}\" already exists", p.display()))
-        } else {
-            if p.parent().is_some() {
-                p.pop();
-                fs::canonicalize(&p).map_err(|_| format!("Output directory's parent directory \"{}\" nonexistant", p.display())).and_then(|f| if !f.is_file() {
-                    Ok(())
-                } else {
-                    Err(format!("Output directory's parent directory \"{}\" actually a file", p.display()))
-                })
-            } else {
+        } else if p.parent().is_some() {
+            p.pop();
+            fs::canonicalize(&p).map_err(|_| format!("Output directory's parent directory \"{}\" nonexistant", p.display())).and_then(|f| if !f.is_file() {
                 Ok(())
-            }
+            } else {
+                Err(format!("Output directory's parent directory \"{}\" actually a file", p.display()))
+            })
+        } else {
+            Ok(())
         }
     }
 }
