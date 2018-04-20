@@ -7,7 +7,7 @@ fn normal_non_e() {
     Error::Io {
             desc: "input file",
             op: "read",
-            more: Some("stream ended"),
+            more: Some("stream ended".to_string()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
@@ -20,7 +20,7 @@ fn normal_e() {
     Error::Io {
             desc: "output file",
             op: "create",
-            more: Some("stream ended"),
+            more: Some("stream ended".to_string()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
@@ -33,7 +33,7 @@ fn single_non_e() {
     Error::Io {
             desc: "input file",
             op: "C",
-            more: Some("stream ended"),
+            more: Some("stream ended".to_string()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
@@ -46,7 +46,7 @@ fn single_e() {
     Error::Io {
             desc: "input file",
             op: "e",
-            more: Some("stream ended"),
+            more: Some("stream ended".to_string()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
@@ -59,7 +59,7 @@ fn empty() {
     Error::Io {
             desc: "input file",
             op: "",
-            more: Some("stream ended"),
+            more: Some("stream ended".to_string()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),

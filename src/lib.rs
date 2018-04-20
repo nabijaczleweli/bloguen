@@ -17,10 +17,16 @@
 
 #[macro_use]
 extern crate serde_derive;
+#[macro_use]
+extern crate lazy_static;
+extern crate walkdir;
+extern crate chrono;
+extern crate regex;
 extern crate serde;
 #[macro_use]
 extern crate clap;
 extern crate toml;
+extern crate crc;
 
 pub mod ops;
 pub mod util;

@@ -41,7 +41,7 @@ impl BlogueDescriptor {
                 Error::Io {
                     desc: "blogue descriptor",
                     op: "read",
-                    more: Some("not UTF-8"),
+                    more: Some("not UTF-8".to_string()),
                 }
             })?;
 

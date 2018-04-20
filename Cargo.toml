@@ -13,9 +13,15 @@ authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 
 [dependencies]
 serde_derive = "1.0"
+lazy_static = "1.0"
+tabwriter = "1.0"
+walkdir = "2.1"
+chrono = "0.4"
+regex = "1.0"
 serde = "1.0"
 clap = "2.31"
 toml = "0.4"
+crc = "1.8"
 
 [[bin]]
 name = "bloguen"

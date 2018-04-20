@@ -14,7 +14,7 @@ fn io() {
     assert_eq!(Error::Io {
                        desc: "",
                        op: "",
-                       more: Some(""),
+                       more: Some("".to_string()),
                    }
                    .exit_value(),
                1);

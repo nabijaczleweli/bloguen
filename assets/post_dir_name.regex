@@ -1,0 +1,1 @@
+(?P<post_number>[[:digit:]]+)\. (?P<date_year>[[:digit:]]{4})-(?P<date_month>[[:digit:]]{2})-(?P<date_day>[[:digit:]]{2})(?: (?P<time_hour>[[:digit:]]{2})-(?P<time_minute>[[:digit:]]{2})(?:-(?P<time_second>[[:digit:]]{2}))?)? (?P<name>.+)

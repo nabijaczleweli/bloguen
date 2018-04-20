@@ -35,13 +35,34 @@ impl Options {
             .get_matches();
 
         Options {
-            source_dir: matches.value_of("IN_DIR").map(|s| (s.to_string(), PathBuf::from(s).canonicalize().unwrap())).unwrap(),
+            source_dir: matches.value_of("IN_DIR")
+                .map(|s| {
+                    ({
+                         let mut src = s.to_string();
+                         if !['/', '\\'].contains(&src.chars().last().unwrap()) {
+                             src.push('/');
+                         }
+                         src
+                     },
+                     PathBuf::from(s).canonicalize().unwrap())
+                })
+                .unwrap(),
             output_dir: matches.value_of("OUT_DIR")
                 .map(|o| {
-                    (o.to_string(),
+                    ({
+                         let mut out = o.to_string();
+                         if !['/', '\\'].contains(&out.chars().last().unwrap()) {
+                             out.push('/');
+                         }
+                         out
+                     },
                      {
                          let fname = Path::new(&o).file_name().unwrap();
-                         Path::new(&o).parent().expect("1").canonicalize().unwrap_or_else(|_| Path::new(".").canonicalize().unwrap()).join(fname)
+                         let mut p = PathBuf::from(&o);
+                         if !p.is_absolute() {
+                             p = PathBuf::from(format!("./{}", o));
+                         }
+                         p.parent().unwrap().canonicalize().unwrap_or_else(|_| Path::new(".").canonicalize().unwrap()).join(fname)
                      })
                 })
                 .unwrap(),

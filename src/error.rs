@@ -17,7 +17,7 @@ pub enum Error {
         /// This should be lowercase and imperative ("create", "open").
         op: &'static str,
         /// Additional data.
-        more: Option<&'static str>,
+        more: Option<String>,
     },
     Parse {
         /// What failed to parse.
@@ -43,7 +43,7 @@ pub enum Error {
         /// The file that should be.
         path: PathBuf,
     },
-        /// Failed to parse the specified file because of the specified error(s).
+    /// Failed to parse the specified file because of the specified error(s).
     FileParsingFailed {
         /// The file that failed to parse.
         desc: &'static str,
@@ -64,14 +64,13 @@ impl Error {
     /// Error::Io {
     ///     desc: "network",
     ///     op: "write",
-    ///     more: Some("full buffer"),
+    ///     more: Some("full buffer".to_string()),
     /// }.print_error(&mut out);
-    /// assert_eq!(String::from_iter(out.iter().map(|&i| i as char)),
-    ///            "Writing network failed: full buffer.\n".to_string());
+    /// assert_eq!(out, "Writing network failed: full buffer.\n".as_bytes());
     /// ```
     pub fn print_error<W: Write>(&self, err_out: &mut W) {
         match *self {
-            Error::Io { desc, op, more } => {
+            Error::Io { desc, op, ref more } => {
                 // Strip the last 'e', if any, so we get correct inflection for continuous tenses
                 let op = uppercase_first(if op.ends_with('e') {
                     &op[..op.len() - 1]
