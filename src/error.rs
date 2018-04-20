@@ -24,7 +24,7 @@ pub enum Error {
         ///
         /// Something like "URL", "datetime".
         tp: &'static str,
-        /// Where the thing that failed to parse would go, were it to parese properly.
+        /// Where the thing that failed to parse would go, were it to parse properly.
         wher: &'static str,
         /// Additional data.
         more: Option<&'static str>,
@@ -42,6 +42,13 @@ pub enum Error {
         what: &'static str,
         /// The file that should be.
         path: PathBuf,
+    },
+        /// Failed to parse the specified file because of the specified error(s).
+    FileParsingFailed {
+        /// The file that failed to parse.
+        desc: &'static str,
+        /// The parsing error(s) that occured.
+        errors: Option<String>,
     },
 }
 
@@ -86,6 +93,13 @@ impl Error {
             }
             Error::FileNotFound { who, ref path } => writeln!(err_out, "File {} for {} not found.", path.display(), who).unwrap(),
             Error::WrongFileState { what, ref path } => writeln!(err_out, "File {} is not {}.", path.display(), what).unwrap(),
+            Error::FileParsingFailed { ref desc, ref errors } => {
+                write!(err_out, "Failed to parse {}", desc).unwrap();
+                if let Some(ref error) = errors {
+                    write!(err_out, ": {}", error).unwrap();
+                }
+                writeln!(err_out, ".").unwrap();
+            }
         }
     }
 
@@ -107,6 +121,7 @@ impl Error {
             Error::Parse { .. } => 2,
             Error::FileNotFound { .. } => 3,
             Error::WrongFileState { .. } => 4,
+            Error::FileParsingFailed { .. } => 5,
         }
     }
 }

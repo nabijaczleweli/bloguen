@@ -12,8 +12,10 @@ version = "0.1.0"
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 
 [dependencies]
+serde_derive = "1.0"
+serde = "1.0"
 clap = "2.31"
-
+toml = "0.4"
 
 [[bin]]
 name = "bloguen"

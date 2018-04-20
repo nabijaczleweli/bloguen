@@ -21,8 +21,10 @@ fn actual_main() -> i32 {
 
 fn result_main() -> Result<(), Error> {
     let opts = Options::parse();
+    println!("{:#?}", opts);
 
-    print!("{:#?}", opts);
+    let descriptor = bloguen::ops::BlogueDescriptor::read(&opts.source_dir.1.join("blogue.toml"))?;
+    println!("{:#?}", descriptor);
 
     Ok(())
 }

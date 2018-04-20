@@ -1,3 +1,4 @@
+mod file_parsing_failed;
 mod parse;
 mod io;
 

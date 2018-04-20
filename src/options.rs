@@ -11,8 +11,8 @@
 //! ```
 
 
+use std::path::{PathBuf, Path};
 use clap::{AppSettings, Arg};
-use std::path::PathBuf;
 use std::fs;
 
 
@@ -35,8 +35,16 @@ impl Options {
             .get_matches();
 
         Options {
-            source_dir: matches.value_of("IN_DIR").map(|s| (s.to_string(), PathBuf::from(s))).unwrap(),
-            output_dir: matches.value_of("OUT_DIR").map(|o| (o.to_string(), PathBuf::from(o))).unwrap(),
+            source_dir: matches.value_of("IN_DIR").map(|s| (s.to_string(), PathBuf::from(s).canonicalize().unwrap())).unwrap(),
+            output_dir: matches.value_of("OUT_DIR")
+                .map(|o| {
+                    (o.to_string(),
+                     {
+                         let fname = Path::new(&o).file_name().unwrap();
+                         Path::new(&o).parent().expect("1").canonicalize().unwrap_or_else(|_| Path::new(".").canonicalize().unwrap()).join(fname)
+                     })
+                })
+                .unwrap(),
         }
     }
 

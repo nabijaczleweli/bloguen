@@ -57,3 +57,19 @@ fn wrong_file_state() {
                    .exit_value(),
                4);
 }
+
+#[test]
+fn file_parsing_failed_() {
+    assert_eq!(Error::FileParsingFailed {
+                       desc: "",
+                       errors: None,
+                   }
+                   .exit_value(),
+               5);
+    assert_eq!(Error::FileParsingFailed {
+                       desc: "",
+                       errors: Some("".to_string()),
+                   }
+                   .exit_value(),
+               5);
+}
