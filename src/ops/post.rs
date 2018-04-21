@@ -1,10 +1,13 @@
+use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
-use self::super::super::util::name_based_post_time;
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
+use comrak::{self, Arena as ComrakArena};
 use self::super::super::Error;
 use std::iter::FromIterator;
+use std::fs::{self, File};
 use std::path::PathBuf;
+use std::io::Read;
 use regex::Regex;
 
 
@@ -23,7 +26,7 @@ pub struct BloguePost {
     /// Directory containing the post data.
     pub source_dir: (String, PathBuf),
     /// Post number.
-    pub number: usize,
+    pub number: (usize, String),
     /// Post name.
     pub name: String,
     /// Date & time of posting.
@@ -107,7 +110,7 @@ impl BloguePost {
     /// # use bloguen::Error;
     /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-new");
     /// # let _ = fs::remove_dir_all(&root);
-    /// # for d in &["001. 2018-01-08 16-52 The venture into crocheting",
+    /// # for d in &["01. 2018-01-08 16-52 The venture into crocheting",
     /// #            "003. 2018-02-05 release-front - release front-end",
     /// #            "004. stir plate"] {
     /// #   fs::create_dir_all(root.join("posts").join(d)).unwrap();
@@ -116,12 +119,12 @@ impl BloguePost {
     /// let root: PathBuf = /* obtained elsewhere */;
     /// # */
     ///
-    /// let dir = ("$ROOT/posts/001. 2018-01-08 16-52 The venture into crocheting".to_string(),
-    ///            root.join("posts").join("001. 2018-01-08 16-52 The venture into crocheting"));
+    /// let dir = ("$ROOT/posts/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
+    ///            root.join("posts").join("01. 2018-01-08 16-52 The venture into crocheting"));
     /// assert_eq!(BloguePost::new(dir.clone()),
     ///            Ok(BloguePost {
     ///                source_dir: dir,
-    ///                number: 1,
+    ///                number: (1, "01".to_string()),
     ///                name: "The venture into crocheting".to_string(),
     ///                datetime: LocalOffset.ymd(2018, 01, 08).and_hms(16, 52, 00),
     ///            }));
@@ -131,7 +134,7 @@ impl BloguePost {
     /// assert_eq!(BloguePost::new(dir.clone()),
     ///            Ok(BloguePost {
     ///                source_dir: dir,
-    ///                number: 3,
+    ///                number: (3, "003".to_string()),
     ///                name: "release-front - release front-end".to_string(),
     ///                datetime: LocalOffset.ymd(2018, 02, 05).and_hms(23, 24, 43),
     ///            }));
@@ -165,10 +168,11 @@ impl BloguePost {
                     }
                 })?;
             let name = mch.name("name").unwrap().as_str();
+            let number = mch.name("post_number").unwrap().as_str();
 
             BloguePost {
                 source_dir: (String::new(), PathBuf::from(String::new())),
-                number: mch.name("post_number").unwrap().as_str().parse().map_err(|_| uint_err("post number"))?,
+                number: (number.parse().map_err(|_| uint_err("post number"))?, number.to_string()),
                 name: name.to_string(),
                 datetime: LocalOffset.ymd(mch.name("date_year").unwrap().as_str().parse().map_err(|_| uint_err("post date year"))?,
                          mch.name("date_month").unwrap().as_str().parse().map_err(|_| uint_err("post date month"))?,
@@ -189,5 +193,92 @@ impl BloguePost {
         };
         ret.source_dir = wher;
         Ok(ret)
+    }
+
+    /// Generate an HTML output from the post into the specified output directory.
+    ///
+    /// # Examples
+    ///
+    /// Given the following:
+    ///
+    /// ```plaintext
+    /// src/
+    ///   01. 2018-01-08 16-52 The venture into crocheting/
+    ///     post.md
+    /// ```
+    ///
+    /// The following holds:
+    ///
+    /// ```
+    /// # use bloguen::ops::BloguePost;
+    /// # use std::io::{Write, Read};
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-generate");
+    /// # let _ = fs::remove_dir_all(&root);
+    /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
+    /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
+    /// #                  .join("post.md")).unwrap().write_all("Блогг".as_bytes()).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// # */
+    /// let post =
+    ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
+    ///                     root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
+    /// assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
+    ///
+    /// assert!(root.join("out").join("posts").join("01. 2018-01-08 16-52-00 The venture into crocheting.html").is_file());
+    /// # let mut read = vec![];
+    /// # File::open(root.join("out").join("posts").join("01. 2018-01-08 16-52-00 The venture into crocheting.html")).unwrap().read_to_end(&mut read).unwrap();
+    /// # assert_eq!(&read[..], "<p>Блогг</p>\n".as_bytes());
+    /// ```
+    pub fn generate(&self, into: &(String, PathBuf)) -> Result<(), Error> {
+        let post_text_path = self.source_dir.1.join("post.md");
+        let mut post_text = String::new();
+        File::open(&post_text_path).map_err(|_| {
+                Error::FileNotFound {
+                    who: "post text",
+                    path: post_text_path,
+                }
+            })?
+            .read_to_string(&mut post_text)
+            .map_err(|e| {
+                Error::Io {
+                    desc: "post text",
+                    op: "read",
+                    more: Some(e.to_string()),
+                }
+            })?;
+
+        let arena = ComrakArena::new();
+        let root = comrak::parse_document(&arena, &post_text, &MARKDOWN_OPTIONS);
+
+        fs::create_dir_all(into.1.join("posts")).map_err(|e| {
+                Error::Io {
+                    desc: "posts directory",
+                    op: "create",
+                    more: Some(e.to_string()),
+                }
+            })?;
+
+        // TODO extract arg of second join
+        let post_html_path = into.1.join("posts").join(format!("{}. {} {}.html", self.number.1, self.datetime.format("%Y-%m-%d %H-%M-%S"), self.name));
+        comrak::format_html(root,
+                            &MARKDOWN_OPTIONS,
+                            &mut File::create(post_html_path).map_err(|e| {
+                Error::Io {
+                    desc: "post HTML",
+                    op: "create",
+                    more: Some(e.to_string()),
+                }
+            })?).map_err(|e| {
+                Error::Io {
+                    desc: "post HTML",
+                    op: "write",
+                    more: Some(e.to_string()),
+                }
+            })?;
+
+        Ok(())
     }
 }

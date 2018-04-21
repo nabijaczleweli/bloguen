@@ -26,4 +26,4 @@ fn ok() {
                     [..]);
 }
 
-// Not sure hwo to make this error programmatically
+// Not sure how to make this error programmatically

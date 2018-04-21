@@ -21,6 +21,7 @@ extern crate serde_derive;
 extern crate lazy_static;
 extern crate walkdir;
 extern crate chrono;
+extern crate comrak;
 extern crate regex;
 extern crate serde;
 #[macro_use]

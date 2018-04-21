@@ -1,8 +1,22 @@
 //! Module containing various utility functions.
 
 
-use chrono::NaiveTime;
 use crc::crc32::checksum_ieee as crc32_ieee;
+use comrak::ComrakOptions;
+use chrono::NaiveTime;
+
+
+lazy_static! {
+    pub static ref MARKDOWN_OPTIONS: ComrakOptions = ComrakOptions {
+        hardbreaks: true,
+        ext_strikethrough: true,
+        ext_table: true,
+        ext_autolink: true,
+        ext_tasklist: true,
+        ext_header_ids: Some("".to_string()),
+        ..ComrakOptions::default()
+    };
+}
 
 
 /// Uppercase the first character of the supplied string.

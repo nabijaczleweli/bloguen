@@ -34,9 +34,13 @@ fn result_main() -> Result<(), Error> {
     {
         let mut out = TabWriter::new(stdout()).minwidth(1).padding(3);
         for p in &posts {
-            writeln!(out, "\t{}\t{}\t{}", p.number, p.datetime.format("%Y.%m.%d %r"), p.name).unwrap();
+            writeln!(out, "\t{}\t{}\t{}", p.number.0, p.datetime.format("%Y.%m.%d %r"), p.name).unwrap();
         }
         out.flush().unwrap();
+    }
+
+    for p in &posts {
+        p.generate(&opts.output_dir)?;
     }
 
     Ok(())
