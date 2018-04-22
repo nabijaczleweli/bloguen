@@ -110,7 +110,12 @@ fn posts_directory() {
                Err(Error::Io {
                    desc: "posts directory",
                    op: "create",
-                   more: Some("Cannot create a file when that file already exists. (os error 183)".to_string()),
+                   more: Some(if cfg!(target_os = "windows") {
+                           "Cannot create a file when that file already exists. (os error 183)"
+                       } else {
+                           "File exists (os error 17)"
+                       }
+                       .to_string()),
                }));
 }
 
@@ -132,6 +137,11 @@ fn post_create() {
                Err(Error::Io {
                    desc: "post HTML",
                    op: "create",
-                   more: Some("Access is denied. (os error 5)".to_string()),
+                   more: Some(if cfg!(target_os = "windows") {
+                           "Access is denied. (os error 5)"
+                       } else {
+                           "Is a directory (os error 21)"
+                       }
+                       .to_string()),
                }));
 }
