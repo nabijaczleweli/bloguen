@@ -224,10 +224,11 @@ impl BloguePost {
     /// # */
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
-    ///                     root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
+    ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
     /// assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
     ///
-    /// assert!(root.join("out").join("posts").join("01. 2018-01-08 16-52-00 The venture into crocheting.html").is_file());
+    /// assert!(root.join("out").join("posts")
+    ///     .join("01. 2018-01-08 16-52-00 The venture into crocheting.html").is_file());
     /// # let mut read = vec![];
     /// # File::open(root.join("out").join("posts").join("01. 2018-01-08 16-52-00 The venture into crocheting.html")).unwrap().read_to_end(&mut read).unwrap();
     /// # assert_eq!(&read[..], "<p>Блогг</p>\n".as_bytes());
@@ -261,8 +262,7 @@ impl BloguePost {
                 }
             })?;
 
-        // TODO extract arg of second join
-        let post_html_path = into.1.join("posts").join(format!("{}. {} {}.html", self.number.1, self.datetime.format("%Y-%m-%d %H-%M-%S"), self.name));
+        let post_html_path = into.1.join("posts").join(self.normalised_name() + ".html");
         comrak::format_html(root,
                             &MARKDOWN_OPTIONS,
                             &mut File::create(post_html_path).map_err(|e| {
@@ -280,5 +280,31 @@ impl BloguePost {
             })?;
 
         Ok(())
+    }
+
+    /// Get a normalised output name for this post.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use bloguen::ops::BloguePost;
+    /// # use std::io::{Write, Read};
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-normalised_name");
+    /// # let _ = fs::remove_dir_all(&root);
+    /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
+    /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
+    /// #                  .join("post.md")).unwrap().write_all("Блогг".as_bytes()).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// # */
+    /// let post =
+    ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
+    ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
+    /// assert_eq!(post.normalised_name(), "01. 2018-01-08 16-52-00 The venture into crocheting");
+    /// ```
+    pub fn normalised_name(&self) -> String {
+        format!("{}. {} {}", self.number.1, self.datetime.format("%Y-%m-%d %H-%M-%S"), self.name)
     }
 }

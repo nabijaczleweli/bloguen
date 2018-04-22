@@ -22,7 +22,7 @@ fn ok() {
     let post = BloguePost::new(dir.clone()).unwrap();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
     let mut read = String::new();
-    File::open(root.join("out").join("posts").join("1. 2018-01-08 16-52-00 My first venture into crocheting, and what I've learned.html"))
+    File::open(root.join("out").join("posts").join(post.normalised_name() + ".html"))
         .unwrap()
         .read_to_string(&mut read)
         .unwrap();
@@ -34,7 +34,7 @@ fn ok() {
     let post = BloguePost::new(dir.clone()).unwrap();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
     read.clear();
-    File::open(root.join("out").join("posts").join("03. 2018-02-05 12-33-05 release-front - a generic release front-end, like Patchwork's.html"))
+    File::open(root.join("out").join("posts").join(post.normalised_name() + ".html"))
         .unwrap()
         .read_to_string(&mut read)
         .unwrap();
@@ -45,7 +45,7 @@ fn ok() {
     let post = BloguePost::new(dir.clone()).unwrap();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
     read.clear();
-    File::open(root.join("out").join("posts").join("005. 2018-04-19 23-19-21 cursed device chain.html")).unwrap().read_to_string(&mut read).unwrap();
+    File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read, "<ol start=\"5\">\n<li>2018-04-19 23-19-21 cursed device chain</li>\n</ol>\n");
 }
 
