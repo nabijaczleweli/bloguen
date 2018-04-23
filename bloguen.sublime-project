@@ -3,13 +3,19 @@
 	[
 		{
 			"working_dir": "$project_path",
-			"shell_cmd": "cargo build && cargo test",
-			"name": "Build and test bloguen"
+			"shell_cmd": "cargo build --color always && cargo test --color always",
+			"name": "Build and test bloguen",
+
+			"target": "ansi_color_build",
+			"syntax": "Packages/ANSIescape/ANSI.tmLanguage"
 		},
 		{
 			"working_dir": "$project_path",
-			"cmd": "cargo doc",
-			"name": "Document bloguen"
+			"cmd": "cargo doc --color always",
+			"name": "Document bloguen",
+
+			"target": "ansi_color_build",
+			"syntax": "Packages/ANSIescape/ANSI.tmLanguage"
 		}
 	],
 	"folders":

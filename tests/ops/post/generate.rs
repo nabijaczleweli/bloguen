@@ -14,39 +14,36 @@ fn ok() {
                "005. 2018-04-19 23-19-21 cursed device chain"] {
         let fp = root.join("posts").join(d);
         fs::create_dir_all(&fp).unwrap();
-        File::create(fp.join("post.md")).unwrap().write_all(d.as_bytes()).unwrap();
+        File::create(fp.join("post.md")).unwrap().write_all(format!("[lonk]({})", d.replace(" ", "%20")).as_bytes()).unwrap();
     }
 
     let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
+    assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))),
+               Ok(vec!["1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned".to_string()]));
     let mut read = String::new();
-    File::open(root.join("out").join("posts").join(post.normalised_name() + ".html"))
-        .unwrap()
-        .read_to_string(&mut read)
-        .unwrap();
+    File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read,
-               "<ol>\n<li>2018-01-08 16-52 My first venture into crocheting, and what I've learned</li>\n</ol>\n");
+               "<p><a href=\"1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned\">lonk</a></p>\n");
 
     let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's".to_string(),
                root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
+    assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))),
+               Ok(vec!["03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's".to_string()]));
     read.clear();
-    File::open(root.join("out").join("posts").join(post.normalised_name() + ".html"))
-        .unwrap()
-        .read_to_string(&mut read)
-        .unwrap();
+    File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read,
-               "<ol start=\"3\">\n<li>2018-02-05 release-front - a generic release front-end, like Patchwork's</li>\n</ol>\n");
+               "<p><a href=\"03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's\">lonk</a></p>\n");
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
+    assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))),
+               Ok(vec!["005.%202018-04-19%2023-19-21%20cursed%20device%20chain".to_string()]));
     read.clear();
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
-    assert_eq!(read, "<ol start=\"5\">\n<li>2018-04-19 23-19-21 cursed device chain</li>\n</ol>\n");
+    assert_eq!(read, "<p><a href=\"005.%202018-04-19%2023-19-21%20cursed%20device%20chain\">lonk</a></p>\n");
 }
 
 #[test]

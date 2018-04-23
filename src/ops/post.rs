@@ -1,4 +1,4 @@
-use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time};
+use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
@@ -197,6 +197,8 @@ impl BloguePost {
 
     /// Generate an HTML output from the post into the specified output directory.
     ///
+    /// Returns: set of links in the markdown source.
+    ///
     /// # Examples
     ///
     /// Given the following:
@@ -218,22 +220,24 @@ impl BloguePost {
     /// # let _ = fs::remove_dir_all(&root);
     /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
     /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
-    /// #                  .join("post.md")).unwrap().write_all("Блогг".as_bytes()).unwrap();
+    /// #                  .join("post.md")).unwrap().write_all("[Блогг](url.html)".as_bytes()).unwrap();
     /// # /*
     /// let root: PathBuf = /* obtained elsewhere */;
     /// # */
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(()));
+    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))).is_ok());
+    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(vec!["url.html".to_string()]));
     ///
     /// assert!(root.join("out").join("posts")
-    ///     .join("01. 2018-01-08 16-52-00 The venture into crocheting.html").is_file());
-    /// # let mut read = vec![];
-    /// # File::open(root.join("out").join("posts").join("01. 2018-01-08 16-52-00 The venture into crocheting.html")).unwrap().read_to_end(&mut read).unwrap();
-    /// # assert_eq!(&read[..], "<p>Блогг</p>\n".as_bytes());
+    ///             .join("01. 2018-01-08 16-52-00 The venture into crocheting.html").is_file());
+    /// # let mut read = String::new();
+    /// # File::open(root.join("out").join("posts").join("01. 2018-01-08 16-52-00 The venture into crocheting.html"))
+    /// #                .unwrap().read_to_string(&mut read).unwrap();
+    /// # assert_eq!(read, "<p><a href=\"url.html\">Блогг</a></p>\n");
     /// ```
-    pub fn generate(&self, into: &(String, PathBuf)) -> Result<(), Error> {
+    pub fn generate(&self, into: &(String, PathBuf)) -> Result<Vec<String>, Error> {
         let post_text_path = self.source_dir.1.join("post.md");
         let mut post_text = String::new();
         File::open(&post_text_path).map_err(|_| {
@@ -279,7 +283,7 @@ impl BloguePost {
                 }
             })?;
 
-        Ok(())
+        extract_links(root)
     }
 
     /// Get a normalised output name for this post.

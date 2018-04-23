@@ -39,9 +39,11 @@ fn result_main() -> Result<(), Error> {
         out.flush().unwrap();
     }
 
+    let mut links = vec![];
     for p in &posts {
-        p.generate(&opts.output_dir)?;
+        links.extend(p.generate(&opts.output_dir)?.into_iter().map(|l| (&p.source_dir, l)));
     }
+    println!("{:#?}", links);
 
     Ok(())
 }
