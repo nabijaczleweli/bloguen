@@ -11,8 +11,8 @@
 //! ```
 
 
+use clap::{ErrorKind as ClapErrorKind, Error as ClapError, AppSettings, Arg};
 use std::path::{PathBuf, Path};
-use clap::{AppSettings, Arg};
 use std::fs;
 
 
@@ -21,7 +21,7 @@ use std::fs;
 pub struct Options {
     /// The directory containing the blogue source, must exist.
     pub source_dir: (String, PathBuf),
-    /// The directory to the blogue source, must not exist, parent directory must exist.
+    /// The directory to the blogue source, must not exist if `--force` not specified, parent directory must exist.
     pub output_dir: (String, PathBuf),
 }
 
@@ -32,6 +32,7 @@ impl Options {
             .setting(AppSettings::ColoredHelp)
             .arg(Arg::from_usage("<IN_DIR> 'Directory to generate a blogue from'").validator(Options::source_directory_validator))
             .arg(Arg::from_usage("<OUT_DIR> 'Directory to generate the blogue into'").validator(Options::output_directory_validator))
+            .arg(Arg::from_usage("-f --force 'Allow the output directory to exist, overriding it'"))
             .get_matches();
 
         Options {
@@ -49,6 +50,25 @@ impl Options {
                 .unwrap(),
             output_dir: matches.value_of("OUT_DIR")
                 .map(|o| {
+                    {
+                        let mut p = PathBuf::from(&o);
+                        if !p.is_absolute() {
+                            p = PathBuf::from(format!("./{}", o));
+                        }
+                        if p.exists() {
+                            if !matches.is_present("force") {
+                                ClapError {
+                                        message: format!("Output directory \"{}\" already exists", p.display()),
+                                        kind: ClapErrorKind::InvalidValue,
+                                        info: None,
+                                    }
+                                    .exit();
+                            } else {
+                                fs::remove_dir_all(p).expect("failed to remove preexisting output directory");
+                            }
+                        }
+                    }
+
                     ({
                          let mut out = o.to_string();
                          if !['/', '\\'].contains(&out.chars().last().unwrap()) {
@@ -82,9 +102,7 @@ impl Options {
         if !p.is_absolute() {
             p = PathBuf::from(format!("./{}", s));
         }
-        if p.exists() {
-            Err(format!("Output directory \"{}\" already exists", p.display()))
-        } else if p.parent().is_some() {
+        if p.parent().is_some() {
             p.pop();
             fs::canonicalize(&p).map_err(|_| format!("Output directory's parent directory \"{}\" nonexistant", p.display())).and_then(|f| if !f.is_file() {
                 Ok(())
