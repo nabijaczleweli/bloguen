@@ -6,6 +6,7 @@ use crc::crc32::checksum_ieee as crc32_ieee;
 use comrak::ComrakOptions;
 use self::super::Error;
 use chrono::NaiveTime;
+use url::Url;
 
 
 lazy_static! {
@@ -98,4 +99,19 @@ pub fn extract_links<'a>(ast: &'a ComrakAstNode<'a>) -> Result<Vec<String>, Erro
     }
 
     Ok(out)
+}
+
+/// Check if the link points to a local relative asset.
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::util::is_asset_link;
+/// assert!(is_asset_link("assets/link.html"));
+/// assert!(is_asset_link("assets/image.png"));
+///
+/// assert!(!is_asset_link("https://nabijaczleweli.xyz"));
+/// ```
+pub fn is_asset_link(link: &str) -> bool {
+    Url::parse(link).is_err() && !link.starts_with('/')
 }

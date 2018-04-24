@@ -1,11 +1,13 @@
 extern crate tabwriter;
 extern crate bloguen;
+extern crate url;
 
+use url::percent_encoding::percent_decode;
 use std::io::{Write, stderr, stdout};
-use self::bloguen::{Options, Error};
 use std::iter::FromIterator;
 use tabwriter::TabWriter;
 use std::process::exit;
+use std::fs;
 
 
 fn main() {
@@ -22,8 +24,8 @@ fn actual_main() -> i32 {
     }
 }
 
-fn result_main() -> Result<(), Error> {
-    let opts = Options::parse();
+fn result_main() -> Result<(), bloguen::Error> {
+    let opts = bloguen::Options::parse();
 
     let descriptor = bloguen::ops::BlogueDescriptor::read(&opts.source_dir.1.join("blogue.toml"))?;
     println!("Blog name: {}", descriptor.name);
@@ -38,12 +40,35 @@ fn result_main() -> Result<(), Error> {
         }
         out.flush().unwrap();
     }
+    println!();
 
-    let mut links = vec![];
     for p in &posts {
-        links.extend(p.generate(&opts.output_dir)?.into_iter().map(|l| (&p.source_dir, l)));
+        for link in p.generate(&opts.output_dir)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {
+            let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
+
+            let source = link.split('/').fold(p.source_dir.1.clone(), |cur, el| cur.join(el));
+            if source.exists() {
+                let output = link.split('/').fold(opts.output_dir.1.join("posts"), |cur, el| cur.join(el));
+
+                fs::create_dir_all(output.parent().unwrap()).map_err(|e| {
+                        bloguen::Error::Io {
+                            desc: "asset parent dir",
+                            op: "create",
+                            more: Some(e.to_string()),
+                        }
+                    })?;
+                fs::copy(source, output).map_err(|e| {
+                        bloguen::Error::Io {
+                            desc: "asset",
+                            op: "copy",
+                            more: Some(e.to_string()),
+                        }
+                    })?;
+            } else {
+                eprintln!("Couldn't find \"{}\" for \"{}\" post.", link, p.normalised_name());
+            }
+        }
     }
-    println!("{:#?}", links);
 
     Ok(())
 }

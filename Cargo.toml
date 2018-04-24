@@ -23,6 +23,7 @@ serde = "1.0"
 clap = "2.31"
 toml = "0.4"
 crc = "1.8"
+url = "1.7"
 
 [[bin]]
 name = "bloguen"

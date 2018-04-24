@@ -28,6 +28,7 @@ extern crate serde;
 extern crate clap;
 extern crate toml;
 extern crate crc;
+extern crate url;
 
 pub mod ops;
 pub mod util;

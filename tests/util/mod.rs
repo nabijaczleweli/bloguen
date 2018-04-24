@@ -3,6 +3,7 @@ use chrono::NaiveTime;
 use bloguen::util;
 
 mod uppercase_first;
+mod is_asset_link;
 
 
 #[test]
@@ -12,6 +13,7 @@ fn name_based_post_time() {
     assert_eq!(util::name_based_post_time("cursed device chain"), NaiveTime::from_hms(19, 03, 09));
 }
 
+/// Not quite sure how to test the non-UTF-8 error case, since the document is parsed from a UTF-8 string
 #[test]
 fn extract_links() {
     let doc_arena = ComrakArena::new();
@@ -20,5 +22,6 @@ fn extract_links() {
                                         ![img](assets/image.png)
                                         [наб](https://nabijaczleweli.xyz)"#,
                                      &util::MARKDOWN_OPTIONS);
-    assert_eq!(util::extract_links(ast), Ok(vec!["assets/link.html".to_string(), "assets/image.png".to_string(), "https://nabijaczleweli.xyz".to_string()]));
+    assert_eq!(util::extract_links(ast),
+               Ok(vec!["assets/link.html".to_string(), "assets/image.png".to_string(), "https://nabijaczleweli.xyz".to_string()]));
 }
