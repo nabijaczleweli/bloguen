@@ -2,7 +2,6 @@ mod file_parsing_failed;
 mod parse;
 mod io;
 
-use std::path::PathBuf;
 use bloguen::Error;
 
 
@@ -11,7 +10,7 @@ fn file_not_found() {
     let mut out = Vec::new();
     Error::FileNotFound {
             who: "thumbnail",
-            path: PathBuf::from("file/that/does/not.exist"),
+            path: "file/that/does/not.exist".to_string(),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
@@ -23,7 +22,7 @@ fn wrong_file_state() {
     let mut out = Vec::new();
     Error::WrongFileState {
             what: "actually a file",
-            path: PathBuf::from("file/that/does/not.exist"),
+            path: "file/that/does/not.exist".to_string(),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),

@@ -240,10 +240,10 @@ impl BloguePost {
     pub fn generate(&self, into: &(String, PathBuf)) -> Result<Vec<String>, Error> {
         let post_text_path = self.source_dir.1.join("post.md");
         let mut post_text = String::new();
-        File::open(&post_text_path).map_err(|_| {
+        File::open(post_text_path).map_err(|_| {
                 Error::FileNotFound {
                     who: "post text",
-                    path: post_text_path,
+                    path: format!("{}post.md", self.source_dir.0),
                 }
             })?
             .read_to_string(&mut post_text)

@@ -1,6 +1,6 @@
 use toml::de::from_str as from_toml_str;
 use self::super::super::Error;
-use std::path::Path;
+use std::path::PathBuf;
 use std::fs::File;
 use std::io::Read;
 
@@ -22,18 +22,22 @@ impl BlogueDescriptor {
     /// # use std::env::temp_dir;
     /// # use std::io::Write;
     /// # use std::fs;
-    /// # let tf = temp_dir().join("bloguen-doctest").join("ops-descriptor-read").join("blogue.toml");
-    /// # fs::create_dir_all(tf.parent().unwrap()).unwrap();
-    /// # fs::File::create(&tf).unwrap().write_all(r#"name = "Блогг""#.as_bytes()).unwrap();
-    /// let read_tokens = BlogueDescriptor::read(&tf).unwrap();
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-descriptor-read");
+    /// # fs::create_dir_all(&root).unwrap();
+    /// # fs::File::create(root.join("blogue.toml")).unwrap().write_all(r#"name = "Блогг""#.as_bytes()).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// # */
+    /// let read_tokens = BlogueDescriptor::read(&("$ROOT/blogue.toml".to_string(),
+    ///                                            root.join("blogue.toml"))).unwrap();
     /// assert_eq!(read_tokens, BlogueDescriptor { name: "Блогг".to_string() });
     /// ```
-    pub fn read(p: &Path) -> Result<BlogueDescriptor, Error> {
+    pub fn read(p: &(String, PathBuf)) -> Result<BlogueDescriptor, Error> {
         let mut buf = String::new();
-        File::open(p).map_err(|_| {
+        File::open(&p.1).map_err(|_| {
                 Error::FileNotFound {
                     who: "blogue descriptor",
-                    path: p.to_path_buf(),
+                    path: p.0.clone(),
                 }
             })?
             .read_to_string(&mut buf)

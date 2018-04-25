@@ -17,7 +17,7 @@ fn ok() {
         File::create(fp.join("post.md")).unwrap().write_all(format!("[lonk]({})", d.replace(" ", "%20")).as_bytes()).unwrap();
     }
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned/".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))),
@@ -27,7 +27,7 @@ fn ok() {
     assert_eq!(read,
                "<p><a href=\"1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned\">lonk</a></p>\n");
 
-    let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's".to_string(),
+    let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's/".to_string(),
                root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
     let post = BloguePost::new(dir.clone()).unwrap();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))),
@@ -37,7 +37,8 @@ fn ok() {
     assert_eq!(read,
                "<p><a href=\"03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's\">lonk</a></p>\n");
 
-    let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
+    let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain/".to_string(),
+               root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))),
                Ok(vec!["005.%202018-04-19%2023-19-21%20cursed%20device%20chain".to_string()]));
@@ -54,13 +55,13 @@ fn not_found() {
         fs::create_dir_all(root.join("posts").join(d)).unwrap();
     }
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned/".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))),
                Err(Error::FileNotFound {
                    who: "post text",
-                   path: dir.1.join("post.md"),
+                   path: format!("{}post.md", dir.0),
                }));
 }
 
@@ -77,7 +78,7 @@ fn non_utf8() {
             .unwrap();
     }
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned/".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))),
@@ -98,7 +99,7 @@ fn posts_directory() {
         File::create(fp.join("post.md")).unwrap().write_all(d.as_bytes()).unwrap();
     }
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned/".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(root.join("out")).unwrap();
@@ -126,7 +127,7 @@ fn post_create() {
         File::create(fp.join("post.md")).unwrap().write_all(d.as_bytes()).unwrap();
     }
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned/".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(root.join("out").join("posts").join("1. 2018-01-08 16-52-00 My first venture into crocheting, and what I've learned.html")).unwrap();

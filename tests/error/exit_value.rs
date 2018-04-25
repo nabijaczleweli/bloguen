@@ -1,5 +1,4 @@
 use bloguen::Error;
-use std::path::PathBuf;
 
 
 #[test]
@@ -42,7 +41,7 @@ fn parse() {
 fn file_not_found() {
     assert_eq!(Error::FileNotFound {
                        who: "",
-                       path: PathBuf::new(),
+                       path: String::new(),
                    }
                    .exit_value(),
                3);
@@ -52,7 +51,7 @@ fn file_not_found() {
 fn wrong_file_state() {
     assert_eq!(Error::WrongFileState {
                        what: "",
-                       path: PathBuf::new(),
+                       path: String::new(),
                    }
                    .exit_value(),
                4);
