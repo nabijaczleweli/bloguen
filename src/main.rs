@@ -7,7 +7,6 @@ use std::io::{Write, stderr, stdout};
 use std::iter::FromIterator;
 use tabwriter::TabWriter;
 use std::process::exit;
-use std::fs;
 
 
 fn main() {
@@ -46,25 +45,7 @@ fn result_main() -> Result<(), bloguen::Error> {
         for link in p.generate(&opts.output_dir)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {
             let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
 
-            let source = link.split('/').fold(p.source_dir.1.clone(), |cur, el| cur.join(el));
-            if source.exists() {
-                let output = link.split('/').fold(opts.output_dir.1.join("posts"), |cur, el| cur.join(el));
-
-                fs::create_dir_all(output.parent().unwrap()).map_err(|e| {
-                        bloguen::Error::Io {
-                            desc: "asset parent dir",
-                            op: "create",
-                            more: Some(e.to_string()),
-                        }
-                    })?;
-                fs::copy(source, output).map_err(|e| {
-                        bloguen::Error::Io {
-                            desc: "asset",
-                            op: "copy",
-                            more: Some(e.to_string()),
-                        }
-                    })?;
-            } else {
+            if !p.copy_asset(&opts.output_dir, &link)? {
                 eprintln!("Couldn't find \"{}\" for \"{}\" post.", link, p.normalised_name());
             }
         }

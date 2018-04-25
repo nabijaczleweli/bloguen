@@ -2,6 +2,7 @@ use bloguen::ops::BloguePost;
 use std::env::temp_dir;
 use std::fs;
 
+mod copy_asset;
 mod generate;
 mod list;
 mod new;

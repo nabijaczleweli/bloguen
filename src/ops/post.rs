@@ -311,4 +311,64 @@ impl BloguePost {
     pub fn normalised_name(&self) -> String {
         format!("{}. {} {}", self.number.1, self.datetime.format("%Y-%m-%d %H-%M-%S"), self.name)
     }
+
+    /// Copy a referenced asset to the output directory.
+    ///
+    /// Returns `Ok(b)`, where `b` is whether the asset existed and was copied, `Err(_)` for a copying error.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # extern crate bloguen;
+    /// # extern crate url;
+    /// # use url::percent_encoding::percent_decode;
+    /// # use bloguen::ops::BloguePost;
+    /// # use std::io::{Write, Read};
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # use bloguen::util;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-copy_asset");
+    /// # let _ = fs::remove_dir_all(&root);
+    /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
+    /// # fs::create_dir_all(root.join("out").join("assets")).unwrap();
+    /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
+    /// #                  .join("post.md")).unwrap().write_all("![img](assets/img.png)".as_bytes()).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// # */
+    /// let out_pair = ("$ROOT/out/".to_string(), root.join("out"));
+    /// # File::create(out_pair.1.join("assets").join("img.png")).unwrap();
+    /// let post =
+    ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
+    ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
+    /// for link in post.generate(&out_pair).unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
+    ///     let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
+    ///     println!("Copying {}: {:?}", link, post.copy_asset(&out_pair, &link));
+    /// }
+    /// ```
+    pub fn copy_asset(&self, into: &(String, PathBuf), link: &str) -> Result<bool, Error> {
+        let source = link.split('/').fold(self.source_dir.1.clone(), |cur, el| cur.join(el));
+        if source.exists() {
+            let output = link.split('/').fold(into.1.join("posts"), |cur, el| cur.join(el));
+
+            fs::create_dir_all(output.parent().unwrap()).map_err(|e| {
+                    Error::Io {
+                        desc: "asset parent dir",
+                        op: "create",
+                        more: Some(e.to_string()),
+                    }
+                })?;
+            fs::copy(source, output).map_err(|e| {
+                    Error::Io {
+                        desc: "asset",
+                        op: "copy",
+                        more: Some(e.to_string()),
+                    }
+                })?;
+
+            Ok(true)
+        } else {
+            Ok(false)
+        }
+    }
 }
