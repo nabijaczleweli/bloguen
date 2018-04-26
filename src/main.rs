@@ -26,7 +26,7 @@ fn actual_main() -> i32 {
 fn result_main() -> Result<(), bloguen::Error> {
     let opts = bloguen::Options::parse();
 
-    let descriptor = bloguen::ops::BlogueDescriptor::read(&(format!("{}blogue.toml", opts.source_dir.0), opts.source_dir.1.join("blogue.toml")))?;
+    let descriptor = bloguen::ops::BlogueDescriptor::read(&opts.source_dir)?;
     println!("Blog name: {}", descriptor.name);
 
     let mut posts: Vec<_> = Result::from_iter(bloguen::ops::BloguePost::list(&opts.source_dir)?.into_iter().map(bloguen::ops::BloguePost::new))?;

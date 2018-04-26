@@ -6,27 +6,54 @@ use bloguen::Error;
 
 
 #[test]
-fn ok() {
-    let td = temp_dir().join("bloguen-test").join("ops-descriptor-read-ok");
-    fs::create_dir_all(&td).unwrap();
+fn ok_all_specified() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-ok_all_specified");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
 
-    let tf = td.join("blogue.toml");
-    let _ = fs::remove_file(&tf);
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    header = \"templates/head\"\n\
+                    footer = \"templates\\\\foot\"\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("templates").join("head")).unwrap();
+    File::create(root.join("templates").join("foot")).unwrap();
 
-    File::create(&tf).unwrap().write_all(r#"name = "Блогг""#.as_bytes()).unwrap();
-
-    assert_eq!(BlogueDescriptor::read(&("$ROOT/blogue.toml".to_string(), tf)), Ok(BlogueDescriptor { name: "Блогг".to_string() }));
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Ok(BlogueDescriptor {
+                   name: "Блогг".to_string(),
+                   header_file: ("$ROOT/templates/head".to_string(), root.join("templates").join("head")),
+                   footer_file: ("$ROOT/templates\\foot".to_string(), root.join("templates").join("foot")),
+               }));
 }
 
 #[test]
-fn not_found() {
-    let td = temp_dir().join("bloguen-test").join("ops-descriptor-read-not_found");
-    fs::create_dir_all(&td).unwrap();
+fn ok_induced() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-ok_induced");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
 
-    let tf = td.join("blogue.toml");
-    let _ = fs::remove_file(&tf);
+    File::create(root.join("blogue.toml")).unwrap().write_all("name = \"Блогг\"\n".as_bytes()).unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
 
-    assert_eq!(BlogueDescriptor::read(&("$ROOT/blogue.toml".to_string(), tf)),
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Ok(BlogueDescriptor {
+                   name: "Блогг".to_string(),
+                   header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
+                   footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+               }));
+}
+
+#[test]
+fn descriptor_not_found() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-descriptor_not_found");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(&root).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root)),
                Err(Error::FileNotFound {
                    who: "blogue descriptor",
                    path: "$ROOT/blogue.toml".to_string(),
@@ -35,19 +62,17 @@ fn not_found() {
 
 #[test]
 fn non_utf8() {
-    let td = temp_dir().join("bloguen-test").join("ops-descriptor-read-non_utf8");
-    fs::create_dir_all(&td).unwrap();
-
-    let tf = td.join("blogue.toml");
-    let _ = fs::remove_file(&tf);
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-non_utf8");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(&root).unwrap();
 
     // https://stackoverflow.com/a/3886015/2851815
-    File::create(&tf)
+    File::create(root.join("blogue.toml"))
         .unwrap()
         .write_all(&[0xC3, 0x28, 0xA0, 0xA1, 0xE2, 0x28, 0xA1, 0xE2, 0x82, 0x28, 0xF0, 0x28, 0x8C, 0xBC, 0xF0, 0x90, 0x28, 0xBC, 0xF0, 0x28, 0x8C, 0x28])
         .unwrap();
 
-    assert_eq!(BlogueDescriptor::read(&("$ROOT/blogue.toml".to_string(), tf)),
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root)),
                Err(Error::Io {
                    desc: "blogue descriptor",
                    op: "read",
@@ -57,18 +82,16 @@ fn non_utf8() {
 
 #[test]
 fn invalid_toml() {
-    let td = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_toml");
-    fs::create_dir_all(&td).unwrap();
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_toml");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(&root).unwrap();
 
-    let tf = td.join("blogue.toml");
-    let _ = fs::remove_file(&tf);
-
-    File::create(&tf)
+    File::create(root.join("blogue.toml"))
         .unwrap()
         .write_all("[description\n".as_bytes())
         .unwrap();
 
-    assert_eq!(BlogueDescriptor::read(&("$ROOT/blogue.toml".to_string(), tf)),
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root)),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor",
                    errors: Some("expected a right bracket, found a newline at line 1".to_string()),
