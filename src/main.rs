@@ -41,6 +41,12 @@ fn result_main() -> Result<(), bloguen::Error> {
     }
     println!();
 
+    let post_header = bloguen::util::read_file(&descriptor.header_file, "post header")?;
+    let post_footer = bloguen::util::read_file(&descriptor.footer_file, "post footer")?;
+
+    println!("{}", post_header);
+    println!("{}", post_footer);
+
     for p in &posts {
         for link in p.generate(&opts.output_dir)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {
             let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();

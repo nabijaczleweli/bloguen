@@ -2,10 +2,13 @@
 
 
 use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
+use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
 use comrak::ComrakOptions;
 use self::super::Error;
+use std::path::PathBuf;
 use chrono::NaiveTime;
+use std::fs::File;
 use url::Url;
 
 
@@ -114,4 +117,76 @@ pub fn extract_links<'a>(ast: &'a ComrakAstNode<'a>) -> Result<Vec<String>, Erro
 /// ```
 pub fn is_asset_link(link: &str) -> bool {
     Url::parse(link).is_err() && !link.starts_with('/')
+}
+
+
+/// Read
+///
+/// # Examples
+///
+/// Given the following:
+///
+/// ```plaintext
+/// $ROOT
+///   index.html
+///   image.png
+/// ```
+///
+/// The following holds:
+///
+/// ```
+/// # use bloguen::util::read_file;
+/// # use std::fs::{self, File};
+/// # use std::path::PathBuf;
+/// # use std::env::temp_dir;
+/// # use std::io::Write;
+/// # use bloguen::Error;
+/// # let root = temp_dir().join("bloguen-doctest").join("ops-util-read_file");
+/// # let _ = fs::remove_dir_all(&root);
+/// # fs::create_dir_all(&root).unwrap();
+/// # File::create(root.join("index.html")).unwrap().write_all("<html>{henlo}</html>".as_bytes()).unwrap();
+/// # File::create(root.join("image.png")).unwrap()
+/// #     .write_all(&[0xC3, 0x28, 0xA0, 0xA1, 0xE2, 0x28, 0xA1, 0xE2, 0x82, 0x28, 0xF0, 0x28,
+/// #                  0x8C, 0xBC, 0xF0, 0x90, 0x28, 0xBC, 0xF0, 0x28, 0x8C, 0x28]).unwrap();
+/// # /*
+/// let root: PathBuf = /* obtained elsewhere */;
+/// # */
+///
+/// assert_eq!(read_file(&("$ROOT/index.html".to_string(), root.join("index.html")), "root HTML"),
+///            Ok("<html>{henlo}</html>".to_string()));
+/// assert_eq!(read_file(&("$ROOT/image.png".to_string(), root.join("image.png")), "image"),
+///            Err(Error::Parse {
+///                tp: "UTF-8 string",
+///                wher: "image",
+///                more: None,
+///            }));
+/// assert_eq!(read_file(&("$ROOT/nonexistant".to_string(), root.join("nonexistant")), "∅"),
+///            Err(Error::FileNotFound {
+///                who: "∅",
+///                path: "$ROOT/nonexistant".to_string(),
+///            }));
+/// ```
+pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<String, Error> {
+    let mut buf = String::new();
+    File::open(&whom.1).map_err(|e| if e.kind() == IoErrorKind::NotFound {
+            Error::FileNotFound {
+                who: what_for,
+                path: whom.0.clone(),
+            }
+        } else {
+            Error::Io {
+                desc: what_for,
+                op: "open",
+                more: Some(e.to_string()),
+            }
+        })?
+        .read_to_string(&mut buf)
+        .map_err(|_| {
+            Error::Parse {
+                tp: "UTF-8 string",
+                wher: what_for,
+                more: None,
+            }
+        })?;
+    Ok(buf)
 }

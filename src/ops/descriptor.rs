@@ -12,11 +12,11 @@ pub struct BlogueDescriptor {
     pub name: String,
     /// Data to put before post HTML, templated.
     ///
-    /// Default: "$ROOT/header.html", then "$ROOT/header.htm".
+    /// Default: `"$ROOT/header.html"`, then `"$ROOT/header.htm"`.
     pub header_file: (String, PathBuf),
     /// Data to put after post HTML, templated.
     ///
-    /// Default: "$ROOT/footer.html", then "$ROOT/footer.htm".
+    /// Default: `"$ROOT/footer.html"`, then `"$ROOT/footer.htm"`.
     pub footer_file: (String, PathBuf),
 }
 
@@ -43,7 +43,7 @@ impl BlogueDescriptor {
     ///
     /// Given `$ROOT/blogue.toml` containing:
     ///
-    /// ```plaintext
+    /// ```toml
     /// name = "Блогг"
     /// header = "head.html"
     /// ```
