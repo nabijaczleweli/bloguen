@@ -5,6 +5,7 @@ use bloguen::util;
 mod uppercase_first;
 mod is_asset_link;
 mod read_file;
+mod bcp_47;
 
 
 #[test]

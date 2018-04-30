@@ -15,6 +15,7 @@ use self::super::Error;
 use std::path::PathBuf;
 use chrono::NaiveTime;
 use std::fs::File;
+use regex::Regex;
 use url::Url;
 
 #[cfg(target_os = "windows")]
@@ -34,6 +35,11 @@ lazy_static! {
         ext_header_ids: Some("".to_string()),
         ..ComrakOptions::default()
     };
+
+    /// Regex to use for parsing a BCP47 language tag.
+    ///
+    /// Stolen from http://stackoverflow.com/a/7036171/2851815
+    pub static ref BCP_47: Regex = Regex::new(include_str!("../../assets/bcp47.regex").trim()).unwrap();
 }
 
 
