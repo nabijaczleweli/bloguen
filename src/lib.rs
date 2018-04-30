@@ -22,6 +22,8 @@ extern crate lazy_static;
 extern crate walkdir;
 extern crate chrono;
 extern crate comrak;
+#[cfg(target_os = "windows")]
+extern crate winapi;
 extern crate regex;
 extern crate serde;
 #[macro_use]

@@ -1,6 +1,12 @@
 //! Module containing various utility functions.
 
 
+
+#[cfg(target_os = "windows")]
+mod windows;
+#[cfg(not(target_os = "windows"))]
+mod non_windows;
+
 use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
@@ -10,6 +16,11 @@ use std::path::PathBuf;
 use chrono::NaiveTime;
 use std::fs::File;
 use url::Url;
+
+#[cfg(target_os = "windows")]
+use self::windows::default_language_impl;
+#[cfg(not(target_os = "windows"))]
+use self::non_windows::default_language_impl;
 
 
 lazy_static! {
@@ -189,4 +200,27 @@ pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<Str
             }
         })?;
     Ok(buf)
+}
+
+/// Try to get the default language for the system/user/environment.
+///
+/// On Windows, checks `LANG`, then `LANGUAGE`, then `LC_NAME`.
+///
+/// On non-Windows, checks `LANG`, then `LANGUAGE`, then `LC_NAME`.
+///
+/// # Examples
+///
+/// ```ignore
+/// # use bloguen::util::default_language;
+/// // On Linux, if `LANG=en_GB.utf8`.
+/// assert_eq!(default_language(), Some("en-GB".to_string()));
+///
+/// // On Windows, if language is set to Polish.
+/// assert_eq!(default_language(), Some("pl".to_string()));
+///
+/// // If the language cannot be detected:
+/// assert_eq!(default_language(), None);
+/// ```
+pub fn default_language() -> Option<String> {
+    default_language_impl()
 }

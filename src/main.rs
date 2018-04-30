@@ -43,9 +43,11 @@ fn result_main() -> Result<(), bloguen::Error> {
 
     let post_header = bloguen::util::read_file(&descriptor.header_file, "post header")?;
     let post_footer = bloguen::util::read_file(&descriptor.footer_file, "post footer")?;
+    let default_language = bloguen::util::default_language().unwrap_or_else(|| "en-GB".to_string());
 
     println!("{}", post_header);
     println!("{}", post_footer);
+    println!("{}", default_language);
 
     for p in &posts {
         for link in p.generate(&opts.output_dir)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {

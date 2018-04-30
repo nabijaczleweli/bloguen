@@ -26,3 +26,5 @@ fn extract_links() {
     assert_eq!(util::extract_links(ast),
                Ok(vec!["assets/link.html".to_string(), "assets/image.png".to_string(), "https://nabijaczleweli.xyz".to_string()]));
 }
+
+// default_language() is untestable :v
