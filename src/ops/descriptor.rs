@@ -1,4 +1,5 @@
 use toml::de::from_str as from_toml_str;
+use self::super::super::util::BCP_47;
 use self::super::super::Error;
 use std::path::PathBuf;
 use std::fs::File;
@@ -18,6 +19,12 @@ pub struct BlogueDescriptor {
     ///
     /// Default: `"$ROOT/footer.html"`, then `"$ROOT/footer.htm"`.
     pub footer_file: (String, PathBuf),
+    /// Default post language.
+    ///
+    /// Overriden by post metadata, if present.
+    ///
+    /// If not present, defaults to the current system language, which, if not detected, defaults to en-GB.
+    pub language: Option<String>,
 }
 
 #[derive(Deserialize)]
@@ -25,6 +32,7 @@ struct BlogueDescriptorSerialised {
     pub name: String,
     pub header: Option<String>,
     pub footer: Option<String>,
+    pub language: Option<String>,
 }
 
 impl BlogueDescriptor {
@@ -46,6 +54,7 @@ impl BlogueDescriptor {
     /// ```toml
     /// name = "Блогг"
     /// header = "head.html"
+    /// language = "pl"
     /// ```
     ///
     /// The following holds:
@@ -60,6 +69,7 @@ impl BlogueDescriptor {
     /// # File::create(root.join("blogue.toml")).unwrap().write_all("\
     /// #     name = \"Блогг\"\n\
     /// #     header = \"head.html\"\n\
+    /// #     language = \"pl\"\n\
     /// # ".as_bytes()).unwrap();
     /// # File::create(root.join("head.html")).unwrap().write_all("header".as_bytes()).unwrap();
     /// # File::create(root.join("footer.htm")).unwrap().write_all("footer".as_bytes()).unwrap();
@@ -72,6 +82,7 @@ impl BlogueDescriptor {
     ///                name: "Блогг".to_string(),
     ///                header_file: ("$ROOT/head.html".to_string(), root.join("head.html")),
     ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+    ///                language: Some("pl".to_string()),
     ///            });
     /// ```
     pub fn read(root: &(String, PathBuf)) -> Result<BlogueDescriptor, Error> {
@@ -98,10 +109,22 @@ impl BlogueDescriptor {
                 }
             })?;
 
+        let serialised_language = serialised.language;
         Ok(BlogueDescriptor {
             name: serialised.name,
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
+            language: match serialised_language.as_ref() {
+                Some(l) if BCP_47.is_match(l) => Some(String::new()),
+                None => None,
+                Some(_) => {
+                    return Err(Error::Parse {
+                        tp: "BCP-47 language tag",
+                        wher: "blogue descriptor",
+                        more: None,
+                    });
+                }
+            }.map(|_| serialised_language.unwrap()),
         })
     }
 }

@@ -43,21 +43,24 @@ fn result_main() -> Result<(), bloguen::Error> {
 
     let post_header = bloguen::util::read_file(&descriptor.header_file, "post header")?;
     let post_footer = bloguen::util::read_file(&descriptor.footer_file, "post footer")?;
-    let default_language = match bloguen::util::default_language() {
-        Some(ref l) if bloguen::util::BCP_47.is_match(&l) => l,
-        Some(l) => {
-            eprintln!("Detected system language {} not BCP-47. Defaulting to \"en-GB\".", l);
-            "en-GB"
-        }
-        None => {
-            eprintln!("Couldn't detect system language. Defaulting to \"en-GB\".");
-            "en-GB"
-        }
-    }.to_string();
+    let global_language = descriptor.language.unwrap_or_else(|| {
+        match bloguen::util::default_language() {
+                Some(ref l) if bloguen::util::BCP_47.is_match(&l) => l,
+                Some(l) => {
+                    eprintln!("Detected system language {} not BCP-47. Defaulting to \"en-GB\".", l);
+                    "en-GB"
+                }
+                None => {
+                    eprintln!("Couldn't detect system language. Defaulting to \"en-GB\".");
+                    "en-GB"
+                }
+            }
+            .to_string()
+    });
 
     println!("{}", post_header);
     println!("{}", post_footer);
-    println!("{}", default_language);
+    println!("{}", global_language);
 
     for p in &posts {
         for link in p.generate(&opts.output_dir)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {
