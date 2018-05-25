@@ -124,6 +124,14 @@
 <span id="67">67</span>
 <span id="68">68</span>
 <span id="69">69</span>
+<span id="70">70</span>
+<span id="71">71</span>
+<span id="72">72</span>
+<span id="73">73</span>
+<span id="74">74</span>
+<span id="75">75</span>
+<span id="76">76</span>
+<span id="77">77</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! This module contains the configuration of the application.</span>
 <span class="doccomment">//!</span>
@@ -138,8 +146,8 @@
 <span class="doccomment">//! ```</span>
 
 
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="ident">PathBuf</span>, <span class="ident">Path</span>};
 <span class="kw">use</span> <span class="ident">clap</span>::{<span class="ident">AppSettings</span>, <span class="ident">Arg</span>};
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>;
 
 
@@ -162,8 +170,16 @@
             .<span class="ident">get_matches</span>();
 
         <span class="ident">Options</span> {
-            <span class="ident">source_dir</span>: <span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;IN_DIR&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> (<span class="ident">s</span>.<span class="ident">to_string</span>(), <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">s</span>))).<span class="ident">unwrap</span>(),
-            <span class="ident">output_dir</span>: <span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;OUT_DIR&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> (<span class="ident">o</span>.<span class="ident">to_string</span>(), <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">o</span>))).<span class="ident">unwrap</span>(),
+            <span class="ident">source_dir</span>: <span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;IN_DIR&quot;</span>).<span class="ident">map</span>(<span class="op">|</span><span class="ident">s</span><span class="op">|</span> (<span class="ident">s</span>.<span class="ident">to_string</span>(), <span class="ident">PathBuf</span>::<span class="ident">from</span>(<span class="ident">s</span>).<span class="ident">canonicalize</span>().<span class="ident">unwrap</span>())).<span class="ident">unwrap</span>(),
+            <span class="ident">output_dir</span>: <span class="ident">matches</span>.<span class="ident">value_of</span>(<span class="string">&quot;OUT_DIR&quot;</span>)
+                .<span class="ident">map</span>(<span class="op">|</span><span class="ident">o</span><span class="op">|</span> {
+                    (<span class="ident">o</span>.<span class="ident">to_string</span>(),
+                     {
+                         <span class="kw">let</span> <span class="ident">fname</span> <span class="op">=</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">o</span>).<span class="ident">file_name</span>().<span class="ident">unwrap</span>();
+                         <span class="ident">Path</span>::<span class="ident">new</span>(<span class="kw-2">&amp;</span><span class="ident">o</span>).<span class="ident">parent</span>().<span class="ident">expect</span>(<span class="string">&quot;1&quot;</span>).<span class="ident">canonicalize</span>().<span class="ident">unwrap_or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">Path</span>::<span class="ident">new</span>(<span class="string">&quot;.&quot;</span>).<span class="ident">canonicalize</span>().<span class="ident">unwrap</span>()).<span class="ident">join</span>(<span class="ident">fname</span>)
+                     })
+                })
+                .<span class="ident">unwrap</span>(),
         }
     }
 

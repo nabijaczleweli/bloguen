@@ -82,6 +82,11 @@
 <span id="25">25</span>
 <span id="26">26</span>
 <span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Generate an ePub book from a simple plaintext descriptor</span>
 <span class="doccomment">//!</span>
@@ -101,8 +106,13 @@
 
 
 <span class="attribute">#[<span class="ident">macro_use</span>]</span>
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde_derive</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">serde</span>;
+<span class="attribute">#[<span class="ident">macro_use</span>]</span>
 <span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">clap</span>;
+<span class="kw">extern</span> <span class="kw">crate</span> <span class="ident">toml</span>;
 
+<span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">ops</span>;
 <span class="kw">pub</span> <span class="kw">mod</span> <span class="ident">util</span>;
 
 <span class="kw">mod</span> <span class="ident">error</span>;
