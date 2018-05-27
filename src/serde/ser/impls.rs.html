@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.59/src/ser/impls.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde-1.0.61/src/ser/impls.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>impls.rs.html -- source</title>
@@ -815,6 +815,11 @@
 <span id="758">758</span>
 <span id="759">759</span>
 <span id="760">760</span>
+<span id="761">761</span>
+<span id="762">762</span>
+<span id="763">763</span>
+<span id="764">764</span>
+<span id="765">765</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2017 Serde Developers</span>
 <span class="comment">//</span>
@@ -861,6 +866,11 @@
 <span class="macro">primitive_impl</span><span class="macro">!</span>(<span class="ident">f32</span>, <span class="ident">serialize_f32</span>);
 <span class="macro">primitive_impl</span><span class="macro">!</span>(<span class="ident">f64</span>, <span class="ident">serialize_f64</span>);
 <span class="macro">primitive_impl</span><span class="macro">!</span>(<span class="ident">char</span>, <span class="ident">serialize_char</span>);
+
+<span class="macro">serde_if_integer128</span><span class="macro">!</span> {
+    <span class="macro">primitive_impl</span><span class="macro">!</span>(<span class="ident">i128</span>, <span class="ident">serialize_i128</span>);
+    <span class="macro">primitive_impl</span><span class="macro">!</span>(<span class="ident">u128</span>, <span class="ident">serialize_u128</span>);
+}
 
 <span class="comment">////////////////////////////////////////////////////////////////////////////////</span>
 
@@ -1229,8 +1239,8 @@
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">nonzero_integers</span> {
     ( $( <span class="macro-nonterminal">$</span><span class="macro-nonterminal">T</span>: <span class="ident">ident</span>, )<span class="op">+</span> ) <span class="op">=&gt;</span> {
         $(
-            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;unstable&quot;</span>)]</span>
-            <span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">T</span> {
+            <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">num_nonzero</span>)]</span>
+            <span class="kw">impl</span> <span class="ident">Serialize</span> <span class="kw">for</span> <span class="ident">num</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">T</span> {
                 <span class="kw">fn</span> <span class="ident">serialize</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">serializer</span>: <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">S</span>::<span class="prelude-val">Ok</span>, <span class="ident">S</span>::<span class="ident">Error</span><span class="op">&gt;</span>
                 <span class="kw">where</span>
                     <span class="ident">S</span>: <span class="ident">Serializer</span>,

@@ -154,7 +154,7 @@
                 <span class="ident">Error</span>::<span class="ident">Io</span> {
                     <span class="ident">desc</span>: <span class="string">&quot;blogue descriptor&quot;</span>,
                     <span class="ident">op</span>: <span class="string">&quot;read&quot;</span>,
-                    <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;not UTF-8&quot;</span>),
+                    <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;not UTF-8&quot;</span>.<span class="ident">to_string</span>()),
                 }
             })<span class="question-mark">?</span>;
 

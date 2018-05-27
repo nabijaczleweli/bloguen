@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive-1.0.59/src/de.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive-1.0.61/src/de.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>de.rs.html -- source</title>
@@ -2994,6 +2994,15 @@
 <span id="2937">2937</span>
 <span id="2938">2938</span>
 <span id="2939">2939</span>
+<span id="2940">2940</span>
+<span id="2941">2941</span>
+<span id="2942">2942</span>
+<span id="2943">2943</span>
+<span id="2944">2944</span>
+<span id="2945">2945</span>
+<span id="2946">2946</span>
+<span id="2947">2947</span>
+<span id="2948">2948</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2017 Serde Developers</span>
 <span class="comment">//</span>
@@ -3786,7 +3795,11 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">deserialize_newtype_struct</span>(<span class="ident">type_path</span>: <span class="kw-2">&amp;</span><span class="ident">TokenStream</span>, <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>, <span class="ident">field</span>: <span class="kw-2">&amp;</span><span class="ident">Field</span>) <span class="op">-&gt;</span> <span class="ident">TokenStream</span> {
+<span class="kw">fn</span> <span class="ident">deserialize_newtype_struct</span>(
+    <span class="ident">type_path</span>: <span class="kw-2">&amp;</span><span class="ident">TokenStream</span>,
+    <span class="ident">params</span>: <span class="kw-2">&amp;</span><span class="ident">Parameters</span>,
+    <span class="ident">field</span>: <span class="kw-2">&amp;</span><span class="ident">Field</span>,
+) <span class="op">-&gt;</span> <span class="ident">TokenStream</span> {
     <span class="kw">let</span> <span class="ident">delife</span> <span class="op">=</span> <span class="ident">params</span>.<span class="ident">borrowed</span>.<span class="ident">de_lifetime</span>();
     <span class="kw">let</span> <span class="ident">field_ty</span> <span class="op">=</span> <span class="ident">field</span>.<span class="ident">ty</span>;
 
@@ -4924,7 +4937,12 @@
 
     <span class="kw">let</span> <span class="ident">names_idents</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">ordinary</span>
         .<span class="ident">iter</span>()
-        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">variant</span><span class="op">|</span> (<span class="ident">variant</span>.<span class="ident">attrs</span>.<span class="ident">name</span>().<span class="ident">deserialize_name</span>(), <span class="ident">variant</span>.<span class="ident">ident</span>.<span class="ident">clone</span>()))
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">variant</span><span class="op">|</span> {
+            (
+                <span class="ident">variant</span>.<span class="ident">attrs</span>.<span class="ident">name</span>().<span class="ident">deserialize_name</span>(),
+                <span class="ident">variant</span>.<span class="ident">ident</span>.<span class="ident">clone</span>(),
+            )
+        })
         .<span class="ident">collect</span>();
 
     <span class="kw">let</span> <span class="ident">names</span> <span class="op">=</span> <span class="ident">names_idents</span>.<span class="ident">iter</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span>(<span class="kw-2">ref</span> <span class="ident">name</span>, <span class="kw">_</span>)<span class="op">|</span> <span class="ident">name</span>);
@@ -5825,9 +5843,9 @@
                     <span class="ident">param</span>.<span class="ident">bounds</span>.<span class="ident">push</span>(<span class="ident">place_lifetime</span>.<span class="ident">lifetime</span>.<span class="ident">clone</span>());
                 }
                 <span class="ident">syn</span>::<span class="ident">GenericParam</span>::<span class="ident">Type</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">param</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">param</span>
-                        .<span class="ident">bounds</span>
-                        .<span class="ident">push</span>(<span class="ident">syn</span>::<span class="ident">TypeParamBound</span>::<span class="ident">Lifetime</span>(<span class="ident">place_lifetime</span>.<span class="ident">lifetime</span>.<span class="ident">clone</span>()));
+                    <span class="ident">param</span>.<span class="ident">bounds</span>.<span class="ident">push</span>(<span class="ident">syn</span>::<span class="ident">TypeParamBound</span>::<span class="ident">Lifetime</span>(
+                        <span class="ident">place_lifetime</span>.<span class="ident">lifetime</span>.<span class="ident">clone</span>(),
+                    ));
                 }
                 <span class="ident">syn</span>::<span class="ident">GenericParam</span>::<span class="ident">Const</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {}
             }

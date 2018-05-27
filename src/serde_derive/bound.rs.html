@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive-1.0.59/src/bound.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/serde_derive-1.0.61/src/bound.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>bound.rs.html -- source</title>
@@ -369,6 +369,11 @@
 <span id="312">312</span>
 <span id="313">313</span>
 <span id="314">314</span>
+<span id="315">315</span>
+<span id="316">316</span>
+<span id="317">317</span>
+<span id="318">318</span>
+<span id="319">319</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2017 Serde Developers</span>
 <span class="comment">//</span>
@@ -529,7 +534,10 @@
         <span class="kw">fn</span> <span class="ident">visit_macro</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">_mac</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;ast</span> <span class="ident">syn</span>::<span class="ident">Macro</span>) {}
     }
 
-    <span class="kw">let</span> <span class="ident">all_type_params</span> <span class="op">=</span> <span class="ident">generics</span>.<span class="ident">type_params</span>().<span class="ident">map</span>(<span class="op">|</span><span class="ident">param</span><span class="op">|</span> <span class="ident">param</span>.<span class="ident">ident</span>.<span class="ident">clone</span>()).<span class="ident">collect</span>();
+    <span class="kw">let</span> <span class="ident">all_type_params</span> <span class="op">=</span> <span class="ident">generics</span>
+        .<span class="ident">type_params</span>()
+        .<span class="ident">map</span>(<span class="op">|</span><span class="ident">param</span><span class="op">|</span> <span class="ident">param</span>.<span class="ident">ident</span>.<span class="ident">clone</span>())
+        .<span class="ident">collect</span>();
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">visitor</span> <span class="op">=</span> <span class="ident">FindTyParams</span> {
         <span class="ident">all_type_params</span>: <span class="ident">all_type_params</span>,
@@ -632,7 +640,9 @@
                     <span class="ident">param</span>.<span class="ident">bounds</span>.<span class="ident">push</span>(<span class="ident">bound</span>.<span class="ident">clone</span>());
                 }
                 <span class="ident">syn</span>::<span class="ident">GenericParam</span>::<span class="ident">Type</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">param</span>) <span class="op">=&gt;</span> {
-                    <span class="ident">param</span>.<span class="ident">bounds</span>.<span class="ident">push</span>(<span class="ident">syn</span>::<span class="ident">TypeParamBound</span>::<span class="ident">Lifetime</span>(<span class="ident">bound</span>.<span class="ident">clone</span>()));
+                    <span class="ident">param</span>
+                        .<span class="ident">bounds</span>
+                        .<span class="ident">push</span>(<span class="ident">syn</span>::<span class="ident">TypeParamBound</span>::<span class="ident">Lifetime</span>(<span class="ident">bound</span>.<span class="ident">clone</span>()));
                 }
                 <span class="ident">syn</span>::<span class="ident">GenericParam</span>::<span class="ident">Const</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {}
             }
