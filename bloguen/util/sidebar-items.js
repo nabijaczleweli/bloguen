@@ -1,1 +1,1 @@
-initSidebarItems({"fn":[["name_based_post_time","Generate a reproducible post time from its name."],["uppercase_first","Uppercase the first character of the supplied string."]]});
+initSidebarItems({"fn":[["name_based_post_time","Generate a reproducible post time from its name."],["uppercase_first","Uppercase the first character of the supplied string."]],"struct":[["MARKDOWN_OPTIONS",""]]});

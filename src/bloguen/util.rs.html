@@ -102,12 +102,40 @@
 <span id="45">45</span>
 <span id="46">46</span>
 <span id="47">47</span>
+<span id="48">48</span>
+<span id="49">49</span>
+<span id="50">50</span>
+<span id="51">51</span>
+<span id="52">52</span>
+<span id="53">53</span>
+<span id="54">54</span>
+<span id="55">55</span>
+<span id="56">56</span>
+<span id="57">57</span>
+<span id="58">58</span>
+<span id="59">59</span>
+<span id="60">60</span>
+<span id="61">61</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Module containing various utility functions.</span>
 
 
-<span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">NaiveTime</span>;
 <span class="kw">use</span> <span class="ident">crc</span>::<span class="ident">crc32</span>::<span class="ident">checksum_ieee</span> <span class="kw">as</span> <span class="ident">crc32_ieee</span>;
+<span class="kw">use</span> <span class="ident">comrak</span>::<span class="ident">ComrakOptions</span>;
+<span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">NaiveTime</span>;
+
+
+<span class="macro">lazy_static</span><span class="macro">!</span> {
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">MARKDOWN_OPTIONS</span>: <span class="ident">ComrakOptions</span> <span class="op">=</span> <span class="ident">ComrakOptions</span> {
+        <span class="ident">hardbreaks</span>: <span class="bool-val">true</span>,
+        <span class="ident">ext_strikethrough</span>: <span class="bool-val">true</span>,
+        <span class="ident">ext_table</span>: <span class="bool-val">true</span>,
+        <span class="ident">ext_autolink</span>: <span class="bool-val">true</span>,
+        <span class="ident">ext_tasklist</span>: <span class="bool-val">true</span>,
+        <span class="ident">ext_header_ids</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;&quot;</span>.<span class="ident">to_string</span>()),
+        ..<span class="ident">ComrakOptions</span>::<span class="ident">default</span>()
+    };
+}
 
 
 <span class="doccomment">/// Uppercase the first character of the supplied string.</span>
