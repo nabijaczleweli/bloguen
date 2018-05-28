@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/regex-syntax-0.5.6/src/hir/translate.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/regex-syntax-0.6.0/src/hir/translate.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>translate.rs.html -- source</title>
@@ -2587,11 +2587,6 @@
 <span id="2530">2530</span>
 <span id="2531">2531</span>
 <span id="2532">2532</span>
-<span id="2533">2533</span>
-<span id="2534">2534</span>
-<span id="2535">2535</span>
-<span id="2536">2536</span>
-<span id="2537">2537</span>
 </pre><pre class="rust ">
 <span class="comment">// Copyright 2018 The Rust Project Developers. See the COPYRIGHT</span>
 <span class="comment">// file at the top-level directory of this distribution and at</span>
@@ -2884,13 +2879,13 @@ Defines a translator that converts an `Ast` to an `Hir`.
                 <span class="self">self</span>.<span class="ident">set_flags</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="ident">flags</span>);
             }
             <span class="ident">Ast</span>::<span class="ident">Literal</span>(<span class="kw-2">ref</span> <span class="ident">x</span>) <span class="op">=&gt;</span> {
-                <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">Expr</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">hir_literal</span>(<span class="ident">x</span>))));
+                <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">Expr</span>(<span class="self">self</span>.<span class="ident">hir_literal</span>(<span class="ident">x</span>)<span class="question-mark">?</span>));
             }
             <span class="ident">Ast</span>::<span class="ident">Dot</span>(<span class="ident">span</span>) <span class="op">=&gt;</span> {
-                <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">Expr</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">hir_dot</span>(<span class="ident">span</span>))));
+                <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">Expr</span>(<span class="self">self</span>.<span class="ident">hir_dot</span>(<span class="ident">span</span>)<span class="question-mark">?</span>));
             }
             <span class="ident">Ast</span>::<span class="ident">Assertion</span>(<span class="kw-2">ref</span> <span class="ident">x</span>) <span class="op">=&gt;</span> {
-                <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">Expr</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">hir_assertion</span>(<span class="ident">x</span>))));
+                <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">Expr</span>(<span class="self">self</span>.<span class="ident">hir_assertion</span>(<span class="ident">x</span>)<span class="question-mark">?</span>));
             }
             <span class="ident">Ast</span>::<span class="ident">Class</span>(<span class="ident">ast</span>::<span class="ident">Class</span>::<span class="ident">Perl</span>(<span class="kw-2">ref</span> <span class="ident">x</span>)) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">flags</span>().<span class="ident">unicode</span>() {
@@ -2904,7 +2899,7 @@ Defines a translator that converts an `Ast` to an `Hir`.
                 }
             }
             <span class="ident">Ast</span>::<span class="ident">Class</span>(<span class="ident">ast</span>::<span class="ident">Class</span>::<span class="ident">Unicode</span>(<span class="kw-2">ref</span> <span class="ident">x</span>)) <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="ident">hir</span>::<span class="ident">Class</span>::<span class="ident">Unicode</span>(<span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">hir_unicode_class</span>(<span class="ident">x</span>)));
+                <span class="kw">let</span> <span class="ident">cls</span> <span class="op">=</span> <span class="ident">hir</span>::<span class="ident">Class</span>::<span class="ident">Unicode</span>(<span class="self">self</span>.<span class="ident">hir_unicode_class</span>(<span class="ident">x</span>)<span class="question-mark">?</span>);
                 <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">Expr</span>(<span class="ident">Hir</span>::<span class="ident">class</span>(<span class="ident">cls</span>)));
             }
             <span class="ident">Ast</span>::<span class="ident">Class</span>(<span class="ident">ast</span>::<span class="ident">Class</span>::<span class="ident">Bracketed</span>(<span class="kw-2">ref</span> <span class="ident">ast</span>)) <span class="op">=&gt;</span> {
@@ -2919,8 +2914,8 @@ Defines a translator that converts an `Ast` to an `Hir`.
                     <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">Expr</span>(<span class="ident">expr</span>));
                 } <span class="kw">else</span> {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap_class_bytes</span>();
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">bytes_fold_and_negate</span>(
-                        <span class="kw-2">&amp;</span><span class="ident">ast</span>.<span class="ident">span</span>, <span class="ident">ast</span>.<span class="ident">negated</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cls</span>));
+                    <span class="self">self</span>.<span class="ident">bytes_fold_and_negate</span>(
+                        <span class="kw-2">&amp;</span><span class="ident">ast</span>.<span class="ident">span</span>, <span class="ident">ast</span>.<span class="ident">negated</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cls</span>)<span class="question-mark">?</span>;
                     <span class="kw">if</span> <span class="ident">cls</span>.<span class="ident">iter</span>().<span class="ident">next</span>().<span class="ident">is_none</span>() {
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">error</span>(
                             <span class="ident">ast</span>.<span class="ident">span</span>, <span class="ident">ErrorKind</span>::<span class="ident">EmptyClassNotAllowed</span>));
@@ -2997,7 +2992,7 @@ Defines a translator that converts an `Ast` to an `Hir`.
                     <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">ClassUnicode</span>(<span class="ident">cls</span>));
                 } <span class="kw">else</span> {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap_class_bytes</span>();
-                    <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">class_literal_byte</span>(<span class="ident">x</span>));
+                    <span class="kw">let</span> <span class="ident">byte</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">class_literal_byte</span>(<span class="ident">x</span>)<span class="question-mark">?</span>;
                     <span class="ident">cls</span>.<span class="ident">push</span>(<span class="ident">hir</span>::<span class="ident">ClassBytesRange</span>::<span class="ident">new</span>(<span class="ident">byte</span>, <span class="ident">byte</span>));
                     <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">ClassBytes</span>(<span class="ident">cls</span>));
                 }
@@ -3009,8 +3004,8 @@ Defines a translator that converts an `Ast` to an `Hir`.
                     <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">ClassUnicode</span>(<span class="ident">cls</span>));
                 } <span class="kw">else</span> {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap_class_bytes</span>();
-                    <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">class_literal_byte</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="ident">start</span>));
-                    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">class_literal_byte</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="ident">end</span>));
+                    <span class="kw">let</span> <span class="ident">start</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">class_literal_byte</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="ident">start</span>)<span class="question-mark">?</span>;
+                    <span class="kw">let</span> <span class="ident">end</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">class_literal_byte</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="ident">end</span>)<span class="question-mark">?</span>;
                     <span class="ident">cls</span>.<span class="ident">push</span>(<span class="ident">hir</span>::<span class="ident">ClassBytesRange</span>::<span class="ident">new</span>(<span class="ident">start</span>, <span class="ident">end</span>));
                     <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">ClassBytes</span>(<span class="ident">cls</span>));
                 }
@@ -3028,13 +3023,13 @@ Defines a translator that converts an `Ast` to an `Hir`.
                     <span class="kw">for</span> <span class="kw-2">&amp;</span>(<span class="ident">s</span>, <span class="ident">e</span>) <span class="kw">in</span> <span class="ident">ascii_class</span>(<span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="ident">kind</span>) {
                         <span class="ident">cls</span>.<span class="ident">push</span>(<span class="ident">hir</span>::<span class="ident">ClassBytesRange</span>::<span class="ident">new</span>(<span class="ident">s</span> <span class="kw">as</span> <span class="ident">u8</span>, <span class="ident">e</span> <span class="kw">as</span> <span class="ident">u8</span>));
                     }
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">bytes_fold_and_negate</span>(
-                        <span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="ident">span</span>, <span class="ident">x</span>.<span class="ident">negated</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cls</span>));
+                    <span class="self">self</span>.<span class="ident">bytes_fold_and_negate</span>(
+                        <span class="kw-2">&amp;</span><span class="ident">x</span>.<span class="ident">span</span>, <span class="ident">x</span>.<span class="ident">negated</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cls</span>)<span class="question-mark">?</span>;
                     <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">ClassBytes</span>(<span class="ident">cls</span>));
                 }
             }
             <span class="ident">ast</span>::<span class="ident">ClassSetItem</span>::<span class="ident">Unicode</span>(<span class="kw-2">ref</span> <span class="ident">x</span>) <span class="op">=&gt;</span> {
-                <span class="kw">let</span> <span class="ident">xcls</span> <span class="op">=</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">hir_unicode_class</span>(<span class="ident">x</span>));
+                <span class="kw">let</span> <span class="ident">xcls</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">hir_unicode_class</span>(<span class="ident">x</span>)<span class="question-mark">?</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cls</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap_class_unicode</span>();
                 <span class="ident">cls</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">xcls</span>);
                 <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">ClassUnicode</span>(<span class="ident">cls</span>));
@@ -3062,8 +3057,8 @@ Defines a translator that converts an `Ast` to an `Hir`.
                     <span class="self">self</span>.<span class="ident">push</span>(<span class="ident">HirFrame</span>::<span class="ident">ClassUnicode</span>(<span class="ident">cls2</span>));
                 } <span class="kw">else</span> {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cls1</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap_class_bytes</span>();
-                    <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">bytes_fold_and_negate</span>(
-                        <span class="kw-2">&amp;</span><span class="ident">ast</span>.<span class="ident">span</span>, <span class="ident">ast</span>.<span class="ident">negated</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cls1</span>));
+                    <span class="self">self</span>.<span class="ident">bytes_fold_and_negate</span>(
+                        <span class="kw-2">&amp;</span><span class="ident">ast</span>.<span class="ident">span</span>, <span class="ident">ast</span>.<span class="ident">negated</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">cls1</span>)<span class="question-mark">?</span>;
 
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">cls2</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">pop</span>().<span class="ident">unwrap</span>().<span class="ident">unwrap_class_bytes</span>();
                     <span class="ident">cls2</span>.<span class="ident">union</span>(<span class="kw-2">&amp;</span><span class="ident">cls1</span>);
@@ -3199,7 +3194,7 @@ Defines a translator that converts an `Ast` to an `Hir`.
     }
 
     <span class="kw">fn</span> <span class="ident">hir_literal</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">lit</span>: <span class="kw-2">&amp;</span><span class="ident">ast</span>::<span class="ident">Literal</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Hir</span><span class="op">&gt;</span> {
-        <span class="kw">let</span> <span class="ident">ch</span> <span class="op">=</span> <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">literal_to_char</span>(<span class="ident">lit</span>)) {
+        <span class="kw">let</span> <span class="ident">ch</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">literal_to_char</span>(<span class="ident">lit</span>)<span class="question-mark">?</span> {
             <span class="ident">byte</span> @ <span class="ident">hir</span>::<span class="ident">Literal</span>::<span class="ident">Byte</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Ok</span>(<span class="ident">Hir</span>::<span class="ident">literal</span>(<span class="ident">byte</span>)),
             <span class="ident">hir</span>::<span class="ident">Literal</span>::<span class="ident">Unicode</span>(<span class="ident">ch</span>) <span class="op">=&gt;</span> <span class="ident">ch</span>,
         };
@@ -3319,13 +3314,10 @@ Defines a translator that converts an `Ast` to an `Hir`.
                     <span class="comment">// It is possible for negated ASCII word boundaries to</span>
                     <span class="comment">// match at invalid UTF-8 boundaries, even when searching</span>
                     <span class="comment">// valid UTF-8.</span>
-                    <span class="comment">//</span>
-                    <span class="comment">// TODO(ag): Enable this error when regex goes to 1.0.</span>
-                    <span class="comment">// Otherwise, it is too steep of a breaking change.</span>
-                    <span class="comment">// if !self.trans().allow_invalid_utf8 {</span>
-                        <span class="comment">// return Err(self.error(</span>
-                            <span class="comment">// asst.span, ErrorKind::InvalidUtf8));</span>
-                    <span class="comment">// }</span>
+                    <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">trans</span>().<span class="ident">allow_invalid_utf8</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="self">self</span>.<span class="ident">error</span>(
+                            <span class="ident">asst</span>.<span class="ident">span</span>, <span class="ident">ErrorKind</span>::<span class="ident">InvalidUtf8</span>));
+                    }
                     <span class="ident">hir</span>::<span class="ident">WordBoundary</span>::<span class="ident">AsciiNegate</span>
                 })
             }
@@ -3510,7 +3502,7 @@ Defines a translator that converts an `Ast` to an `Hir`.
     <span class="doccomment">/// Return a scalar byte value suitable for use as a literal in a byte</span>
     <span class="doccomment">/// character class.</span>
     <span class="kw">fn</span> <span class="ident">class_literal_byte</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="ident">ast</span>::<span class="ident">Literal</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
-        <span class="kw">match</span> <span class="macro">try</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">literal_to_char</span>(<span class="ident">ast</span>)) {
+        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">literal_to_char</span>(<span class="ident">ast</span>)<span class="question-mark">?</span> {
             <span class="ident">hir</span>::<span class="ident">Literal</span>::<span class="ident">Byte</span>(<span class="ident">byte</span>) <span class="op">=&gt;</span> <span class="prelude-val">Ok</span>(<span class="ident">byte</span>),
             <span class="ident">hir</span>::<span class="ident">Literal</span>::<span class="ident">Unicode</span>(<span class="ident">ch</span>) <span class="op">=&gt;</span> {
                 <span class="kw">if</span> <span class="ident">ch</span> <span class="op">&lt;=</span> <span class="number">0x7F</span> <span class="kw">as</span> <span class="ident">char</span> {
@@ -3621,8 +3613,8 @@ Defines a translator that converts an `Ast` to an `Hir`.
 <span class="kw">fn</span> <span class="ident">ascii_class</span>(<span class="ident">kind</span>: <span class="kw-2">&amp;</span><span class="ident">ast</span>::<span class="ident">ClassAsciiKind</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [(<span class="ident">char</span>, <span class="ident">char</span>)] {
     <span class="kw">use</span> <span class="ident">ast</span>::<span class="ident">ClassAsciiKind</span>::<span class="kw-2">*</span>;
 
-    <span class="comment">// TODO: Get rid of these consts, which appear necessary for older</span>
-    <span class="comment">// versions of Rust.</span>
+    <span class="comment">// The contortions below with `const` appear necessary for older versions</span>
+    <span class="comment">// of Rust.</span>
     <span class="kw">type</span> <span class="ident">T</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [(<span class="ident">char</span>, <span class="ident">char</span>)];
     <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">kind</span> {
         <span class="ident">Alnum</span> <span class="op">=&gt;</span> {
@@ -4106,11 +4098,10 @@ Defines a translator that converts an `Ast` to an `Hir`.
             <span class="ident">t_bytes</span>(<span class="string">r&quot;(?-u)\B&quot;</span>),
             <span class="ident">hir_word</span>(<span class="ident">hir</span>::<span class="ident">WordBoundary</span>::<span class="ident">AsciiNegate</span>));
 
-        <span class="comment">// TODO(ag): Enable this tests when regex goes to 1.0.</span>
-        <span class="comment">// assert_eq!(t_err(r&quot;(?-u)\B&quot;), TestError {</span>
-            <span class="comment">// kind: hir::ErrorKind::InvalidUtf8,</span>
-            <span class="comment">// span: Span::new(Position::new(5, 1, 6), Position::new(7, 1, 8)),</span>
-        <span class="comment">// });</span>
+        <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">t_err</span>(<span class="string">r&quot;(?-u)\B&quot;</span>), <span class="ident">TestError</span> {
+            <span class="ident">kind</span>: <span class="ident">hir</span>::<span class="ident">ErrorKind</span>::<span class="ident">InvalidUtf8</span>,
+            <span class="ident">span</span>: <span class="ident">Span</span>::<span class="ident">new</span>(<span class="ident">Position</span>::<span class="ident">new</span>(<span class="number">5</span>, <span class="number">1</span>, <span class="number">6</span>), <span class="ident">Position</span>::<span class="ident">new</span>(<span class="number">7</span>, <span class="number">1</span>, <span class="number">8</span>)),
+        });
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>
@@ -4198,8 +4189,7 @@ Defines a translator that converts an `Ast` to an `Hir`.
     <span class="kw">fn</span> <span class="ident">escape</span>() {
         <span class="macro">assert_eq</span><span class="macro">!</span>(
             <span class="ident">t</span>(<span class="string">r&quot;\\\.\+\*\?\(\)\|\[\]\{\}\^\$\#&quot;</span>),
-            <span class="ident">hir_lit</span>(<span class="string">r&quot;\.+*?()|[]{}^$#&quot;</span>),
-        );
+            <span class="ident">hir_lit</span>(<span class="string">r&quot;\.+*?()|[]{}^$#&quot;</span>));
     }
 
     <span class="attribute">#[<span class="ident">test</span>]</span>

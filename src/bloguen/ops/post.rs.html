@@ -339,6 +339,32 @@
 <span id="282">282</span>
 <span id="283">283</span>
 <span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
+<span id="293">293</span>
+<span id="294">294</span>
+<span id="295">295</span>
+<span id="296">296</span>
+<span id="297">297</span>
+<span id="298">298</span>
+<span id="299">299</span>
+<span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">MARKDOWN_OPTIONS</span>, <span class="ident">name_based_post_time</span>};
 <span class="kw">use</span> <span class="ident">walkdir</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">WalkDirError</span>, <span class="ident">DirEntry</span>, <span class="ident">WalkDir</span>};
@@ -566,10 +592,11 @@
     <span class="doccomment">/// # */</span>
     <span class="doccomment">/// let post =</span>
     <span class="doccomment">///     BloguePost::new((&quot;$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting&quot;.to_string(),</span>
-    <span class="doccomment">///                     root.join(&quot;src&quot;).join(&quot;01. 2018-01-08 16-52 The venture into crocheting&quot;))).unwrap();</span>
+    <span class="doccomment">///         root.join(&quot;src&quot;).join(&quot;01. 2018-01-08 16-52 The venture into crocheting&quot;))).unwrap();</span>
     <span class="doccomment">/// assert_eq!(post.generate(&amp;(&quot;$ROOT/out/&quot;.to_string(), root.join(&quot;out&quot;))), Ok(()));</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// assert!(root.join(&quot;out&quot;).join(&quot;posts&quot;).join(&quot;01. 2018-01-08 16-52-00 The venture into crocheting.html&quot;).is_file());</span>
+    <span class="doccomment">/// assert!(root.join(&quot;out&quot;).join(&quot;posts&quot;)</span>
+    <span class="doccomment">///     .join(&quot;01. 2018-01-08 16-52-00 The venture into crocheting.html&quot;).is_file());</span>
     <span class="doccomment">/// # let mut read = vec![];</span>
     <span class="doccomment">/// # File::open(root.join(&quot;out&quot;).join(&quot;posts&quot;).join(&quot;01. 2018-01-08 16-52-00 The venture into crocheting.html&quot;)).unwrap().read_to_end(&amp;mut read).unwrap();</span>
     <span class="doccomment">/// # assert_eq!(&amp;read[..], &quot;&lt;p&gt;Блогг&lt;/p&gt;\n&quot;.as_bytes());</span>
@@ -603,8 +630,7 @@
                 }
             })<span class="question-mark">?</span>;
 
-        <span class="comment">// TODO extract arg of second join</span>
-        <span class="kw">let</span> <span class="ident">post_html_path</span> <span class="op">=</span> <span class="ident">into</span>.<span class="number">1</span>.<span class="ident">join</span>(<span class="string">&quot;posts&quot;</span>).<span class="ident">join</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}. {} {}.html&quot;</span>, <span class="self">self</span>.<span class="ident">number</span>.<span class="number">1</span>, <span class="self">self</span>.<span class="ident">datetime</span>.<span class="ident">format</span>(<span class="string">&quot;%Y-%m-%d %H-%M-%S&quot;</span>), <span class="self">self</span>.<span class="ident">name</span>));
+        <span class="kw">let</span> <span class="ident">post_html_path</span> <span class="op">=</span> <span class="ident">into</span>.<span class="number">1</span>.<span class="ident">join</span>(<span class="string">&quot;posts&quot;</span>).<span class="ident">join</span>(<span class="self">self</span>.<span class="ident">normalised_name</span>() <span class="op">+</span> <span class="string">&quot;.html&quot;</span>);
         <span class="ident">comrak</span>::<span class="ident">format_html</span>(<span class="ident">root</span>,
                             <span class="kw-2">&amp;</span><span class="ident">MARKDOWN_OPTIONS</span>,
                             <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">File</span>::<span class="ident">create</span>(<span class="ident">post_html_path</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
@@ -622,6 +648,32 @@
             })<span class="question-mark">?</span>;
 
         <span class="prelude-val">Ok</span>(())
+    }
+
+    <span class="doccomment">/// Get a normalised output name for this post.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use bloguen::ops::BloguePost;</span>
+    <span class="doccomment">/// # use std::io::{Write, Read};</span>
+    <span class="doccomment">/// # use std::fs::{self, File};</span>
+    <span class="doccomment">/// # use std::env::temp_dir;</span>
+    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-post-normalised_name&quot;);</span>
+    <span class="doccomment">/// # let _ = fs::remove_dir_all(&amp;root);</span>
+    <span class="doccomment">/// # fs::create_dir_all(root.join(&quot;src&quot;).join(&quot;01. 2018-01-08 16-52 The venture into crocheting&quot;)).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;src&quot;).join(&quot;01. 2018-01-08 16-52 The venture into crocheting&quot;)</span>
+    <span class="doccomment">/// #                  .join(&quot;post.md&quot;)).unwrap().write_all(&quot;Блогг&quot;.as_bytes()).unwrap();</span>
+    <span class="doccomment">/// # /*</span>
+    <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
+    <span class="doccomment">/// # */</span>
+    <span class="doccomment">/// let post =</span>
+    <span class="doccomment">///     BloguePost::new((&quot;$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting&quot;.to_string(),</span>
+    <span class="doccomment">///         root.join(&quot;src&quot;).join(&quot;01. 2018-01-08 16-52 The venture into crocheting&quot;))).unwrap();</span>
+    <span class="doccomment">/// assert_eq!(post.normalised_name(), &quot;01. 2018-01-08 16-52-00 The venture into crocheting&quot;);</span>
+    <span class="doccomment">/// ```</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">normalised_name</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">String</span> {
+        <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}. {} {}&quot;</span>, <span class="self">self</span>.<span class="ident">number</span>.<span class="number">1</span>, <span class="self">self</span>.<span class="ident">datetime</span>.<span class="ident">format</span>(<span class="string">&quot;%Y-%m-%d %H-%M-%S&quot;</span>), <span class="self">self</span>.<span class="ident">name</span>)
     }
 }
 </pre>
