@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/syn-0.14.0/src/synom.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/syn-0.14.1/src/synom.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>synom.rs.html -- source</title>
@@ -505,19 +505,19 @@
 <span class="doccomment">//! use syn::{PathSegment, Expr, Attribute};</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! # fn run_parsers() -&gt; Result&lt;(), syn::synom::ParseError&gt; {</span>
-<span class="doccomment">//! #     let tokens = TokenStream::empty().into();</span>
+<span class="doccomment">//! #     let tokens = TokenStream::new().into();</span>
 <span class="doccomment">//! // Parse a nonempty sequence of path segments separated by `::` punctuation</span>
 <span class="doccomment">//! // with no trailing punctuation.</span>
 <span class="doccomment">//! let parser = Punctuated::&lt;PathSegment, Token![::]&gt;::parse_separated_nonempty;</span>
 <span class="doccomment">//! let path = parser.parse(tokens)?;</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! #     let tokens = TokenStream::empty().into();</span>
+<span class="doccomment">//! #     let tokens = TokenStream::new().into();</span>
 <span class="doccomment">//! // Parse a possibly empty sequence of expressions terminated by commas with</span>
 <span class="doccomment">//! // an optional trailing punctuation.</span>
 <span class="doccomment">//! let parser = Punctuated::&lt;Expr, Token![,]&gt;::parse_terminated;</span>
 <span class="doccomment">//! let args = parser.parse(tokens)?;</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! #     let tokens = TokenStream::empty().into();</span>
+<span class="doccomment">//! #     let tokens = TokenStream::new().into();</span>
 <span class="doccomment">//! // Parse zero or more outer attributes but not inner attributes.</span>
 <span class="doccomment">//! named!(outer_attrs -&gt; Vec&lt;Attribute&gt;, many0!(Attribute::parse_outer));</span>
 <span class="doccomment">//! let attrs = outer_attrs.parse(tokens)?;</span>
