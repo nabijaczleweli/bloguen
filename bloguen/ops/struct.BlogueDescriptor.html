@@ -34,7 +34,7 @@
     <nav class="sidebar">
         <div class="sidebar-menu">&#9776;</div>
         
-        <p class='location'>Struct BlogueDescriptor</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.name">name</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.read">read</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-Clone">Clone</a><a href="#impl-Hash">Hash</a><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Eq">Eq</a><a href="#impl-PartialOrd">PartialOrd</a><a href="#impl-Ord">Ord</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a></div></div><p class='location'><a href='../index.html'>bloguen</a>::<wbr><a href='index.html'>ops</a></p><script>window.sidebarCurrent = {name: 'BlogueDescriptor', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+        <p class='location'>Struct BlogueDescriptor</p><div class="sidebar-elems"><div class="block items"><a class="sidebar-title" href="#fields">Fields</a><div class="sidebar-links"><a href="#structfield.name">name</a><a href="#structfield.header_file">header_file</a><a href="#structfield.footer_file">footer_file</a></div><a class="sidebar-title" href="#methods">Methods</a><div class="sidebar-links"><a href="#method.read">read</a></div><a class="sidebar-title" href="#implementations">Trait Implementations</a><div class="sidebar-links"><a href="#impl-Debug">Debug</a><a href="#impl-Clone">Clone</a><a href="#impl-Hash">Hash</a><a href="#impl-PartialEq">PartialEq</a><a href="#impl-Eq">Eq</a><a href="#impl-PartialOrd">PartialOrd</a><a href="#impl-Ord">Ord</a></div><a class="sidebar-title" href="#synthetic-implementations">Auto Trait Implementations</a><div class="sidebar-links"><a href="#impl-Send">Send</a><a href="#impl-Sync">Sync</a></div></div><p class='location'><a href='../index.html'>bloguen</a>::<wbr><a href='index.html'>ops</a></p><script>window.sidebarCurrent = {name: 'BlogueDescriptor', ty: 'struct', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
     <div class="theme-picker">
@@ -59,8 +59,10 @@
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/bloguen/ops/descriptor.rs.html#10-13' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'>pub struct BlogueDescriptor {
+               </span><a class='srclink' href='../../src/bloguen/ops/descriptor.rs.html#10-21' title='goto source code'>[src]</a></span></h1><div class="docblock type-decl"><pre class='rust struct'>pub struct BlogueDescriptor {
     pub name: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>,
+    pub header_file: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>,
+    pub footer_file: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>,
 }</pre></div><div class='docblock'><p>Generic blogue metadata.</p>
 </div><h2 id='fields' class='fields small-section-header'>
                        Fields<a href='#fields' class='anchor'></a></h2><span id="structfield.name" class="structfield small-section-header">
@@ -68,17 +70,45 @@
                            <span id="name.v" class='invisible'>
                            <code>name: <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></code>
                            </span></span><div class='docblock'><p>The blogue's display name.</p>
+</div><span id="structfield.header_file" class="structfield small-section-header">
+                           <a href="#structfield.header_file" class="anchor field"></a>
+                           <span id="header_file.v" class='invisible'>
+                           <code>header_file: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code>
+                           </span></span><div class='docblock'><p>Data to put before post HTML, templated.</p>
+<p>Default: &quot;$ROOT/header.html&quot;, then &quot;$ROOT/header.htm&quot;.</p>
+</div><span id="structfield.footer_file" class="structfield small-section-header">
+                           <a href="#structfield.footer_file" class="anchor field"></a>
+                           <span id="footer_file.v" class='invisible'>
+                           <code>footer_file: <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a></code>
+                           </span></span><div class='docblock'><p>Data to put after post HTML, templated.</p>
+<p>Default: &quot;$ROOT/footer.html&quot;, then &quot;$ROOT/footer.htm&quot;.</p>
 </div>
                     <h2 id='methods' class='small-section-header'>
                       Methods<a href='#methods' class='anchor'></a>
                     </h2>
-                <h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../bloguen/ops/struct.BlogueDescriptor.html" title="struct bloguen::ops::BlogueDescriptor">BlogueDescriptor</a></code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/bloguen/ops/descriptor.rs.html#15-59' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.read' class="method"><span id='read.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.read' class='fnname'>read</a>(p: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../../bloguen/ops/struct.BlogueDescriptor.html" title="struct bloguen::ops::BlogueDescriptor">BlogueDescriptor</a>, <a class="enum" href="../../bloguen/enum.Error.html" title="enum bloguen::Error">Error</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/bloguen/ops/descriptor.rs.html#35-58' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Read all queued tweets from the specified file.</p>
+                <h3 id='impl' class='impl'><span class='in-band'><table class='table-display'><tbody><tr><td><code>impl <a class="struct" href="../../bloguen/ops/struct.BlogueDescriptor.html" title="struct bloguen::ops::BlogueDescriptor">BlogueDescriptor</a></code><a href='#impl' class='anchor'></a></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/bloguen/ops/descriptor.rs.html#30-107' title='goto source code'>[src]</a></span></td></tr></tbody></table></h3><div class='impl-items'><h4 id='method.read' class="method"><span id='read.v' class='invisible'><table class='table-display'><tbody><tr><td><code>pub fn <a href='#method.read' class='fnname'>read</a>(root: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">(</a><a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>, <a class="struct" href="https://doc.rust-lang.org/nightly/std/path/struct.PathBuf.html" title="struct std::path::PathBuf">PathBuf</a><a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.tuple.html">)</a>) -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/result/enum.Result.html" title="enum core::result::Result">Result</a>&lt;<a class="struct" href="../../bloguen/ops/struct.BlogueDescriptor.html" title="struct bloguen::ops::BlogueDescriptor">BlogueDescriptor</a>, <a class="enum" href="../../bloguen/enum.Error.html" title="enum bloguen::Error">Error</a>&gt;</code></span></td><td><span class='out-of-band'><div class='ghost'></div><a class='srclink' href='../../src/bloguen/ops/descriptor.rs.html#77-106' title='goto source code'>[src]</a></td></tr></tbody></table></span></h4><div class='docblock'><p>Read the blogue descriptor from the specified root firectory.</p>
 <h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
+<p>Given the following directory layout:</p>
+<pre><code class="language-plaintext">$ROOT
+  blogue.toml
+  head.html
+  footer.htm
+</code></pre>
+<p>Given <code>$ROOT/blogue.toml</code> containing:</p>
+<pre><code class="language-plaintext">name = &quot;Блогг&quot;
+header = &quot;head.html&quot;
+</code></pre>
+<p>The following holds:</p>
+
 <pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="ident">root</span>: <span class="ident">PathBuf</span> <span class="op">=</span> <span class="comment">/* obtained elsewhere */</span>;
-<span class="kw">let</span> <span class="ident">read_tokens</span> <span class="op">=</span> <span class="ident">BlogueDescriptor</span>::<span class="ident">read</span>(<span class="kw-2">&amp;</span>(<span class="string">&quot;$ROOT/blogue.toml&quot;</span>.<span class="ident">to_string</span>(),
-                                           <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;blogue.toml&quot;</span>))).<span class="ident">unwrap</span>();
-<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">read_tokens</span>, <span class="ident">BlogueDescriptor</span> { <span class="ident">name</span>: <span class="string">&quot;Блогг&quot;</span>.<span class="ident">to_string</span>() });</pre>
+<span class="kw">let</span> <span class="ident">read_tokens</span> <span class="op">=</span> <span class="ident">BlogueDescriptor</span>::<span class="ident">read</span>(<span class="kw-2">&amp;</span>(<span class="string">&quot;$ROOT/&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">root</span>.<span class="ident">clone</span>())).<span class="ident">unwrap</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">read_tokens</span>,
+           <span class="ident">BlogueDescriptor</span> {
+               <span class="ident">name</span>: <span class="string">&quot;Блогг&quot;</span>.<span class="ident">to_string</span>(),
+               <span class="ident">header_file</span>: (<span class="string">&quot;$ROOT/head.html&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;head.html&quot;</span>)),
+               <span class="ident">footer_file</span>: (<span class="string">&quot;$ROOT/footer.htm&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;footer.htm&quot;</span>)),
+           });</pre>
 </div></div>
             <h2 id='implementations' class='small-section-header'>
               Trait Implementations<a href='#implementations' class='anchor'></a>
