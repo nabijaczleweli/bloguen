@@ -216,11 +216,11 @@
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="doccomment">/// Data to put before post HTML, templated.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Default: &quot;$ROOT/header.html&quot;, then &quot;$ROOT/header.htm&quot;.</span>
+    <span class="doccomment">/// Default: `&quot;$ROOT/header.html&quot;`, then `&quot;$ROOT/header.htm&quot;`.</span>
     <span class="kw">pub</span> <span class="ident">header_file</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
     <span class="doccomment">/// Data to put after post HTML, templated.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Default: &quot;$ROOT/footer.html&quot;, then &quot;$ROOT/footer.htm&quot;.</span>
+    <span class="doccomment">/// Default: `&quot;$ROOT/footer.html&quot;`, then `&quot;$ROOT/footer.htm&quot;`.</span>
     <span class="kw">pub</span> <span class="ident">footer_file</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
 }
 
@@ -247,7 +247,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Given `$ROOT/blogue.toml` containing:</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ```plaintext</span>
+    <span class="doccomment">/// ```toml</span>
     <span class="doccomment">/// name = &quot;Блогг&quot;</span>
     <span class="doccomment">/// header = &quot;head.html&quot;</span>
     <span class="doccomment">/// ```</span>
