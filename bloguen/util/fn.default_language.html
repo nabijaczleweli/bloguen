@@ -4,10 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="API documentation for the Rust `uppercase_first` fn in crate `bloguen`.">
-    <meta name="keywords" content="rust, rustlang, rust-lang, uppercase_first">
+    <meta name="description" content="API documentation for the Rust `default_language` fn in crate `bloguen`.">
+    <meta name="keywords" content="rust, rustlang, rust-lang, default_language">
 
-    <title>bloguen::util::uppercase_first - Rust</title>
+    <title>bloguen::util::default_language - Rust</title>
 
     <link rel="stylesheet" type="text/css" href="../../normalize.css">
     <link rel="stylesheet" type="text/css" href="../../rustdoc.css"
@@ -34,7 +34,7 @@
     <nav class="sidebar">
         <div class="sidebar-menu">&#9776;</div>
         
-        <div class="sidebar-elems"><p class='location'><a href='../index.html'>bloguen</a>::<wbr><a href='index.html'>util</a></p><script>window.sidebarCurrent = {name: 'uppercase_first', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
+        <div class="sidebar-elems"><p class='location'><a href='../index.html'>bloguen</a>::<wbr><a href='index.html'>util</a></p><script>window.sidebarCurrent = {name: 'default_language', ty: 'fn', relpath: ''};</script><script defer src="sidebar-items.js"></script></div>
     </nav>
 
     <div class="theme-picker">
@@ -55,15 +55,23 @@
         </form>
     </nav>
 
-    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>bloguen</a>::<wbr><a href='index.html'>util</a>::<wbr><a class="fn" href=''>uppercase_first</a></span><span class='out-of-band'><span id='render-detail'>
+    <section id='main' class="content"><h1 class='fqn'><span class='in-band'>Function <a href='../index.html'>bloguen</a>::<wbr><a href='index.html'>util</a>::<wbr><a class="fn" href=''>default_language</a></span><span class='out-of-band'><span id='render-detail'>
                    <a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">
                        [<span class='inner'>&#x2212;</span>]
                    </a>
-               </span><a class='srclink' href='../../src/bloguen/util/mod.rs.html#56-62' title='goto source code'>[src]</a></span></h1><pre class='rust fn'>pub fn uppercase_first(s: &amp;<a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>) -&gt; <a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a></pre><div class='docblock'><p>Uppercase the first character of the supplied string.</p>
-<p>Based on http://stackoverflow.com/a/38406885/2851815</p>
+               </span><a class='srclink' href='../../src/bloguen/util/mod.rs.html#230-232' title='goto source code'>[src]</a></span></h1><pre class='rust fn'>pub fn default_language() -&gt; <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</pre><div class='docblock'><p>Try to get the default language for the system/user/environment.</p>
+<p>On Windows, checks <code>LANG</code>, then <code>LANGUAGE</code>, then <code>LC_NAME</code>.</p>
+<p>On non-Windows, checks <code>LANG</code>, then <code>LANGUAGE</code>, then <code>LC_NAME</code>.</p>
 <h1 id="examples" class="section-header"><a href="#examples">Examples</a></h1>
-<pre class="rust rust-example-rendered">
-<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">uppercase_first</span>(<span class="string">&quot;abolish&quot;</span>), <span class="string">&quot;Abolish&quot;</span>.<span class="ident">to_string</span>());</pre>
+<div class='information'><div class='tooltip ignore'>ⓘ<span class='tooltiptext'>This example is not tested</span></div></div><pre class="rust rust-example-rendered ignore">
+<span class="comment">// On Linux, if `LANG=en_GB.utf8`.</span>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">default_language</span>(), <span class="prelude-val">Some</span>(<span class="string">&quot;en-GB&quot;</span>.<span class="ident">to_string</span>()));
+
+<span class="comment">// On Windows, if language is set to Polish.</span>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">default_language</span>(), <span class="prelude-val">Some</span>(<span class="string">&quot;pl&quot;</span>.<span class="ident">to_string</span>()));
+
+<span class="comment">// If the language cannot be detected:</span>
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">default_language</span>(), <span class="prelude-val">None</span>);</pre>
 </div></section>
     <section id='search' class="content hidden"></section>
 
