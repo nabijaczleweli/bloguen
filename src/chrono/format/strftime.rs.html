@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.2/src/format/strftime.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.3/src/format/strftime.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>strftime.rs.html -- source</title>
@@ -496,6 +496,20 @@
 <span id="439">439</span>
 <span id="440">440</span>
 <span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
 </pre><pre class="rust ">
 <span class="comment">// This is a part of Chrono.</span>
 <span class="comment">// See README.md and LICENSE.txt for details.</span>
@@ -567,6 +581,7 @@ The following specifiers are available both to formatting and parsing.
 | `%Z`  | `ACST`   | *Formatting only:* Local time zone name.                                   |
 | `%z`  | `+0930`  | Offset from the local time to UTC (with UTC being `+0000`).                |
 | `%:z` | `+09:30` | Same to `%z` but with a colon.                                             |
+| `%#z` | `+09`    | *Parsing only:* Same to `%z` but allows minutes to be missing or present.  |
 |       |          |                                                                            |
 |       |          | **DATE &amp; TIME SPECIFIERS:**                                                |
 |`%c`|`Sun Jul  8 00:34:60 2001`|`ctime` date &amp; time format. Same to `%a %b %e %T %Y` sans `\n`.|
@@ -645,7 +660,7 @@ Notes:
 
 */</span>
 
-<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Item</span>, <span class="ident">Numeric</span>, <span class="ident">Fixed</span>, <span class="ident">Pad</span>};
+<span class="kw">use</span> <span class="kw">super</span>::{<span class="ident">Item</span>, <span class="ident">Numeric</span>, <span class="ident">Fixed</span>, <span class="ident">InternalFixed</span>, <span class="ident">InternalInternal</span>, <span class="ident">Pad</span>};
 
 <span class="doccomment">/// Parsing iterator for `strftime`-like format strings.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Clone</span>, <span class="ident">Debug</span>)]</span>
@@ -665,6 +680,8 @@ Notes:
         <span class="ident">StrftimeItems</span> { <span class="ident">remainder</span>: <span class="ident">s</span>, <span class="ident">recons</span>: <span class="kw-2">&amp;</span><span class="ident">FMT_NONE</span> }
     }
 }
+
+<span class="kw">const</span> <span class="ident">HAVE_ALTERNATES</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;z&quot;</span>;
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">Iterator</span> <span class="kw">for</span> <span class="ident">StrftimeItems</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">type</span> <span class="ident">Item</span> <span class="op">=</span> <span class="ident">Item</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>;
@@ -704,7 +721,11 @@ Notes:
                     <span class="string">&#39;_&#39;</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">Pad</span>::<span class="ident">Space</span>),
                     <span class="kw">_</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
                 };
-                <span class="kw">let</span> <span class="ident">spec</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">pad_override</span>.<span class="ident">is_some</span>() { <span class="macro">next</span><span class="macro">!</span>() } <span class="kw">else</span> { <span class="ident">spec</span> };
+                <span class="kw">let</span> <span class="ident">is_alternate</span> <span class="op">=</span> <span class="ident">spec</span> <span class="op">==</span> <span class="string">&#39;#&#39;</span>;
+                <span class="kw">let</span> <span class="ident">spec</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">pad_override</span>.<span class="ident">is_some</span>() <span class="op">||</span> <span class="ident">is_alternate</span> { <span class="macro">next</span><span class="macro">!</span>() } <span class="kw">else</span> { <span class="ident">spec</span> };
+                <span class="kw">if</span> <span class="ident">is_alternate</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">HAVE_ALTERNATES</span>.<span class="ident">contains</span>(<span class="ident">spec</span>) {
+                    <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">Item</span>::<span class="ident">Error</span>);
+                }
 
                 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">recons</span> {
                     [<span class="macro-nonterminal">$</span><span class="macro-nonterminal">head</span>:<span class="ident">expr</span>, $(<span class="macro-nonterminal">$</span><span class="macro-nonterminal">tail</span>:<span class="ident">expr</span>),<span class="op">+</span>] <span class="op">=&gt;</span> ({
@@ -761,7 +782,11 @@ Notes:
                     <span class="string">&#39;x&#39;</span> <span class="op">=&gt;</span> <span class="macro">recons</span><span class="macro">!</span>[<span class="macro">num0</span><span class="macro">!</span>(<span class="ident">Month</span>), <span class="macro">lit</span><span class="macro">!</span>(<span class="string">&quot;/&quot;</span>), <span class="macro">num0</span><span class="macro">!</span>(<span class="ident">Day</span>), <span class="macro">lit</span><span class="macro">!</span>(<span class="string">&quot;/&quot;</span>),
                                    <span class="macro">num0</span><span class="macro">!</span>(<span class="ident">YearMod100</span>)],
                     <span class="string">&#39;y&#39;</span> <span class="op">=&gt;</span> <span class="macro">num0</span><span class="macro">!</span>(<span class="ident">YearMod100</span>),
-                    <span class="string">&#39;z&#39;</span> <span class="op">=&gt;</span> <span class="macro">fix</span><span class="macro">!</span>(<span class="ident">TimezoneOffset</span>),
+                    <span class="string">&#39;z&#39;</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">is_alternate</span> {
+                        <span class="macro">internal_fix</span><span class="macro">!</span>(<span class="ident">TimezoneOffsetPermissive</span>)
+                    } <span class="kw">else</span> {
+                        <span class="macro">fix</span><span class="macro">!</span>(<span class="ident">TimezoneOffset</span>)
+                    },
                     <span class="string">&#39;+&#39;</span> <span class="op">=&gt;</span> <span class="macro">fix</span><span class="macro">!</span>(<span class="ident">RFC3339</span>),
                     <span class="string">&#39;:&#39;</span> <span class="op">=&gt;</span> <span class="kw">match</span> <span class="macro">next</span><span class="macro">!</span>() {
                         <span class="string">&#39;z&#39;</span> <span class="op">=&gt;</span> <span class="macro">fix</span><span class="macro">!</span>(<span class="ident">TimezoneOffsetColon</span>),
@@ -867,6 +892,9 @@ Notes:
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_and_collect</span>(<span class="string">&quot;%-e&quot;</span>), [<span class="macro">num</span><span class="macro">!</span>(<span class="ident">Day</span>)]);
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_and_collect</span>(<span class="string">&quot;%0e&quot;</span>), [<span class="macro">num0</span><span class="macro">!</span>(<span class="ident">Day</span>)]);
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_and_collect</span>(<span class="string">&quot;%_e&quot;</span>), [<span class="macro">nums</span><span class="macro">!</span>(<span class="ident">Day</span>)]);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_and_collect</span>(<span class="string">&quot;%z&quot;</span>), [<span class="macro">fix</span><span class="macro">!</span>(<span class="ident">TimezoneOffset</span>)]);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_and_collect</span>(<span class="string">&quot;%#z&quot;</span>), [<span class="macro">internal_fix</span><span class="macro">!</span>(<span class="ident">TimezoneOffsetPermissive</span>)]);
+    <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">parse_and_collect</span>(<span class="string">&quot;%#m&quot;</span>), [<span class="ident">Item</span>::<span class="ident">Error</span>]);
 }
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>

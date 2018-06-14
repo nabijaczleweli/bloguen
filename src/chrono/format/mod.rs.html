@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="rustdoc">
-    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.2/src/format/mod.rs`.">
+    <meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/chrono-0.4.3/src/format/mod.rs`.">
     <meta name="keywords" content="rust, rustlang, rust-lang">
 
     <title>mod.rs.html -- source</title>
@@ -659,14 +659,6 @@
 <span id="602">602</span>
 <span id="603">603</span>
 <span id="604">604</span>
-<span id="605">605</span>
-<span id="606">606</span>
-<span id="607">607</span>
-<span id="608">608</span>
-<span id="609">609</span>
-<span id="610">610</span>
-<span id="611">611</span>
-<span id="612">612</span>
 </pre><pre class="rust ">
 <span class="comment">// This is a part of Chrono.</span>
 <span class="comment">// See README.md and LICENSE.txt for details.</span>
@@ -883,29 +875,22 @@
 }
 
 <span class="doccomment">/// An opaque type representing fixed-format item types for internal uses only.</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">InternalFixed</span> {
-    <span class="ident">_dummy</span>: <span class="ident">Void</span>,
+    <span class="ident">val</span>: <span class="ident">InternalInternal</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">Clone</span> <span class="kw">for</span> <span class="ident">InternalFixed</span> {
-    <span class="kw">fn</span> <span class="ident">clone</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">_dummy</span> {}
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">PartialEq</span> <span class="kw">for</span> <span class="ident">InternalFixed</span> {
-    <span class="kw">fn</span> <span class="ident">eq</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">_other</span>: <span class="kw-2">&amp;</span><span class="ident">InternalFixed</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">match</span> <span class="self">self</span>.<span class="ident">_dummy</span> {}
-    }
-}
-
-<span class="kw">impl</span> <span class="ident">Eq</span> <span class="kw">for</span> <span class="ident">InternalFixed</span> {
-}
-
-<span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">InternalFixed</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;&lt;InternalFixed&gt;&quot;</span>)
-    }
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>)]</span>
+<span class="kw">enum</span> <span class="ident">InternalInternal</span> {
+    <span class="doccomment">/// Same as [`TimezoneOffsetColonZ`](#variant.TimezoneOffsetColonZ), but</span>
+    <span class="doccomment">/// allows missing minutes (per [ISO 8601][iso8601]).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Panics</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If you try to use this for printing.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [iso8601]: https://en.wikipedia.org/wiki/ISO_8601#Time_offsets_from_UTC</span>
+    <span class="ident">TimezoneOffsetPermissive</span>,
 }
 
 <span class="doccomment">/// A single formatting item. This is used for both formatting and parsing.</span>
@@ -934,6 +919,7 @@
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">num0</span> { (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> (<span class="ident">Item</span>::<span class="ident">Numeric</span>(<span class="ident">Numeric</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>, <span class="ident">Pad</span>::<span class="ident">Zero</span>)) }
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">nums</span> { (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> (<span class="ident">Item</span>::<span class="ident">Numeric</span>(<span class="ident">Numeric</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>, <span class="ident">Pad</span>::<span class="ident">Space</span>)) }
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">fix</span>  { (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> (<span class="ident">Item</span>::<span class="ident">Fixed</span>(<span class="ident">Fixed</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>)) }
+<span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">internal_fix</span> { (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> (<span class="ident">Item</span>::<span class="ident">Fixed</span>(<span class="ident">Fixed</span>::<span class="ident">Internal</span>(<span class="ident">InternalFixed</span> { <span class="ident">val</span>: <span class="ident">InternalInternal</span>::<span class="macro-nonterminal">$</span><span class="macro-nonterminal">x</span> })))}
 
 <span class="doccomment">/// An error from the `parse` function.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">Copy</span>)]</span>
@@ -1161,6 +1147,8 @@
                         <span class="ident">off</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="ident">off</span>)<span class="op">|</span> <span class="ident">write_local_minus_utc</span>(<span class="ident">w</span>, <span class="ident">off</span>, <span class="bool-val">false</span>, <span class="bool-val">false</span>)),
                     <span class="ident">TimezoneOffsetZ</span> <span class="op">=&gt;</span>
                         <span class="ident">off</span>.<span class="ident">map</span>(<span class="op">|</span><span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="ident">off</span>)<span class="op">|</span> <span class="ident">write_local_minus_utc</span>(<span class="ident">w</span>, <span class="ident">off</span>, <span class="bool-val">true</span>, <span class="bool-val">false</span>)),
+                    <span class="ident">Internal</span>(<span class="ident">InternalFixed</span> { <span class="ident">val</span>: <span class="ident">InternalInternal</span>::<span class="ident">TimezoneOffsetPermissive</span> }) <span class="op">=&gt;</span>
+                        <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;Do not try to write %#z it is undefined&quot;</span>),
                     <span class="ident">RFC2822</span> <span class="op">=&gt;</span> <span class="comment">// same to `%a, %e %b %Y %H:%M:%S %z`</span>
                         <span class="kw">if</span> <span class="kw">let</span> (<span class="prelude-val">Some</span>(<span class="ident">d</span>), <span class="prelude-val">Some</span>(<span class="ident">t</span>), <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="kw">_</span>, <span class="ident">off</span>))) <span class="op">=</span> (<span class="ident">date</span>, <span class="ident">time</span>, <span class="ident">off</span>) {
                             <span class="kw">let</span> <span class="ident">sec</span> <span class="op">=</span> <span class="ident">t</span>.<span class="ident">second</span>() <span class="op">+</span> <span class="ident">t</span>.<span class="ident">nanosecond</span>() <span class="op">/</span> <span class="number">1_000_000_000</span>;
@@ -1181,9 +1169,6 @@
                         } <span class="kw">else</span> {
                             <span class="prelude-val">None</span>
                         },
-
-                    <span class="comment">// for the future expansion</span>
-                    <span class="ident">Internal</span>(<span class="kw-2">ref</span> <span class="ident">int</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">int</span>.<span class="ident">_dummy</span> {},
                 };
 
                 <span class="kw">match</span> <span class="ident">ret</span> {
@@ -1279,7 +1264,6 @@
         }
     }
 }
-
 </pre>
 </section>
     <section id='search' class="content hidden"></section>
