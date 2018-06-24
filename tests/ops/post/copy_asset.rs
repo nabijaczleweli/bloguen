@@ -1,4 +1,5 @@
 use url::percent_encoding::percent_decode;
+use bloguen::util::LANGUAGE_EN_GB;
 use bloguen::ops::BloguePost;
 use std::io::{Write, Read};
 use std::fs::{self, File};
@@ -30,7 +31,15 @@ fn ok_copied() {
     let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir, "header", "footer").unwrap() {
+    for link in post.generate(&out_dir,
+                  "header",
+                  "footer",
+                  "Блогг",
+                  &LANGUAGE_EN_GB,
+                  "autheur",
+                  &Default::default(),
+                  &Default::default())
+        .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
     let mut read = String::new();
@@ -46,7 +55,15 @@ fn ok_copied() {
     let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's".to_string(),
                root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir, "header", "footer").unwrap() {
+    for link in post.generate(&out_dir,
+                  "header",
+                  "footer",
+                  "Блогг",
+                  &LANGUAGE_EN_GB,
+                  "autheur",
+                  &Default::default(),
+                  &Default::default())
+        .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
     read.clear();
@@ -61,7 +78,15 @@ fn ok_copied() {
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir, "header", "footer").unwrap() {
+    for link in post.generate(&out_dir,
+                  "header",
+                  "footer",
+                  "Блогг",
+                  &LANGUAGE_EN_GB,
+                  "autheur",
+                  &Default::default(),
+                  &Default::default())
+        .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
     read.clear();
@@ -94,7 +119,15 @@ fn ok_not_copied() {
     let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir, "header", "footer").unwrap() {
+    for link in post.generate(&out_dir,
+                  "header",
+                  "footer",
+                  "Блогг",
+                  &LANGUAGE_EN_GB,
+                  "autheur",
+                  &Default::default(),
+                  &Default::default())
+        .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin")).is_err());
@@ -103,7 +136,15 @@ fn ok_not_copied() {
     let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's".to_string(),
                root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir, "header", "footer").unwrap() {
+    for link in post.generate(&out_dir,
+                  "header",
+                  "footer",
+                  "Блогг",
+                  &LANGUAGE_EN_GB,
+                  "autheur",
+                  &Default::default(),
+                  &Default::default())
+        .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's.bin")).is_err());
@@ -111,7 +152,15 @@ fn ok_not_copied() {
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir, "header", "footer").unwrap() {
+    for link in post.generate(&out_dir,
+                  "header",
+                  "footer",
+                  "Блогг",
+                  &LANGUAGE_EN_GB,
+                  "autheur",
+                  &Default::default(),
+                  &Default::default())
+        .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain.bin")).is_err());
@@ -144,7 +193,7 @@ fn posts_directory() {
     File::create(out_dir.1.join("posts")).unwrap();
     assert_eq!(post.copy_asset(&out_dir, "assets/image.png"),
                Err(Error::Io {
-                   desc: "asset parent dir",
+                   desc: "asset parent dir".into(),
                    op: "create",
                    more: Some(if cfg!(target_os = "windows") {
                            "Cannot create a file when that file already exists. (os error 183)"
@@ -155,7 +204,7 @@ fn posts_directory() {
                }));
     assert_eq!(post.copy_asset(&out_dir, "1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin"),
                Err(Error::Io {
-                   desc: "asset parent dir",
+                   desc: "asset parent dir".into(),
                    op: "create",
                    more: Some(if cfg!(target_os = "windows") {
                            "Cannot create a file when that file already exists. (os error 183)"
@@ -190,10 +239,18 @@ fn copy_failed() {
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(out_dir.1.join("posts").join("assets").join("image.png")).unwrap();
     fs::create_dir_all(out_dir.1.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin")).unwrap();
-    for link in post.generate(&out_dir, "header", "footer").unwrap() {
+    for link in post.generate(&out_dir,
+                  "header",
+                  "footer",
+                  "Блогг",
+                  &LANGUAGE_EN_GB,
+                  "autheur",
+                  &Default::default(),
+                  &Default::default())
+        .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
                    Err(Error::Io {
-                       desc: "asset",
+                       desc: "asset".into(),
                        op: "copy",
                        more: Some(if cfg!(target_os = "windows") {
                                "Access is denied. (os error 5)"

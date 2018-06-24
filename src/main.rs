@@ -76,7 +76,20 @@ fn result_main() -> Result<(), bloguen::Error> {
     println!("{}", global_author);
 
     for p in &posts {
-        for link in p.generate(&opts.output_dir, &post_header, &post_footer)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {
+        let metadata = bloguen::ops::PostMetadata::read_or_default(&p.source_dir)?;
+        let language = metadata.language.as_ref().unwrap_or(&global_language);
+        let author = metadata.author.as_ref().unwrap_or(&global_author);
+
+        for link in p.generate(&opts.output_dir,
+                      &post_header,
+                      &post_footer,
+                      &descriptor.name,
+                      &language,
+                      author,
+                      &metadata.data,
+                      &descriptor.data)?
+            .into_iter()
+            .filter(|l| bloguen::util::is_asset_link(l)) {
             let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
 
             if !p.copy_asset(&opts.output_dir, &link)? {

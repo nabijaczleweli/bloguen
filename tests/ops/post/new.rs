@@ -58,7 +58,7 @@ fn invalid_name() {
     assert_eq!(BloguePost::new(dir.clone()),
                Err(Error::Parse {
                    tp: "post directory filename",
-                   wher: "blogue post",
+                   wher: "blogue post".into(),
                    more: None,
                }));
 }
@@ -76,7 +76,7 @@ fn invalid_post_number() {
     assert_eq!(BloguePost::new(dir.clone()),
                Err(Error::Parse {
                    tp: "unsigned int",
-                   wher: "post number",
+                   wher: "post number".into(),
                    more: None,
                }));
 }

@@ -1,13 +1,14 @@
 use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links, read_file};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
+use self::super::{LanguageTag, format_output};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
 use comrak::{self, Arena as ComrakArena};
+use std::collections::BTreeMap;
 use self::super::super::Error;
 use std::iter::FromIterator;
 use std::fs::{self, File};
 use std::path::PathBuf;
-use std::io::Write;
 use regex::Regex;
 
 
@@ -84,7 +85,7 @@ impl BloguePost {
         Ok(Result::<Vec<DirEntry>, WalkDirError>::from_iter(WalkDir::new(&within.1).sort_by(|lhs, rhs| lhs.file_name().cmp(rhs.file_name())).into_iter())
             .map_err(|e| {
                 Error::Io {
-                    desc: "post list",
+                    desc: "post list".into(),
                     op: "list",
                     more: Some(e.to_string().into()),
                 }
@@ -144,7 +145,7 @@ impl BloguePost {
     /// assert_eq!(BloguePost::new(dir.clone()),
     ///            Err(Error::Parse {
     ///                tp: "post directory filename",
-    ///                wher: "blogue post",
+    ///                wher: "blogue post".into(),
     ///                more: None,
     ///            }));
     /// ```
@@ -152,7 +153,7 @@ impl BloguePost {
         fn uint_err(wher: &'static str) -> Error {
             Error::Parse {
                 tp: "unsigned int",
-                wher: wher,
+                wher: wher.into(),
                 more: None,
             }
         }
@@ -163,7 +164,7 @@ impl BloguePost {
                 .ok_or_else(|| {
                     Error::Parse {
                         tp: "post directory filename",
-                        wher: "blogue post",
+                        wher: "blogue post".into(),
                         more: None,
                     }
                 })?;
@@ -212,6 +213,7 @@ impl BloguePost {
     /// The following holds:
     ///
     /// ```
+    /// # use bloguen::util::LANGUAGE_EN_GB;
     /// # use bloguen::ops::BloguePost;
     /// # use std::io::{Write, Read};
     /// # use std::fs::{self, File};
@@ -227,8 +229,11 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer").is_ok());
-    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer"), Ok(vec!["url.html".to_string()]));
+    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer",
+    ///                       "Блогг", &LANGUAGE_EN_GB, "autheur", &Default::default(), &Default::default()).is_ok());
+    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer",
+    /// #                          "Блогг", &LANGUAGE_EN_GB, "autheur", &Default::default(), &Default::default()),
+    /// #            Ok(vec!["url.html".to_string()]));
     ///
     /// assert!(root.join("out").join("posts")
     ///             .join("01. 2018-01-08 16-52-00 The venture into crocheting.html").is_file());
@@ -237,7 +242,9 @@ impl BloguePost {
     /// #                .unwrap().read_to_string(&mut read).unwrap();
     /// # assert_eq!(read, "header<p><a href=\"url.html\">Блогг</a></p>\nfooter");
     /// ```
-    pub fn generate(&self, into: &(String, PathBuf), post_header: &str, post_footer: &str) -> Result<Vec<String>, Error> {
+    pub fn generate(&self, into: &(String, PathBuf), post_header: &str, post_footer: &str, blog_name: &str, language: &LanguageTag, author: &str,
+                    post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>)
+                    -> Result<Vec<String>, Error> {
         let post_text = read_file(&(format!("{}post.md", self.source_dir.0), self.source_dir.1.join("post.md")), "post text")?;
 
         let arena = ComrakArena::new();
@@ -245,41 +252,49 @@ impl BloguePost {
 
         fs::create_dir_all(into.1.join("posts")).map_err(|e| {
                 Error::Io {
-                    desc: "posts directory",
+                    desc: "posts directory".into(),
                     op: "create",
                     more: Some(e.to_string().into()),
                 }
             })?;
 
-        let post_html_path = into.1.join("posts").join(self.normalised_name() + ".html");
+        let normalised_name = self.normalised_name();
+        let post_html_path = into.1.join("posts").join(format!("{}.html", normalised_name));
         let mut post_html_f = File::create(post_html_path).map_err(|e| {
                 Error::Io {
-                    desc: "post HTML",
+                    desc: "post HTML".into(),
                     op: "create",
                     more: Some(e.to_string().into()),
                 }
             })?;
-        post_html_f.write_all(post_header.as_bytes()).map_err(|e| {
-                Error::Io {
-                    desc: "post header",
-                    op: "write",
-                    more: Some(e.to_string().into()),
-                }
-            })?;
+
+        let normalised_name = format_output(post_header,
+                                            blog_name,
+                                            language,
+                                            global_data,
+                                            post_data,
+                                            &self.name,
+                                            author,
+                                            &self.datetime,
+                                            &mut post_html_f,
+                                            normalised_name)?;
         comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f).map_err(|e| {
                 Error::Io {
-                    desc: "post HTML",
+                    desc: "post HTML".into(),
                     op: "write",
                     more: Some(e.to_string().into()),
                 }
             })?;
-        post_html_f.write_all(post_footer.as_bytes()).map_err(|e| {
-                Error::Io {
-                    desc: "post footer",
-                    op: "write",
-                    more: Some(e.to_string().into()),
-                }
-            })?;
+        format_output(post_footer,
+                      blog_name,
+                      language,
+                      global_data,
+                      post_data,
+                      &self.name,
+                      author,
+                      &self.datetime,
+                      &mut post_html_f,
+                      normalised_name)?;
 
         extract_links(root)
     }
@@ -320,6 +335,7 @@ impl BloguePost {
     /// # extern crate bloguen;
     /// # extern crate url;
     /// # use url::percent_encoding::percent_decode;
+    /// # use bloguen::util::LANGUAGE_EN_GB;
     /// # use bloguen::ops::BloguePost;
     /// # use std::io::{Write, Read};
     /// # use std::fs::{self, File};
@@ -339,7 +355,8 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// for link in post.generate(&out_pair, "header", "footer").unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
+    /// for link in post.generate(&out_pair, "header", "footer", "Блогг", &LANGUAGE_EN_GB, "autheur", &Default::default(),
+    ///                           &Default::default()).unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
     ///     let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
     ///     println!("Copying {}: {:?}", link, post.copy_asset(&out_pair, &link));
     /// }
@@ -351,14 +368,14 @@ impl BloguePost {
 
             fs::create_dir_all(output.parent().unwrap()).map_err(|e| {
                     Error::Io {
-                        desc: "asset parent dir",
+                        desc: "asset parent dir".into(),
                         op: "create",
                         more: Some(e.to_string().into()),
                     }
                 })?;
             fs::copy(source, output).map_err(|e| {
                     Error::Io {
-                        desc: "asset",
+                        desc: "asset".into(),
                         op: "copy",
                         more: Some(e.to_string().into()),
                     }
