@@ -13,14 +13,14 @@ authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 
 [dependencies]
 serde_derive = "1.0"
-lazy_static = "1.0"
-tabwriter = "1.0"
-walkdir = "2.1"
+lazy_static = "1.1"
+tabwriter = "1.1"
+walkdir = "2.2"
 chrono = "0.4"
 comrak = "0.2"
 regex = "1.0"
 serde = "1.0"
-clap = "2.31"
+clap = "2.32"
 toml = "0.4"
 crc = "1.8"
 url = "1.7"
