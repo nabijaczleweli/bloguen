@@ -1,4 +1,4 @@
-use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links};
+use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links, read_file};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
@@ -7,7 +7,7 @@ use self::super::super::Error;
 use std::iter::FromIterator;
 use std::fs::{self, File};
 use std::path::PathBuf;
-use std::io::Read;
+use std::io::Write;
 use regex::Regex;
 
 
@@ -227,33 +227,18 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))).is_ok());
-    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out"))), Ok(vec!["url.html".to_string()]));
+    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer").is_ok());
+    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer"), Ok(vec!["url.html".to_string()]));
     ///
     /// assert!(root.join("out").join("posts")
     ///             .join("01. 2018-01-08 16-52-00 The venture into crocheting.html").is_file());
     /// # let mut read = String::new();
     /// # File::open(root.join("out").join("posts").join("01. 2018-01-08 16-52-00 The venture into crocheting.html"))
     /// #                .unwrap().read_to_string(&mut read).unwrap();
-    /// # assert_eq!(read, "<p><a href=\"url.html\">Блогг</a></p>\n");
+    /// # assert_eq!(read, "header<p><a href=\"url.html\">Блогг</a></p>\nfooter");
     /// ```
-    pub fn generate(&self, into: &(String, PathBuf)) -> Result<Vec<String>, Error> {
-        let post_text_path = self.source_dir.1.join("post.md");
-        let mut post_text = String::new();
-        File::open(post_text_path).map_err(|_| {
-                Error::FileNotFound {
-                    who: "post text",
-                    path: format!("{}post.md", self.source_dir.0),
-                }
-            })?
-            .read_to_string(&mut post_text)
-            .map_err(|e| {
-                Error::Io {
-                    desc: "post text",
-                    op: "read",
-                    more: Some(e.to_string()),
-                }
-            })?;
+    pub fn generate(&self, into: &(String, PathBuf), post_header: &str, post_footer: &str) -> Result<Vec<String>, Error> {
+        let post_text = read_file(&(format!("{}post.md", self.source_dir.0), self.source_dir.1.join("post.md")), "post text")?;
 
         let arena = ComrakArena::new();
         let root = comrak::parse_document(&arena, &post_text, &MARKDOWN_OPTIONS);
@@ -267,17 +252,30 @@ impl BloguePost {
             })?;
 
         let post_html_path = into.1.join("posts").join(self.normalised_name() + ".html");
-        comrak::format_html(root,
-                            &MARKDOWN_OPTIONS,
-                            &mut File::create(post_html_path).map_err(|e| {
+        let mut post_html_f = File::create(post_html_path).map_err(|e| {
                 Error::Io {
                     desc: "post HTML",
                     op: "create",
                     more: Some(e.to_string()),
                 }
-            })?).map_err(|e| {
+            })?;
+        post_html_f.write_all(post_header.as_bytes()).map_err(|e| {
+                Error::Io {
+                    desc: "post header",
+                    op: "write",
+                    more: Some(e.to_string()),
+                }
+            })?;
+        comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f).map_err(|e| {
                 Error::Io {
                     desc: "post HTML",
+                    op: "write",
+                    more: Some(e.to_string()),
+                }
+            })?;
+        post_html_f.write_all(post_footer.as_bytes()).map_err(|e| {
+                Error::Io {
+                    desc: "post footer",
                     op: "write",
                     more: Some(e.to_string()),
                 }
@@ -341,7 +339,7 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// for link in post.generate(&out_pair).unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
+    /// for link in post.generate(&out_pair, "header", "footer").unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
     ///     let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
     ///     println!("Copying {}: {:?}", link, post.copy_asset(&out_pair, &link));
     /// }

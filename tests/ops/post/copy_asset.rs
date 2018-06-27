@@ -30,7 +30,7 @@ fn ok_copied() {
     let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir).unwrap() {
+    for link in post.generate(&out_dir, "header", "footer").unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
     let mut read = String::new();
@@ -46,7 +46,7 @@ fn ok_copied() {
     let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's".to_string(),
                root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir).unwrap() {
+    for link in post.generate(&out_dir, "header", "footer").unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
     read.clear();
@@ -61,7 +61,7 @@ fn ok_copied() {
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir).unwrap() {
+    for link in post.generate(&out_dir, "header", "footer").unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
     read.clear();
@@ -94,7 +94,7 @@ fn ok_not_copied() {
     let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir).unwrap() {
+    for link in post.generate(&out_dir, "header", "footer").unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin")).is_err());
@@ -103,7 +103,7 @@ fn ok_not_copied() {
     let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's".to_string(),
                root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir).unwrap() {
+    for link in post.generate(&out_dir, "header", "footer").unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's.bin")).is_err());
@@ -111,7 +111,7 @@ fn ok_not_copied() {
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    for link in post.generate(&out_dir).unwrap() {
+    for link in post.generate(&out_dir, "header", "footer").unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain.bin")).is_err());
@@ -180,7 +180,7 @@ fn copy_failed() {
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(out_dir.1.join("posts").join("assets").join("image.png")).unwrap();
     fs::create_dir_all(out_dir.1.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin")).unwrap();
-    for link in post.generate(&out_dir).unwrap() {
+    for link in post.generate(&out_dir, "header", "footer").unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
                    Err(Error::Io {
                        desc: "asset",

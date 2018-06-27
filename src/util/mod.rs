@@ -17,6 +17,7 @@ use chrono::NaiveTime;
 use std::fs::File;
 use regex::Regex;
 use url::Url;
+use std::cmp;
 
 #[cfg(target_os = "windows")]
 use self::windows::default_language_impl;
@@ -208,6 +209,41 @@ pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<Str
     Ok(buf)
 }
 
+/// Insert enough newlines at the start and end of the string to reach the specified count.
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::util::newline_pad;
+/// let mut data = "\nHenlo!\n".to_string();
+/// newline_pad(&mut data, 0, 2);
+/// assert_eq!(data, "\nHenlo!\n\n");
+/// ```
+pub fn newline_pad(val: &mut String, min_before: usize, min_after: usize) {
+    let max = cmp::max(min_before, min_after);
+    let mut cur_affix = String::with_capacity(max);
+
+    let mut prefix_length = 0;
+    let mut suffix_length = 0;
+    for i in 1..=max {
+        cur_affix.push('\n');
+
+        if val.starts_with(&cur_affix) {
+            prefix_length = i;
+        }
+        if val.ends_with(&cur_affix) {
+            suffix_length = i;
+        }
+    }
+
+    if prefix_length < min_before {
+        val.insert_str(0, &cur_affix[..min_before - prefix_length]);
+    }
+    if suffix_length < min_after {
+        val.push_str(&cur_affix[..min_after - suffix_length]);
+    }
+}
+
 /// Try to get the default language for the system/user/environment.
 ///
 /// On Windows, checks `LANG`, then `LANGUAGE`, then `LC_NAME`.
@@ -216,7 +252,7 @@ pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<Str
 ///
 /// # Examples
 ///
-/// ```ignore
+/// ```no_run
 /// # use bloguen::util::default_language;
 /// // On Linux, if `LANG=en_GB.utf8`.
 /// assert_eq!(default_language(), Some("en-GB".to_string()));

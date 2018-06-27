@@ -41,8 +41,8 @@ fn result_main() -> Result<(), bloguen::Error> {
     }
     println!();
 
-    let post_header = bloguen::util::read_file(&descriptor.header_file, "post header")?;
-    let post_footer = bloguen::util::read_file(&descriptor.footer_file, "post footer")?;
+    let mut post_header = bloguen::util::read_file(&descriptor.header_file, "post header")?;
+    let mut post_footer = bloguen::util::read_file(&descriptor.footer_file, "post footer")?;
     let global_language = descriptor.language.unwrap_or_else(|| {
         match bloguen::util::default_language() {
                 Some(ref l) if bloguen::util::BCP_47.is_match(&l) => l,
@@ -58,12 +58,15 @@ fn result_main() -> Result<(), bloguen::Error> {
             .to_string()
     });
 
+    bloguen::util::newline_pad(&mut post_header, 0, 2);
+    bloguen::util::newline_pad(&mut post_footer, 2, 1);
+
     println!("{}", post_header);
     println!("{}", post_footer);
     println!("{}", global_language);
 
     for p in &posts {
-        for link in p.generate(&opts.output_dir)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {
+        for link in p.generate(&opts.output_dir, &post_header, &post_footer)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {
             let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
 
             if !p.copy_asset(&opts.output_dir, &link)? {
