@@ -115,16 +115,17 @@ impl BlogueDescriptor {
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
             language: match serialised_language.as_ref() {
-                Some(l) if BCP_47.is_match(l) => Some(String::new()),
-                None => None,
-                Some(_) => {
-                    return Err(Error::Parse {
-                        tp: "BCP-47 language tag",
-                        wher: "blogue descriptor",
-                        more: None,
-                    });
+                    Some(l) if BCP_47.is_match(l) => Some(String::new()),
+                    None => None,
+                    Some(_) => {
+                        return Err(Error::Parse {
+                            tp: "BCP-47 language tag",
+                            wher: "blogue descriptor",
+                            more: None,
+                        });
+                    }
                 }
-            }.map(|_| serialised_language.unwrap()),
+                .map(|_| serialised_language.unwrap()),
         })
     }
 }
