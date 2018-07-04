@@ -10,6 +10,7 @@ mod non_windows;
 use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
+use self::super::ops::LanguageTag;
 use comrak::ComrakOptions;
 use self::super::Error;
 use std::path::PathBuf;
@@ -41,6 +42,9 @@ lazy_static! {
     ///
     /// Stolen from http://stackoverflow.com/a/7036171/2851815
     pub static ref BCP_47: Regex = Regex::new(include_str!("../../assets/bcp47.regex").trim()).unwrap();
+
+    /// The default `en-GB` language tag.
+    pub static ref LANGUAGE_EN_GB: LanguageTag = "en-GB".parse().unwrap();
 }
 
 

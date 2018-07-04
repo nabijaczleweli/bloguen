@@ -25,7 +25,7 @@ fn ok_all_specified() {
 
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Ok(PostMetadata {
-                   language: Some("pl".to_string()),
+                   language: Some("pl".parse().unwrap()),
                    data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string()), ("communism".to_string(), "yass, queen".to_string())]
                        .into_iter()
                        .collect(),
@@ -45,7 +45,7 @@ fn ok_no_data() {
 
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Ok(PostMetadata {
-                   language: Some("pl".to_string()),
+                   language: Some("pl".parse().unwrap()),
                    data: BTreeMap::new(),
                }));
 }
@@ -89,10 +89,9 @@ fn invalid_language() {
     File::create(post_root.join("footer.htm")).unwrap();
 
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
-               Err(Error::Parse {
-                   tp: "BCP-47 language tag",
-                   wher: "post metadata",
-                   more: None,
+               Err(Error::FileParsingFailed {
+                   desc: "post metadata",
+                   errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language`".to_string()),
                }));
 }
 

@@ -19,7 +19,7 @@ fn more() {
     Error::Parse {
             tp: "datetime",
             wher: "post descriptor",
-            more: Some("not RFC3339"),
+            more: Some("not RFC3339".to_string()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),

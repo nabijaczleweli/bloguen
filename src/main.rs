@@ -45,17 +45,20 @@ fn result_main() -> Result<(), bloguen::Error> {
     let mut post_footer = bloguen::util::read_file(&descriptor.footer_file, "post footer")?;
     let global_language = descriptor.language.unwrap_or_else(|| {
         match bloguen::util::default_language() {
-                Some(ref l) if bloguen::util::BCP_47.is_match(&l) => l,
                 Some(l) => {
-                    eprintln!("Detected system language {} not BCP-47. Defaulting to \"en-GB\".", l);
-                    "en-GB"
+                    match l.parse() {
+                        Ok(l) => l,
+                        Err(_) => {
+                            eprintln!("Detected system language {} not BCP-47. Defaulting to \"en-GB\".", l);
+                            bloguen::util::LANGUAGE_EN_GB.clone()
+                        }
+                    }
                 }
                 None => {
                     eprintln!("Couldn't detect system language. Defaulting to \"en-GB\".");
-                    "en-GB"
+                    bloguen::util::LANGUAGE_EN_GB.clone()
                 }
             }
-            .to_string()
     });
 
     bloguen::util::newline_pad(&mut post_header, 0, 2);

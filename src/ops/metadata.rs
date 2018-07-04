@@ -1,7 +1,7 @@
 use toml::de::from_str as from_toml_str;
-use self::super::super::util::BCP_47;
 use std::collections::BTreeMap;
 use self::super::super::Error;
+use self::super::LanguageTag;
 use std::default::Default;
 use std::path::PathBuf;
 use std::fs::File;
@@ -14,14 +14,14 @@ pub struct PostMetadata {
     /// Post language override.
     ///
     /// If not present, default post language is used.
-    pub language: Option<String>,
+    pub language: Option<LanguageTag>,
     /// Additional static data to substitute in header and footer.
     pub data: BTreeMap<String, String>,
 }
 
 #[derive(Deserialize)]
 struct PostMetadataSerialised {
-    pub language: Option<String>,
+    pub language: Option<LanguageTag>,
     pub data: Option<BTreeMap<String, String>>,
 }
 
@@ -62,7 +62,7 @@ impl PostMetadata {
     /// let metadata = PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root.clone())).unwrap();
     /// assert_eq!(metadata,
     ///            PostMetadata {
-    ///                language: Some("pl".to_string()),
+    ///                language: Some("pl".parse().unwrap()),
     ///                data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect(),
     ///            });
     /// ```
@@ -81,7 +81,7 @@ impl PostMetadata {
                 }
             })?;
 
-        let mut serialised: PostMetadataSerialised = from_toml_str(&buf).map_err(move |err| {
+        let serialised: PostMetadataSerialised = from_toml_str(&buf).map_err(move |err| {
                 Error::FileParsingFailed {
                     desc: "post metadata",
                     errors: Some(err.to_string()),
@@ -89,17 +89,7 @@ impl PostMetadata {
             })?;
 
         Ok(PostMetadata {
-            language: match serialised.language.as_ref() {
-                Some(l) if BCP_47.is_match(l) => Some(String::new()),
-                None => None,
-                Some(_) => {
-                    return Err(Error::Parse {
-                        tp: "BCP-47 language tag",
-                        wher: "post metadata",
-                        more: None,
-                    });
-                }
-            }.map(|_| serialised.language.take().unwrap()),
+            language: serialised.language,
             data: serialised.data.unwrap_or_default(),
         })
     }

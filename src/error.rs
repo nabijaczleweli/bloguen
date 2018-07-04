@@ -26,7 +26,7 @@ pub enum Error {
         /// Where the thing that failed to parse would go, were it to parse properly.
         wher: &'static str,
         /// Additional data.
-        more: Option<&'static str>,
+        more: Option<String>,
     },
     /// A requested file doesn't exist.
     FileNotFound {
@@ -82,7 +82,7 @@ impl Error {
                 }
                 writeln!(err_out, ".").unwrap();
             }
-            Error::Parse { tp, wher, more } => {
+            Error::Parse { tp, wher, ref more } => {
                 write!(err_out, "Failed to parse {} for {}", tp, wher).unwrap();
                 if let Some(more) = more {
                     write!(err_out, ": {}", more).unwrap();

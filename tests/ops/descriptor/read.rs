@@ -27,7 +27,7 @@ fn ok_all_specified() {
                    name: "Блогг".to_string(),
                    header_file: ("$ROOT/templates/head".to_string(), root.join("templates").join("head")),
                    footer_file: ("$ROOT/templates\\foot".to_string(), root.join("templates").join("foot")),
-                   language: Some("pl".to_string()),
+                   language: Some("pl".parse().unwrap()),
                }));
 }
 
@@ -66,10 +66,9 @@ fn invalid_language() {
     File::create(root.join("footer.htm")).unwrap();
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
-               Err(Error::Parse {
-                   tp: "BCP-47 language tag",
-                   wher: "blogue descriptor",
-                   more: None,
+               Err(Error::FileParsingFailed {
+                   desc: "blogue descriptor",
+                   errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language`".to_string()),
                }));
 }
 

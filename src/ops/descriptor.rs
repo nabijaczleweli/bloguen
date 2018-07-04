@@ -1,6 +1,6 @@
 use toml::de::from_str as from_toml_str;
-use self::super::super::util::BCP_47;
 use self::super::super::Error;
+use self::super::LanguageTag;
 use std::path::PathBuf;
 use std::fs::File;
 use std::io::Read;
@@ -24,7 +24,7 @@ pub struct BlogueDescriptor {
     /// Overriden by post metadata, if present.
     ///
     /// If not present, defaults to the current system language, which, if not detected, defaults to en-GB.
-    pub language: Option<String>,
+    pub language: Option<LanguageTag>,
 }
 
 #[derive(Deserialize)]
@@ -32,7 +32,7 @@ struct BlogueDescriptorSerialised {
     pub name: String,
     pub header: Option<String>,
     pub footer: Option<String>,
-    pub language: Option<String>,
+    pub language: Option<LanguageTag>,
 }
 
 impl BlogueDescriptor {
@@ -82,7 +82,7 @@ impl BlogueDescriptor {
     ///                name: "Блогг".to_string(),
     ///                header_file: ("$ROOT/head.html".to_string(), root.join("head.html")),
     ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
-    ///                language: Some("pl".to_string()),
+    ///                language: Some("pl".parse().unwrap()),
     ///            });
     /// ```
     pub fn read(root: &(String, PathBuf)) -> Result<BlogueDescriptor, Error> {
@@ -109,23 +109,11 @@ impl BlogueDescriptor {
                 }
             })?;
 
-        let serialised_language = serialised.language;
         Ok(BlogueDescriptor {
             name: serialised.name,
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
-            language: match serialised_language.as_ref() {
-                    Some(l) if BCP_47.is_match(l) => Some(String::new()),
-                    None => None,
-                    Some(_) => {
-                        return Err(Error::Parse {
-                            tp: "BCP-47 language tag",
-                            wher: "blogue descriptor",
-                            more: None,
-                        });
-                    }
-                }
-                .map(|_| serialised_language.unwrap()),
+            language: serialised.language,
         })
     }
 }

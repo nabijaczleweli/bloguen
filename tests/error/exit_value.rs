@@ -31,7 +31,7 @@ fn parse() {
     assert_eq!(Error::Parse {
                        tp: "",
                        wher: "",
-                       more: Some(""),
+                       more: Some("".to_string()),
                    }
                    .exit_value(),
                2);
