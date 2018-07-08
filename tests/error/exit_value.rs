@@ -13,7 +13,7 @@ fn io() {
     assert_eq!(Error::Io {
                        desc: "",
                        op: "",
-                       more: Some("".to_string()),
+                       more: Some("".into()),
                    }
                    .exit_value(),
                1);
@@ -31,7 +31,7 @@ fn parse() {
     assert_eq!(Error::Parse {
                        tp: "",
                        wher: "",
-                       more: Some("".to_string()),
+                       more: Some("".into()),
                    }
                    .exit_value(),
                2);
@@ -41,7 +41,7 @@ fn parse() {
 fn file_not_found() {
     assert_eq!(Error::FileNotFound {
                        who: "",
-                       path: String::new(),
+                       path: "".into(),
                    }
                    .exit_value(),
                3);
@@ -51,7 +51,7 @@ fn file_not_found() {
 fn wrong_file_state() {
     assert_eq!(Error::WrongFileState {
                        what: "",
-                       path: String::new(),
+                       path: "".into(),
                    }
                    .exit_value(),
                4);
@@ -67,7 +67,7 @@ fn file_parsing_failed_() {
                5);
     assert_eq!(Error::FileParsingFailed {
                        desc: "",
-                       errors: Some("".to_string()),
+                       errors: Some("".into()),
                    }
                    .exit_value(),
                5);

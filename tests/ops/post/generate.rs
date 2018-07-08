@@ -62,7 +62,7 @@ fn not_found() {
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer"),
                Err(Error::FileNotFound {
                    who: "post text",
-                   path: format!("{}post.md", dir.0),
+                   path: format!("{}post.md", dir.0).into(),
                }));
 }
 
@@ -114,7 +114,7 @@ fn posts_directory() {
                        } else {
                            "File exists (os error 17)"
                        }
-                       .to_string()),
+                       .into()),
                }));
 }
 
@@ -141,6 +141,6 @@ fn post_create() {
                        } else {
                            "Is a directory (os error 21)"
                        }
-                       .to_string()),
+                       .into()),
                }));
 }

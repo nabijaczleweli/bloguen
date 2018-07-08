@@ -7,11 +7,11 @@ fn normal_non_e() {
     Error::Io {
             desc: "input file",
             op: "read",
-            more: Some("stream ended".to_string()),
+            more: Some("stream ended".into()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
-               "Reading input file failed: stream ended.\n".to_string());
+               "Reading input file failed: stream ended.\n");
 }
 
 #[test]
@@ -20,11 +20,11 @@ fn normal_e() {
     Error::Io {
             desc: "output file",
             op: "create",
-            more: Some("stream ended".to_string()),
+            more: Some("stream ended".into()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
-               "Creating output file failed: stream ended.\n".to_string());
+               "Creating output file failed: stream ended.\n");
 }
 
 #[test]
@@ -33,11 +33,11 @@ fn single_non_e() {
     Error::Io {
             desc: "input file",
             op: "C",
-            more: Some("stream ended".to_string()),
+            more: Some("stream ended".into()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
-               "Cing input file failed: stream ended.\n".to_string());
+               "Cing input file failed: stream ended.\n");
 }
 
 #[test]
@@ -46,11 +46,11 @@ fn single_e() {
     Error::Io {
             desc: "input file",
             op: "e",
-            more: Some("stream ended".to_string()),
+            more: Some("stream ended".into()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
-               "ing input file failed: stream ended.\n".to_string());
+               "ing input file failed: stream ended.\n");
 }
 
 #[test]
@@ -59,9 +59,9 @@ fn empty() {
     Error::Io {
             desc: "input file",
             op: "",
-            more: Some("stream ended".to_string()),
+            more: Some("stream ended".into()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
-               "ing input file failed: stream ended.\n".to_string());
+               "ing input file failed: stream ended.\n");
 }

@@ -86,7 +86,7 @@ impl BloguePost {
                 Error::Io {
                     desc: "post list",
                     op: "list",
-                    more: Some(e.to_string()),
+                    more: Some(e.to_string().into()),
                 }
             })?
             .into_iter()
@@ -247,7 +247,7 @@ impl BloguePost {
                 Error::Io {
                     desc: "posts directory",
                     op: "create",
-                    more: Some(e.to_string()),
+                    more: Some(e.to_string().into()),
                 }
             })?;
 
@@ -256,28 +256,28 @@ impl BloguePost {
                 Error::Io {
                     desc: "post HTML",
                     op: "create",
-                    more: Some(e.to_string()),
+                    more: Some(e.to_string().into()),
                 }
             })?;
         post_html_f.write_all(post_header.as_bytes()).map_err(|e| {
                 Error::Io {
                     desc: "post header",
                     op: "write",
-                    more: Some(e.to_string()),
+                    more: Some(e.to_string().into()),
                 }
             })?;
         comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f).map_err(|e| {
                 Error::Io {
                     desc: "post HTML",
                     op: "write",
-                    more: Some(e.to_string()),
+                    more: Some(e.to_string().into()),
                 }
             })?;
         post_html_f.write_all(post_footer.as_bytes()).map_err(|e| {
                 Error::Io {
                     desc: "post footer",
                     op: "write",
-                    more: Some(e.to_string()),
+                    more: Some(e.to_string().into()),
                 }
             })?;
 
@@ -353,14 +353,14 @@ impl BloguePost {
                     Error::Io {
                         desc: "asset parent dir",
                         op: "create",
-                        more: Some(e.to_string()),
+                        more: Some(e.to_string().into()),
                     }
                 })?;
             fs::copy(source, output).map_err(|e| {
                     Error::Io {
                         desc: "asset",
                         op: "copy",
-                        more: Some(e.to_string()),
+                        more: Some(e.to_string().into()),
                     }
                 })?;
 

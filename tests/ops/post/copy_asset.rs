@@ -146,13 +146,13 @@ fn posts_directory() {
                Err(Error::Io {
                    desc: "asset parent dir",
                    op: "create",
-                   more: Some("Cannot create a file when that file already exists. (os error 183)".to_string()),
+                   more: Some("Cannot create a file when that file already exists. (os error 183)".into()),
                }));
     assert_eq!(post.copy_asset(&out_dir, "1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin"),
                Err(Error::Io {
                    desc: "asset parent dir",
                    op: "create",
-                   more: Some("Cannot create a file when that file already exists. (os error 183)".to_string()),
+                   more: Some("Cannot create a file when that file already exists. (os error 183)".into()),
                }));
 }
 
@@ -190,7 +190,7 @@ fn copy_failed() {
                            } else {
                                "Is a directory (os error 21)"
                            }
-                           .to_string()),
+                           .into()),
                    }));
     }
 }

@@ -185,7 +185,7 @@ pub fn is_asset_link(link: &str) -> bool {
 /// assert_eq!(read_file(&("$ROOT/nonexistant".to_string(), root.join("nonexistant")), "∅"),
 ///            Err(Error::FileNotFound {
 ///                who: "∅",
-///                path: "$ROOT/nonexistant".to_string(),
+///                path: "$ROOT/nonexistant".into(),
 ///            }));
 /// ```
 pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<String, Error> {
@@ -193,13 +193,13 @@ pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<Str
     File::open(&whom.1).map_err(|e| if e.kind() == IoErrorKind::NotFound {
             Error::FileNotFound {
                 who: what_for,
-                path: whom.0.clone(),
+                path: whom.0.clone().into(),
             }
         } else {
             Error::Io {
                 desc: what_for,
                 op: "open",
-                more: Some(e.to_string()),
+                more: Some(e.to_string().into()),
             }
         })?
         .read_to_string(&mut buf)

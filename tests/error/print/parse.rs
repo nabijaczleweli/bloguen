@@ -10,7 +10,8 @@ fn no_more() {
             more: None,
         }
         .print_error(&mut out);
-    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(), "Failed to parse e-mail for post descriptor.\n");
+    assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),
+               "Failed to parse e-mail for post descriptor.\n");
 }
 
 #[test]
@@ -19,7 +20,7 @@ fn more() {
     Error::Parse {
             tp: "datetime",
             wher: "post descriptor",
-            more: Some("not RFC3339".to_string()),
+            more: Some("not RFC3339".into()),
         }
         .print_error(&mut out);
     assert_eq!(out.iter().map(|&i| i as char).collect::<String>(),

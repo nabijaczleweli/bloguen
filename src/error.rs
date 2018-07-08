@@ -1,4 +1,5 @@
 use self::super::util::uppercase_first;
+use std::borrow::Cow;
 use std::io::Write;
 
 
@@ -16,7 +17,7 @@ pub enum Error {
         /// This should be lowercase and imperative ("create", "open").
         op: &'static str,
         /// Additional data.
-        more: Option<String>,
+        more: Option<Cow<'static, str>>,
     },
     Parse {
         /// What failed to parse.
@@ -26,28 +27,28 @@ pub enum Error {
         /// Where the thing that failed to parse would go, were it to parse properly.
         wher: &'static str,
         /// Additional data.
-        more: Option<String>,
+        more: Option<Cow<'static, str>>,
     },
     /// A requested file doesn't exist.
     FileNotFound {
         /// What requested the file.
         who: &'static str,
         /// The file that should exist.
-        path: String,
+        path: Cow<'static, str>,
     },
     /// A path is in a wrong state.
     WrongFileState {
         /// What the file is not.
         what: &'static str,
         /// The file that should be.
-        path: String,
+        path: Cow<'static, str>,
     },
     /// Failed to parse the specified file because of the specified error(s).
     FileParsingFailed {
         /// The file that failed to parse.
         desc: &'static str,
         /// The parsing error(s) that occured.
-        errors: Option<String>,
+        errors: Option<Cow<'static, str>>,
     },
 }
 
@@ -63,7 +64,7 @@ impl Error {
     /// Error::Io {
     ///     desc: "network",
     ///     op: "write",
-    ///     more: Some("full buffer".to_string()),
+    ///     more: Some("full buffer".into()),
     /// }.print_error(&mut out);
     /// assert_eq!(out, "Writing network failed: full buffer.\n".as_bytes());
     /// ```

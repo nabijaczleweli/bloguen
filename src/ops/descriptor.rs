@@ -90,7 +90,7 @@ impl BlogueDescriptor {
         File::open(root.1.join("blogue.toml")).map_err(|_| {
                 Error::FileNotFound {
                     who: "blogue descriptor",
-                    path: format!("{}blogue.toml", root.0),
+                    path: format!("{}blogue.toml", root.0).into(),
                 }
             })?
             .read_to_string(&mut buf)
@@ -98,14 +98,14 @@ impl BlogueDescriptor {
                 Error::Io {
                     desc: "blogue descriptor",
                     op: "read",
-                    more: Some("not UTF-8".to_string()),
+                    more: Some("not UTF-8".into()),
                 }
             })?;
 
         let serialised: BlogueDescriptorSerialised = from_toml_str(&buf).map_err(move |err| {
                 Error::FileParsingFailed {
                     desc: "blogue descriptor",
-                    errors: Some(err.to_string()),
+                    errors: Some(err.to_string().into()),
                 }
             })?;
 
@@ -123,7 +123,7 @@ fn additional_file(file_opt: Option<String>, root: &(String, PathBuf), tp: &str,
         check_additional_file(root, &format!("{}.html", tp)).or_else(|| check_additional_file(root, &format!("{}.htm", tp))).ok_or_else(|| {
             Error::FileNotFound {
                 who: error_n,
-                path: format!("{}{{{1}.html/{1}.htm}}", root.0, tp),
+                path: format!("{}{{{1}.html/{1}.htm}}", root.0, tp).into(),
             }
         })
     },
@@ -136,13 +136,13 @@ fn additional_file(file_opt: Option<String>, root: &(String, PathBuf), tp: &str,
             } else {
                 Err(Error::WrongFileState {
                     what: "a file",
-                    path: file_s,
+                    path: file_s.into(),
                 })
             }
         } else {
             Err(Error::FileNotFound {
                 who: error_n,
-                path: file_s,
+                path: file_s.into(),
             })
         }
     })

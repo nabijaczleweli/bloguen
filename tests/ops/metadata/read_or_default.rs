@@ -91,7 +91,7 @@ fn invalid_language() {
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Err(Error::FileParsingFailed {
                    desc: "post metadata",
-                   errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language`".to_string()),
+                   errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language`".into()),
                }));
 }
 
@@ -118,7 +118,7 @@ fn non_utf8() {
                Err(Error::Io {
                    desc: "post metadata",
                    op: "read",
-                   more: Some("not UTF-8".to_string()),
+                   more: Some("not UTF-8".into()),
                }));
 }
 
@@ -136,6 +136,6 @@ fn invalid_toml() {
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Err(Error::FileParsingFailed {
                    desc: "post metadata",
-                   errors: Some("expected a right bracket, found a newline at line 1".to_string()),
+                   errors: Some("expected a right bracket, found a newline at line 1".into()),
                }));
 }

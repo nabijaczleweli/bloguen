@@ -77,14 +77,14 @@ impl PostMetadata {
                 Error::Io {
                     desc: "post metadata",
                     op: "read",
-                    more: Some("not UTF-8".to_string()),
+                    more: Some("not UTF-8".into()),
                 }
             })?;
 
         let serialised: PostMetadataSerialised = from_toml_str(&buf).map_err(move |err| {
                 Error::FileParsingFailed {
                     desc: "post metadata",
-                    errors: Some(err.to_string()),
+                    errors: Some(err.to_string().into()),
                 }
             })?;
 

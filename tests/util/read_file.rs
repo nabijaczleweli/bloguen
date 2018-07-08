@@ -50,7 +50,7 @@ fn not_found() {
     assert_eq!(read_file(&("$ROOT/data".to_string(), root.join("data")), "data"),
                Err(Error::FileNotFound {
                    who: "data",
-                   path: "$ROOT/data".to_string(),
+                   path: "$ROOT/data".into(),
                }));
 }
 
