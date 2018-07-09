@@ -1,13 +1,13 @@
 //! Module containing various utility functions.
 
 
-
 #[cfg(target_os = "windows")]
 mod windows;
 #[cfg(not(target_os = "windows"))]
 mod non_windows;
 
 use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
+use chrono::format::{StrftimeItems as StrftimeFormatItems, Fixed as FixedTimeFormatItem, Item as TimeFormatItem};
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
 use self::super::ops::LanguageTag;
@@ -15,6 +15,7 @@ use comrak::ComrakOptions;
 use self::super::Error;
 use std::path::PathBuf;
 use chrono::NaiveTime;
+use std::borrow::Cow;
 use std::fs::File;
 use regex::Regex;
 use url::Url;
@@ -245,6 +246,43 @@ pub fn newline_pad(val: &mut String, min_before: usize, min_after: usize) {
     }
     if suffix_length < min_after {
         val.push_str(&cur_affix[..min_after - suffix_length]);
+    }
+}
+
+/// Parse a datetime specifier in the [`format_output()`](../ops/fn.format_output.html) argument style.
+///
+/// A couple presets are accepted:
+///   * [RFC2822](https://docs.rs/chrono/0.4.6/chrono/struct.DateTime.html#method.to_rfc2822) – `rfc2822`, `rfc_2822`, `RFC2822`, `RFC_2822`
+///   * [RFC3339](https://docs.rs/chrono/0.4.6/chrono/struct.DateTime.html#method.to_rfc3339) – `rfc3339`, `rfc_3339`, `RFC3339`, `RFC_3339`
+///
+/// The standard [`strftime()`](https://docs.rs/chrono/0.4.6/chrono/format/strftime/index.html#specifiers) syntax, but wrapped in `"`s.
+///
+/// # Examples
+///
+/// ```
+/// # extern crate bloguen;
+/// # extern crate chrono;
+/// # use chrono::format::{StrftimeItems, Fixed, Item};
+/// # use bloguen::util::parse_date_format_specifier;
+/// assert_eq!(parse_date_format_specifier("rfc_2822"),
+///            Some(vec![Item::Fixed(Fixed::RFC2822)].into()));
+/// assert_eq!(parse_date_format_specifier("RFC3339"),
+///            Some(vec![Item::Fixed(Fixed::RFC3339)].into()));
+///
+/// assert_eq!(parse_date_format_specifier("\"%Y %B %d\""),
+///            Some(StrftimeItems::new("%Y %B %d").collect()));
+///
+/// assert!(parse_date_format_specifier("epoch").is_none());
+/// ```
+pub fn parse_date_format_specifier(spec: &str) -> Option<Cow<'static, [TimeFormatItem]>> {
+    static RFC2822_ITEMS: &[TimeFormatItem] = &[TimeFormatItem::Fixed(FixedTimeFormatItem::RFC2822)];
+    static RFC3339_ITEMS: &[TimeFormatItem] = &[TimeFormatItem::Fixed(FixedTimeFormatItem::RFC3339)];
+
+    match spec.trim() {
+        "rfc2822" | "rfc_2822" | "RFC2822" | "RFC_2822" => Some(RFC2822_ITEMS.into()),
+        "rfc3339" | "rfc_3339" | "RFC3339" | "RFC_3339" => Some(RFC3339_ITEMS.into()),
+        s if s.starts_with('"') && s.ends_with('"') => Some(StrftimeFormatItems::new(&spec[1..spec.len() - 1]).collect()),
+        _ => None,
     }
 }
 

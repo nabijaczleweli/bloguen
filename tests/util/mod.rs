@@ -2,6 +2,7 @@ use comrak::{self, Arena as ComrakArena};
 use chrono::NaiveTime;
 use bloguen::util;
 
+mod parse_date_format_specifier;
 mod uppercase_first;
 mod is_asset_link;
 mod read_file;
