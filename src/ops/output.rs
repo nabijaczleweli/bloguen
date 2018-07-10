@@ -62,42 +62,17 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
     while let Some(idx) = to_format.find(|ref c| ['{', '}'].contains(c)) {
         let (before, mut after) = to_format.split_at(idx);
 
-        into.write_all(before.as_bytes())
-            .map_err(|e| {
-                Error::Io {
-                    desc: "formatted output", // TODO
-                    op: "write",
-                    more: Some(format!("{} when writing unformatted output", e).into()),
-                }
-            })?;
+        into.write_all(before.as_bytes()).map_err(|e| err_io("write", format!("{} when writing unformatted output", e)))?;
         byte_pos += before.len();
 
         if after.starts_with("{{") {
-            into.write_all(&['{' as u8])
-                .map_err(|e| {
-                    Error::Io {
-                        desc: "formatted output", // TODO
-                        op: "write",
-                        more: Some(format!("{} when writing escaped opening curly brace", e).into()),
-                    }
-                })?;
+            into.write_all(&['{' as u8]).map_err(|e| err_io("write", format!("{} when writing escaped opening curly brace", e)))?;
             byte_pos += 2;
         } else if after.starts_with("}}") {
-            into.write_all(&['}' as u8])
-                .map_err(|e| {
-                    Error::Io {
-                        desc: "formatted output", // TODO
-                        op: "write",
-                        more: Some(format!("{} when writing escaped closing curly brace", e).into()),
-                    }
-                })?;
+            into.write_all(&['}' as u8]).map_err(|e| err_io("write", format!("{} when writing escaped closing curly brace", e)))?;
             byte_pos += 2;
         } else if after.starts_with("}") {
-            return Err(Error::Parse {
-                tp: "unformatted input", // TODO
-                wher: "formatted output",
-                more: Some(format!("stray closing brace at position {}", byte_pos).into()),
-            });
+            return Err(err_parse(format!("stray closing brace at position {}", byte_pos)));
         } else {
             // Must start with { – begin format sequence
 
@@ -114,35 +89,13 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
                             let key = &key["data-".len()..];
                             match local_data.get(key).or_else(|| global_data.get(key)) {
                                 Some(data) => into.write_all(data.as_bytes()).map_err(|e| (e, format!("data-{} tag with value {}", key, data).into())),
-                                None => {
-                                    return Err(Error::Parse {
-                                        tp: "unformatted input", // TODO
-                                        wher: "formatted output",
-                                        more: Some(format!("missing value for data-{}", key).into()),
-                                    });
-                                }
+                                None => return Err(err_parse(format!("missing value for data-{}", key))),
                             }
                         }
-                        _ => {
-                            return Err(Error::Parse {
-                                tp: "unformatted input", // TODO
-                                wher: "formatted output",
-                                more: Some(format!("unrecognised format specifier {} at position {}", format_str, byte_pos).into()),
-                            });
-                        }
-                    }.map_err(|(e, d): (_, Cow<'static, str>)| {
-                        Error::Io {
-                            desc: "formatted output", // TODO
-                            op: "write",
-                            more: Some(format!("{} when writing substituted {}", e, d).into()),
-                        }
-                    })?;
+                        _ => return Err(err_parse(format!("unrecognised format specifier {} at position {}", format_str, byte_pos))),
+                    }.map_err(|(e, d): (_, Cow<'static, str>)| err_io("write", format!("{} when writing substituted {}", e, d)))?;
             } else {
-                return Err(Error::Parse {
-                    tp: "unformatted input", // TODO
-                    wher: "formatted output",
-                    more: Some(format!("unmatched open brace at position {}", byte_pos).into()),
-                });
+                return Err(err_parse(format!("unmatched open brace at position {}", byte_pos)));
             }
         }
 
@@ -154,4 +107,28 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
     // ASSETS.iter().fold(format_strings.iter().enumerate().fold(to_format.to_string(), |d, (i, s)| d.replace(&format!("{{{}}}",
     // i), s.as_ref())),
     //                   |d, (k, v)| d.replace(&format!("{{{}}}", k), v))
+}
+
+fn err_io<M: Into<Cow<'static, str>>>(op: &'static str, more: M) -> Error {
+    err_io_impl(op, more.into())
+}
+
+fn err_parse<M: Into<Cow<'static, str>>>(more: M) -> Error {
+    err_parse_impl(more.into())
+}
+
+fn err_io_impl(op: &'static str, more: Cow<'static, str>) -> Error {
+    Error::Io {
+        desc: "formatted output", // TODO
+        op: op,
+        more: Some(more),
+    }
+}
+
+fn err_parse_impl(more: Cow<'static, str>) -> Error {
+    Error::Parse {
+        tp: "unformatted input", // TODO
+        wher: "formatted output",
+        more: Some(more),
+    }
 }
