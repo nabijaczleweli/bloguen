@@ -143,7 +143,7 @@ pub fn is_asset_link(link: &str) -> bool {
 }
 
 
-/// Read
+/// Read the contents of the specified file into a `String`.
 ///
 /// # Examples
 ///
@@ -230,7 +230,7 @@ pub fn newline_pad(val: &mut String, min_before: usize, min_after: usize) {
 
     let mut prefix_length = 0;
     let mut suffix_length = 0;
-    for i in 1..=max {
+    for i in 1..max {
         cur_affix.push('\n');
 
         if val.starts_with(&cur_affix) {
@@ -252,10 +252,13 @@ pub fn newline_pad(val: &mut String, min_before: usize, min_after: usize) {
 /// Parse a datetime specifier in the [`format_output()`](../ops/fn.format_output.html) argument style.
 ///
 /// A couple presets are accepted:
-///   * [RFC2822](https://docs.rs/chrono/0.4.6/chrono/struct.DateTime.html#method.to_rfc2822) – `rfc2822`, `rfc_2822`, `RFC2822`, `RFC_2822`
-///   * [RFC3339](https://docs.rs/chrono/0.4.6/chrono/struct.DateTime.html#method.to_rfc3339) – `rfc3339`, `rfc_3339`, `RFC3339`, `RFC_3339`
+/// * [RFC2822](https://docs.rs/chrono/0.4.6/chrono/struct.DateTime.html#method.to_rfc2822) –
+///   `rfc2822`, `rfc_2822`, `RFC2822`, `RFC_2822`
+/// * [RFC3339](https://docs.rs/chrono/0.4.6/chrono/struct.DateTime.html#method.to_rfc3339) –
+///   `rfc3339`, `rfc_3339`, `RFC3339`, `RFC_3339`
 ///
-/// The standard [`strftime()`](https://docs.rs/chrono/0.4.6/chrono/format/strftime/index.html#specifiers) syntax, but wrapped in `"`s.
+/// The standard [`strftime()`](https://docs.rs/chrono/0.4.6/chrono/format/strftime/index.html#specifiers) syntax,
+/// but wrapped in `"`s.
 ///
 /// # Examples
 ///
@@ -283,6 +286,39 @@ pub fn parse_date_format_specifier(spec: &str) -> Option<Cow<'static, [TimeForma
         "rfc3339" | "rfc_3339" | "RFC3339" | "RFC_3339" => Some(RFC3339_ITEMS.into()),
         s if s.starts_with('"') && s.ends_with('"') => Some(StrftimeFormatItems::new(&spec[1..spec.len() - 1]).collect()),
         _ => None,
+    }
+}
+
+/// Trivially parse a standard funxion invocation notation.
+///
+/// Return value is `Some((name, arguments))`, all trimmed, if a funxion is found, `None` otherwise.
+///
+/// Stolen and adapted from
+/// [`controller-display`](https://github.com/nabijaczleweli/controller-display/blob/d7abaa206/src/util/parse.cpp#L98-L115).
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::util::parse_function_notation;
+/// assert_eq!(parse_function_notation("post_date(rfc_2822)"),
+///            Some(("post_date", vec!["rfc_2822"])));
+/// assert_eq!(parse_function_notation("date(post, \"%Y %B %d\")"),
+///            Some(("date", vec!["post", "\"%Y %B %d\""])));
+/// assert_eq!(parse_function_notation("date()"),
+///            Some(("date", vec![])));
+///
+/// assert!(parse_function_notation("(post)").is_none());
+/// ```
+pub fn parse_function_notation(mut from: &str) -> Option<(&str, Vec<&str>)> {
+    match (from.find('('), from.find(')')) {
+        (Some(0), _) => None,
+        (Some(lparen), Some(rparen)) if rparen > lparen => {
+            from = &from[0..rparen];
+            let args = from[lparen + 1..].split(',').map(str::trim).collect();
+
+            Some((from[0..lparen].trim(), if args == &[""] { vec![] } else { args }))
+        }
+        (lparen, _) => Some((&from[0..lparen.unwrap_or_else(|| from.len())], vec![])),
     }
 }
 
