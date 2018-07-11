@@ -39,30 +39,31 @@ use std::io::Write;
 ///     <meta name="viewport" content="width=device-width,initial-scale=1">
 ///     <meta name="author" content="{author}">
 ///     <meta name="description" content="{data-desc}">
-///     <title>{title} – generated { date ( now, rfc3339 ) }</title>
+///     <title>{title} – generated { date ( now_utc, rfc3339 ) }</title>
 ///
 ///     <link href="/kaschism/assets/column.css" rel="stylesheet" />
 ///     <link href="../Roboto-font.css" rel="stylesheet" />
 ///     <link href="../the_taste_of_mi/Merriweather-font.css" rel="stylesheet" />
 ///     <link href="/content/assets/common.css" rel="stylesheet" />
 ///     <style type="text/css">
-///         {style}
+///         {{style}}
 ///     </style>
-///     {style_links}
-///     {script_links}
+///     {{style_links}}
+///     {{script_links}}
 /// </head>
 ///     <body>
 /// "###;
 /// let global_data = vec![].into_iter().collect();
 /// let local_data = vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect();
 /// let mut out = vec![];
-/// format_output(head, &LANGUAGE_EN_GB, &global_data, &local_data,
+/// format_output(head, &LANGUAGE_EN_GB, &global_data, &local_data, "nabijaczleweli", "release-front - a generic release
+/// front-end, like Patchwork's",
 ///               &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(), &mut out).unwrap();
 /// println!("{}", String::from_utf8(out).unwrap());
 /// panic!();
 /// ```
 pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>, local_data: &BTreeMap<String, String>,
-                               post_date: &DateTime<FixedOffset>, into: &mut W)
+                               title: &str, author: &str, post_date: &DateTime<FixedOffset>, into: &mut W)
                                -> Result<(), Error> {
     let mut byte_pos = 0usize;
     while let Some(idx) = to_format.find(|ref c| ['{', '}'].contains(c)) {
@@ -74,9 +75,11 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
         if after.starts_with("{{") {
             into.write_all(&['{' as u8]).map_err(|e| err_io("write", format!("{} when writing escaped opening curly brace", e)))?;
             byte_pos += 2;
+            after = &after[2..];
         } else if after.starts_with("}}") {
             into.write_all(&['}' as u8]).map_err(|e| err_io("write", format!("{} when writing escaped closing curly brace", e)))?;
             byte_pos += 2;
+            after = &after[2..];
         } else if after.starts_with("}") {
             return Err(err_parse(format!("stray closing brace at position {}", byte_pos)));
         } else {
@@ -91,6 +94,9 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
 
                 match format_str {
                         "language" => into.write_all(language.as_bytes()).map_err(|e| (e, "language tag".into())),
+                        "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
+                        "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
+
                         key if key.starts_with("data-") => {
                             let key = &key["data-".len()..];
                             match local_data.get(key).or_else(|| global_data.get(key)) {
@@ -98,6 +104,7 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
                                 None => return Err(err_parse(format!("missing value for data-{}", key))),
                             }
                         }
+
                         _ => {
                             match parse_function_notation(format_str) {
                                 Some(("date", args)) => {
@@ -129,6 +136,7 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
                                     into.write_fmt(format_args!("{}", date.format_with_items(date_format.to_vec().into_iter())))
                                         .map_err(|e| (e, format!("{} date as {}", args[0], args[1]).into()))
                                 }
+
                                 Some((fname, args)) => {
                                     return Err(err_parse(format!("unrecognised format function {} with arguments {:?} at position {}", fname, args, byte_pos)))
                                 }
@@ -143,6 +151,8 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
 
         to_format = after;
     }
+
+    into.write_all(to_format.as_bytes()).map_err(|e| err_io("write", format!("{} when writing unformatted output", e)))?;
 
     Ok(())
 }
