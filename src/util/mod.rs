@@ -230,7 +230,7 @@ pub fn newline_pad(val: &mut String, min_before: usize, min_after: usize) {
 
     let mut prefix_length = 0;
     let mut suffix_length = 0;
-    for i in 1..max {
+    for i in 1..=max {
         cur_affix.push('\n');
 
         if val.starts_with(&cur_affix) {
@@ -277,7 +277,7 @@ pub fn newline_pad(val: &mut String, min_before: usize, min_after: usize) {
 ///
 /// assert!(parse_date_format_specifier("epoch").is_none());
 /// ```
-pub fn parse_date_format_specifier(spec: &str) -> Option<Cow<'static, [TimeFormatItem]>> {
+pub fn parse_date_format_specifier(spec: &str) -> Option<Cow<[TimeFormatItem]>> {
     static RFC2822_ITEMS: &[TimeFormatItem] = &[TimeFormatItem::Fixed(FixedTimeFormatItem::RFC2822)];
     static RFC3339_ITEMS: &[TimeFormatItem] = &[TimeFormatItem::Fixed(FixedTimeFormatItem::RFC3339)];
 
@@ -311,14 +311,14 @@ pub fn parse_date_format_specifier(spec: &str) -> Option<Cow<'static, [TimeForma
 /// ```
 pub fn parse_function_notation(mut from: &str) -> Option<(&str, Vec<&str>)> {
     match (from.find('('), from.find(')')) {
-        (Some(0), _) => None,
+        (None, _) | (Some(0), _) => None,
         (Some(lparen), Some(rparen)) if rparen > lparen => {
             from = &from[0..rparen];
             let args = from[lparen + 1..].split(',').map(str::trim).collect();
 
             Some((from[0..lparen].trim(), if args == &[""] { vec![] } else { args }))
         }
-        (lparen, _) => Some((&from[0..lparen.unwrap_or_else(|| from.len())], vec![])),
+        (Some(lparen), _) => Some((&from[0..lparen], vec![])),
     }
 }
 

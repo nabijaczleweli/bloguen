@@ -1,3 +1,5 @@
+use self::super::super::util::{parse_date_format_specifier, parse_function_notation};
+use chrono::{FixedOffset, DateTime, TimeZone, Offset, Local, Utc};
 use std::collections::BTreeMap;
 use self::super::super::Error;
 use self::super::LanguageTag;
@@ -12,8 +14,11 @@ use std::io::Write;
 /// # Examples
 ///
 /// ```
+/// # extern crate bloguen;
+/// # extern crate chrono;
 /// # use bloguen::util::LANGUAGE_EN_GB;
 /// # use bloguen::ops::format_output;
+/// # use chrono::DateTime;
 /// let head = r###"<!--
 /// nabijaczleweli.xyz (c) by nabijaczleweli@gmail.com (nabijaczleweli)
 /// ​
@@ -25,7 +30,7 @@ use std::io::Write;
 /// -->
 ///
 ///
-/// <!-- RSS_PUB_DATE: "{post_date(rfc_2822)}" -->
+/// <!-- RSS_PUB_DATE: "{date(post, rfc_2822)}" -->
 /// <!DOCTYPE html>
 /// <html lang="{language}">
 /// <head>
@@ -34,7 +39,7 @@ use std::io::Write;
 ///     <meta name="viewport" content="width=device-width,initial-scale=1">
 ///     <meta name="author" content="{author}">
 ///     <meta name="description" content="{data-desc}">
-///     <title>{title}</title>
+///     <title>{title} – generated { date ( now, rfc3339 ) }</title>
 ///
 ///     <link href="/kaschism/assets/column.css" rel="stylesheet" />
 ///     <link href="../Roboto-font.css" rel="stylesheet" />
@@ -51,12 +56,13 @@ use std::io::Write;
 /// let global_data = vec![].into_iter().collect();
 /// let local_data = vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect();
 /// let mut out = vec![];
-/// format_output(head, &LANGUAGE_EN_GB, &global_data, &local_data, &mut out).unwrap();
+/// format_output(head, &LANGUAGE_EN_GB, &global_data, &local_data,
+///               &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(), &mut out).unwrap();
 /// println!("{}", String::from_utf8(out).unwrap());
 /// panic!();
 /// ```
 pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>, local_data: &BTreeMap<String, String>,
-                               into: &mut W)
+                               post_date: &DateTime<FixedOffset>, into: &mut W)
                                -> Result<(), Error> {
     let mut byte_pos = 0usize;
     while let Some(idx) = to_format.find(|ref c| ['{', '}'].contains(c)) {
@@ -92,7 +98,43 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
                                 None => return Err(err_parse(format!("missing value for data-{}", key))),
                             }
                         }
-                        _ => return Err(err_parse(format!("unrecognised format specifier {} at position {}", format_str, byte_pos))),
+                        _ => {
+                            match parse_function_notation(format_str) {
+                                Some(("date", args)) => {
+                                    if args.len() != 2 {
+                                        return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `date(of_what, format)` \
+                                                                      function, around position {}",
+                                                                     args.len(),
+                                                                     byte_pos)));
+                                    }
+
+                                    let date_format =
+                                                parse_date_format_specifier(args[1]).ok_or_else(|| {
+                                                        err_parse(format!("invalid date format specifier {} around position {}", args[1], byte_pos))
+                                                    })?;
+                                    let date = match args[0] {
+                                        "post" => Cow::Borrowed(post_date),
+
+                                        "now_utc" => Cow::Owned(normalise_datetime(Utc::now())),
+                                        "now_local" => Cow::Owned(normalise_datetime(Local::now())),
+
+                                        of_what => {
+                                            return Err(err_parse(format!("{} is an unrecognised date specifier (accepted: post, now_{{utc,local}}), around \
+                                                                          position {}",
+                                                                         of_what,
+                                                                         byte_pos)))
+                                        }
+                                    };
+
+                                    into.write_fmt(format_args!("{}", date.format_with_items(date_format.to_vec().into_iter())))
+                                        .map_err(|e| (e, format!("{} date as {}", args[0], args[1]).into()))
+                                }
+                                Some((fname, args)) => {
+                                    return Err(err_parse(format!("unrecognised format function {} with arguments {:?} at position {}", fname, args, byte_pos)))
+                                }
+                                _ => return Err(err_parse(format!("unrecognised format specifier {} at position {}", format_str, byte_pos))),
+                            }
+                        }
                     }.map_err(|(e, d): (_, Cow<'static, str>)| err_io("write", format!("{} when writing substituted {}", e, d)))?;
             } else {
                 return Err(err_parse(format!("unmatched open brace at position {}", byte_pos)));
@@ -103,10 +145,10 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
     }
 
     Ok(())
+}
 
-    // ASSETS.iter().fold(format_strings.iter().enumerate().fold(to_format.to_string(), |d, (i, s)| d.replace(&format!("{{{}}}",
-    // i), s.as_ref())),
-    //                   |d, (k, v)| d.replace(&format!("{{{}}}", k), v))
+fn normalise_datetime<Tz: TimeZone>(whom: DateTime<Tz>) -> DateTime<FixedOffset> {
+    whom.with_timezone(&whom.offset().fix())
 }
 
 fn err_io<M: Into<Cow<'static, str>>>(op: &'static str, more: M) -> Error {
