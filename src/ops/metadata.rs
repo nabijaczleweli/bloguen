@@ -8,20 +8,27 @@ use std::fs::File;
 use std::io::Read;
 
 
-/// Generic blogue metadata.
+/// Generic post metadata.
 #[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct PostMetadata {
     /// Post language override.
     ///
     /// If not present, default post language is used.
     pub language: Option<LanguageTag>,
+    /// Post author override.
+    ///
+    /// If not present, default post author is used.
+    pub author: Option<String>,
     /// Additional static data to substitute in header and footer.
+    ///
+    /// If not present, defaults to empty.
     pub data: BTreeMap<String, String>,
 }
 
 #[derive(Deserialize)]
 struct PostMetadataSerialised {
     pub language: Option<LanguageTag>,
+    pub author: Option<String>,
     pub data: Option<BTreeMap<String, String>>,
 }
 
@@ -63,6 +70,7 @@ impl PostMetadata {
     /// assert_eq!(metadata,
     ///            PostMetadata {
     ///                language: Some("pl".parse().unwrap()),
+    ///                author: None,
     ///                data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect(),
     ///            });
     /// ```
@@ -90,6 +98,7 @@ impl PostMetadata {
 
         Ok(PostMetadata {
             language: serialised.language,
+            author: serialised.author,
             data: serialised.data.unwrap_or_default(),
         })
     }
@@ -99,6 +108,7 @@ impl Default for PostMetadata {
     fn default() -> PostMetadata {
         PostMetadata {
             language: None,
+            author: None,
             data: BTreeMap::new(),
         }
     }

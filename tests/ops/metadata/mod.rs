@@ -10,6 +10,7 @@ fn default() {
     assert_eq!(PostMetadata::default(),
                PostMetadata {
                    language: None,
+                   author: None,
                    data: BTreeMap::new(),
                });
 }

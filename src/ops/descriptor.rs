@@ -1,4 +1,5 @@
 use toml::de::from_str as from_toml_str;
+use std::collections::BTreeMap;
 use self::super::super::Error;
 use self::super::LanguageTag;
 use std::path::PathBuf;
@@ -11,6 +12,12 @@ use std::io::Read;
 pub struct BlogueDescriptor {
     /// The blogue's display name.
     pub name: String,
+    /// The blogue's main author(s).
+    ///
+    /// Overriden by post metadata, if present.
+    ///
+    /// If not present, defaults to the current system user's name, which, if not detected, errors out.
+    pub author: Option<String>,
     /// Data to put before post HTML, templated.
     ///
     /// Default: `"$ROOT/header.html"`, then `"$ROOT/header.htm"`.
@@ -25,14 +32,20 @@ pub struct BlogueDescriptor {
     ///
     /// If not present, defaults to the current system language, which, if not detected, defaults to en-GB.
     pub language: Option<LanguageTag>,
+    /// Additional static data to substitute in header and footer.
+    ///
+    /// If not present, defaults to empty.
+    pub data: BTreeMap<String, String>,
 }
 
 #[derive(Deserialize)]
 struct BlogueDescriptorSerialised {
     pub name: String,
+    pub author: Option<String>,
     pub header: Option<String>,
     pub footer: Option<String>,
     pub language: Option<LanguageTag>,
+    pub data: Option<BTreeMap<String, String>>,
 }
 
 impl BlogueDescriptor {
@@ -55,6 +68,9 @@ impl BlogueDescriptor {
     /// name = "Блогг"
     /// header = "head.html"
     /// language = "pl"
+    ///
+    /// [data]
+    /// preferred_system = "capitalism"
     /// ```
     ///
     /// The following holds:
@@ -70,6 +86,9 @@ impl BlogueDescriptor {
     /// #     name = \"Блогг\"\n\
     /// #     header = \"head.html\"\n\
     /// #     language = \"pl\"\n\
+    /// #     \n\
+    /// #     [data]\n\
+    /// #     preferred_system = \"capitalism\"\n\
     /// # ".as_bytes()).unwrap();
     /// # File::create(root.join("head.html")).unwrap().write_all("header".as_bytes()).unwrap();
     /// # File::create(root.join("footer.htm")).unwrap().write_all("footer".as_bytes()).unwrap();
@@ -80,9 +99,11 @@ impl BlogueDescriptor {
     /// assert_eq!(read_tokens,
     ///            BlogueDescriptor {
     ///                name: "Блогг".to_string(),
+    ///                author: None,
     ///                header_file: ("$ROOT/head.html".to_string(), root.join("head.html")),
     ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
     ///                language: Some("pl".parse().unwrap()),
+    ///                data: vec![("preferred_system".to_string(), "capitalism".to_string())].into_iter().collect(),
     ///            });
     /// ```
     pub fn read(root: &(String, PathBuf)) -> Result<BlogueDescriptor, Error> {
@@ -111,9 +132,11 @@ impl BlogueDescriptor {
 
         Ok(BlogueDescriptor {
             name: serialised.name,
+            author: serialised.author,
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
             language: serialised.language,
+            data: serialised.data.unwrap_or_default(),
         })
     }
 }

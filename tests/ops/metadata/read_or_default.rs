@@ -16,6 +16,7 @@ fn ok_all_specified() {
     File::create(post_root.join("metadata.toml"))
         .unwrap()
         .write_all("language = \"pl\"\n\
+                    author = \"nabijaczleweli\"\n\
                     \n\
                     [data]\n\
                     desc = \"Każdy koniec to nowy początek [PL]\"\n\
@@ -26,6 +27,7 @@ fn ok_all_specified() {
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Ok(PostMetadata {
                    language: Some("pl".parse().unwrap()),
+                   author: Some("nabijaczleweli".to_string()),
                    data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string()), ("communism".to_string(), "yass, queen".to_string())]
                        .into_iter()
                        .collect(),
@@ -40,12 +42,14 @@ fn ok_no_data() {
 
     File::create(post_root.join("metadata.toml"))
         .unwrap()
-        .write_all("language = \"pl\"\n".as_bytes())
+        .write_all("language = \"pl\"\n\
+                    author = \"nabijaczleweli\"\n".as_bytes())
         .unwrap();
 
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Ok(PostMetadata {
                    language: Some("pl".parse().unwrap()),
+                   author: Some("nabijaczleweli".to_string()),
                    data: BTreeMap::new(),
                }));
 }
@@ -67,6 +71,7 @@ fn ok_just_data() {
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Ok(PostMetadata {
                    language: None,
+                   author: None,
                    data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string()), ("communism".to_string(), "yass, queen".to_string())]
                        .into_iter()
                        .collect(),

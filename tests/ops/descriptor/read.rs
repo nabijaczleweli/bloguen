@@ -14,9 +14,13 @@ fn ok_all_specified() {
     File::create(root.join("blogue.toml"))
         .unwrap()
         .write_all("name = \"Блогг\"\n\
+                    author = \"nabijaczleweli\"\n\
                     header = \"templates/head\"\n\
                     footer = \"templates\\\\foot\"\n\
-                    language = \"pl\"\n"
+                    language = \"pl\"\n\
+                    \n\
+                    [data]\n\
+                    preferred-system = \"communism\"\n"
             .as_bytes())
         .unwrap();
     File::create(root.join("templates").join("head")).unwrap();
@@ -25,9 +29,11 @@ fn ok_all_specified() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Ok(BlogueDescriptor {
                    name: "Блогг".to_string(),
+                   author: Some("nabijaczleweli".to_string()),
                    header_file: ("$ROOT/templates/head".to_string(), root.join("templates").join("head")),
                    footer_file: ("$ROOT/templates\\foot".to_string(), root.join("templates").join("foot")),
                    language: Some("pl".parse().unwrap()),
+                   data: vec![("preferred-system".to_string(), "communism".to_string())].into_iter().collect(),
                }));
 }
 
@@ -44,9 +50,11 @@ fn ok_induced() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Ok(BlogueDescriptor {
                    name: "Блогг".to_string(),
+                   author: None,
                    header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
                    language: None,
+                   data: vec![].into_iter().collect()
                }));
 }
 
