@@ -5,6 +5,7 @@ repository = "https://github.com/nabijaczleweli/bloguen"
 documentation = "https://cdn.rawgit.com/nabijaczleweli/bloguen/doc/bloguen/index.html"
 readme = "README.md"
 keywords = ["generate", "blog", "markdown"]
+categories = ["command-line-utilities", "template-engine"]
 license = "MIT"
 # Remember to also update in appveyor.yml
 version = "0.1.0"
@@ -32,6 +33,9 @@ features = ["lmcons", "winnls"]
 [target.'cfg(not(target_os = "windows"))'.dependencies.libc]
 version = "0.2"
 
+
+[build-dependencies]
+reqwest = "0.8"
 
 [target.'cfg(not(target_os = "windows"))'.build-dependencies.gcc]
 version = "0.3"

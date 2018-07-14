@@ -27,6 +27,8 @@ use self::windows::{current_username_impl, default_language_impl};
 use self::non_windows::{current_username_impl, default_language_impl};
 
 
+include!(concat!(env!("OUT_DIR"), "/words.rs"));
+
 lazy_static! {
     /// Options to use for parsing Markdown.
     pub static ref MARKDOWN_OPTIONS: ComrakOptions = ComrakOptions {
