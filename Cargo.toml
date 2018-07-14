@@ -27,7 +27,15 @@ url = "1.7"
 
 [target.'cfg(target_os = "windows")'.dependencies.winapi]
 version = "0.3"
-features = ["winnls"]
+features = ["lmcons", "winnls"]
+
+[target.'cfg(not(target_os = "windows"))'.dependencies.libc]
+version = "0.2"
+
+
+[target.'cfg(not(target_os = "windows"))'.build-dependencies.gcc]
+version = "0.3"
+
 
 [[bin]]
 name = "bloguen"

@@ -45,7 +45,8 @@
 			[
 				"*Makefile*",
 				"*.yml",
-				"Cargo.*"
+				"Cargo.*",
+				"build.rs"
 			],
 			"folder_exclude_patterns":
 			[

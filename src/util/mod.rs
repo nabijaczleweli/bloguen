@@ -22,9 +22,9 @@ use url::Url;
 use std::cmp;
 
 #[cfg(target_os = "windows")]
-use self::windows::default_language_impl;
+use self::windows::{current_username_impl, default_language_impl};
 #[cfg(not(target_os = "windows"))]
-use self::non_windows::default_language_impl;
+use self::non_windows::{current_username_impl, default_language_impl};
 
 
 lazy_static! {
@@ -324,9 +324,9 @@ pub fn parse_function_notation(mut from: &str) -> Option<(&str, Vec<&str>)> {
 
 /// Try to get the default language for the system/user/environment.
 ///
-/// On Windows, checks `LANG`, then `LANGUAGE`, then `LC_NAME`.
+/// On Windows, checks `GetLocaleInfoEx()`.
 ///
-/// On non-Windows, checks `LANG`, then `LANGUAGE`, then `LC_NAME`.
+/// On non-Windows, checks `$LANG`, then `$LANGUAGE`, then `$LC_NAME`.
 ///
 /// # Examples
 ///
@@ -343,4 +343,13 @@ pub fn parse_function_notation(mut from: &str) -> Option<(&str, Vec<&str>)> {
 /// ```
 pub fn default_language() -> Option<String> {
     default_language_impl()
+}
+
+/// Try to get the name of the currently logged-in user.
+///
+/// On Windows, checks `GetUserName()`.
+///
+/// On non-Windows, checks `getlogin_r(3)`, then `$USER`.
+pub fn current_username() -> Option<String> {
+    current_username_impl()
 }

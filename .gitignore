@@ -7,6 +7,7 @@
 !*.md
 !Cargo.toml
 !rustfmt.toml
+!build.rs
 !LICENSE
 !src
 !src/**
