@@ -26,7 +26,7 @@ fn actual_main() -> i32 {
 fn result_main() -> Result<(), bloguen::Error> {
     let opts = bloguen::Options::parse();
 
-    let descriptor = bloguen::ops::BlogueDescriptor::read(&opts.source_dir)?;
+    let mut descriptor = bloguen::ops::BlogueDescriptor::read(&opts.source_dir)?;
     println!("Blog name: {}", descriptor.name);
 
     let mut posts: Vec<_> = Result::from_iter(bloguen::ops::BloguePost::list(&opts.source_dir)?.into_iter().map(bloguen::ops::BloguePost::new))?;
@@ -43,22 +43,28 @@ fn result_main() -> Result<(), bloguen::Error> {
 
     let mut post_header = bloguen::util::read_file(&descriptor.header_file, "post header")?;
     let mut post_footer = bloguen::util::read_file(&descriptor.footer_file, "post footer")?;
-    let global_language = descriptor.language.unwrap_or_else(|| {
-        match bloguen::util::default_language() {
-                Some(l) => {
-                    match l.parse() {
-                        Ok(l) => l,
-                        Err(_) => {
-                            eprintln!("Detected system language {} not BCP-47. Defaulting to \"en-GB\".", l);
-                            bloguen::util::LANGUAGE_EN_GB.clone()
-                        }
-                    }
-                }
-                None => {
-                    eprintln!("Couldn't detect system language. Defaulting to \"en-GB\".");
+    let global_language = descriptor.language.take().unwrap_or_else(|| match bloguen::util::default_language() {
+        Some(l) => {
+            match l.parse() {
+                Ok(l) => l,
+                Err(_) => {
+                    eprintln!("Detected system language {} not BCP-47. Defaulting to \"en-GB\".", l);
                     bloguen::util::LANGUAGE_EN_GB.clone()
                 }
             }
+        }
+        None => {
+            eprintln!("Couldn't detect system language. Defaulting to \"en-GB\".");
+            bloguen::util::LANGUAGE_EN_GB.clone()
+        }
+    });
+    let global_author = descriptor.author.take().unwrap_or_else(|| match bloguen::util::current_username() {
+        Some(l) => l,
+        None => {
+            let uname = bloguen::util::name_based_full_name(&descriptor.name);
+            eprintln!("Couldn't detect system username. Generated \"{}\".", uname);
+            uname
+        }
     });
 
     bloguen::util::newline_pad(&mut post_header, 0, 2);
@@ -67,6 +73,7 @@ fn result_main() -> Result<(), bloguen::Error> {
     println!("{}", post_header);
     println!("{}", post_footer);
     println!("{}", global_language);
+    println!("{}", global_author);
 
     for p in &posts {
         for link in p.generate(&opts.output_dir, &post_header, &post_footer)?.into_iter().filter(|l| bloguen::util::is_asset_link(l)) {
