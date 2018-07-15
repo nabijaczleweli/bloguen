@@ -8,9 +8,12 @@ mod non_windows;
 
 use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
 use chrono::format::{StrftimeItems as StrftimeFormatItems, Fixed as FixedTimeFormatItem, Item as TimeFormatItem};
+use safe_transmute::guarded_transmute_to_bytes_pod;
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
 use self::super::ops::LanguageTag;
+use rand::{SeedableRng, Rng};
+use rand::prng::XorShiftRng;
 use comrak::ComrakOptions;
 use self::super::Error;
 use std::path::PathBuf;
@@ -90,6 +93,58 @@ pub fn name_based_post_time(name: &str) -> NaiveTime {
     let second = ((digest >> (5 + 6)) & 0b111111) % 60;
 
     NaiveTime::from_hms(hour, minute, second)
+}
+
+/// Generate a reproducible blogue author from its name.
+///
+/// Works by seeding an [XOR-shift](../../rand/prng/struct.XorShiftRng.html) with an IEEE-CRC32ing the name.
+///
+/// The generated name has a `.2` probability of including a middle portion, then a `.25` probability of it being full,
+/// as opposed to just an initial.
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::util::name_based_full_name;
+/// assert_eq!(name_based_full_name("Блогг"),          "Specifically Shopper");
+/// assert_eq!(name_based_full_name("Blogue"),         "Very Turban");
+///
+/// assert_eq!(name_based_full_name("Ben's Blog"),     "Properly P. Postbox");
+/// assert_eq!(name_based_full_name("Benjojo's Blog"), "Why Q. Wannabe");
+///
+/// assert_eq!(name_based_full_name("Inquiescence"),   "Always Chart Baritone");
+/// ```
+pub fn name_based_full_name(name: &str) -> String {
+    let digest = crc32_ieee(name.as_bytes());
+    let mut seed = [0u8; 16];
+    if cfg!(target_endian = "little") {
+        guarded_transmute_to_bytes_pod(&digest)
+            .iter()
+            .cycle()
+            .zip(seed.iter_mut())
+            .for_each(|(d, s)| *s = *d);
+    } else {
+        guarded_transmute_to_bytes_pod(&digest)
+            .iter()
+            .rev()
+            .cycle()
+            .zip(seed.iter_mut())
+            .for_each(|(d, s)| *s = *d);
+    }
+    let mut rng = XorShiftRng::from_seed(seed);
+
+    let first_name = rng.choose(ADVERBS).unwrap();
+    let last_name = rng.choose(NOUNS).unwrap();
+    if rng.gen_bool(0.2) {
+        let middle_name = rng.choose(ADJECTIVES).unwrap();
+        if rng.gen_bool(0.25) {
+            format!("{} {} {}", first_name, middle_name, last_name)
+        } else {
+            format!("{} {}. {}", first_name, middle_name.chars().next().unwrap(), last_name)
+        }
+    } else {
+        format!("{} {}", first_name, last_name)
+    }
 }
 
 /// Get list of all links in the specified AST.

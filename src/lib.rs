@@ -15,6 +15,7 @@
 //! ```
 
 
+extern crate safe_transmute;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
@@ -26,6 +27,7 @@ extern crate comrak;
 extern crate winapi;
 extern crate regex;
 extern crate serde;
+extern crate rand;
 #[macro_use]
 extern crate clap;
 #[cfg(not(target_os = "windows"))]
