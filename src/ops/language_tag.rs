@@ -19,7 +19,7 @@ impl FromStr for LanguageTag {
         } else {
             Err(Error::Parse {
                 tp: "BCP-47 language tag",
-                wher: "language specifier",
+                wher: "language specifier".into(),
                 more: Some(format!("\"{}\" invalid", s).into()),
             })
         }

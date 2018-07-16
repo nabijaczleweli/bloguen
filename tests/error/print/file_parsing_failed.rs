@@ -5,7 +5,7 @@ use bloguen::Error;
 fn no_error() {
     let mut out = Vec::new();
     Error::FileParsingFailed {
-            desc: "blogue descriptor",
+            desc: "blogue descriptor".into(),
             errors: None,
         }
         .print_error(&mut out);
@@ -16,7 +16,7 @@ fn no_error() {
 fn with_error() {
     let mut out = Vec::new();
     Error::FileParsingFailed {
-            desc: "blogue descriptor",
+            desc: "blogue descriptor".into(),
             errors: Some("unexpected eof encountered".into()),
         }
         .print_error(&mut out);

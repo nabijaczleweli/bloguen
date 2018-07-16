@@ -75,7 +75,7 @@ fn invalid_language() {
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::FileParsingFailed {
-                   desc: "blogue descriptor",
+                   desc: "blogue descriptor".into(),
                    errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language`".into()),
                }));
 }
@@ -107,7 +107,7 @@ fn non_utf8() {
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root)),
                Err(Error::Io {
-                   desc: "blogue descriptor",
+                   desc: "blogue descriptor".into(),
                    op: "read",
                    more: Some("not UTF-8".into()),
                }));
@@ -126,7 +126,7 @@ fn invalid_toml() {
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".into(), root)),
                Err(Error::FileParsingFailed {
-                   desc: "blogue descriptor",
+                   desc: "blogue descriptor".into(),
                    errors: Some("expected a right bracket, found a newline at line 1".into()),
                }));
 }

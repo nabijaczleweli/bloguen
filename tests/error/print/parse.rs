@@ -6,7 +6,7 @@ fn no_more() {
     let mut out = Vec::new();
     Error::Parse {
             tp: "e-mail",
-            wher: "post descriptor",
+            wher: "post descriptor".into(),
             more: None,
         }
         .print_error(&mut out);
@@ -19,7 +19,7 @@ fn more() {
     let mut out = Vec::new();
     Error::Parse {
             tp: "datetime",
-            wher: "post descriptor",
+            wher: "post descriptor".into(),
             more: Some("not RFC3339".into()),
         }
         .print_error(&mut out);

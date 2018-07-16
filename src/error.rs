@@ -11,7 +11,7 @@ pub enum Error {
     /// This includes higher-level I/O errors like FS ones.
     Io {
         /// The file the I/O operation regards.
-        desc: &'static str,
+        desc: Cow<'static, str>,
         /// The failed operation.
         ///
         /// This should be lowercase and imperative ("create", "open").
@@ -25,7 +25,7 @@ pub enum Error {
         /// Something like "URL", "datetime".
         tp: &'static str,
         /// Where the thing that failed to parse would go, were it to parse properly.
-        wher: &'static str,
+        wher: Cow<'static, str>,
         /// Additional data.
         more: Option<Cow<'static, str>>,
     },
@@ -46,7 +46,7 @@ pub enum Error {
     /// Failed to parse the specified file because of the specified error(s).
     FileParsingFailed {
         /// The file that failed to parse.
-        desc: &'static str,
+        desc: Cow<'static, str>,
         /// The parsing error(s) that occured.
         errors: Option<Cow<'static, str>>,
     },
@@ -62,7 +62,7 @@ impl Error {
     /// # use std::iter::FromIterator;
     /// let mut out = Vec::new();
     /// Error::Io {
-    ///     desc: "network",
+    ///     desc: "network".into(),
     ///     op: "write",
     ///     more: Some("full buffer".into()),
     /// }.print_error(&mut out);
@@ -70,7 +70,7 @@ impl Error {
     /// ```
     pub fn print_error<W: Write>(&self, err_out: &mut W) {
         match *self {
-            Error::Io { desc, op, ref more } => {
+            Error::Io { ref desc, op, ref more } => {
                 // Strip the last 'e', if any, so we get correct inflection for continuous tenses
                 let op = uppercase_first(if op.ends_with('e') {
                     &op[..op.len() - 1]
@@ -83,7 +83,7 @@ impl Error {
                 }
                 writeln!(err_out, ".").unwrap();
             }
-            Error::Parse { tp, wher, ref more } => {
+            Error::Parse { tp, ref wher, ref more } => {
                 write!(err_out, "Failed to parse {} for {}", tp, wher).unwrap();
                 if let Some(more) = more {
                     write!(err_out, ": {}", more).unwrap();
@@ -109,7 +109,7 @@ impl Error {
     /// ```
     /// # use bloguen::Error;
     /// assert_eq!(Error::Io {
-    ///     desc: "",
+    ///     desc: "".into(),
     ///     op: "",
     ///     more: None,
     /// }.exit_value(), 1);

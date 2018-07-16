@@ -5,7 +5,7 @@ use bloguen::Error;
 fn normal_non_e() {
     let mut out = Vec::new();
     Error::Io {
-            desc: "input file",
+            desc: "input file".into(),
             op: "read",
             more: Some("stream ended".into()),
         }
@@ -18,7 +18,7 @@ fn normal_non_e() {
 fn normal_e() {
     let mut out = Vec::new();
     Error::Io {
-            desc: "output file",
+            desc: "output file".into(),
             op: "create",
             more: Some("stream ended".into()),
         }
@@ -31,7 +31,7 @@ fn normal_e() {
 fn single_non_e() {
     let mut out = Vec::new();
     Error::Io {
-            desc: "input file",
+            desc: "input file".into(),
             op: "C",
             more: Some("stream ended".into()),
         }
@@ -44,7 +44,7 @@ fn single_non_e() {
 fn single_e() {
     let mut out = Vec::new();
     Error::Io {
-            desc: "input file",
+            desc: "input file".into(),
             op: "e",
             more: Some("stream ended".into()),
         }
@@ -57,7 +57,7 @@ fn single_e() {
 fn empty() {
     let mut out = Vec::new();
     Error::Io {
-            desc: "input file",
+            desc: "input file".into(),
             op: "",
             more: Some("stream ended".into()),
         }

@@ -56,32 +56,53 @@ use std::io::Write;
 /// let global_data = vec![].into_iter().collect();
 /// let local_data = vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect();
 /// let mut out = vec![];
-/// format_output(head, &LANGUAGE_EN_GB, &global_data, &local_data, "nabijaczleweli", "release-front - a generic release
-/// front-end, like Patchwork's",
-///               &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(), &mut out).unwrap();
+/// assert_eq!(
+///     format_output(head, "Блогг", &LANGUAGE_EN_GB, &global_data, &local_data,
+///                   "release-front - a generic release front-end, like Patchwork's", "nabijaczleweli",
+///                   &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(), &mut out, "test blog").unwrap(),
+///     "test blog");
 /// println!("{}", String::from_utf8(out).unwrap());
 /// panic!();
 /// ```
-pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>, local_data: &BTreeMap<String, String>,
-                               title: &str, author: &str, post_date: &DateTime<FixedOffset>, into: &mut W)
-                               -> Result<(), Error> {
+pub fn format_output<W: Write, E: Into<Cow<'static, str>>, Tz: TimeZone>(to_format: &str, blog_name: &str, language: &LanguageTag,
+                                                                         global_data: &BTreeMap<String, String>, local_data: &BTreeMap<String, String>,
+                                                                         title: &str, author: &str, post_date: &DateTime<Tz>, into: &mut W, out_name_err: E)
+                                                                         -> Result<Cow<'static, str>, Error> {
+    format_output_impl(to_format,
+                       blog_name,
+                       language,
+                       global_data,
+                       local_data,
+                       title,
+                       author,
+                       normalise_datetime(post_date),
+                       into,
+                       out_name_err.into())
+}
+
+pub fn format_output_impl<W: Write>(mut to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
+                                    local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: DateTime<FixedOffset>, into: &mut W,
+                                    out_name_err: Cow<'static, str>)
+                                    -> Result<Cow<'static, str>, Error> {
+    let mut out_name_err = Some(out_name_err);
+
     let mut byte_pos = 0usize;
     while let Some(idx) = to_format.find(|ref c| ['{', '}'].contains(c)) {
         let (before, mut after) = to_format.split_at(idx);
 
-        into.write_all(before.as_bytes()).map_err(|e| err_io("write", format!("{} when writing unformatted output", e)))?;
+        into.write_all(before.as_bytes()).map_err(|e| err_io("write", format!("{} when writing unformatted output", e), out_name_err.take().unwrap()))?;
         byte_pos += before.len();
 
         if after.starts_with("{{") {
-            into.write_all(&['{' as u8]).map_err(|e| err_io("write", format!("{} when writing escaped opening curly brace", e)))?;
+            into.write_all(&['{' as u8]).map_err(|e| err_io("write", format!("{} when writing escaped opening curly brace", e), out_name_err.take().unwrap()))?;
             byte_pos += 2;
             after = &after[2..];
         } else if after.starts_with("}}") {
-            into.write_all(&['}' as u8]).map_err(|e| err_io("write", format!("{} when writing escaped closing curly brace", e)))?;
+            into.write_all(&['}' as u8]).map_err(|e| err_io("write", format!("{} when writing escaped closing curly brace", e), out_name_err.take().unwrap()))?;
             byte_pos += 2;
             after = &after[2..];
         } else if after.starts_with("}") {
-            return Err(err_parse(format!("stray closing brace at position {}", byte_pos)));
+            return Err(err_parse(format!("stray closing brace at position {}", byte_pos), out_name_err.take().unwrap()));
         } else {
             // Must start with { – begin format sequence
 
@@ -96,12 +117,13 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
                         "language" => into.write_all(language.as_bytes()).map_err(|e| (e, "language tag".into())),
                         "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
                         "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
+                        "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
 
                         key if key.starts_with("data-") => {
                             let key = &key["data-".len()..];
                             match local_data.get(key).or_else(|| global_data.get(key)) {
                                 Some(data) => into.write_all(data.as_bytes()).map_err(|e| (e, format!("data-{} tag with value {}", key, data).into())),
-                                None => return Err(err_parse(format!("missing value for data-{}", key))),
+                                None => return Err(err_parse(format!("missing value for data-{}", key), out_name_err.take().unwrap())),
                             }
                         }
 
@@ -112,24 +134,26 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
                                         return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `date(of_what, format)` \
                                                                       function, around position {}",
                                                                      args.len(),
-                                                                     byte_pos)));
+                                                                     byte_pos),
+                                                             out_name_err.take().unwrap()));
                                     }
 
-                                    let date_format =
-                                                parse_date_format_specifier(args[1]).ok_or_else(|| {
-                                                        err_parse(format!("invalid date format specifier {} around position {}", args[1], byte_pos))
-                                                    })?;
+                                    let date_format = parse_date_format_specifier(args[1]).ok_or_else(|| {
+                                            err_parse(format!("invalid date format specifier {} around position {}", args[1], byte_pos),
+                                                      out_name_err.take().unwrap())
+                                        })?;
                                     let date = match args[0] {
-                                        "post" => Cow::Borrowed(post_date),
+                                        "post" => Cow::Borrowed(&post_date),
 
-                                        "now_utc" => Cow::Owned(normalise_datetime(Utc::now())),
-                                        "now_local" => Cow::Owned(normalise_datetime(Local::now())),
+                                        "now_utc" => Cow::Owned(normalise_datetime(&Utc::now())),
+                                        "now_local" => Cow::Owned(normalise_datetime(&Local::now())),
 
                                         of_what => {
                                             return Err(err_parse(format!("{} is an unrecognised date specifier (accepted: post, now_{{utc,local}}), around \
                                                                           position {}",
                                                                          of_what,
-                                                                         byte_pos)))
+                                                                         byte_pos),
+                                                                 out_name_err.take().unwrap()))
                                         }
                                     };
 
@@ -138,49 +162,53 @@ pub fn format_output<W: Write>(mut to_format: &str, language: &LanguageTag, glob
                                 }
 
                                 Some((fname, args)) => {
-                                    return Err(err_parse(format!("unrecognised format function {} with arguments {:?} at position {}", fname, args, byte_pos)))
+                                    return Err(err_parse(format!("unrecognised format function {} with arguments {:?} at position {}", fname, args, byte_pos),
+                                                         out_name_err.take().unwrap()))
                                 }
-                                _ => return Err(err_parse(format!("unrecognised format specifier {} at position {}", format_str, byte_pos))),
+                                _ => {
+                                    return Err(err_parse(format!("unrecognised format specifier {} at position {}", format_str, byte_pos),
+                                                         out_name_err.take().unwrap()))
+                                }
                             }
                         }
-                    }.map_err(|(e, d): (_, Cow<'static, str>)| err_io("write", format!("{} when writing substituted {}", e, d)))?;
+                    }.map_err(|(e, d): (_, Cow<'static, str>)| err_io("write", format!("{} when writing substituted {}", e, d), out_name_err.take().unwrap()))?;
             } else {
-                return Err(err_parse(format!("unmatched open brace at position {}", byte_pos)));
+                return Err(err_parse(format!("unmatched open brace at position {}", byte_pos), out_name_err.take().unwrap()));
             }
         }
 
         to_format = after;
     }
 
-    into.write_all(to_format.as_bytes()).map_err(|e| err_io("write", format!("{} when writing unformatted output", e)))?;
+    into.write_all(to_format.as_bytes()).map_err(|e| err_io("write", format!("{} when writing unformatted output", e), out_name_err.take().unwrap()))?;
 
-    Ok(())
+    Ok(out_name_err.unwrap())
 }
 
-fn normalise_datetime<Tz: TimeZone>(whom: DateTime<Tz>) -> DateTime<FixedOffset> {
+fn normalise_datetime<Tz: TimeZone>(whom: &DateTime<Tz>) -> DateTime<FixedOffset> {
     whom.with_timezone(&whom.offset().fix())
 }
 
-fn err_io<M: Into<Cow<'static, str>>>(op: &'static str, more: M) -> Error {
-    err_io_impl(op, more.into())
+fn err_io<M: Into<Cow<'static, str>>>(op: &'static str, more: M, out_name_err: Cow<'static, str>) -> Error {
+    err_io_impl(op, more.into(), out_name_err)
 }
 
-fn err_parse<M: Into<Cow<'static, str>>>(more: M) -> Error {
-    err_parse_impl(more.into())
+fn err_parse<M: Into<Cow<'static, str>>>(more: M, out_name_err: Cow<'static, str>) -> Error {
+    err_parse_impl(more.into(), out_name_err)
 }
 
-fn err_io_impl(op: &'static str, more: Cow<'static, str>) -> Error {
+fn err_io_impl(op: &'static str, more: Cow<'static, str>, out_name_err: Cow<'static, str>) -> Error {
     Error::Io {
-        desc: "formatted output", // TODO
+        desc: out_name_err,
         op: op,
         more: Some(more),
     }
 }
 
-fn err_parse_impl(more: Cow<'static, str>) -> Error {
+fn err_parse_impl(more: Cow<'static, str>, out_name_err: Cow<'static, str>) -> Error {
     Error::Parse {
-        tp: "unformatted input", // TODO
-        wher: "formatted output",
+        tp: "unformatted input",
+        wher: out_name_err,
         more: Some(more),
     }
 }

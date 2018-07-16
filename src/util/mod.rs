@@ -172,7 +172,7 @@ pub fn extract_links<'a>(ast: &'a ComrakAstNode<'a>) -> Result<Vec<String>, Erro
                 out.push(String::from_utf8(link.url.clone()).map_err(|_| {
                         Error::Parse {
                             tp: "UTF-8 string",
-                            wher: "URL list",
+                            wher: "URL list".into(),
                             more: None,
                         }
                     })?);
@@ -237,7 +237,7 @@ pub fn is_asset_link(link: &str) -> bool {
 /// assert_eq!(read_file(&("$ROOT/image.png".to_string(), root.join("image.png")), "image"),
 ///            Err(Error::Parse {
 ///                tp: "UTF-8 string",
-///                wher: "image",
+///                wher: "image".into(),
 ///                more: None,
 ///            }));
 /// assert_eq!(read_file(&("$ROOT/nonexistant".to_string(), root.join("nonexistant")), "∅"),
@@ -255,7 +255,7 @@ pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<Str
             }
         } else {
             Error::Io {
-                desc: what_for,
+                desc: what_for.into(),
                 op: "open",
                 more: Some(e.to_string().into()),
             }
@@ -264,7 +264,7 @@ pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<Str
         .map_err(|_| {
             Error::Parse {
                 tp: "UTF-8 string",
-                wher: what_for,
+                wher: what_for.into(),
                 more: None,
             }
         })?;

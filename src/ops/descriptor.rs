@@ -117,7 +117,7 @@ impl BlogueDescriptor {
             .read_to_string(&mut buf)
             .map_err(|_| {
                 Error::Io {
-                    desc: "blogue descriptor",
+                    desc: "blogue descriptor".into(),
                     op: "read",
                     more: Some("not UTF-8".into()),
                 }
@@ -125,7 +125,7 @@ impl BlogueDescriptor {
 
         let serialised: BlogueDescriptorSerialised = from_toml_str(&buf).map_err(move |err| {
                 Error::FileParsingFailed {
-                    desc: "blogue descriptor",
+                    desc: "blogue descriptor".into(),
                     errors: Some(err.to_string().into()),
                 }
             })?;

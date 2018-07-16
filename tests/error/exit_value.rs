@@ -4,14 +4,14 @@ use bloguen::Error;
 #[test]
 fn io() {
     assert_eq!(Error::Io {
-                       desc: "",
+                       desc: "".into(),
                        op: "",
                        more: None,
                    }
                    .exit_value(),
                1);
     assert_eq!(Error::Io {
-                       desc: "",
+                       desc: "".into(),
                        op: "",
                        more: Some("".into()),
                    }
@@ -23,14 +23,14 @@ fn io() {
 fn parse() {
     assert_eq!(Error::Parse {
                        tp: "",
-                       wher: "",
+                       wher: "".into(),
                        more: None,
                    }
                    .exit_value(),
                2);
     assert_eq!(Error::Parse {
                        tp: "",
-                       wher: "",
+                       wher: "".into(),
                        more: Some("".into()),
                    }
                    .exit_value(),
@@ -60,13 +60,13 @@ fn wrong_file_state() {
 #[test]
 fn file_parsing_failed_() {
     assert_eq!(Error::FileParsingFailed {
-                       desc: "",
+                       desc: "".into(),
                        errors: None,
                    }
                    .exit_value(),
                5);
     assert_eq!(Error::FileParsingFailed {
-                       desc: "",
+                       desc: "".into(),
                        errors: Some("".into()),
                    }
                    .exit_value(),

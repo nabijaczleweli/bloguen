@@ -69,7 +69,7 @@ fn not_utf8() {
     assert_eq!(read_file(&("$ROOT/data".to_string(), root.join("data")), "data"),
                Err(Error::Parse {
                    tp: "UTF-8 string",
-                   wher: "data",
+                   wher: "data".into(),
                    more: None,
                }));
 }
