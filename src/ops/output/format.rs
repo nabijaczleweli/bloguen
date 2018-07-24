@@ -1,8 +1,8 @@
-use self::super::super::util::{parse_date_format_specifier, parse_function_notation};
+use self::super::super::super::util::{parse_date_format_specifier, parse_function_notation};
 use chrono::{FixedOffset, DateTime, TimeZone, Offset, Local, Utc};
+use self::super::super::super::Error;
+use self::super::super::LanguageTag;
 use std::collections::BTreeMap;
-use self::super::super::Error;
-use self::super::LanguageTag;
 use std::borrow::Cow;
 use std::io::Write;
 
