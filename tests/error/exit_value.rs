@@ -58,7 +58,7 @@ fn wrong_file_state() {
 }
 
 #[test]
-fn file_parsing_failed_() {
+fn file_parsing_failed() {
     assert_eq!(Error::FileParsingFailed {
                        desc: "".into(),
                        errors: None,
