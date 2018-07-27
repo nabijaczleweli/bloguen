@@ -1,5 +1,6 @@
-use self::super::super::super::util::read_file;
-use self::super::super::super::Error;
+use self::super::super::super::super::util::read_file;
+use self::super::super::super::super::Error;
+use self::super::WrappedElement;
 use std::path::PathBuf;
 use std::borrow::Cow;
 use serde::de;
@@ -7,43 +8,26 @@ use std::fmt;
 
 
 lazy_static! {
-    static ref STYLE_LINK_HEAD: &'static str = include_str!("../../../assets/element_wrappers/style/link.head").trim();
-    static ref STYLE_LINK_FOOT: &'static str = include_str!("../../../assets/element_wrappers/style/link.foot").trim();
+    static ref STYLE_LINK_HEAD: &'static str = include_str!("../../../../assets/element_wrappers/style/link.head").trim();
+    static ref STYLE_LINK_FOOT: &'static str = include_str!("../../../../assets/element_wrappers/style/link.foot").trim();
 
-    static ref STYLE_LITERAL_HEAD: &'static str = include_str!("../../../assets/element_wrappers/style/link.head").trim_left();
-    static ref STYLE_LITERAL_FOOT: &'static str = include_str!("../../../assets/element_wrappers/style/link.foot").trim_right();
+    static ref STYLE_LITERAL_HEAD: &'static str = include_str!("../../../../assets/element_wrappers/style/link.head").trim_left();
+    static ref STYLE_LITERAL_FOOT: &'static str = include_str!("../../../../assets/element_wrappers/style/link.foot").trim_right();
 }
 
-
-pub trait WrappedElement {
-    fn head(&self) -> &str;
-    fn content(&self) -> &str;
-    fn foot(&self) -> &str;
-
-    fn head_b(&self) -> &[u8] {
-        self.head().as_bytes()
-    }
-
-    fn content_b(&self) -> &[u8] {
-        self.content().as_bytes()
-    }
-
-    fn foot_b(&self) -> &[u8] {
-        self.foot().as_bytes()
-    }
-}
-
-#[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
-pub struct StyleElement {
-    class: StyleElementClass,
-    data: Cow<'static, str>,
-}
 
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub enum StyleElementClass {
     Link,
     Literal,
     File,
+}
+
+
+#[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+pub struct StyleElement {
+    class: StyleElementClass,
+    data: Cow<'static, str>,
 }
 
 impl StyleElement {
@@ -107,6 +91,7 @@ impl WrappedElement for StyleElement {
         }
     }
 }
+
 
 const STYLE_FIELDS: &[&str] = &["class", "data"];
 
