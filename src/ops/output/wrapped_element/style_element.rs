@@ -156,7 +156,7 @@ impl<'de> de::Visitor<'de> for StyleElementVisitor {
                         "literal" => StyleElementClass::Literal,
                         "link" => StyleElementClass::Link,
                         "file" => StyleElementClass::File,
-                        val => return Err(de::Error::invalid_value(de::Unexpected::Str(val), &r#""literal", "link", or "file" "#)),
+                        val => return Err(de::Error::invalid_value(de::Unexpected::Str(val), &r#""literal", "link", or "file""#)),
                     });
                 }
                 "data" => {
