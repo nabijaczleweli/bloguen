@@ -42,7 +42,18 @@ impl StyleElement {
         }
     }
 
-    pub fn from_path(path: &(String, PathBuf)) -> Result<StyleElement, Error> {
+    pub fn from_path<Dt: Into<Cow<'static, str>>>(path: Dt) -> StyleElement {
+        StyleElement::from_path_impl(path.into())
+    }
+
+    fn from_path_impl(path: Cow<'static, str>) -> StyleElement {
+        StyleElement {
+            class: StyleElementClass::File,
+            data: path.into(),
+        }
+    }
+
+    pub fn from_file(path: &(String, PathBuf)) -> Result<StyleElement, Error> {
         Ok(StyleElement {
             class: StyleElementClass::Literal,
             data: read_file(path, "literal style element from path")?.into(),
