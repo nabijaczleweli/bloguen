@@ -9,10 +9,9 @@ struct Data {
 
 #[test]
 fn invalid_class() {
-    let res: Result<Data, _> = from_toml_str("[data]\n\
-                                              class = 'helnlo'\n\
-                                              data = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
-    assert_eq!(format!("{}", res.err().unwrap()), r#"invalid value: string "helnlo", expected "literal", "link", or "file" for key `data`"#);
+    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'helnlo'\ndata = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
+    assert_eq!(format!("{}", res.err().unwrap()),
+               r#"invalid value: string "helnlo", expected "literal", "link", or "file" for key `data`"#);
 }
 
 #[test]
@@ -31,19 +30,14 @@ fn no_data() {
 
 #[test]
 fn dupe_class() {
-    let res: Result<Data, _> = from_toml_str("[data]\n\
-                                              class = 'link'\n\
-                                              class = 'link'\n\
-                                              data = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
+    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'link'\nclass = 'link'\ndata = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
     assert_eq!(format!("{}", res.err().unwrap()), r#"duplicate field `class` for key `data`"#);
 }
 
 #[test]
 fn dupe_data() {
-    let res: Result<Data, _> = from_toml_str("[data]\n\
-                                              class = 'link'\n\
-                                              data = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n\
-                                              data = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
+    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'link'\ndata = '//nabijaczlewli.xyz/kaschism/assets/column.css'\ndata = \
+                                              '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
     assert_eq!(format!("{}", res.err().unwrap()), r#"duplicate field `data` for key `data`"#);
 }
 
@@ -52,5 +46,6 @@ fn dupe_data() {
 fn unknown_field() {
     let res: Result<Data, _> = from_toml_str("[data]\n\
                                               helnlo = 'link'\n");
-    assert_eq!(format!("{}", res.err().unwrap()), r#"unknown field `helnlo`, expected `class` or `data` for key `data`"#);
+    assert_eq!(format!("{}", res.err().unwrap()),
+               r#"unknown field `helnlo`, expected `class` or `data` for key `data`"#);
 }

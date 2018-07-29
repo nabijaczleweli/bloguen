@@ -31,6 +31,17 @@ pub struct StyleElement {
 }
 
 impl StyleElement {
+    pub fn from_link<Dt: Into<Cow<'static, str>>>(link: Dt) -> StyleElement {
+        StyleElement::from_link_impl(link.into())
+    }
+
+    fn from_link_impl(link: Cow<'static, str>) -> StyleElement {
+        StyleElement {
+            class: StyleElementClass::Link,
+            data: link,
+        }
+    }
+
     pub fn from_literal<Dt: Into<Cow<'static, str>>>(literal: Dt) -> StyleElement {
         StyleElement::from_literal_impl(literal.into())
     }
@@ -60,20 +71,21 @@ impl StyleElement {
         })
     }
 
-    pub fn from_link<Dt: Into<Cow<'static, str>>>(link: Dt) -> StyleElement {
-        StyleElement::from_link_impl(link.into())
-    }
-
-    fn from_link_impl(link: Cow<'static, str>) -> StyleElement {
-        StyleElement {
-            class: StyleElementClass::Link,
-            data: link,
-        }
-    }
-
     pub fn load(&mut self, base: &(String, PathBuf)) -> Result<(), Error> {
         if self.class == StyleElementClass::File {
-            self.data = read_file(&(format!("{}{}", base.0, self.data), base.1.join(self.data.as_ref())), "file style element")?.into();
+            self.data = read_file(&(format!("{}{}{}",
+                                            base.0,
+                                            if !['/', '\\'].contains(&(base.0.as_bytes()[base.0.as_bytes().len() - 1] as char)) &&
+                                               !['/', '\\'].contains(&(self.data.as_bytes()[0] as char)) {
+                                                "/"
+                                            } else {
+                                                ""
+                                            },
+                                            self.data),
+                                    base.1.join(self.data.as_ref())),
+                                  "file style element")
+                ?
+                .into();
             self.class = StyleElementClass::Literal;
         }
 
