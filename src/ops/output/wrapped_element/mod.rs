@@ -3,6 +3,9 @@ mod style_element;
 pub use self::style_element::StyleElement;
 
 
+/// An element with a preface, a content, and a postface.
+///
+/// More efficient than concatting them together.
 pub trait WrappedElement {
     fn head(&self) -> &str;
     fn content(&self) -> &str;
