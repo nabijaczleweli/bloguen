@@ -1,6 +1,8 @@
 mod style_element;
+mod script_element;
 
 pub use self::style_element::StyleElement;
+pub use self::script_element::ScriptElement;
 
 
 /// An element with a preface, a content, and a postface.

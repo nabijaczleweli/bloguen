@@ -255,8 +255,8 @@ impl StyleElement {
     /// # */
     ///
     /// let lit_p = StyleElement::from_file(&("$ROOT/common.cs".to_string(), root.join("common.css"))).unwrap();
-    /// assert_eq!(format!("{}{}{}", lit_p.head(), lit_p.content(), lit_p.foot()),
-    /// "<style type=\"text/css\">\n\n\
+    /// assert_eq!(format!("{}{}{}", lit_p.head(), lit_p.content(), lit_p.foot()), "\
+    /// <style type=\"text/css\">\n\n\
     ///      ul, ol {\n\
     ///          margin-top: 0;\n\
     ///          margin-bottom: 0;\n\
