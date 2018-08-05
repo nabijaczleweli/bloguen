@@ -9,7 +9,7 @@ struct Data {
 
 #[test]
 fn invalid_class() {
-    let res: Result<Data, _> = from_toml_str("data = 'helnlo://nabijaczlewli.xyz/kaschism/assets/column.css'");
+    let res: Result<Data, _> = from_toml_str("data = 'helnlo://nabijaczleweli.xyz/kaschism/assets/column.css'");
     assert_eq!(format!("{}", res.err().unwrap()),
                r#"invalid value: string "helnlo", expected "literal", "link", or "file" for key `data`"#);
 }

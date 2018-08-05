@@ -12,7 +12,7 @@ fn link() {
     let root = temp_dir().join("bloguen-test").join("ops-output-wrapped_element-style_element-load-ok-link");
     let _ = fs::create_dir_all(&root);
 
-    let mut dt = StyleElement::from_link("//nabijaczlewli.xyz/kaschism/assets/column.css");
+    let mut dt = StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css");
     let bkp = dt.clone();
 
     assert_eq!(dt.load(&("$ROOT".to_string(), root)), Ok(()));

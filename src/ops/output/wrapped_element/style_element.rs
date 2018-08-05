@@ -49,7 +49,7 @@ enum StyleElementClass {
 /// # fn main() {
 /// let styles_toml = "[[styles]]
 ///                    class = 'link'
-///                    data = '//nabijaczlewli.xyz/kaschism/assets/column.css'
+///                    data = '//nabijaczleweli.xyz/kaschism/assets/column.css'
 ///
 ///                    [[styles]]
 ///                    class = 'literal'
@@ -61,7 +61,7 @@ enum StyleElementClass {
 ///
 /// let StyleContainer { styles } = toml::from_str(styles_toml).unwrap();
 /// assert_eq!(&styles,
-///            &[StyleElement::from_link("//nabijaczlewli.xyz/kaschism/assets/column.css"),
+///            &[StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
 ///              StyleElement::from_literal(".indented { text-indent: 1em; }"),
 ///              StyleElement::from_path("common.css")]);
 /// # }
@@ -82,14 +82,14 @@ enum StyleElementClass {
 ///
 /// # fn main() {
 /// let styles_toml = "styles = [
-///                        'link://nabijaczlewli.xyz/kaschism/assets/column.css',
+///                        'link://nabijaczleweli.xyz/kaschism/assets/column.css',
 ///                        'literal:.indented { text-indent: 1em; }',
 ///                        'file:common.css',
 ///                    ]";
 ///
 /// let StyleContainer { styles } = toml::from_str(styles_toml).unwrap();
 /// assert_eq!(&styles,
-///            &[StyleElement::from_link("//nabijaczlewli.xyz/kaschism/assets/column.css"),
+///            &[StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
 ///              StyleElement::from_literal(".indented { text-indent: 1em; }"),
 ///              StyleElement::from_path("common.css")]);
 /// # }
@@ -107,10 +107,10 @@ impl StyleElement {
     ///
     /// ```
     /// # use bloguen::ops::{WrappedElement, StyleElement};
-    /// let lonk = StyleElement::from_link("//nabijaczlewli.xyz/kaschism/assets/column.css");
+    /// let lonk = StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css");
     /// assert_eq!(
     ///     format!("{}{}{}", lonk.head(), lonk.content(), lonk.foot()),
-    ///     "<link href=\"//nabijaczlewli.xyz/kaschism/assets/column.css\" rel=\"stylesheet\" />\n")
+    ///     "<link href=\"//nabijaczleweli.xyz/kaschism/assets/column.css\" rel=\"stylesheet\" />\n")
     /// ```
     pub fn from_link<Dt: Into<Cow<'static, str>>>(link: Dt) -> StyleElement {
         StyleElement::from_link_impl(link.into())

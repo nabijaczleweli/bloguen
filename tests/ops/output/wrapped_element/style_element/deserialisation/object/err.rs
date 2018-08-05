@@ -9,7 +9,7 @@ struct Data {
 
 #[test]
 fn invalid_class() {
-    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'helnlo'\ndata = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
+    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'helnlo'\ndata = '//nabijaczleweli.xyz/kaschism/assets/column.css'\n");
     assert_eq!(format!("{}", res.err().unwrap()),
                r#"invalid value: string "helnlo", expected "literal", "link", or "file" for key `data`"#);
 }
@@ -17,7 +17,7 @@ fn invalid_class() {
 #[test]
 fn no_class() {
     let res: Result<Data, _> = from_toml_str("[data]\n\
-                                              data = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
+                                              data = '//nabijaczleweli.xyz/kaschism/assets/column.css'\n");
     assert_eq!(format!("{}", res.err().unwrap()), r#"missing field `class` for key `data`"#);
 }
 
@@ -30,14 +30,14 @@ fn no_data() {
 
 #[test]
 fn dupe_class() {
-    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'link'\nclass = 'link'\ndata = '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
+    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'link'\nclass = 'link'\ndata = '//nabijaczleweli.xyz/kaschism/assets/column.css'\n");
     assert_eq!(format!("{}", res.err().unwrap()), r#"duplicate field `class` for key `data`"#);
 }
 
 #[test]
 fn dupe_data() {
-    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'link'\ndata = '//nabijaczlewli.xyz/kaschism/assets/column.css'\ndata = \
-                                              '//nabijaczlewli.xyz/kaschism/assets/column.css'\n");
+    let res: Result<Data, _> = from_toml_str("[data]\nclass = 'link'\ndata = '//nabijaczleweli.xyz/kaschism/assets/column.css'\ndata = \
+                                              '//nabijaczleweli.xyz/kaschism/assets/column.css'\n");
     assert_eq!(format!("{}", res.err().unwrap()), r#"duplicate field `data` for key `data`"#);
 }
 

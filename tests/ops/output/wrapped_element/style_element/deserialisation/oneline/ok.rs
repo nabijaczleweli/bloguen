@@ -9,8 +9,8 @@ struct Data {
 
 #[test]
 fn link() {
-    let Data { data } = from_toml_str("data = 'link://nabijaczlewli.xyz/kaschism/assets/column.css'").unwrap();
-    assert_eq!(data, StyleElement::from_link("//nabijaczlewli.xyz/kaschism/assets/column.css"));
+    let Data { data } = from_toml_str("data = 'link://nabijaczleweli.xyz/kaschism/assets/column.css'").unwrap();
+    assert_eq!(data, StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"));
 }
 
 #[test]
