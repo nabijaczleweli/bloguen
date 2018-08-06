@@ -1,6 +1,6 @@
 use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links, read_file};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
-use self::super::{LanguageTag, format_output};
+use self::super::{ScriptElement, StyleElement, LanguageTag, format_output};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
 use comrak::{self, Arena as ComrakArena};
@@ -243,7 +243,8 @@ impl BloguePost {
     /// # assert_eq!(read, "header<p><a href=\"url.html\">Блогг</a></p>\nfooter");
     /// ```
     pub fn generate(&self, into: &(String, PathBuf), post_header: &str, post_footer: &str, blog_name: &str, language: &LanguageTag, author: &str,
-                    post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>)
+                    post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>, post_styles: &[StyleElement],
+                    global_styles: &[StyleElement], post_scripts: &[ScriptElement], global_scripts: &[ScriptElement])
                     -> Result<Vec<String>, Error> {
         let post_text = read_file(&(format!("{}post.md", self.source_dir.0), self.source_dir.1.join("post.md")), "post text")?;
 
@@ -276,6 +277,8 @@ impl BloguePost {
                                             &self.name,
                                             author,
                                             &self.datetime,
+                                            &[global_styles, post_styles],
+                                            &[global_scripts, post_scripts],
                                             &mut post_html_f,
                                             normalised_name)?;
         comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f).map_err(|e| {
@@ -293,6 +296,8 @@ impl BloguePost {
                       &self.name,
                       author,
                       &self.datetime,
+                      &[global_styles, post_styles],
+                      &[global_scripts, post_scripts],
                       &mut post_html_f,
                       normalised_name)?;
 

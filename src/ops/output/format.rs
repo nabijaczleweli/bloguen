@@ -1,8 +1,9 @@
 use self::super::super::super::util::{parse_date_format_specifier, parse_function_notation};
 use chrono::{FixedOffset, DateTime, TimeZone, Offset, Local, Utc};
+use self::super::super::{WrappedElement, LanguageTag};
 use self::super::super::super::Error;
-use self::super::super::LanguageTag;
 use std::collections::BTreeMap;
+use std::iter::FromIterator;
 use std::borrow::Cow;
 use std::io::Write;
 
@@ -64,10 +65,16 @@ use std::io::Write;
 /// println!("{}", String::from_utf8(out).unwrap());
 /// panic!();
 /// ```
-pub fn format_output<W: Write, E: Into<Cow<'static, str>>, Tz: TimeZone>(to_format: &str, blog_name: &str, language: &LanguageTag,
-                                                                         global_data: &BTreeMap<String, String>, local_data: &BTreeMap<String, String>,
-                                                                         title: &str, author: &str, post_date: &DateTime<Tz>, into: &mut W, out_name_err: E)
-                                                                         -> Result<Cow<'static, str>, Error> {
+pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
+                                       local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: &DateTime<Tz>, styles: &[&[St]],
+                                       scripts: &[&[Sc]], into: &mut W, out_name_err: E)
+                                       -> Result<Cow<'static, str>, Error>
+    where W: Write,
+          E: Into<Cow<'static, str>>,
+          Tz: TimeZone,
+          St: WrappedElement,
+          Sc: WrappedElement
+{
     format_output_impl(to_format,
                        blog_name,
                        language,
@@ -76,14 +83,20 @@ pub fn format_output<W: Write, E: Into<Cow<'static, str>>, Tz: TimeZone>(to_form
                        title,
                        author,
                        normalise_datetime(post_date),
+                       styles,
+                       scripts,
                        into,
                        out_name_err.into())
 }
 
-pub fn format_output_impl<W: Write>(mut to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
-                                    local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: DateTime<FixedOffset>, into: &mut W,
-                                    out_name_err: Cow<'static, str>)
-                                    -> Result<Cow<'static, str>, Error> {
+pub fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
+                                     local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: DateTime<FixedOffset>, styles: &[&[St]],
+                                     scripts: &[&[Sc]], into: &mut W, out_name_err: Cow<'static, str>)
+                                     -> Result<Cow<'static, str>, Error>
+    where W: Write,
+          St: WrappedElement,
+          Sc: WrappedElement
+{
     let mut out_name_err = Some(out_name_err);
 
     let mut byte_pos = 0usize;
@@ -118,6 +131,30 @@ pub fn format_output_impl<W: Write>(mut to_format: &str, blog_name: &str, langua
                         "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
                         "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
                         "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
+
+                        "styles" => {
+                            Result::from_iter(styles.iter().map(|ss| {
+                                Result::from_iter(ss.iter().map(|s| {
+                                    into.write_all(s.head_b()).map_err(|e| (e, "style tag header".into()))?;
+                                    into.write_all(s.content_b()).map_err(|e| (e, "style tag footer".into()))?;
+                                    into.write_all(s.foot_b()).map_err(|e| (e, "style tag footer".into()))?;
+
+                                    Ok(())
+                                }))
+                            }))
+                        }
+
+                        "scripts" => {
+                            Result::from_iter(scripts.iter().map(|ss| {
+                                Result::from_iter(ss.iter().map(|s| {
+                                    into.write_all(s.head_b()).map_err(|e| (e, "script tag header".into()))?;
+                                    into.write_all(s.content_b()).map_err(|e| (e, "script tag footer".into()))?;
+                                    into.write_all(s.foot_b()).map_err(|e| (e, "script tag footer".into()))?;
+
+                                    Ok(())
+                                }))
+                            }))
+                        }
 
                         key if key.starts_with("data-") => {
                             let key = &key["data-".len()..];
