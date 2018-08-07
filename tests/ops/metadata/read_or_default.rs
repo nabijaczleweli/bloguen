@@ -1,5 +1,5 @@
+use bloguen::ops::{ScriptElement, StyleElement, PostMetadata};
 use std::collections::BTreeMap;
-use bloguen::ops::PostMetadata;
 use std::fs::{self, File};
 use std::default::Default;
 use std::env::temp_dir;
@@ -17,6 +17,16 @@ fn ok_all_specified() {
         .unwrap()
         .write_all("language = \"pl\"\n\
                     author = \"nabijaczleweli\"\n\
+                    styles = [\"link://nabijaczleweli.xyz/kaschism/assets/column.css\",\n\
+                              \"literal:.indented { text-indent: 1em; }\"]\n\
+                    \n\
+                    [[scripts]]\n\
+                    class = \"link\"\n\
+                    data = \"/content/assets/syllable.js\"\n\
+                    \n\
+                    [[scripts]]\n\
+                    class = \"file\"\n\
+                    data = \"MathJax-config.js\"\n\
                     \n\
                     [data]\n\
                     desc = \"Każdy koniec to nowy początek [PL]\"\n\
@@ -28,6 +38,9 @@ fn ok_all_specified() {
                Ok(PostMetadata {
                    language: Some("pl".parse().unwrap()),
                    author: Some("nabijaczleweli".to_string()),
+                   styles: vec![StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
+                                StyleElement::from_literal(".indented { text-indent: 1em; }")],
+                   scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
                    data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string()), ("communism".to_string(), "yass, queen".to_string())]
                        .into_iter()
                        .collect(),
@@ -43,13 +56,16 @@ fn ok_no_data() {
     File::create(post_root.join("metadata.toml"))
         .unwrap()
         .write_all("language = \"pl\"\n\
-                    author = \"nabijaczleweli\"\n".as_bytes())
+                    author = \"nabijaczleweli\"\n"
+            .as_bytes())
         .unwrap();
 
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Ok(PostMetadata {
                    language: Some("pl".parse().unwrap()),
                    author: Some("nabijaczleweli".to_string()),
+                   styles: vec![],
+                   scripts: vec![],
                    data: BTreeMap::new(),
                }));
 }
@@ -62,7 +78,18 @@ fn ok_just_data() {
 
     File::create(post_root.join("metadata.toml"))
         .unwrap()
-        .write_all("[data]\n\
+        .write_all("styles = [\"link://nabijaczleweli.xyz/kaschism/assets/column.css\",\n\
+                              \"literal:.indented { text-indent: 1em; }\"]\n\
+                    \n\
+                    [[scripts]]\n\
+                    class = \"link\"\n\
+                    data = \"/content/assets/syllable.js\"\n\
+                    \n\
+                    [[scripts]]\n\
+                    class = \"file\"\n\
+                    data = \"MathJax-config.js\"\n\
+                    \n\
+                    [data]\n\
                     desc = \"Każdy koniec to nowy początek [PL]\"\n\
                     communism = \"yass, queen\"\n"
             .as_bytes())
@@ -72,9 +99,32 @@ fn ok_just_data() {
                Ok(PostMetadata {
                    language: None,
                    author: None,
+                   styles: vec![StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
+                                StyleElement::from_literal(".indented { text-indent: 1em; }")],
+                   scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
                    data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string()), ("communism".to_string(), "yass, queen".to_string())]
                        .into_iter()
                        .collect(),
+               }));
+}
+
+#[test]
+fn invalid_style_element() {
+    let post_root = temp_dir().join("bloguen-test").join("ops-metadata-read_or_default-invalid_style_element");
+    let _ = fs::remove_dir_all(&post_root);
+    fs::create_dir_all(post_root.join("templates")).unwrap();
+
+    File::create(post_root.join("metadata.toml"))
+        .unwrap()
+        .write_all("styles = [\"henlo:benlo\"]".as_bytes())
+        .unwrap();
+    File::create(post_root.join("header.html")).unwrap();
+    File::create(post_root.join("footer.htm")).unwrap();
+
+    assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
+               Err(Error::FileParsingFailed {
+                   desc: "post metadata".into(),
+                   errors: Some("invalid value: string \"henlo\", expected \"literal\", \"link\", or \"file\" for key `styles`".into()),
                }));
 }
 

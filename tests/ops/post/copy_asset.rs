@@ -38,7 +38,11 @@ fn ok_copied() {
                   &LANGUAGE_EN_GB,
                   "autheur",
                   &Default::default(),
-                  &Default::default())
+                  &Default::default(),
+                  &[],
+                  &[],
+                  &[],
+                  &[])
         .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
@@ -62,7 +66,11 @@ fn ok_copied() {
                   &LANGUAGE_EN_GB,
                   "autheur",
                   &Default::default(),
-                  &Default::default())
+                  &Default::default(),
+                  &[],
+                  &[],
+                  &[],
+                  &[])
         .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
@@ -85,7 +93,11 @@ fn ok_copied() {
                   &LANGUAGE_EN_GB,
                   "autheur",
                   &Default::default(),
-                  &Default::default())
+                  &Default::default(),
+                  &[],
+                  &[],
+                  &[],
+                  &[])
         .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
     }
@@ -126,7 +138,11 @@ fn ok_not_copied() {
                   &LANGUAGE_EN_GB,
                   "autheur",
                   &Default::default(),
-                  &Default::default())
+                  &Default::default(),
+                  &[],
+                  &[],
+                  &[],
+                  &[])
         .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
@@ -143,7 +159,11 @@ fn ok_not_copied() {
                   &LANGUAGE_EN_GB,
                   "autheur",
                   &Default::default(),
-                  &Default::default())
+                  &Default::default(),
+                  &[],
+                  &[],
+                  &[],
+                  &[])
         .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
@@ -159,7 +179,11 @@ fn ok_not_copied() {
                   &LANGUAGE_EN_GB,
                   "autheur",
                   &Default::default(),
-                  &Default::default())
+                  &Default::default(),
+                  &[],
+                  &[],
+                  &[],
+                  &[])
         .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
     }
@@ -246,7 +270,11 @@ fn copy_failed() {
                   &LANGUAGE_EN_GB,
                   "autheur",
                   &Default::default(),
-                  &Default::default())
+                  &Default::default(),
+                  &[],
+                  &[],
+                  &[],
+                  &[])
         .unwrap() {
         assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
                    Err(Error::Io {

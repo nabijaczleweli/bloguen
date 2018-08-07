@@ -28,7 +28,11 @@ fn ok() {
                              &LANGUAGE_EN_GB,
                              "autheur",
                              &Default::default(),
-                             &Default::default()),
+                             &Default::default(),
+                             &[],
+                             &[],
+                             &[],
+                             &[]),
                Ok(vec!["1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned".to_string()]));
     let mut read = String::new();
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
@@ -45,7 +49,11 @@ fn ok() {
                              &LANGUAGE_EN_GB,
                              "autheur",
                              &Default::default(),
-                             &Default::default()),
+                             &Default::default(),
+                             &[],
+                             &[],
+                             &[],
+                             &[]),
                Ok(vec!["03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's".to_string()]));
     read.clear();
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
@@ -62,7 +70,11 @@ fn ok() {
                              &LANGUAGE_EN_GB,
                              "autheur",
                              &Default::default(),
-                             &Default::default()),
+                             &Default::default(),
+                             &[],
+                             &[],
+                             &[],
+                             &[]),
                Ok(vec!["005.%202018-04-19%2023-19-21%20cursed%20device%20chain".to_string()]));
     read.clear();
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
@@ -88,7 +100,11 @@ fn not_found() {
                              &LANGUAGE_EN_GB,
                              "autheur",
                              &Default::default(),
-                             &Default::default()),
+                             &Default::default(),
+                             &[],
+                             &[],
+                             &[],
+                             &[]),
                Err(Error::FileNotFound {
                    who: "post text",
                    path: format!("{}post.md", dir.0).into(),
@@ -118,7 +134,11 @@ fn non_utf8() {
                              &LANGUAGE_EN_GB,
                              "autheur",
                              &Default::default(),
-                             &Default::default()),
+                             &Default::default(),
+                             &[],
+                             &[],
+                             &[],
+                             &[]),
                Err(Error::Parse {
                    tp: "UTF-8 string",
                    wher: "post text".into(),
@@ -148,7 +168,11 @@ fn posts_directory() {
                              &LANGUAGE_EN_GB,
                              "autheur",
                              &Default::default(),
-                             &Default::default()),
+                             &Default::default(),
+                             &[],
+                             &[],
+                             &[],
+                             &[]),
                Err(Error::Io {
                    desc: "posts directory".into(),
                    op: "create",
@@ -182,7 +206,11 @@ fn post_create() {
                              &LANGUAGE_EN_GB,
                              "autheur",
                              &Default::default(),
-                             &Default::default()),
+                             &Default::default(),
+                             &[],
+                             &[],
+                             &[],
+                             &[]),
                Err(Error::Io {
                    desc: "post HTML".into(),
                    op: "create",

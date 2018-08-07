@@ -11,6 +11,8 @@ fn default() {
                PostMetadata {
                    language: None,
                    author: None,
+                   styles: vec![],
+                   scripts: vec![],
                    data: BTreeMap::new(),
                });
 }

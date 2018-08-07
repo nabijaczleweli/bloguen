@@ -17,8 +17,8 @@ use std::io::Write;
 /// ```
 /// # extern crate bloguen;
 /// # extern crate chrono;
+/// # use bloguen::ops::{ScriptElement, StyleElement, format_output};
 /// # use bloguen::util::LANGUAGE_EN_GB;
-/// # use bloguen::ops::format_output;
 /// # use chrono::DateTime;
 /// let head = r###"<!--
 /// nabijaczleweli.xyz (c) by nabijaczleweli@gmail.com (nabijaczleweli)
@@ -46,11 +46,8 @@ use std::io::Write;
 ///     <link href="../Roboto-font.css" rel="stylesheet" />
 ///     <link href="../the_taste_of_mi/Merriweather-font.css" rel="stylesheet" />
 ///     <link href="/content/assets/common.css" rel="stylesheet" />
-///     <style type="text/css">
-///         {{style}}
-///     </style>
-///     {{style_links}}
-///     {{script_links}}
+///     {styles}
+///     {scripts}
 /// </head>
 ///     <body>
 /// "###;
@@ -60,7 +57,12 @@ use std::io::Write;
 /// assert_eq!(
 ///     format_output(head, "Блогг", &LANGUAGE_EN_GB, &global_data, &local_data,
 ///                   "release-front - a generic release front-end, like Patchwork's", "nabijaczleweli",
-///                   &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(), &mut out, "test blog").unwrap(),
+///                   &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
+///                   &[&[StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css")],
+///                     &[StyleElement::from_literal(".indented { text-indent: 1em; }")]],
+///                   &[&[ScriptElement::from_link("/content/assets/syllable.js")],
+///                     &[ScriptElement::from_literal("document.getElementById(\"title\").innerText = \"Наган\";")]],
+///                   &mut out, "test blog").unwrap(),
 ///     "test blog");
 /// println!("{}", String::from_utf8(out).unwrap());
 /// panic!();

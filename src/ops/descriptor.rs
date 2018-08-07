@@ -1,7 +1,7 @@
+use self::super::{ScriptElement, StyleElement, LanguageTag};
 use toml::de::from_str as from_toml_str;
 use std::collections::BTreeMap;
 use self::super::super::Error;
-use self::super::LanguageTag;
 use std::path::PathBuf;
 use std::fs::File;
 use std::io::Read;
@@ -32,6 +32,14 @@ pub struct BlogueDescriptor {
     ///
     /// If not present, defaults to the current system language, which, if not detected, defaults to en-GB.
     pub language: Option<LanguageTag>,
+    /// A set of style descriptors.
+    ///
+    /// If not present, defaults to empty.
+    pub styles: Vec<StyleElement>,
+    /// A set of style descriptors.
+    ///
+    /// If not present, defaults to empty.
+    pub scripts: Vec<ScriptElement>,
     /// Additional static data to substitute in header and footer.
     ///
     /// If not present, defaults to empty.
@@ -45,6 +53,8 @@ struct BlogueDescriptorSerialised {
     pub header: Option<String>,
     pub footer: Option<String>,
     pub language: Option<LanguageTag>,
+    pub styles: Option<Vec<StyleElement>>,
+    pub scripts: Option<Vec<ScriptElement>>,
     pub data: Option<BTreeMap<String, String>>,
 }
 
@@ -69,6 +79,14 @@ impl BlogueDescriptor {
     /// header = "head.html"
     /// language = "pl"
     ///
+    /// [[scripts]]
+    /// class = "link"
+    /// data = "/content/assets/syllable.js"
+    ///
+    /// [[scripts]]
+    /// class = "file"
+    /// data = "MathJax-config.js"
+    ///
     /// [data]
     /// preferred_system = "capitalism"
     /// ```
@@ -76,7 +94,7 @@ impl BlogueDescriptor {
     /// The following holds:
     ///
     /// ```
-    /// # use bloguen::ops::BlogueDescriptor;
+    /// # use bloguen::ops::{BlogueDescriptor, ScriptElement};
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
     /// # use std::io::Write;
@@ -86,6 +104,14 @@ impl BlogueDescriptor {
     /// #     name = \"Блогг\"\n\
     /// #     header = \"head.html\"\n\
     /// #     language = \"pl\"\n\
+    /// #     \n\
+    /// #     [[scripts]]\n\
+    /// #     class = \"link\"\n\
+    /// #     data = \"/content/assets/syllable.js\"\n\
+    /// #     \n\
+    /// #     [[scripts]]\n\
+    /// #     class = \"file\"\n\
+    /// #     data = \"MathJax-config.js\"\n\
     /// #     \n\
     /// #     [data]\n\
     /// #     preferred_system = \"capitalism\"\n\
@@ -103,6 +129,8 @@ impl BlogueDescriptor {
     ///                header_file: ("$ROOT/head.html".to_string(), root.join("head.html")),
     ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
     ///                language: Some("pl".parse().unwrap()),
+    ///                styles: vec![],
+    ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
     ///                data: vec![("preferred_system".to_string(), "capitalism".to_string())].into_iter().collect(),
     ///            });
     /// ```
@@ -136,6 +164,8 @@ impl BlogueDescriptor {
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
             language: serialised.language,
+            styles: serialised.styles.unwrap_or_default(),
+            scripts: serialised.scripts.unwrap_or_default(),
             data: serialised.data.unwrap_or_default(),
         })
     }

@@ -1,4 +1,4 @@
-use bloguen::ops::BlogueDescriptor;
+use bloguen::ops::{BlogueDescriptor, ScriptElement, StyleElement};
 use std::fs::{self, File};
 use std::env::temp_dir;
 use std::io::Write;
@@ -18,6 +18,16 @@ fn ok_all_specified() {
                     header = \"templates/head\"\n\
                     footer = \"templates\\\\foot\"\n\
                     language = \"pl\"\n\
+                    styles = [\"link://nabijaczleweli.xyz/kaschism/assets/column.css\",\n\
+                              \"literal:.indented { text-indent: 1em; }\"]\n\
+                    \n\
+                    [[scripts]]\n\
+                    class = \"link\"\n\
+                    data = \"/content/assets/syllable.js\"\n\
+                    \n\
+                    [[scripts]]\n\
+                    class = \"file\"\n\
+                    data = \"MathJax-config.js\"\n\
                     \n\
                     [data]\n\
                     preferred-system = \"communism\"\n"
@@ -33,6 +43,9 @@ fn ok_all_specified() {
                    header_file: ("$ROOT/templates/head".to_string(), root.join("templates").join("head")),
                    footer_file: ("$ROOT/templates\\foot".to_string(), root.join("templates").join("foot")),
                    language: Some("pl".parse().unwrap()),
+                   styles: vec![StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
+                                StyleElement::from_literal(".indented { text-indent: 1em; }")],
+                   scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
                    data: vec![("preferred-system".to_string(), "communism".to_string())].into_iter().collect(),
                }));
 }
@@ -54,7 +67,9 @@ fn ok_induced() {
                    header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
                    language: None,
-                   data: vec![].into_iter().collect()
+                   styles: vec![],
+                   scripts: vec![],
+                   data: vec![].into_iter().collect(),
                }));
 }
 
@@ -77,6 +92,26 @@ fn invalid_language() {
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
                    errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language`".into()),
+               }));
+}
+
+#[test]
+fn invalid_style_element() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_style_element");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("styles = [\"henlo:benlo\"]".as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Err(Error::FileParsingFailed {
+                   desc: "blogue descriptor".into(),
+                   errors: Some("invalid value: string \"henlo\", expected \"literal\", \"link\", or \"file\" for key `styles`".into()),
                }));
 }
 

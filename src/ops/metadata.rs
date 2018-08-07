@@ -1,7 +1,7 @@
+use self::super::{ScriptElement, StyleElement, LanguageTag};
 use toml::de::from_str as from_toml_str;
 use std::collections::BTreeMap;
 use self::super::super::Error;
-use self::super::LanguageTag;
 use std::default::Default;
 use std::path::PathBuf;
 use std::fs::File;
@@ -19,6 +19,14 @@ pub struct PostMetadata {
     ///
     /// If not present, default post author is used.
     pub author: Option<String>,
+    /// A set of style descriptors.
+    ///
+    /// If not present, defaults to empty.
+    pub styles: Vec<StyleElement>,
+    /// A set of style descriptors.
+    ///
+    /// If not present, defaults to empty.
+    pub scripts: Vec<ScriptElement>,
     /// Additional static data to substitute in header and footer.
     ///
     /// If not present, defaults to empty.
@@ -29,6 +37,8 @@ pub struct PostMetadata {
 struct PostMetadataSerialised {
     pub language: Option<LanguageTag>,
     pub author: Option<String>,
+    pub styles: Option<Vec<StyleElement>>,
+    pub scripts: Option<Vec<ScriptElement>>,
     pub data: Option<BTreeMap<String, String>>,
 }
 
@@ -44,6 +54,14 @@ impl PostMetadata {
     /// ```toml
     /// language = "pl"
     ///
+    /// [[scripts]]
+    /// class = "link"
+    /// data = "/content/assets/syllable.js"
+    ///
+    /// [[scripts]]
+    /// class = "file"
+    /// data = "MathJax-config.js"
+    ///
     /// [data]
     /// desc = "Każdy koniec to nowy początek [PL]"
     /// ```
@@ -51,7 +69,7 @@ impl PostMetadata {
     /// The following holds:
     ///
     /// ```
-    /// # use bloguen::ops::PostMetadata;
+    /// # use bloguen::ops::{ScriptElement, PostMetadata};
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
     /// # use std::io::Write;
@@ -59,6 +77,14 @@ impl PostMetadata {
     /// # fs::create_dir_all(&post_root).unwrap();
     /// # File::create(post_root.join("metadata.toml")).unwrap().write_all(r#"
     /// #     language = "pl"
+    /// #
+    /// #     [[scripts]]
+    /// #     class = "link"
+    /// #     data = "/content/assets/syllable.js"
+    /// #
+    /// #     [[scripts]]
+    /// #     class = "file"
+    /// #     data = "MathJax-config.js"
     /// #
     /// #     [data]
     /// #     desc = "Każdy koniec to nowy początek [PL]"
@@ -71,6 +97,8 @@ impl PostMetadata {
     ///            PostMetadata {
     ///                language: Some("pl".parse().unwrap()),
     ///                author: None,
+    ///                styles: vec![],
+    ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
     ///                data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect(),
     ///            });
     /// ```
@@ -99,6 +127,8 @@ impl PostMetadata {
         Ok(PostMetadata {
             language: serialised.language,
             author: serialised.author,
+            styles: serialised.styles.unwrap_or_default(),
+            scripts: serialised.scripts.unwrap_or_default(),
             data: serialised.data.unwrap_or_default(),
         })
     }
@@ -109,6 +139,8 @@ impl Default for PostMetadata {
         PostMetadata {
             language: None,
             author: None,
+            styles: vec![],
+            scripts: vec![],
             data: BTreeMap::new(),
         }
     }
