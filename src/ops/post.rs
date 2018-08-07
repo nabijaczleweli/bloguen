@@ -230,9 +230,11 @@ impl BloguePost {
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
     /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer",
-    ///                       "Блогг", &LANGUAGE_EN_GB, "autheur", &Default::default(), &Default::default(), &[], &[], &[], &[]).is_ok());
+    ///                       "Блогг", &LANGUAGE_EN_GB, "autheur", &Default::default(), &Default::default(),
+    ///                       &[], &[], &[], &[]).is_ok());
     /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer",
-    /// #                          "Блогг", &LANGUAGE_EN_GB, "autheur", &Default::default(), &Default::default(), &[], &[], &[], &[]),
+    /// #                          "Блогг", &LANGUAGE_EN_GB, "autheur", &Default::default(), &Default::default(),
+    /// #                          &[], &[], &[], &[]),
     /// #            Ok(vec!["url.html".to_string()]));
     ///
     /// assert!(root.join("out").join("posts")

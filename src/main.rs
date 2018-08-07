@@ -70,6 +70,14 @@ fn result_main() -> Result<(), bloguen::Error> {
     bloguen::util::newline_pad(&mut post_header, 0, 2);
     bloguen::util::newline_pad(&mut post_footer, 2, 1);
 
+    for s in &mut descriptor.styles {
+        s.load(&opts.source_dir)?;
+    }
+
+    for s in &mut descriptor.scripts {
+        s.load(&opts.source_dir)?;
+    }
+
     println!("{}", post_header);
     println!("{}", post_footer);
     println!("{}", global_language);
@@ -79,6 +87,14 @@ fn result_main() -> Result<(), bloguen::Error> {
         let mut metadata = bloguen::ops::PostMetadata::read_or_default(&p.source_dir)?;
         let language = metadata.language.as_ref().unwrap_or(&global_language);
         let author = metadata.author.as_ref().unwrap_or(&global_author);
+
+        for s in &mut metadata.styles {
+            s.load(&p.source_dir)?;
+        }
+
+        for s in &mut metadata.scripts {
+            s.load(&p.source_dir)?;
+        }
 
         for link in p.generate(&opts.output_dir,
                       &post_header,
