@@ -12,11 +12,11 @@ use safe_transmute::guarded_transmute_to_bytes_pod;
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
 use self::super::ops::LanguageTag;
+use std::path::{self, PathBuf};
 use rand::{SeedableRng, Rng};
 use rand::prng::XorShiftRng;
 use comrak::ComrakOptions;
 use self::super::Error;
-use std::path::PathBuf;
 use chrono::NaiveTime;
 use std::borrow::Cow;
 use std::fs::File;
@@ -377,6 +377,36 @@ pub fn parse_function_notation(mut from: &str) -> Option<(&str, Vec<&str>)> {
         }
         (Some(lparen), _) => Some((&from[0..lparen], vec![])),
     }
+}
+
+/// Correctly append the specified string onto the specified path.
+///
+/// Works well even for `"\\?\"` paths on Windows, which don't handle `".."`, e.g., well.
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::util::concat_path;
+/// # use std::path::Path;
+/// assert_eq!(concat_path("hi/my/name/is", "what"),                    Path::new("hi/my/name/is/what"));
+/// assert_eq!(concat_path("/hi/my/name/is/slim/shady", ".././../who"), Path::new("/hi/my/name/is/who"));
+/// ```
+pub fn concat_path<W: Into<PathBuf>>(whom: W, with: &str) -> PathBuf {
+    concat_path_impl(whom.into(), with)
+}
+
+fn concat_path_impl(mut whom: PathBuf, with: &str) -> PathBuf {
+    for seg in with.split(path::is_separator) {
+        match seg {
+            "" | "." => {}
+            ".." => {
+                whom.pop();
+            }
+            _ => whom.push(seg),
+        }
+    }
+
+    whom
 }
 
 /// Try to get the default language for the system/user/environment.
