@@ -1,4 +1,4 @@
-use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links, read_file};
+use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links, concat_path, read_file};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
 use self::super::{ScriptElement, StyleElement, LanguageTag, format_output};
 use chrono::{NaiveTime, DateTime, TimeZone};
@@ -369,9 +369,9 @@ impl BloguePost {
     /// }
     /// ```
     pub fn copy_asset(&self, into: &(String, PathBuf), link: &str) -> Result<bool, Error> {
-        let source = link.split('/').fold(self.source_dir.1.clone(), |cur, el| cur.join(el));
+        let source = concat_path(self.source_dir.1.clone(), link);
         if source.exists() {
-            let output = link.split('/').fold(into.1.join("posts"), |cur, el| cur.join(el));
+            let output = concat_path(into.1.join("posts"), link);
 
             fs::create_dir_all(output.parent().unwrap()).map_err(|e| {
                     Error::Io {

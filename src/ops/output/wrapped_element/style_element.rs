@@ -1,4 +1,4 @@
-use self::super::super::super::super::util::read_file;
+use self::super::super::super::super::util::{concat_path, read_file};
 use self::super::super::super::super::Error;
 use self::super::WrappedElement;
 use std::path::PathBuf;
@@ -276,7 +276,8 @@ impl StyleElement {
 
     /// Read data from the filesystem, if appropriate.
     ///
-    /// Path elements are concatenated with the specified root, then [`read_file()`](../util/fn.read_file.html)d in, becoming literals.
+    /// Path elements are concatenated with the specified root, then [`read_file()`](../util/fn.read_file.html)d in, becoming
+    /// literals.
     ///
     /// Non-path elements are unaffected.
     ///
@@ -383,7 +384,7 @@ impl StyleElement {
                                                 ""
                                             },
                                             self.data),
-                                    base.1.join(self.data.as_ref())),
+                                    concat_path(base.1.clone(), &self.data)),
                                   "file style element")
                 ?
                 .into();

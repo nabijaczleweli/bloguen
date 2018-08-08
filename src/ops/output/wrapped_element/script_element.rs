@@ -1,4 +1,4 @@
-use self::super::super::super::super::util::read_file;
+use self::super::super::super::super::util::{concat_path, read_file};
 use self::super::super::super::super::Error;
 use self::super::WrappedElement;
 use std::path::PathBuf;
@@ -130,8 +130,9 @@ impl ScriptElement {
     /// ```
     /// # use bloguen::ops::{WrappedElement, ScriptElement};
     /// let lit = ScriptElement::from_literal("document.getElementById(\"title\").innerText = \"Наган\";");
-    /// assert_eq!(format!("{}{}{}", lit.head(), lit.content(), lit.foot()),
-    ///            "<script type=\"text/javascript\">\n\ndocument.getElementById(\"title\").innerText = \"Наган\";\n\n</script>\n")
+    /// assert_eq!(
+    ///     format!("{}{}{}", lit.head(), lit.content(), lit.foot()),
+    ///     "<script type=\"text/javascript\">\n\ndocument.getElementById(\"title\").innerText = \"Наган\";\n\n</script>\n")
     /// ```
     pub fn from_literal<Dt: Into<Cow<'static, str>>>(literal: Dt) -> ScriptElement {
         ScriptElement::from_literal_impl(literal.into())
@@ -312,7 +313,8 @@ impl ScriptElement {
 
     /// Read data from the filesystem, if appropriate.
     ///
-    /// Path elements are concatenated with the specified root, then [`read_file()`](../util/fn.read_file.html)d in, becoming literals.
+    /// Path elements are concatenated with the specified root, then [`read_file()`](../util/fn.read_file.html)d in, becoming
+    /// literals.
     ///
     /// Non-path elements are unaffected.
     ///
@@ -449,7 +451,7 @@ impl ScriptElement {
                                                 ""
                                             },
                                             self.data),
-                                    base.1.join(self.data.as_ref())),
+                                    concat_path(base.1.clone(), &self.data)),
                                   "file script element")
                 ?
                 .into();

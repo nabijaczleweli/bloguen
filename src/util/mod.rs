@@ -383,6 +383,8 @@ pub fn parse_function_notation(mut from: &str) -> Option<(&str, Vec<&str>)> {
 ///
 /// Works well even for `"\\?\"` paths on Windows, which don't handle `".."`, e.g., well.
 ///
+/// Only really required for user input.
+///
 /// # Examples
 ///
 /// ```

@@ -1,4 +1,5 @@
 use self::super::{ScriptElement, StyleElement, LanguageTag};
+use self::super::super::util::concat_path;
 use toml::de::from_str as from_toml_str;
 use std::collections::BTreeMap;
 use self::super::super::Error;
@@ -130,7 +131,8 @@ impl BlogueDescriptor {
     ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
     ///                language: Some("pl".parse().unwrap()),
     ///                styles: vec![],
-    ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
+    ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
+    ///                              ScriptElement::from_path("MathJax-config.js")],
     ///                data: vec![("preferred_system".to_string(), "capitalism".to_string())].into_iter().collect(),
     ///            });
     /// ```
@@ -181,7 +183,7 @@ fn additional_file(file_opt: Option<String>, root: &(String, PathBuf), tp: &str,
         })
     },
                          |af| {
-        let file = af.split(|c| c == '/' || c == '\\').fold(root.1.clone(), |cur, el| cur.join(el));
+        let file = concat_path(root.1.clone(), &af);
         let file_s = format!("{}{}", root.0, af);
         if file.exists() {
             if file.is_file() {
