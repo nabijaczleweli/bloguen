@@ -110,10 +110,12 @@ fn result_main() -> Result<(), bloguen::Error> {
                       &descriptor.scripts)?
             .into_iter()
             .filter(|l| bloguen::util::is_asset_link(l)) {
-            let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
-
-            if !p.copy_asset(&opts.output_dir, &link)? {
-                eprintln!("Couldn't find \"{}\" for \"{}\" post.", link, p.normalised_name());
+            if let Ok(link) = percent_decode(link.as_bytes()).decode_utf8() {
+                if !p.copy_asset(&opts.output_dir, &link)? {
+                    eprintln!("Couldn't find \"{}\" for \"{}\" post.", link, p.normalised_name());
+                }
+            } else {
+                eprintln!("Invalid percent-encoded \"{}\" link.", link);
             }
         }
     }
