@@ -362,8 +362,9 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// for link in post.generate(&out_pair, "header", "footer", "Блогг", &LANGUAGE_EN_GB, "autheur", &Default::default(),
-    ///                           &Default::default(), &[], &[], &[], &[]).unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
+    /// for link in post.generate(&out_pair, "header", "footer", "Блогг", &LANGUAGE_EN_GB, "autheur",
+    ///                           &Default::default(), &Default::default(), &[], &[], &[], &[])
+    ///             .unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
     ///     let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
     ///     println!("Copying {}: {:?}", link, post.copy_asset(&out_pair, &link));
     /// }

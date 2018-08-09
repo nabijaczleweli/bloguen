@@ -133,7 +133,8 @@ impl BlogueDescriptor {
     ///                styles: vec![],
     ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
     ///                              ScriptElement::from_path("MathJax-config.js")],
-    ///                data: vec![("preferred_system".to_string(), "capitalism".to_string())].into_iter().collect(),
+    ///                data: vec![("preferred_system".to_string(),
+    ///                            "capitalism".to_string())].into_iter().collect(),
     ///            });
     /// ```
     pub fn read(root: &(String, PathBuf)) -> Result<BlogueDescriptor, Error> {

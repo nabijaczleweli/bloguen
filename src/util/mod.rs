@@ -97,7 +97,7 @@ pub fn name_based_post_time(name: &str) -> NaiveTime {
 
 /// Generate a reproducible blogue author from its name.
 ///
-/// Works by seeding an [XOR-shift](../../rand/prng/struct.XorShiftRng.html) with an IEEE-CRC32ing the name.
+/// Works by seeding an [XOR-shift](../../rand/prng/struct.XorShiftRng.html) with the IEEE-CRC32d name.
 ///
 /// The generated name has a `.2` probability of including a middle portion, then a `.25` probability of it being full,
 /// as opposed to just an initial.
@@ -110,9 +110,9 @@ pub fn name_based_post_time(name: &str) -> NaiveTime {
 /// assert_eq!(name_based_full_name("Blogue"),         "Very Turban");
 ///
 /// assert_eq!(name_based_full_name("Ben's Blog"),     "Properly P. Postbox");
-/// assert_eq!(name_based_full_name("Benjojo's Blog"), "Why Q. Wannabe");
+/// assert_eq!(name_based_full_name("Benjojo's Blog"), "Why W. Wannabe");
 ///
-/// assert_eq!(name_based_full_name("Inquiescence"),   "Always Chart Baritone");
+/// assert_eq!(name_based_full_name("Inquiescence"),   "Always Basket Baritone");
 /// ```
 pub fn name_based_full_name(name: &str) -> String {
     let digest = crc32_ieee(name.as_bytes());
@@ -390,8 +390,10 @@ pub fn parse_function_notation(mut from: &str) -> Option<(&str, Vec<&str>)> {
 /// ```
 /// # use bloguen::util::concat_path;
 /// # use std::path::Path;
-/// assert_eq!(concat_path("hi/my/name/is", "what"),                    Path::new("hi/my/name/is/what"));
-/// assert_eq!(concat_path("/hi/my/name/is/slim/shady", ".././../who"), Path::new("/hi/my/name/is/who"));
+/// assert_eq!(concat_path("hi/my/name/is", "what"),
+///            Path::new("hi/my/name/is/what"));
+/// assert_eq!(concat_path("/hi/my/name/is/slim/shady", ".././../who"),
+///            Path::new("/hi/my/name/is/who"));
 /// ```
 pub fn concat_path<W: Into<PathBuf>>(whom: W, with: &str) -> PathBuf {
     concat_path_impl(whom.into(), with)

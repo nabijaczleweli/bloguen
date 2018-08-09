@@ -92,14 +92,18 @@ impl PostMetadata {
     /// # /*
     /// let post_root: PathBuf = /* obtained elsewhere */;
     /// # */
-    /// let metadata = PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root.clone())).unwrap();
+    /// let metadata =
+    ///     PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root.clone())).unwrap();
     /// assert_eq!(metadata,
     ///            PostMetadata {
     ///                language: Some("pl".parse().unwrap()),
     ///                author: None,
     ///                styles: vec![],
-    ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
-    ///                data: vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect(),
+    ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
+    ///                              ScriptElement::from_path("MathJax-config.js")],
+    ///                data: vec![("desc".to_string(),
+    ///                            "Każdy koniec to nowy początek [PL]".to_string())]
+    ///                          .into_iter().collect(),
     ///            });
     /// ```
     pub fn read_or_default(post_root: &(String, PathBuf)) -> Result<PostMetadata, Error> {

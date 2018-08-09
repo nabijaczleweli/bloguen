@@ -20,7 +20,8 @@ use std::io::Write;
 /// # use bloguen::ops::{ScriptElement, StyleElement, format_output};
 /// # use bloguen::util::LANGUAGE_EN_GB;
 /// # use chrono::DateTime;
-/// let head = r###"<!--
+/// let head = r###"
+/// <!--
 /// nabijaczleweli.xyz (c) by nabijaczleweli@gmail.com (nabijaczleweli)
 /// ​
 /// nabijaczleweli.xyz is licensed under a
@@ -40,32 +41,70 @@ use std::io::Write;
 ///     <meta name="viewport" content="width=device-width,initial-scale=1">
 ///     <meta name="author" content="{author}">
 ///     <meta name="description" content="{data-desc}">
-///     <title>{title} – generated { date ( now_utc, rfc3339 ) }</title>
+///     <title>{title}</title>
 ///
-///     <link href="/kaschism/assets/column.css" rel="stylesheet" />
-///     <link href="../Roboto-font.css" rel="stylesheet" />
-///     <link href="../the_taste_of_mi/Merriweather-font.css" rel="stylesheet" />
-///     <link href="/content/assets/common.css" rel="stylesheet" />
 ///     {styles}
 ///     {scripts}
 /// </head>
 ///     <body>
 /// "###;
+///
 /// let global_data = vec![].into_iter().collect();
-/// let local_data = vec![("desc".to_string(), "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect();
+/// let local_data =
+///     vec![("desc".to_string(),
+///           "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect();
 /// let mut out = vec![];
-/// assert_eq!(
-///     format_output(head, "Блогг", &LANGUAGE_EN_GB, &global_data, &local_data,
-///                   "release-front - a generic release front-end, like Patchwork's", "nabijaczleweli",
-///                   &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
-///                   &[&[StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css")],
-///                     &[StyleElement::from_literal(".indented { text-indent: 1em; }")]],
-///                   &[&[ScriptElement::from_link("/content/assets/syllable.js")],
-///                     &[ScriptElement::from_literal("document.getElementById(\"title\").innerText = \"Наган\";")]],
-///                   &mut out, "test blog").unwrap(),
-///     "test blog");
-/// println!("{}", String::from_utf8(out).unwrap());
-/// panic!();
+/// let res = format_output(
+///     head, "Блогг", &LANGUAGE_EN_GB, &global_data, &local_data,
+///     "release-front - a generic release front-end, like Patchwork's", "nabijaczleweli",
+///     &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
+///     &[&[StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css")],
+///       &[StyleElement::from_literal(".indented { text-indent: 1em; }")]],
+///     &[&[ScriptElement::from_link("/content/assets/syllable.js")],
+///       &[ScriptElement::from_literal("alert(\"You're the 1`000`000th visitor!\");")]],
+///     &mut out, "test blog");
+/// assert_eq!(res, Ok("test blog".into()));
+///
+/// assert_eq!(String::from_utf8(out).unwrap(), r###"
+/// <!--
+/// nabijaczleweli.xyz (c) by nabijaczleweli@gmail.com (nabijaczleweli)
+/// ​
+/// nabijaczleweli.xyz is licensed under a
+/// Creative Commons Attribution 4.0 International License.
+/// ​
+/// You should have received a copy of the license along with this
+/// work. If not, see <https://creativecommons.org/licenses/by/4.0/>.
+/// -->
+///
+///
+/// <!-- RSS_PUB_DATE: "Thu,  6 Sep 2018 18:32:22 +0200" -->
+/// <!DOCTYPE html>
+/// <html lang="en-GB">
+/// <head>
+///     <meta charset="utf-8">
+///     <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+///     <meta name="viewport" content="width=device-width,initial-scale=1">
+///     <meta name="author" content="nabijaczleweli">
+///     <meta name="description" content="Każdy koniec to nowy początek [PL]">
+///     <title>release-front - a generic release front-end, like Patchwork's</title>
+///
+///     <link href="//nabijaczleweli.xyz/kaschism/assets/column.css" rel="stylesheet" />
+/// <style type="text/css">
+///
+/// .indented { text-indent: 1em; }
+///
+/// </style>
+///
+///     <script type="text/javascript" src="/content/assets/syllable.js"></script>
+/// <script type="text/javascript">
+///
+/// alert("You're the 1`000`000th visitor!");
+///
+/// </script>
+///
+/// </head>
+///     <body>
+/// "###);
 /// ```
 pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
                                        local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: &DateTime<Tz>, styles: &[&[St]],
