@@ -19,6 +19,10 @@ pub struct PostMetadata {
     ///
     /// If not present, default post author is used.
     pub author: Option<String>,
+    /// A set of tags.
+    ///
+    /// If not present, defaults to empty.
+    pub tags: Vec<String>,
     /// A set of style descriptors.
     ///
     /// If not present, defaults to empty.
@@ -37,6 +41,7 @@ pub struct PostMetadata {
 struct PostMetadataSerialised {
     pub language: Option<LanguageTag>,
     pub author: Option<String>,
+    pub tags: Option<Vec<String>>,
     pub styles: Option<Vec<StyleElement>>,
     pub scripts: Option<Vec<ScriptElement>>,
     pub data: Option<BTreeMap<String, String>>,
@@ -98,6 +103,7 @@ impl PostMetadata {
     ///            PostMetadata {
     ///                language: Some("pl".parse().unwrap()),
     ///                author: None,
+    ///                tags: vec![],
     ///                styles: vec![],
     ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
     ///                              ScriptElement::from_path("MathJax-config.js")],
@@ -131,6 +137,7 @@ impl PostMetadata {
         Ok(PostMetadata {
             language: serialised.language,
             author: serialised.author,
+            tags: serialised.tags.unwrap_or_default(),
             styles: serialised.styles.unwrap_or_default(),
             scripts: serialised.scripts.unwrap_or_default(),
             data: serialised.data.unwrap_or_default(),
@@ -143,6 +150,7 @@ impl Default for PostMetadata {
         PostMetadata {
             language: None,
             author: None,
+            tags: vec![],
             styles: vec![],
             scripts: vec![],
             data: BTreeMap::new(),

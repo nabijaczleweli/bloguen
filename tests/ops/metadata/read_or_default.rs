@@ -38,6 +38,7 @@ fn ok_all_specified() {
                Ok(PostMetadata {
                    language: Some("pl".parse().unwrap()),
                    author: Some("nabijaczleweli".to_string()),
+                   tags: vec![],
                    styles: vec![StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
                                 StyleElement::from_literal(".indented { text-indent: 1em; }")],
                    scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
@@ -64,6 +65,7 @@ fn ok_no_data() {
                Ok(PostMetadata {
                    language: Some("pl".parse().unwrap()),
                    author: Some("nabijaczleweli".to_string()),
+                   tags: vec![],
                    styles: vec![],
                    scripts: vec![],
                    data: BTreeMap::new(),
@@ -99,6 +101,7 @@ fn ok_just_data() {
                Ok(PostMetadata {
                    language: None,
                    author: None,
+                   tags: vec![],
                    styles: vec![StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
                                 StyleElement::from_literal(".indented { text-indent: 1em; }")],
                    scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"), ScriptElement::from_path("MathJax-config.js")],
