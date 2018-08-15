@@ -6,8 +6,8 @@ mod windows;
 #[cfg(not(target_os = "windows"))]
 mod non_windows;
 
-use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
 use chrono::format::{StrftimeItems as StrftimeFormatItems, Fixed as FixedTimeFormatItem, Item as TimeFormatItem};
+use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
 use safe_transmute::guarded_transmute_to_bytes_pod;
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;

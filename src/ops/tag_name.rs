@@ -1,34 +1,34 @@
 use serde::de::{Deserializer, Deserialize, Error as SerdeError};
-use self::super::super::util::BCP_47;
 use self::super::super::Error;
 use std::str::FromStr;
 use std::ops::Deref;
 use std::fmt;
 
 
-/// A verified-valid BCP47 language tag.
+/// A verified-valid post tag.
 #[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
-pub struct LanguageTag(String);
+pub struct TagName(String);
 
-impl FromStr for LanguageTag {
+impl FromStr for TagName {
     type Err = Error;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if BCP_47.is_match(s) {
-            Ok(LanguageTag(s.to_string()))
+        let s = s.trim();
+        if !s.contains(|c: char| c.is_whitespace() || c.is_control()) {
+            Ok(TagName(s.to_string()))
         } else {
             Err(Error::Parse {
-                tp: "BCP-47 language tag",
-                wher: "language specifier".into(),
+                tp: "WS- and controlless string",
+                wher: "post tag name".into(),
                 more: Some(format!("\"{}\" invalid", s).into()),
             })
         }
     }
 }
 
-impl<'de> Deserialize<'de> for LanguageTag {
+impl<'de> Deserialize<'de> for TagName {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        LanguageTag::from_str(<&'de str>::deserialize(deserializer)?).map_err(|e| {
+        TagName::from_str(<&'de str>::deserialize(deserializer)?).map_err(|e| {
             let mut buf = vec![];
             e.print_error(&mut buf);
             D::Error::custom(String::from_utf8_lossy(&buf[..buf.len() - 2])) // Drop dot and newline
@@ -36,16 +36,16 @@ impl<'de> Deserialize<'de> for LanguageTag {
     }
 }
 
-impl fmt::Display for LanguageTag {
+impl fmt::Display for TagName {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         self.0.fmt(f)
     }
 }
 
-impl Deref for LanguageTag {
+impl Deref for TagName {
     type Target = str;
 
-    fn deref(&self) -> &Self::Target {
+    fn deref(&self) -> &str {
         &self.0
     }
 }
