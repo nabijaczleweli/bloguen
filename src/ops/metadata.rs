@@ -1,4 +1,4 @@
-use self::super::{ScriptElement, StyleElement, LanguageTag};
+use self::super::{ScriptElement, StyleElement, LanguageTag, TagName};
 use toml::de::from_str as from_toml_str;
 use std::collections::BTreeMap;
 use self::super::super::Error;
@@ -22,7 +22,7 @@ pub struct PostMetadata {
     /// A set of tags.
     ///
     /// If not present, defaults to empty.
-    pub tags: Vec<String>,
+    pub tags: Vec<TagName>,
     /// A set of style descriptors.
     ///
     /// If not present, defaults to empty.
@@ -41,7 +41,7 @@ pub struct PostMetadata {
 struct PostMetadataSerialised {
     pub language: Option<LanguageTag>,
     pub author: Option<String>,
-    pub tags: Option<Vec<String>>,
+    pub tags: Option<Vec<TagName>>,
     pub styles: Option<Vec<StyleElement>>,
     pub scripts: Option<Vec<ScriptElement>>,
     pub data: Option<BTreeMap<String, String>>,
@@ -58,6 +58,7 @@ impl PostMetadata {
     ///
     /// ```toml
     /// language = "pl"
+    /// tags = ["vodka", "depression"]
     ///
     /// [[scripts]]
     /// class = "link"
@@ -82,6 +83,7 @@ impl PostMetadata {
     /// # fs::create_dir_all(&post_root).unwrap();
     /// # File::create(post_root.join("metadata.toml")).unwrap().write_all(r#"
     /// #     language = "pl"
+    /// #     tags = ["vodka", "depression"]
     /// #
     /// #     [[scripts]]
     /// #     class = "link"
@@ -103,7 +105,7 @@ impl PostMetadata {
     ///            PostMetadata {
     ///                language: Some("pl".parse().unwrap()),
     ///                author: None,
-    ///                tags: vec![],
+    ///                tags: vec!["vodka".parse().unwrap(), "depression".parse().unwrap()],
     ///                styles: vec![],
     ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
     ///                              ScriptElement::from_path("MathJax-config.js")],
