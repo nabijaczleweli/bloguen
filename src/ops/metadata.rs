@@ -48,7 +48,7 @@ struct PostMetadataSerialised {
 }
 
 impl PostMetadata {
-    /// Read the post metadata from the specified root firectory.
+    /// Read the post metadata from the specified root directory.
     ///
     /// If the metadata file doesn't exist, `Ok(Default::default())` is returned.
     ///
