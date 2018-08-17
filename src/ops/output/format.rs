@@ -1,11 +1,17 @@
 use self::super::super::super::util::{parse_date_format_specifier, parse_function_notation};
 use chrono::{FixedOffset, DateTime, TimeZone, Offset, Local, Utc};
-use self::super::super::{WrappedElement, LanguageTag};
+use self::super::super::{WrappedElement, LanguageTag, TagName};
 use self::super::super::super::Error;
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
 use std::borrow::Cow;
 use std::io::Write;
+
+
+lazy_static! {
+    static ref TAG_HEAD: &'static str = include_str!("../../../assets/element_wrappers/tag/head.htm").trim();
+    static ref TAG_FOOT: &'static str = include_str!("../../../assets/element_wrappers/tag/foot.htm").trim();
+}
 
 
 /// Fill out an HTML template.
@@ -46,7 +52,9 @@ use std::io::Write;
 ///     {styles}
 ///     {scripts}
 /// </head>
-///     <body>
+/// <body>
+///
+///     {tags}
 /// "###;
 ///
 /// let global_data = vec![].into_iter().collect();
@@ -58,6 +66,8 @@ use std::io::Write;
 ///     head, "Блогг", &LANGUAGE_EN_GB, &global_data, &local_data,
 ///     "release-front - a generic release front-end, like Patchwork's", "nabijaczleweli",
 ///     &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
+///     &[&["vodka".parse().unwrap(), "depression".parse().unwrap()][..],
+///       &["коммунизм".parse().unwrap()][..]],
 ///     &[&[StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css")],
 ///       &[StyleElement::from_literal(".indented { text-indent: 1em; }")]],
 ///     &[&[ScriptElement::from_link("/content/assets/syllable.js")],
@@ -103,12 +113,14 @@ use std::io::Write;
 /// </script>
 ///
 /// </head>
-///     <body>
+/// <body>
+///
+///     <span class="post-tag">vodka</span> <span class="post-tag">depression</span> <span class="post-tag">коммунизм</span>
 /// "###);
 /// ```
 pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
-                                       local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: &DateTime<Tz>, styles: &[&[St]],
-                                       scripts: &[&[Sc]], into: &mut W, out_name_err: E)
+                                       local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]],
+                                       styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: E)
                                        -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>,
@@ -124,6 +136,7 @@ pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, languag
                        title,
                        author,
                        normalise_datetime(post_date),
+                       tags,
                        styles,
                        scripts,
                        into,
@@ -131,8 +144,8 @@ pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, languag
 }
 
 pub fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
-                                     local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: DateTime<FixedOffset>, styles: &[&[St]],
-                                     scripts: &[&[Sc]], into: &mut W, out_name_err: Cow<'static, str>)
+                                     local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: DateTime<FixedOffset>, tags: &[&[TagName]],
+                                     styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: Cow<'static, str>)
                                      -> Result<Cow<'static, str>, Error>
     where W: Write,
           St: WrappedElement,
@@ -173,11 +186,26 @@ pub fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, langu
                         "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
                         "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
 
+                        "tags" => {
+                            Result::from_iter(tags.iter().enumerate().map(|(i, tt)| (i == tags.len() - 1, tt)).map(|(ee, tt)| {
+                                Result::from_iter(tt.iter().enumerate().map(|(i, t)| (i == tt.len() - 1, t)).map(|(e, t)| {
+                                    into.write_all(TAG_HEAD.as_bytes()).map_err(|e| (e, "tag header".into()))?;
+                                    into.write_all(t.as_bytes()).map_err(|e| (e, "style tag footer".into()))?;
+                                    into.write_all(TAG_FOOT.as_bytes()).map_err(|e| (e, "tag footer".into()))?;
+                                    if !(e && ee) {
+                                        into.write_all(b" ").map_err(|e| (e, "tag spacer".into()))?;
+                                    }
+
+                                    Ok(())
+                                }))
+                            }))
+                        }
+
                         "styles" => {
                             Result::from_iter(styles.iter().map(|ss| {
                                 Result::from_iter(ss.iter().map(|s| {
                                     into.write_all(s.head_b()).map_err(|e| (e, "style tag header".into()))?;
-                                    into.write_all(s.content_b()).map_err(|e| (e, "style tag footer".into()))?;
+                                    into.write_all(s.content_b()).map_err(|e| (e, "style tag content".into()))?;
                                     into.write_all(s.foot_b()).map_err(|e| (e, "style tag footer".into()))?;
 
                                     Ok(())
@@ -189,7 +217,7 @@ pub fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, langu
                             Result::from_iter(scripts.iter().map(|ss| {
                                 Result::from_iter(ss.iter().map(|s| {
                                     into.write_all(s.head_b()).map_err(|e| (e, "script tag header".into()))?;
-                                    into.write_all(s.content_b()).map_err(|e| (e, "script tag footer".into()))?;
+                                    into.write_all(s.content_b()).map_err(|e| (e, "script tag content".into()))?;
                                     into.write_all(s.foot_b()).map_err(|e| (e, "script tag footer".into()))?;
 
                                     Ok(())
