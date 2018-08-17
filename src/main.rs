@@ -96,12 +96,16 @@ fn result_main() -> Result<(), bloguen::Error> {
             s.load(&p.source_dir)?;
         }
 
+        let independent_tags = bloguen::ops::TagName::load_additional_post_tags(&p.source_dir)?;
+
         for link in p.generate(&opts.output_dir,
                       &post_header,
                       &post_footer,
                       &descriptor.name,
                       &language,
                       author,
+                      &metadata.tags,
+                      &independent_tags,
                       &metadata.data,
                       &descriptor.data,
                       &metadata.styles,
