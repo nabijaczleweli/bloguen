@@ -63,7 +63,7 @@ lazy_static! {
 ///           "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect();
 /// let mut out = vec![];
 /// let res = format_output(
-///     head, "Блогг", &LANGUAGE_EN_GB, &global_data, &local_data,
+///     head, "Блогг", &LANGUAGE_EN_GB, &[&global_data, &local_data],
 ///     "release-front - a generic release front-end, like Patchwork's", "nabijaczleweli",
 ///     &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
 ///     &[&["vodka".parse().unwrap(), "depression".parse().unwrap()][..],
@@ -118,9 +118,9 @@ lazy_static! {
 ///     <span class="post-tag">vodka</span> <span class="post-tag">depression</span> <span class="post-tag">коммунизм</span>
 /// "###);
 /// ```
-pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
-                                       local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]],
-                                       styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: E)
+pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
+                                       title: &str, author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]], styles: &[&[St]], scripts: &[&[Sc]],
+                                       into: &mut W, out_name_err: E)
                                        -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>,
@@ -131,8 +131,7 @@ pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, languag
     format_output_impl(to_format,
                        blog_name,
                        language,
-                       global_data,
-                       local_data,
+                       additional_data_sets,
                        title,
                        author,
                        normalise_datetime(post_date),
@@ -143,10 +142,10 @@ pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, languag
                        out_name_err.into())
 }
 
-pub fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language: &LanguageTag, global_data: &BTreeMap<String, String>,
-                                     local_data: &BTreeMap<String, String>, title: &str, author: &str, post_date: DateTime<FixedOffset>, tags: &[&[TagName]],
-                                     styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: Cow<'static, str>)
-                                     -> Result<Cow<'static, str>, Error>
+fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
+                                 title: &str, author: &str, post_date: DateTime<FixedOffset>, tags: &[&[TagName]], styles: &[&[St]], scripts: &[&[Sc]],
+                                 into: &mut W, out_name_err: Cow<'static, str>)
+                                 -> Result<Cow<'static, str>, Error>
     where W: Write,
           St: WrappedElement,
           Sc: WrappedElement
@@ -227,7 +226,7 @@ pub fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, langu
 
                         key if key.starts_with("data-") => {
                             let key = &key["data-".len()..];
-                            match local_data.get(key).or_else(|| global_data.get(key)) {
+                            match additional_data_sets.iter().rev().map(|dt| dt.get(key)).find(Option::is_some).into_iter().flatten().next() {
                                 Some(data) => into.write_all(data.as_bytes()).map_err(|e| (e, format!("data-{} tag with value {}", key, data).into())),
                                 None => return Err(err_parse(format!("missing value for data-{}", key), out_name_err.take().unwrap())),
                             }
