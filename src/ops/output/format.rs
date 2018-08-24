@@ -1,16 +1,18 @@
 use self::super::super::super::util::{parse_date_format_specifier, parse_function_notation};
 use chrono::{FixedOffset, DateTime, TimeZone, Offset, Local, Utc};
 use self::super::super::{WrappedElement, LanguageTag, TagName};
+use std::io::{Error as IoError, Write};
 use self::super::super::super::Error;
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
 use std::borrow::Cow;
-use std::io::Write;
 
 
 lazy_static! {
     static ref TAG_HEAD: &'static str = include_str!("../../../assets/element_wrappers/tag/head.htm").trim();
+    static ref TAG_CNTR: &'static str = include_str!("../../../assets/element_wrappers/tag/cntr.htm").trim();
     static ref TAG_FOOT: &'static str = include_str!("../../../assets/element_wrappers/tag/foot.htm").trim();
+    static ref TAG_DEFAULT_CLASS: &'static str = include_str!("../../../assets/element_wrappers/tag/default.class").trim();
 }
 
 
@@ -55,6 +57,8 @@ lazy_static! {
 /// <body>
 ///
 ///     {tags}
+///     {tags()}
+///     {tags(пост-таг)}
 /// "###;
 ///
 /// let global_data = vec![].into_iter().collect();
@@ -116,6 +120,8 @@ lazy_static! {
 /// <body>
 ///
 ///     <span class="post-tag">vodka</span> <span class="post-tag">depression</span> <span class="post-tag">коммунизм</span>
+///     <span class="post-tag">vodka</span> <span class="post-tag">depression</span> <span class="post-tag">коммунизм</span>
+///     <span class="пост-таг">vodka</span> <span class="пост-таг">depression</span> <span class="пост-таг">коммунизм</span>
 /// "###);
 /// ```
 pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
@@ -185,20 +191,7 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
                         "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
                         "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
 
-                        "tags" => {
-                            Result::from_iter(tags.iter().enumerate().map(|(i, tt)| (i == tags.len() - 1, tt)).map(|(ee, tt)| {
-                                Result::from_iter(tt.iter().enumerate().map(|(i, t)| (i == tt.len() - 1, t)).map(|(e, t)| {
-                                    into.write_all(TAG_HEAD.as_bytes()).map_err(|e| (e, "tag header".into()))?;
-                                    into.write_all(t.as_bytes()).map_err(|e| (e, "style tag footer".into()))?;
-                                    into.write_all(TAG_FOOT.as_bytes()).map_err(|e| (e, "tag footer".into()))?;
-                                    if !(e && ee) {
-                                        into.write_all(b" ").map_err(|e| (e, "tag spacer".into()))?;
-                                    }
-
-                                    Ok(())
-                                }))
-                            }))
-                        }
+                        "tags" => write_tags(&TAG_DEFAULT_CLASS, tags, into),
 
                         "styles" => {
                             Result::from_iter(styles.iter().map(|ss| {
@@ -266,6 +259,20 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
                                         .map_err(|e| (e, format!("{} date as {}", args[0], args[1]).into()))
                                 }
 
+                                Some(("tags", args)) => {
+                                    match args.len() {
+                                        0 => write_tags(&TAG_DEFAULT_CLASS, tags, into),
+                                        1 => write_tags(args[0], tags, into),
+                                        _ => {
+                                            return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `tags([html-class])` \
+                                                                          function, around position {}",
+                                                                         args.len(),
+                                                                         byte_pos),
+                                                                 out_name_err.take().unwrap()));
+                                        }
+                                    }
+                                }
+
                                 Some((fname, args)) => {
                                     return Err(err_parse(format!("unrecognised format function {} with arguments {:?} at position {}", fname, args, byte_pos),
                                                          out_name_err.take().unwrap()))
@@ -288,6 +295,23 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
     into.write_all(to_format.as_bytes()).map_err(|e| err_io("write", format!("{} when writing unformatted output", e), out_name_err.take().unwrap()))?;
 
     Ok(out_name_err.unwrap())
+}
+
+fn write_tags<W: Write>(class: &str, tags: &[&[TagName]], into: &mut W) -> Result<(), (IoError, Cow<'static, str>)> {
+    Result::from_iter(tags.iter().enumerate().map(|(i, tt)| (i == tags.len() - 1, tt)).map(|(ee, tt)| {
+        Result::from_iter(tt.iter().enumerate().map(|(i, t)| (i == tt.len() - 1, t)).map(|(e, t)| {
+            into.write_all(TAG_HEAD.as_bytes()).map_err(|e| (e, "tag header".into()))?;
+            into.write_all(class.as_bytes()).map_err(|e| (e, "tag class".into()))?;
+            into.write_all(TAG_CNTR.as_bytes()).map_err(|e| (e, "tag center".into()))?;
+            into.write_all(t.as_bytes()).map_err(|e| (e, "style tag footer".into()))?;
+            into.write_all(TAG_FOOT.as_bytes()).map_err(|e| (e, "tag footer".into()))?;
+            if !(e && ee) {
+                into.write_all(b" ").map_err(|e| (e, "tag spacer".into()))?;
+            }
+
+            Ok(())
+        }))
+    }))
 }
 
 fn normalise_datetime<Tz: TimeZone>(whom: &DateTime<Tz>) -> DateTime<FixedOffset> {
