@@ -271,10 +271,12 @@ impl BloguePost {
                 }
             })?;
 
+        let original_name = self.source_dir.1.file_name().unwrap().to_str().unwrap();
         let normalised_name = format_output(post_header,
                                             blog_name,
                                             language,
                                             &[global_data, post_data],
+                                            &original_name,
                                             &self.name,
                                             author,
                                             &self.datetime,
@@ -294,6 +296,7 @@ impl BloguePost {
                       blog_name,
                       language,
                       &[global_data, post_data],
+                      &original_name,
                       &self.name,
                       author,
                       &self.datetime,

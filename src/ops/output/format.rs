@@ -68,6 +68,7 @@ lazy_static! {
 /// let mut out = vec![];
 /// let res = format_output(
 ///     head, "Блогг", &LANGUAGE_EN_GB, &[&global_data, &local_data],
+///     "003. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
 ///     "release-front - a generic release front-end, like Patchwork's", "nabijaczleweli",
 ///     &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
 ///     &[&["vodka".parse().unwrap(), "depression".parse().unwrap()][..],
@@ -125,8 +126,8 @@ lazy_static! {
 /// "###);
 /// ```
 pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
-                                       title: &str, author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]], styles: &[&[St]], scripts: &[&[Sc]],
-                                       into: &mut W, out_name_err: E)
+                                       raw_post_name: &str, title: &str, author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]], styles: &[&[St]],
+                                       scripts: &[&[Sc]], into: &mut W, out_name_err: E)
                                        -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>,
@@ -138,6 +139,7 @@ pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, languag
                        blog_name,
                        language,
                        additional_data_sets,
+                       raw_post_name,
                        title,
                        author,
                        normalise_datetime(post_date),
@@ -149,8 +151,8 @@ pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, languag
 }
 
 fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
-                                 title: &str, author: &str, post_date: DateTime<FixedOffset>, tags: &[&[TagName]], styles: &[&[St]], scripts: &[&[Sc]],
-                                 into: &mut W, out_name_err: Cow<'static, str>)
+                                 raw_post_name: &str, title: &str, author: &str, post_date: DateTime<FixedOffset>, tags: &[&[TagName]], styles: &[&[St]],
+                                 scripts: &[&[Sc]], into: &mut W, out_name_err: Cow<'static, str>)
                                  -> Result<Cow<'static, str>, Error>
     where W: Write,
           St: WrappedElement,
@@ -189,6 +191,7 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
                         "language" => into.write_all(language.as_bytes()).map_err(|e| (e, "language tag".into())),
                         "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
                         "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
+                        "raw_post_name" => into.write_all(raw_post_name.as_bytes()).map_err(|e| (e, "raw_post_name tag".into())),
                         "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
 
                         "bloguen-version" => into.write_all(BLOGUEN_VERSION.as_bytes()).map_err(|e| (e, "bloguen-version tag".into())),
