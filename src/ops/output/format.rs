@@ -1,4 +1,4 @@
-use self::super::super::super::util::{parse_date_format_specifier, parse_function_notation};
+use self::super::super::super::util::{BLOGUEN_VERSION, parse_date_format_specifier, parse_function_notation};
 use chrono::{FixedOffset, DateTime, TimeZone, Offset, Local, Utc};
 use self::super::super::{WrappedElement, LanguageTag, TagName};
 use std::io::{Error as IoError, Write};
@@ -190,6 +190,8 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
                         "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
                         "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
                         "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
+
+                        "bloguen-version" => into.write_all(BLOGUEN_VERSION.as_bytes()).map_err(|e| (e, "bloguen-version tag".into())),
 
                         "tags" => write_tags(&TAG_DEFAULT_CLASS, tags, into),
 

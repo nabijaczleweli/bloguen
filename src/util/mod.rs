@@ -53,6 +53,9 @@ lazy_static! {
     pub static ref LANGUAGE_EN_GB: LanguageTag = "en-GB".parse().unwrap();
 }
 
+/// Current version of `bloguen`.
+pub static BLOGUEN_VERSION: &str = env!("CARGO_PKG_VERSION");
+
 
 /// Uppercase the first character of the supplied string.
 ///
