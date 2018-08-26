@@ -1,7 +1,9 @@
 extern crate tabwriter;
 extern crate bloguen;
+extern crate rayon;
 extern crate url;
 
+use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use url::percent_encoding::percent_decode;
 use std::io::{Write, stderr, stdout};
 use std::iter::FromIterator;
@@ -83,46 +85,49 @@ fn result_main() -> Result<(), bloguen::Error> {
     println!("{}", global_language);
     println!("{}", global_author);
 
-    for p in &posts {
-        let mut metadata = bloguen::ops::PostMetadata::read_or_default(&p.source_dir)?;
-        let language = metadata.language.as_ref().unwrap_or(&global_language);
-        let author = metadata.author.as_ref().unwrap_or(&global_author);
+    posts.par_iter()
+        .try_for_each(|p| {
+            let mut metadata = bloguen::ops::PostMetadata::read_or_default(&p.source_dir)?;
+            let language = metadata.language.as_ref().unwrap_or(&global_language);
+            let author = metadata.author.as_ref().unwrap_or(&global_author);
 
-        for s in &mut metadata.styles {
-            s.load(&p.source_dir)?;
-        }
-
-        for s in &mut metadata.scripts {
-            s.load(&p.source_dir)?;
-        }
-
-        let independent_tags = bloguen::ops::TagName::load_additional_post_tags(&p.source_dir)?;
-
-        for link in p.generate(&opts.output_dir,
-                      &post_header,
-                      &post_footer,
-                      &descriptor.name,
-                      &language,
-                      author,
-                      &metadata.tags,
-                      &independent_tags,
-                      &metadata.data,
-                      &descriptor.data,
-                      &metadata.styles,
-                      &descriptor.styles,
-                      &metadata.scripts,
-                      &descriptor.scripts)?
-            .into_iter()
-            .filter(|l| bloguen::util::is_asset_link(l)) {
-            if let Ok(link) = percent_decode(link.as_bytes()).decode_utf8() {
-                if !p.copy_asset(&opts.output_dir, &link)? {
-                    eprintln!("Couldn't find \"{}\" for \"{}\" post.", link, p.normalised_name());
-                }
-            } else {
-                eprintln!("Invalid percent-encoded \"{}\" link.", link);
+            for s in &mut metadata.styles {
+                s.load(&p.source_dir)?;
             }
-        }
-    }
+
+            for s in &mut metadata.scripts {
+                s.load(&p.source_dir)?;
+            }
+
+            let independent_tags = bloguen::ops::TagName::load_additional_post_tags(&p.source_dir)?;
+
+            for link in p.generate(&opts.output_dir,
+                          &post_header,
+                          &post_footer,
+                          &descriptor.name,
+                          &language,
+                          author,
+                          &metadata.tags,
+                          &independent_tags,
+                          &metadata.data,
+                          &descriptor.data,
+                          &metadata.styles,
+                          &descriptor.styles,
+                          &metadata.scripts,
+                          &descriptor.scripts)?
+                .into_iter()
+                .filter(|l| bloguen::util::is_asset_link(l)) {
+                if let Ok(link) = percent_decode(link.as_bytes()).decode_utf8() {
+                    if !p.copy_asset(&opts.output_dir, &link)? {
+                        eprintln!("Couldn't find \"{}\" for \"{}\" post.", link, p.normalised_name());
+                    }
+                } else {
+                    eprintln!("Invalid percent-encoded \"{}\" link.", link);
+                }
+            }
+
+            Ok(())
+        })?;
 
     Ok(())
 }
