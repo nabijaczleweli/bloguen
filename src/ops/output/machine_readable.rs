@@ -1,7 +1,7 @@
+use self::super::super::super::util::{BLOGUEN_VERSION, normalise_datetime};
 use chrono::format::{Fixed as FixedTimeFormatItem, Item as TimeFormatItem};
-use chrono::{FixedOffset, DateTime, TimeZone, Offset, Local, Utc};
 use self::super::super::{WrappedElement, LanguageTag, TagName};
-use self::super::super::super::util::BLOGUEN_VERSION;
+use chrono::{FixedOffset, DateTime, TimeZone, Local, Utc};
 use std::collections::{BTreeMap, BTreeSet};
 use std::io::{Error as IoError, Write};
 use self::super::super::super::Error;
@@ -280,8 +280,4 @@ fn write_data<W: Write>(name: &str, datas: &[&BTreeMap<String, String>], into: &
     into.write_all(MAP_POST.as_bytes()).map_err(|e| (e, "map post".into()))?;
 
     Ok(())
-}
-
-fn normalise_datetime<Tz: TimeZone>(whom: &DateTime<Tz>) -> DateTime<FixedOffset> {
-    whom.with_timezone(&whom.offset().fix())
 }

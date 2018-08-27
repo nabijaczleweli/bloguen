@@ -8,6 +8,7 @@ mod non_windows;
 
 use chrono::format::{StrftimeItems as StrftimeFormatItems, Fixed as FixedTimeFormatItem, Item as TimeFormatItem};
 use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
+use chrono::{FixedOffset, NaiveTime, DateTime, TimeZone, Offset};
 use safe_transmute::guarded_transmute_to_bytes_pod;
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
@@ -17,7 +18,6 @@ use rand::{SeedableRng, Rng};
 use rand::prng::XorShiftRng;
 use comrak::ComrakOptions;
 use self::super::Error;
-use chrono::NaiveTime;
 use std::borrow::Cow;
 use std::fs::File;
 use regex::Regex;
@@ -347,6 +347,22 @@ pub fn parse_date_format_specifier(spec: &str) -> Option<Cow<[TimeFormatItem]>> 
         s if s.starts_with('"') && s.ends_with('"') => Some(StrftimeFormatItems::new(&spec[1..spec.len() - 1]).collect()),
         _ => None,
     }
+}
+
+/// Normalise a `DateTime` with any offset to a `FixedOffset` one.
+///
+/// # Examples
+///
+/// ```
+/// # extern crate bloguen;
+/// # extern crate chrono;
+/// # use bloguen::util::normalise_datetime;
+/// # use chrono::{DateTime, TimeZone, Utc};
+/// assert_eq!(normalise_datetime(&Utc.ymd(2018, 8, 27).and_hms(7, 21, 32)),
+///            DateTime::parse_from_rfc3339("2018-08-27T07:21:32+00:00").unwrap());
+/// ```
+pub fn normalise_datetime<Tz: TimeZone>(whom: &DateTime<Tz>) -> DateTime<FixedOffset> {
+    whom.with_timezone(&whom.offset().fix())
 }
 
 /// Trivially parse a standard funxion invocation notation.

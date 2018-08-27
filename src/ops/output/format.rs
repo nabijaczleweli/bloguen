@@ -1,6 +1,6 @@
-use self::super::super::super::util::{BLOGUEN_VERSION, parse_date_format_specifier, parse_function_notation};
-use chrono::{FixedOffset, DateTime, TimeZone, Offset, Local, Utc};
+use self::super::super::super::util::{BLOGUEN_VERSION, parse_date_format_specifier, parse_function_notation, normalise_datetime};
 use self::super::super::{WrappedElement, LanguageTag, TagName};
+use chrono::{FixedOffset, DateTime, TimeZone, Local, Utc};
 use std::io::{Error as IoError, Write};
 use self::super::super::super::Error;
 use std::collections::BTreeMap;
@@ -320,10 +320,6 @@ fn write_tags<W: Write>(class: &str, tags: &[&[TagName]], into: &mut W) -> Resul
             Ok(())
         }))
     }))
-}
-
-fn normalise_datetime<Tz: TimeZone>(whom: &DateTime<Tz>) -> DateTime<FixedOffset> {
-    whom.with_timezone(&whom.offset().fix())
 }
 
 
