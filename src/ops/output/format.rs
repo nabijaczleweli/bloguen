@@ -5,6 +5,7 @@ use std::io::{Error as IoError, Write};
 use self::super::super::super::Error;
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
+use self::super::err_io;
 use std::borrow::Cow;
 
 
@@ -190,7 +191,7 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
 
                 match format_str {
                         "language" => into.write_all(language.as_bytes()).map_err(|e| (e, "language tag".into())),
-                        "number" => write!(into, "{}", number).map_err(|e| (e, "number tag".into())),
+                        "number" => into.write_fmt(format_args!("{}", number)).map_err(|e| (e, "number tag".into())),
                         "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
                         "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
                         "raw_post_name" => into.write_all(raw_post_name.as_bytes()).map_err(|e| (e, "raw_post_name tag".into())),
@@ -325,20 +326,9 @@ fn normalise_datetime<Tz: TimeZone>(whom: &DateTime<Tz>) -> DateTime<FixedOffset
     whom.with_timezone(&whom.offset().fix())
 }
 
-fn err_io<M: Into<Cow<'static, str>>>(op: &'static str, more: M, out_name_err: Cow<'static, str>) -> Error {
-    err_io_impl(op, more.into(), out_name_err)
-}
 
 fn err_parse<M: Into<Cow<'static, str>>>(more: M, out_name_err: Cow<'static, str>) -> Error {
     err_parse_impl(more.into(), out_name_err)
-}
-
-fn err_io_impl(op: &'static str, more: Cow<'static, str>, out_name_err: Cow<'static, str>) -> Error {
-    Error::Io {
-        desc: out_name_err,
-        op: op,
-        more: Some(more),
-    }
 }
 
 fn err_parse_impl(more: Cow<'static, str>, out_name_err: Cow<'static, str>) -> Error {
