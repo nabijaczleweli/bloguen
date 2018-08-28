@@ -189,17 +189,18 @@ fn write_array<El, M: Fn(&El) -> &str, W: Write>(name: &str, arrs: &[&[El]], map
     into.write_all(name.as_bytes()).map_err(|e| (e, format!("{} field name", name).into()))?;
     into.write_all(b"\": [").map_err(|e| (e, "array center".into()))?;
 
-    Result::from_iter(arrs.iter().enumerate().map(|(i, arr)| (i == arrs.len() - 1, arr)).map(|(ee, arr)| {
-        Result::from_iter(arr.iter().enumerate().map(|(i, a)| (i == arr.len() - 1, a)).map(|(e, a)| {
-            into.write_all(b"\n        ").map_err(|e| (e, "indented newline".into()))?;
+    let mut first = true;
+    Result::from_iter(arrs.iter().flat_map(|arr| arr.iter()).map(|a| {
+        if !first {
+            into.write_all(b",").map_err(|e| (e, "string array comma".into()))?;
+        }
 
-            into.write_fmt(format_args!("{:?}", map(a))).map_err(|e| (e, "string array element".into()))?;
-            if !(e && ee) {
-                into.write_all(b",").map_err(|e| (e, "string array post".into()))?;
-            }
+        into.write_all(b"\n        ").map_err(|e| (e, "indented newline".into()))?;
 
-            Ok(())
-        }))
+        into.write_fmt(format_args!("{:?}", map(a))).map_err(|e| (e, "string array element".into()))?;
+
+        first = false;
+        Ok(())
     }))?;
 
     into.write_all(b"\n    ],\n    ").map_err(|e| (e, "aray post".into()))?;
@@ -212,6 +213,7 @@ fn write_data<W: Write>(name: &str, datas: &[&BTreeMap<String, String>], into: &
     into.write_all(name.as_bytes()).map_err(|e| (e, format!("{} field name", name).into()))?;
     into.write_all(b"\": {").map_err(|e| (e, "map center".into()))?;
 
+    let mut first = true;
     datas.iter()
         .rev()
         .flat_map(|dt| dt.iter())
@@ -220,15 +222,18 @@ fn write_data<W: Write>(name: &str, datas: &[&BTreeMap<String, String>], into: &
                 return acc;
             }
 
+            if !first {
+                into.write_all(b",").map_err(|e| (e, "aux data string comma".into()))?;
+            }
             into.write_all(b"\n        ").map_err(|e| (e, "indented newline".into()))?;
 
             into.write_fmt(format_args!("{:?}", el.0)).map_err(|e| (e, "aux data string map element".into()))?;
             into.write_all(b": ").map_err(|e| (e, "aux data string map post".into()))?;
             into.write_fmt(format_args!("{:?}", el.1)).map_err(|e| (e, "aux data string map element".into()))?;
-            into.write_all(b",").map_err(|e| (e, "aux data string map post".into()))?;
 
             acc.as_mut().unwrap().insert(el.0);
 
+            first = false;
             acc
         })?;
 
