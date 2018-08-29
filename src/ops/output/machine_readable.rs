@@ -25,6 +25,7 @@ use std::borrow::Cow;
 /// # use bloguen::ops::{ScriptElement, StyleElement, machine_output_json};
 /// # use bloguen::util::{LANGUAGE_EN_GB, normalise_datetime};
 /// # use chrono::{DateTime, Local, Utc};
+/// # use std::str;
 /// let global_data = vec![].into_iter().collect();
 /// let local_data =
 ///     vec![("desc".to_string(),
@@ -44,7 +45,22 @@ use std::borrow::Cow;
 ///     &mut out, "test blog");
 /// assert_eq!(res, Ok("test blog".into()));
 ///
-/// assert_eq!(String::from_utf8(out).unwrap(), format!(r###"{{
+/// let out = str::from_utf8(&out).unwrap();
+/// let (mut gendate_utc_rfc3339, mut gendate_utc_rfc2822, mut gendate_local_rfc3339, mut gendate_local_rfc2822) = ("", "", "",
+/// "");
+/// for l in out.split_terminator('\n') {
+///     let val = l.find("\": \"").map(|i| &l[i + 4..l.len() - 2]);
+///     if l.contains("generation_date_utc_rfc3339") {
+///         gendate_utc_rfc3339 = val.unwrap();
+///     } else if l.contains("generation_date_utc_rfc2822") {
+///         gendate_utc_rfc2822 = val.unwrap();
+///     } else if l.contains("generation_date_local_rfc3339") {
+///         gendate_local_rfc3339 = val.unwrap();
+///     } else if l.contains("generation_date_local_rfc2822") {
+///         gendate_local_rfc2822 = val.unwrap();
+///     }
+/// }
+/// assert_eq!(out, format!(r###"{{
 ///     "number": 3,
 ///     "language": "en-GB",
 ///     "title": "release-front - a generic release front-end, like Patchwork\'s",
@@ -66,7 +82,7 @@ use std::borrow::Cow;
 ///         "коммунизм"
 ///     ],
 ///     "additional_data": {{
-///         "desc": "Każdy koniec to nowy początek [PL]",
+///         "desc": "Każdy koniec to nowy początek [PL]"
 ///     }},
 ///
 ///     "styles": [
@@ -75,12 +91,11 @@ use std::borrow::Cow;
 ///     ],
 ///     "scripts": [
 ///         "/content/assets/syllable.js",
-///         "alert(\"You're the 1`000`000th visitor!\");"
+///         "alert(\"You\'re the 1`000`000th visitor!\");"
 ///     ],
 ///
 ///     "bloguen-version": "0.1.0"
-///     //
-/// }}"###, normalise_datetime(&Utc::now()).to_rfc3339(), normalise_datetime(&Utc::now()).to_rfc2822(), normalise_datetime(&Local::now()).to_rfc3339(), normalise_datetime(&Local::now()).to_rfc2822()).replace("//", ""));
+/// }}"###, gendate_utc_rfc3339, gendate_utc_rfc2822, gendate_local_rfc3339, gendate_local_rfc2822));
 /// ```
 pub fn machine_output_json<W, E, Tz, St, Sc>(blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
                                              raw_post_name: &str, number: usize, title: &str, author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]],
@@ -122,41 +137,50 @@ fn machine_output_json_impl<W, St, Sc>(blog_name: &str, language: &LanguageTag, 
 
             into.write_all(b"\"number\": ").map_err(|e| (e, "post number pre".into()))?;
             into.write_fmt(format_args!("{}", number)).map_err(|e| (e, "post number".into()))?;
-            into.write_all(b",\n").map_err(|e| (e, "post number post".into()))?;
+            into.write_all(b",\n    ").map_err(|e| (e, "post number post".into()))?;
 
             write_string_variable("language", &language, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
             write_string_variable("title", title, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
             write_string_variable("author", author, into)?;
-            into.write_all(b"\n").map_err(|e| (e, "newline".into()))?;
+            into.write_all(b",\n\n    ").map_err(|e| (e, "newline".into()))?;
 
             write_string_variable("raw_post_name", raw_post_name, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
             write_string_variable("blog_name", blog_name, into)?;
-            into.write_all(b"\n").map_err(|e| (e, "newline".into()))?;
+            into.write_all(b",\n\n    ").map_err(|e| (e, "newline".into()))?;
 
             write_date("post_date_rfc3339", &post_date, FixedTimeFormatItem::RFC3339, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
             write_date("post_date_rfc2822", &post_date, FixedTimeFormatItem::RFC2822, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
 
             let now_utc = normalise_datetime(&Utc::now());
             write_date("generation_date_utc_rfc3339", &now_utc, FixedTimeFormatItem::RFC3339, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
             write_date("generation_date_utc_rfc2822", &now_utc, FixedTimeFormatItem::RFC2822, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
 
             let now_local = normalise_datetime(&Local::now());
             write_date("generation_date_local_rfc3339", &now_local, FixedTimeFormatItem::RFC3339, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
             write_date("generation_date_local_rfc2822", &now_local, FixedTimeFormatItem::RFC2822, into)?;
-            into.write_all(b"\n").map_err(|e| (e, "newline".into()))?;
+            into.write_all(b",\n\n    ").map_err(|e| (e, "newline".into()))?;
 
             write_array("tags", tags, |t| &*t, into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
             write_data("additional_data", additional_data_sets, into)?;
-            into.write_all(b"\n").map_err(|e| (e, "newline".into()))?;
+            into.write_all(b",\n\n    ").map_err(|e| (e, "newline".into()))?;
 
             write_array("styles", styles, |s| s.content(), into)?;
+            into.write_all(b",\n    ").map_err(|e| (e, "newline".into()))?;
             write_array("scripts", scripts, |s| s.content(), into)?;
-            into.write_all(b"\n").map_err(|e| (e, "newline".into()))?;
+            into.write_all(b",\n\n    ").map_err(|e| (e, "newline".into()))?;
 
             write_string_variable("bloguen-version", BLOGUEN_VERSION, into)?;
 
-            into.write_all("\n}".as_bytes()).map_err(|e| (e, "footer".into()))?;
-
+            into.write_all(b"\n}").map_err(|e| (e, "footer".into()))?;
             Ok(())
         })().map_err(|(e, d): (_, Cow<'static, str>)| err_io("write", format!("{} when writing JSON machine output {}", e, d), out_name_err.take().unwrap()))?;
 
@@ -169,7 +193,7 @@ fn write_date<W: Write>(name: &str, value: &DateTime<FixedOffset>, format: Fixed
     into.write_all(b"\": \"").map_err(|e| (e, "string center".into()))?;
     into.write_fmt(format_args!("{}", value.format_with_items([TimeFormatItem::Fixed(format)].iter().cloned())))
         .map_err(|e| (e, format!("{} date", name).into()))?;
-    into.write_all(b"\",\n    ").map_err(|e| (e, "string post".into()))?;
+    into.write_all(b"\"").map_err(|e| (e, "string post".into()))?;
 
     Ok(())
 }
@@ -179,7 +203,6 @@ fn write_string_variable<W: Write>(name: &str, value: &str, into: &mut W) -> Res
     into.write_all(name.as_bytes()).map_err(|e| (e, format!("{} field name", name).into()))?;
     into.write_all(b"\": ").map_err(|e| (e, "string center".into()))?;
     into.write_fmt(format_args!("{:?}", value)).map_err(|e| (e, format!("{} field content", name).into()))?;
-    into.write_all(b",\n    ").map_err(|e| (e, "string post".into()))?;
 
     Ok(())
 }
@@ -203,7 +226,7 @@ fn write_array<El, M: Fn(&El) -> &str, W: Write>(name: &str, arrs: &[&[El]], map
         Ok(())
     }))?;
 
-    into.write_all(b"\n    ],\n    ").map_err(|e| (e, "aray post".into()))?;
+    into.write_all(b"\n    ]").map_err(|e| (e, "aray post".into()))?;
 
     Ok(())
 }
@@ -237,7 +260,7 @@ fn write_data<W: Write>(name: &str, datas: &[&BTreeMap<String, String>], into: &
             acc
         })?;
 
-    into.write_all(b"\n    },").map_err(|e| (e, "newline".into()))?;
+    into.write_all(b"\n    }").map_err(|e| (e, "newline".into()))?;
 
     Ok(())
 }
