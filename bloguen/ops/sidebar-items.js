@@ -1,1 +1,1 @@
-initSidebarItems({"struct":[["BlogueDescriptor","Generic blogue metadata."],["BloguePost","Information about a blogue post."]]});
+initSidebarItems({"struct":[["BlogueDescriptor","Generic blogue metadata."],["BloguePost","Information about a blogue post."],["PostMetadata","Generic blogue metadata."]]});

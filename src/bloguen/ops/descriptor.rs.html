@@ -167,6 +167,7 @@
 <span id="167">167</span>
 <span id="168">168</span>
 <span id="169">169</span>
+<span id="170">170</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">toml</span>::<span class="ident">de</span>::<span class="ident">from_str</span> <span class="kw">as</span> <span class="ident">from_toml_str</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">BCP_47</span>;
@@ -285,16 +286,17 @@
             <span class="ident">header_file</span>: <span class="ident">additional_file</span>(<span class="ident">serialised</span>.<span class="ident">header</span>, <span class="ident">root</span>, <span class="string">&quot;header&quot;</span>, <span class="string">&quot;post header&quot;</span>)<span class="question-mark">?</span>,
             <span class="ident">footer_file</span>: <span class="ident">additional_file</span>(<span class="ident">serialised</span>.<span class="ident">footer</span>, <span class="ident">root</span>, <span class="string">&quot;footer&quot;</span>, <span class="string">&quot;post footer&quot;</span>)<span class="question-mark">?</span>,
             <span class="ident">language</span>: <span class="kw">match</span> <span class="ident">serialised_language</span>.<span class="ident">as_ref</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">l</span>) <span class="kw">if</span> <span class="ident">BCP_47</span>.<span class="ident">is_match</span>(<span class="ident">l</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">String</span>::<span class="ident">new</span>()),
-                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-                <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
-                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Parse</span> {
-                        <span class="ident">tp</span>: <span class="string">&quot;BCP-47 language tag&quot;</span>,
-                        <span class="ident">wher</span>: <span class="string">&quot;blogue descriptor&quot;</span>,
-                        <span class="ident">more</span>: <span class="prelude-val">None</span>,
-                    });
+                    <span class="prelude-val">Some</span>(<span class="ident">l</span>) <span class="kw">if</span> <span class="ident">BCP_47</span>.<span class="ident">is_match</span>(<span class="ident">l</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">String</span>::<span class="ident">new</span>()),
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+                    <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
+                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Parse</span> {
+                            <span class="ident">tp</span>: <span class="string">&quot;BCP-47 language tag&quot;</span>,
+                            <span class="ident">wher</span>: <span class="string">&quot;blogue descriptor&quot;</span>,
+                            <span class="ident">more</span>: <span class="prelude-val">None</span>,
+                        });
+                    }
                 }
-            }.<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">serialised_language</span>.<span class="ident">unwrap</span>()),
+                .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">serialised_language</span>.<span class="ident">unwrap</span>()),
         })
     }
 }
