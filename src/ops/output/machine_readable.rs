@@ -46,20 +46,24 @@ use std::borrow::Cow;
 /// assert_eq!(res, Ok("test blog".into()));
 ///
 /// let out = str::from_utf8(&out).unwrap();
-/// let (mut gendate_utc_rfc3339, mut gendate_utc_rfc2822, mut gendate_local_rfc3339, mut gendate_local_rfc2822) = ("", "", "",
-/// "");
-/// for l in out.split_terminator('\n') {
-///     let val = l.find("\": \"").map(|i| &l[i + 4..l.len() - 2]);
-///     if l.contains("generation_date_utc_rfc3339") {
-///         gendate_utc_rfc3339 = val.unwrap();
-///     } else if l.contains("generation_date_utc_rfc2822") {
-///         gendate_utc_rfc2822 = val.unwrap();
-///     } else if l.contains("generation_date_local_rfc3339") {
-///         gendate_local_rfc3339 = val.unwrap();
-///     } else if l.contains("generation_date_local_rfc2822") {
-///         gendate_local_rfc2822 = val.unwrap();
-///     }
-/// }
+/// # let (mut gendate_utc_rfc3339, mut gendate_utc_rfc2822, mut gendate_local_rfc3339, mut gendate_local_rfc2822) =
+/// #     ("", "", "", "");
+/// # for l in out.split_terminator('\n') {
+/// #     let val = l.find("\": \"").map(|i| &l[i + 4..l.len() - 2]);
+/// #     if l.contains("generation_date_utc_rfc3339") {
+/// #         gendate_utc_rfc3339 = val.unwrap();
+/// #     } else if l.contains("generation_date_utc_rfc2822") {
+/// #         gendate_utc_rfc2822 = val.unwrap();
+/// #     } else if l.contains("generation_date_local_rfc3339") {
+/// #         gendate_local_rfc3339 = val.unwrap();
+/// #     } else if l.contains("generation_date_local_rfc2822") {
+/// #         gendate_local_rfc2822 = val.unwrap();
+/// #     }
+/// # }
+/// # /*
+/// let (gendate_utc_rfc3339, gendate_utc_rfc2822, gendate_local_rfc3339, gendate_local_rfc2822) =
+///     /* extracted from output, format p.a. to post_date_* */;
+/// # */
 /// assert_eq!(out, format!(r###"{{
 ///     "number": 3,
 ///     "language": "en-GB",
@@ -95,7 +99,8 @@ use std::borrow::Cow;
 ///     ],
 ///
 ///     "bloguen-version": "0.1.0"
-/// }}"###, gendate_utc_rfc3339, gendate_utc_rfc2822, gendate_local_rfc3339, gendate_local_rfc2822));
+/// }}"###,
+///     gendate_utc_rfc3339, gendate_utc_rfc2822, gendate_local_rfc3339, gendate_local_rfc2822));
 /// ```
 pub fn machine_output_json<W, E, Tz, St, Sc>(blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
                                              raw_post_name: &str, number: usize, title: &str, author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]],
