@@ -123,8 +123,10 @@
 <span id="123">123</span>
 <span id="124">124</span>
 <span id="125">125</span>
+<span id="126">126</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">uppercase_first</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Write</span>;
 
 
@@ -142,7 +144,7 @@
         <span class="doccomment">/// This should be lowercase and imperative (&quot;create&quot;, &quot;open&quot;).</span>
         <span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="doccomment">/// Additional data.</span>
-        <span class="ident">more</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">more</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
     },
     <span class="ident">Parse</span> {
         <span class="doccomment">/// What failed to parse.</span>
@@ -152,28 +154,28 @@
         <span class="doccomment">/// Where the thing that failed to parse would go, were it to parse properly.</span>
         <span class="ident">wher</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="doccomment">/// Additional data.</span>
-        <span class="ident">more</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">more</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
     },
     <span class="doccomment">/// A requested file doesn&#39;t exist.</span>
     <span class="ident">FileNotFound</span> {
         <span class="doccomment">/// What requested the file.</span>
         <span class="ident">who</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="doccomment">/// The file that should exist.</span>
-        <span class="ident">path</span>: <span class="ident">String</span>,
+        <span class="ident">path</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// A path is in a wrong state.</span>
     <span class="ident">WrongFileState</span> {
         <span class="doccomment">/// What the file is not.</span>
         <span class="ident">what</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="doccomment">/// The file that should be.</span>
-        <span class="ident">path</span>: <span class="ident">String</span>,
+        <span class="ident">path</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>,
     },
     <span class="doccomment">/// Failed to parse the specified file because of the specified error(s).</span>
     <span class="ident">FileParsingFailed</span> {
         <span class="doccomment">/// The file that failed to parse.</span>
         <span class="ident">desc</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>,
         <span class="doccomment">/// The parsing error(s) that occured.</span>
-        <span class="ident">errors</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+        <span class="ident">errors</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>,
     },
 }
 
@@ -189,7 +191,7 @@
     <span class="doccomment">/// Error::Io {</span>
     <span class="doccomment">///     desc: &quot;network&quot;,</span>
     <span class="doccomment">///     op: &quot;write&quot;,</span>
-    <span class="doccomment">///     more: Some(&quot;full buffer&quot;.to_string()),</span>
+    <span class="doccomment">///     more: Some(&quot;full buffer&quot;.into()),</span>
     <span class="doccomment">/// }.print_error(&amp;mut out);</span>
     <span class="doccomment">/// assert_eq!(out, &quot;Writing network failed: full buffer.\n&quot;.as_bytes());</span>
     <span class="doccomment">/// ```</span>

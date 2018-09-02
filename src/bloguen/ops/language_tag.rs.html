@@ -72,7 +72,7 @@
             <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Parse</span> {
                 <span class="ident">tp</span>: <span class="string">&quot;BCP-47 language tag&quot;</span>,
                 <span class="ident">wher</span>: <span class="string">&quot;language specifier&quot;</span>,
-                <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;\&quot;{}\&quot; invalid&quot;</span>, <span class="ident">s</span>)),
+                <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;\&quot;{}\&quot; invalid&quot;</span>, <span class="ident">s</span>).<span class="ident">into</span>()),
             })
         }
     }
