@@ -156,22 +156,10 @@
 <span id="156">156</span>
 <span id="157">157</span>
 <span id="158">158</span>
-<span id="159">159</span>
-<span id="160">160</span>
-<span id="161">161</span>
-<span id="162">162</span>
-<span id="163">163</span>
-<span id="164">164</span>
-<span id="165">165</span>
-<span id="166">166</span>
-<span id="167">167</span>
-<span id="168">168</span>
-<span id="169">169</span>
-<span id="170">170</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">toml</span>::<span class="ident">de</span>::<span class="ident">from_str</span> <span class="kw">as</span> <span class="ident">from_toml_str</span>;
-<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">BCP_47</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">LanguageTag</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
@@ -195,7 +183,7 @@
     <span class="doccomment">/// Overriden by post metadata, if present.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not present, defaults to the current system language, which, if not detected, defaults to en-GB.</span>
-    <span class="kw">pub</span> <span class="ident">language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LanguageTag</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>)]</span>
@@ -203,7 +191,7 @@
     <span class="kw">pub</span> <span class="ident">name</span>: <span class="ident">String</span>,
     <span class="kw">pub</span> <span class="ident">header</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">footer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
-    <span class="kw">pub</span> <span class="ident">language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LanguageTag</span><span class="op">&gt;</span>,
 }
 
 <span class="kw">impl</span> <span class="ident">BlogueDescriptor</span> {
@@ -253,7 +241,7 @@
     <span class="doccomment">///                name: &quot;Блогг&quot;.to_string(),</span>
     <span class="doccomment">///                header_file: (&quot;$ROOT/head.html&quot;.to_string(), root.join(&quot;head.html&quot;)),</span>
     <span class="doccomment">///                footer_file: (&quot;$ROOT/footer.htm&quot;.to_string(), root.join(&quot;footer.htm&quot;)),</span>
-    <span class="doccomment">///                language: Some(&quot;pl&quot;.to_string()),</span>
+    <span class="doccomment">///                language: Some(&quot;pl&quot;.parse().unwrap()),</span>
     <span class="doccomment">///            });</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">root</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>)) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BlogueDescriptor</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
@@ -280,23 +268,11 @@
                 }
             })<span class="question-mark">?</span>;
 
-        <span class="kw">let</span> <span class="ident">serialised_language</span> <span class="op">=</span> <span class="ident">serialised</span>.<span class="ident">language</span>;
         <span class="prelude-val">Ok</span>(<span class="ident">BlogueDescriptor</span> {
             <span class="ident">name</span>: <span class="ident">serialised</span>.<span class="ident">name</span>,
             <span class="ident">header_file</span>: <span class="ident">additional_file</span>(<span class="ident">serialised</span>.<span class="ident">header</span>, <span class="ident">root</span>, <span class="string">&quot;header&quot;</span>, <span class="string">&quot;post header&quot;</span>)<span class="question-mark">?</span>,
             <span class="ident">footer_file</span>: <span class="ident">additional_file</span>(<span class="ident">serialised</span>.<span class="ident">footer</span>, <span class="ident">root</span>, <span class="string">&quot;footer&quot;</span>, <span class="string">&quot;post footer&quot;</span>)<span class="question-mark">?</span>,
-            <span class="ident">language</span>: <span class="kw">match</span> <span class="ident">serialised_language</span>.<span class="ident">as_ref</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">l</span>) <span class="kw">if</span> <span class="ident">BCP_47</span>.<span class="ident">is_match</span>(<span class="ident">l</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">String</span>::<span class="ident">new</span>()),
-                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-                    <span class="prelude-val">Some</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> {
-                        <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Parse</span> {
-                            <span class="ident">tp</span>: <span class="string">&quot;BCP-47 language tag&quot;</span>,
-                            <span class="ident">wher</span>: <span class="string">&quot;blogue descriptor&quot;</span>,
-                            <span class="ident">more</span>: <span class="prelude-val">None</span>,
-                        });
-                    }
-                }
-                .<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">serialised_language</span>.<span class="ident">unwrap</span>()),
+            <span class="ident">language</span>: <span class="ident">serialised</span>.<span class="ident">language</span>,
         })
     }
 }

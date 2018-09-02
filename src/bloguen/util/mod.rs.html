@@ -266,6 +266,10 @@
 <span id="266">266</span>
 <span id="267">267</span>
 <span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Module containing various utility functions.</span>
 
@@ -279,6 +283,7 @@
 <span class="kw">use</span> <span class="ident">comrak</span>::<span class="ident">nodes</span>::{<span class="ident">NodeValue</span> <span class="kw">as</span> <span class="ident">ComrakNodeValue</span>, <span class="ident">AstNode</span> <span class="kw">as</span> <span class="ident">ComrakAstNode</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">ErrorKind</span> <span class="kw">as</span> <span class="ident">IoErrorKind</span>, <span class="ident">Read</span>};
 <span class="kw">use</span> <span class="ident">crc</span>::<span class="ident">crc32</span>::<span class="ident">checksum_ieee</span> <span class="kw">as</span> <span class="ident">crc32_ieee</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">ops</span>::<span class="ident">LanguageTag</span>;
 <span class="kw">use</span> <span class="ident">comrak</span>::<span class="ident">ComrakOptions</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
@@ -310,6 +315,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Stolen from http://stackoverflow.com/a/7036171/2851815</span>
     <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">BCP_47</span>: <span class="ident">Regex</span> <span class="op">=</span> <span class="ident">Regex</span>::<span class="ident">new</span>(<span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../assets/bcp47.regex&quot;</span>).<span class="ident">trim</span>()).<span class="ident">unwrap</span>();
+
+    <span class="doccomment">/// The default `en-GB` language tag.</span>
+    <span class="kw">pub</span> <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">LANGUAGE_EN_GB</span>: <span class="ident">LanguageTag</span> <span class="op">=</span> <span class="string">&quot;en-GB&quot;</span>.<span class="ident">parse</span>().<span class="ident">unwrap</span>();
 }
 
 

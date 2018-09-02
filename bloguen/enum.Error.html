@@ -7,7 +7,7 @@
     Parse {
         tp: &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
         wher: &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
-        more: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;,
+        more: <a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;,
     },
     FileNotFound {
         who: &amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>,
@@ -37,7 +37,7 @@
                            <table><tr><td id='variant.Parse.field.tp'><span id='Parse.v.tp.v' class='invisible'><code>tp:&nbsp;&amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></span></td><td><div class='docblock'><p>What failed to parse.</p>
 <p>Something like &quot;URL&quot;, &quot;datetime&quot;.</p>
 </div></td></tr><tr><td id='variant.Parse.field.wher'><span id='Parse.v.wher.v' class='invisible'><code>wher:&nbsp;&amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a></code></span></td><td><div class='docblock'><p>Where the thing that failed to parse would go, were it to parse properly.</p>
-</div></td></tr><tr><td id='variant.Parse.field.more'><span id='Parse.v.more.v' class='invisible'><code>more:&nbsp;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;&amp;'static <a class="primitive" href="https://doc.rust-lang.org/nightly/std/primitive.str.html">str</a>&gt;</code></span></td><td><div class='docblock'><p>Additional data.</p>
+</div></td></tr><tr><td id='variant.Parse.field.more'><span id='Parse.v.more.v' class='invisible'><code>more:&nbsp;<a class="enum" href="https://doc.rust-lang.org/nightly/core/option/enum.Option.html" title="enum core::option::Option">Option</a>&lt;<a class="struct" href="https://doc.rust-lang.org/nightly/alloc/string/struct.String.html" title="struct alloc::string::String">String</a>&gt;</code></span></td><td><div class='docblock'><p>Additional data.</p>
 </div></td></tr></table></span><span id="variant.FileNotFound" class="variant small-section-header"><a href="#variant.FileNotFound" class="anchor field"></a><span id='FileNotFound.v' class='invisible'><code>FileNotFound</code></span></span><div class='docblock'><p>A requested file doesn't exist.</p>
 </div><span class='docblock autohide sub-variant' id='variant.FileNotFound.fields'><h3 class='fields'>Fields of <code>FileNotFound</code></h3>
 
