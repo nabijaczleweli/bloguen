@@ -1,5 +1,5 @@
 use self::super::super::super::util::{BLOGUEN_VERSION, parse_date_format_specifier, parse_function_notation, normalise_datetime};
-use self::super::super::{WrappedElement, LanguageTag, TagName};
+use self::super::super::{MachineDataKind, WrappedElement, LanguageTag, TagName};
 use chrono::{FixedOffset, DateTime, TimeZone, Local, Utc};
 use self::super::{machine_output_json, err_io};
 use std::io::{Error as IoError, Write};
@@ -7,7 +7,6 @@ use self::super::super::super::Error;
 use std::collections::BTreeMap;
 use std::iter::FromIterator;
 use std::borrow::Cow;
-use unicase;
 
 
 lazy_static! {
@@ -285,28 +284,30 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
                                 Some(("machine_data", args)) => {
                                     match args.len() {
                                         1 => {
-                                            // Convert to a static UC(string)-funxion map for more cases
-                                            if unicase::eq(args[0], "json") {
-                                                out_name_err = Some(machine_output_json(blog_name,
-                                                                                        language,
-                                                                                        additional_data_sets,
-                                                                                        raw_post_name,
-                                                                                        number,
-                                                                                        title,
-                                                                                        author,
-                                                                                        &post_date,
-                                                                                        tags,
-                                                                                        styles,
-                                                                                        scripts,
-                                                                                        into,
-                                                                                        out_name_err.take().unwrap())?);
-                                                Ok(())
-                                            } else {
-                                                return Err(err_parse(format!("{} is an invalid data format for `machine_data([format])` \
-                                                                              function, accepted formats: json, around position {}",
-                                                                             args[0],
-                                                                             byte_pos),
-                                                                     out_name_err.take().unwrap()));
+                                            match args[0].parse() {
+                                                Ok(MachineDataKind::Json) => {
+                                                    out_name_err = Some(machine_output_json(blog_name,
+                                                                                            language,
+                                                                                            additional_data_sets,
+                                                                                            raw_post_name,
+                                                                                            number,
+                                                                                            title,
+                                                                                            author,
+                                                                                            &post_date,
+                                                                                            tags,
+                                                                                            styles,
+                                                                                            scripts,
+                                                                                            into,
+                                                                                            out_name_err.take().unwrap())?);
+                                                    Ok(())
+                                                }
+                                                Err(_) => {
+                                                    return Err(err_parse(format!("{} is an invalid data format for `machine_data([format])` function, \
+                                                                                  accepted formats: json, around position {}",
+                                                                                 args[0],
+                                                                                 byte_pos),
+                                                                         out_name_err.take().unwrap()))
+                                                }
                                             }
                                         }
                                         _ => {
