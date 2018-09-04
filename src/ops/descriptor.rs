@@ -1,4 +1,4 @@
-use self::super::{ScriptElement, StyleElement, LanguageTag};
+use self::super::{MachineDataKind, ScriptElement, StyleElement, LanguageTag};
 use self::super::super::util::concat_path;
 use toml::de::from_str as from_toml_str;
 use std::collections::BTreeMap;
@@ -27,6 +27,12 @@ pub struct BlogueDescriptor {
     ///
     /// Default: `"$ROOT/footer.html"`, then `"$ROOT/footer.htm"`.
     pub footer_file: (String, PathBuf),
+    /// Where and which machine datasets to put.
+    ///
+    /// Each value here is a prefix appended to the output directory under which to put the machine data.
+    ///
+    /// Values can't be empty (to put machine data at post root use "./").
+    pub machine_data: BTreeMap<MachineDataKind, String>,
     /// Default post language.
     ///
     /// Overriden by post metadata, if present.
@@ -53,6 +59,7 @@ struct BlogueDescriptorSerialised {
     pub author: Option<String>,
     pub header: Option<String>,
     pub footer: Option<String>,
+    pub machine_data: Option<BTreeMap<MachineDataKind, String>>,
     pub language: Option<LanguageTag>,
     pub styles: Option<Vec<StyleElement>>,
     pub scripts: Option<Vec<ScriptElement>>,
@@ -88,6 +95,9 @@ impl BlogueDescriptor {
     /// class = "file"
     /// data = "MathJax-config.js"
     ///
+    /// [machine_data]
+    /// JSON = "metadata/json/"
+    ///
     /// [data]
     /// preferred_system = "capitalism"
     /// ```
@@ -95,7 +105,7 @@ impl BlogueDescriptor {
     /// The following holds:
     ///
     /// ```
-    /// # use bloguen::ops::{BlogueDescriptor, ScriptElement};
+    /// # use bloguen::ops::{BlogueDescriptor, MachineDataKind, ScriptElement};
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
     /// # use std::io::Write;
@@ -114,6 +124,9 @@ impl BlogueDescriptor {
     /// #     class = \"file\"\n\
     /// #     data = \"MathJax-config.js\"\n\
     /// #     \n\
+    /// #     [machine_data]\n\
+    /// #     JSON = \"metadata/json/\"\n\
+    /// #     \n\
     /// #     [data]\n\
     /// #     preferred_system = \"capitalism\"\n\
     /// # ".as_bytes()).unwrap();
@@ -129,6 +142,7 @@ impl BlogueDescriptor {
     ///                author: None,
     ///                header_file: ("$ROOT/head.html".to_string(), root.join("head.html")),
     ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+    ///                machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
     ///                language: Some("pl".parse().unwrap()),
     ///                styles: vec![],
     ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
@@ -161,11 +175,23 @@ impl BlogueDescriptor {
                 }
             })?;
 
+        let machine_data = serialised.machine_data.unwrap_or_default();
+        for (ref k, ref v) in &machine_data {
+            if v.find(|c| !['/', '\\'].contains(&c)).is_none() {
+                return Err(Error::Parse {
+                    tp: "path chunk",
+                    wher: "blogue descriptor".into(),
+                    more: Some(format!("{} subdir selector empty", k).into()),
+                });
+            }
+        }
+
         Ok(BlogueDescriptor {
             name: serialised.name,
             author: serialised.author,
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
+            machine_data: machine_data,
             language: serialised.language,
             styles: serialised.styles.unwrap_or_default(),
             scripts: serialised.scripts.unwrap_or_default(),

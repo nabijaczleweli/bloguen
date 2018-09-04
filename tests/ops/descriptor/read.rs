@@ -1,4 +1,4 @@
-use bloguen::ops::{BlogueDescriptor, ScriptElement, StyleElement};
+use bloguen::ops::{BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement};
 use std::fs::{self, File};
 use std::env::temp_dir;
 use std::io::Write;
@@ -29,6 +29,9 @@ fn ok_all_specified() {
                     class = \"file\"\n\
                     data = \"MathJax-config.js\"\n\
                     \n\
+                    [machine_data]\n\
+                    JSON = \"metadata/json/\"\n\
+                    \n\
                     [data]\n\
                     preferred-system = \"communism\"\n"
             .as_bytes())
@@ -42,6 +45,7 @@ fn ok_all_specified() {
                    author: Some("nabijaczleweli".to_string()),
                    header_file: ("$ROOT/templates/head".to_string(), root.join("templates").join("head")),
                    footer_file: ("$ROOT/templates\\foot".to_string(), root.join("templates").join("foot")),
+                   machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
                    language: Some("pl".parse().unwrap()),
                    styles: vec![StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
                                 StyleElement::from_literal(".indented { text-indent: 1em; }")],
@@ -66,11 +70,87 @@ fn ok_induced() {
                    author: None,
                    header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+                   machine_data: vec![].into_iter().collect(),
                    language: None,
                    styles: vec![],
                    scripts: vec![],
                    data: vec![].into_iter().collect(),
                }));
+}
+
+#[test]
+fn invalid_machine_data_empty_path() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_machine_data_empty_path");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [machine_data]\n\
+                    JSON = \"\"\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Err(Error::Parse {
+                    tp: "path chunk",
+                    wher: "blogue descriptor".into(),
+                    more: Some("JSON subdir selector empty".into()),
+                }));
+}
+
+#[test]
+fn invalid_machine_data_slash_path() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_machine_data_slash_path");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [machine_data]\n\
+                    JSON = \"/\"\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Err(Error::Parse {
+                    tp: "path chunk",
+                    wher: "blogue descriptor".into(),
+                    more: Some("JSON subdir selector empty".into()),
+                }));
+}
+
+#[test]
+fn invalid_machine_data_invalid_kind() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_machine_data_invalid_kind");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [machine_data]\n\
+                    JSON = \"\"\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Err(Error::Parse {
+                    tp: "path chunk",
+                    wher: "blogue descriptor".into(),
+                    more: Some("JSON subdir selector empty".into()),
+                }));
 }
 
 #[test]
