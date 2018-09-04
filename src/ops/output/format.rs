@@ -284,8 +284,8 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
                                 Some(("machine_data", args)) => {
                                     match args.len() {
                                         1 => {
-                                            match args[0].parse() {
-                                                Ok(MachineDataKind::Json) => {
+                                            match MachineDataKind::from(args[0]) {
+                                                Some(MachineDataKind::Json) => {
                                                     out_name_err = Some(machine_output_json(blog_name,
                                                                                             language,
                                                                                             additional_data_sets,
@@ -301,7 +301,7 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
                                                                                             out_name_err.take().unwrap())?);
                                                     Ok(())
                                                 }
-                                                Err(_) => {
+                                                None => {
                                                     return Err(err_parse(format!("{} is an invalid data format for `machine_data([format])` function, \
                                                                                   accepted formats: json, around position {}",
                                                                                  args[0],
