@@ -132,18 +132,6 @@
 <span id="132">132</span>
 <span id="133">133</span>
 <span id="134">134</span>
-<span id="135">135</span>
-<span id="136">136</span>
-<span id="137">137</span>
-<span id="138">138</span>
-<span id="139">139</span>
-<span id="140">140</span>
-<span id="141">141</span>
-<span id="142">142</span>
-<span id="143">143</span>
-<span id="144">144</span>
-<span id="145">145</span>
-<span id="146">146</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
@@ -239,20 +227,8 @@
                                 <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;missing value for data-{}&quot;</span>, <span class="ident">key</span>)),
                             }
                         }
-                        <span class="kw">_</span> <span class="op">=&gt;</span> {
-                            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Parse</span> {
-                                <span class="ident">tp</span>: <span class="string">&quot;unformatted input&quot;</span>, <span class="comment">// TODO</span>
-                                <span class="ident">wher</span>: <span class="string">&quot;formatted output&quot;</span>,
-                                <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unrecognised format specifier {} at position {}&quot;</span>, <span class="ident">format_str</span>, <span class="ident">byte_pos</span>).<span class="ident">into</span>()),
-                            });
-                        }
-                    }.<span class="ident">map_err</span>(<span class="op">|</span>(<span class="ident">e</span>, <span class="ident">d</span>): (<span class="kw">_</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">|</span> {
-                        <span class="ident">Error</span>::<span class="ident">Io</span> {
-                            <span class="ident">desc</span>: <span class="string">&quot;formatted output&quot;</span>, <span class="comment">// TODO</span>
-                            <span class="ident">op</span>: <span class="string">&quot;write&quot;</span>,
-                            <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing substituted {}&quot;</span>, <span class="ident">e</span>, <span class="ident">d</span>).<span class="ident">into</span>()),
-                        }
-                    })<span class="question-mark">?</span>;
+                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unrecognised format specifier {} at position {}&quot;</span>, <span class="ident">format_str</span>, <span class="ident">byte_pos</span>)),
+                    }.<span class="ident">map_err</span>(<span class="op">|</span>(<span class="ident">e</span>, <span class="ident">d</span>): (<span class="kw">_</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing substituted {}&quot;</span>, <span class="ident">e</span>, <span class="ident">d</span>)))<span class="question-mark">?</span>;
             } <span class="kw">else</span> {
                 <span class="kw">return</span> <span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unmatched open brace at position {}&quot;</span>, <span class="ident">byte_pos</span>));
             }
