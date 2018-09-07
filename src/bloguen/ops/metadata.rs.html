@@ -103,6 +103,16 @@
 <span id="103">103</span>
 <span id="104">104</span>
 <span id="105">105</span>
+<span id="106">106</span>
+<span id="107">107</span>
+<span id="108">108</span>
+<span id="109">109</span>
+<span id="110">110</span>
+<span id="111">111</span>
+<span id="112">112</span>
+<span id="113">113</span>
+<span id="114">114</span>
+<span id="115">115</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="ident">toml</span>::<span class="ident">de</span>::<span class="ident">from_str</span> <span class="kw">as</span> <span class="ident">from_toml_str</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
@@ -114,20 +124,27 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="ident">Read</span>;
 
 
-<span class="doccomment">/// Generic blogue metadata.</span>
+<span class="doccomment">/// Generic post metadata.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">PostMetadata</span> {
     <span class="doccomment">/// Post language override.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not present, default post language is used.</span>
     <span class="kw">pub</span> <span class="ident">language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LanguageTag</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Post author override.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If not present, default post author is used.</span>
+    <span class="kw">pub</span> <span class="ident">author</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Additional static data to substitute in header and footer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If not present, defaults to empty.</span>
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>)]</span>
 <span class="kw">struct</span> <span class="ident">PostMetadataSerialised</span> {
     <span class="kw">pub</span> <span class="ident">language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LanguageTag</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">author</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;&gt;</span>,
 }
 
@@ -169,6 +186,7 @@
     <span class="doccomment">/// assert_eq!(metadata,</span>
     <span class="doccomment">///            PostMetadata {</span>
     <span class="doccomment">///                language: Some(&quot;pl&quot;.parse().unwrap()),</span>
+    <span class="doccomment">///                author: None,</span>
     <span class="doccomment">///                data: vec![(&quot;desc&quot;.to_string(), &quot;Każdy koniec to nowy początek [PL]&quot;.to_string())].into_iter().collect(),</span>
     <span class="doccomment">///            });</span>
     <span class="doccomment">/// ```</span>
@@ -196,6 +214,7 @@
 
         <span class="prelude-val">Ok</span>(<span class="ident">PostMetadata</span> {
             <span class="ident">language</span>: <span class="ident">serialised</span>.<span class="ident">language</span>,
+            <span class="ident">author</span>: <span class="ident">serialised</span>.<span class="ident">author</span>,
             <span class="ident">data</span>: <span class="ident">serialised</span>.<span class="ident">data</span>.<span class="ident">unwrap_or_default</span>(),
         })
     }
@@ -205,6 +224,7 @@
     <span class="kw">fn</span> <span class="ident">default</span>() <span class="op">-&gt;</span> <span class="ident">PostMetadata</span> {
         <span class="ident">PostMetadata</span> {
             <span class="ident">language</span>: <span class="prelude-val">None</span>,
+            <span class="ident">author</span>: <span class="prelude-val">None</span>,
             <span class="ident">data</span>: <span class="ident">BTreeMap</span>::<span class="ident">new</span>(),
         }
     }
