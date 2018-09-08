@@ -1,5 +1,5 @@
+use self::super::{MachineDataKind, ScriptElement, StyleElement, LanguageTag, TagName, machine_output_kind, format_output};
 use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links, concat_path, read_file};
-use self::super::{ScriptElement, StyleElement, LanguageTag, TagName, format_output};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
@@ -309,6 +309,110 @@ impl BloguePost {
                       normalised_name)?;
 
         extract_links(root)
+    }
+
+    /// Generate machine output of the specified kind from the post into the specified subpath in the specified output directory.
+    ///
+    /// # Examples
+    ///
+    /// Given the following:
+    ///
+    /// ```plaintext
+    /// src/
+    ///   01. 2018-01-08 16-52 The venture into crocheting/
+    ///     post.md
+    /// ```
+    ///
+    /// The following holds:
+    ///
+    /// ```
+    /// # use bloguen::ops::{MachineDataKind, BloguePost};
+    /// # use bloguen::util::LANGUAGE_EN_GB;
+    /// # use std::io::{Write, Read};
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-generate_machine");
+    /// # let _ = fs::remove_dir_all(&root);
+    /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
+    /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
+    /// #                  .join("post.md")).unwrap().write_all("[Блогг](url.html)".as_bytes()).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// # */
+    /// let post =
+    ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
+    ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
+    /// assert!(post.generate_machine(&("$ROOT/out/".to_string(), root.join("out")), "machine/", &MachineDataKind::Json,
+    ///                               "Блогг", &LANGUAGE_EN_GB, "autheur", &[], &[], &Default::default(), &Default::default(),
+    ///                       &[], &[], &[], &[]).is_ok());
+    ///
+    /// assert!(root.join("out").join("machine")
+    ///             .join("01. 2018-01-08 16-52-00 The venture into crocheting.json").is_file());
+    /// # let mut read = String::new();
+    /// # File::open(root.join("out").join("machine").join("01. 2018-01-08 16-52-00 The venture into crocheting.json"))
+    /// #                .unwrap().read_to_string(&mut read).unwrap();
+    /// # assert!(read.starts_with(r##"{
+    /// #     "number": 1,
+    /// #     "language": "en-GB",
+    /// #     "title": "The venture into crocheting",
+    /// #     "author": "autheur",
+    /// #
+    /// #     "raw_post_name": "01. 2018-01-08 16-52 The venture into crocheting",
+    /// #     "blog_name": "Блогг","##));
+    /// # assert!(read.ends_with(r##"
+    /// #     "tags": [
+    /// #     ],
+    /// #     "additional_data": {
+    /// #     },
+    /// #
+    /// #     "styles": [
+    /// #     ],
+    /// #     "scripts": [
+    /// #     ],
+    /// #
+    /// #     "bloguen-version": "0.1.0"
+    /// # }"##));
+    /// ```
+    pub fn generate_machine(&self, into: &(String, PathBuf), subpath: &str, kind: &MachineDataKind, blog_name: &str, language: &LanguageTag, author: &str,
+                            spec_tags: &[TagName], free_tags: &[TagName], post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>,
+                            post_styles: &[StyleElement], global_styles: &[StyleElement], post_scripts: &[ScriptElement], global_scripts: &[ScriptElement])
+                            -> Result<(), Error> {
+        let mut machine_root_path = concat_path(&into.1, subpath);
+        fs::create_dir_all(&machine_root_path).map_err(|e| {
+                Error::Io {
+                    desc: format!("{} directory", subpath).into(),
+                    op: "create",
+                    more: Some(e.to_string().into()),
+                }
+            })?;
+
+        let normalised_name = self.normalised_name();
+        machine_root_path.push(format!("{}.{}", normalised_name, kind.extension()));
+        let mut post_kind_f = File::create(machine_root_path).map_err(|e| {
+                Error::Io {
+                    desc: format!("post {}", kind).into(),
+                    op: "create",
+                    more: Some(e.to_string().into()),
+                }
+            })?;
+
+        let original_name = self.source_dir.1.file_name().unwrap().to_str().unwrap();
+        machine_output_kind(kind,
+                            blog_name,
+                            language,
+                            &[global_data, post_data],
+                            &original_name,
+                            self.number.0,
+                            &self.name,
+                            author,
+                            &self.datetime,
+                            &[spec_tags, free_tags],
+                            &[global_styles, post_styles],
+                            &[global_scripts, post_scripts],
+                            &mut post_kind_f,
+                            normalised_name)?;
+
+        Ok(())
     }
 
     /// Get a normalised output name for this post.
