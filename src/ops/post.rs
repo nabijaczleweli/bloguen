@@ -311,7 +311,8 @@ impl BloguePost {
         extract_links(root)
     }
 
-    /// Generate machine output of the specified kind from the post into the specified subpath in the specified output directory.
+    /// Generate machine output of the specified kind from the post into the specified subpath in the specified output
+    /// directory.
     ///
     /// # Examples
     ///
@@ -397,20 +398,19 @@ impl BloguePost {
             })?;
 
         let original_name = self.source_dir.1.file_name().unwrap().to_str().unwrap();
-        machine_output_kind(kind,
-                            blog_name,
-                            language,
-                            &[global_data, post_data],
-                            &original_name,
-                            self.number.0,
-                            &self.name,
-                            author,
-                            &self.datetime,
-                            &[spec_tags, free_tags],
-                            &[global_styles, post_styles],
-                            &[global_scripts, post_scripts],
-                            &mut post_kind_f,
-                            normalised_name)?;
+        machine_output_kind(kind)(blog_name,
+                                  language,
+                                  &[global_data, post_data],
+                                  &original_name,
+                                  self.number.0,
+                                  &self.name,
+                                  author,
+                                  &self.datetime,
+                                  &[spec_tags, free_tags],
+                                  &[global_styles, post_styles],
+                                  &[global_scripts, post_scripts],
+                                  &mut post_kind_f,
+                                  normalised_name)?;
 
         Ok(())
     }

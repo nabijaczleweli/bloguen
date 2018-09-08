@@ -10,17 +10,24 @@ use self::super::err_io;
 use std::borrow::Cow;
 
 
-/// Output a the correct type of blob of post metadata.
+/// Get the correct machine output funxion for the specified output kind.
 ///
-/// Care should be taken to ensure the arguments to this funxion are as close as possible to the arguments to
-/// [`format_output()`](fn.format_output.html)
-///
-/// Forwards to [`machine_output_json()`](fn.machine_output_json.html) for `MachineDataKind::Json`.
-pub fn machine_output_kind<W, E, Tz, St, Sc>(kind: &MachineDataKind, blog_name: &str, language: &LanguageTag,
-                                             additional_data_sets: &[&BTreeMap<String, String>], raw_post_name: &str, number: usize, title: &str,
-                                             author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]], styles: &[&[St]], scripts: &[&[Sc]], into: &mut W,
-                                             out_name_err: E)
-                                             -> Result<Cow<'static, str>, Error>
+/// Returns [`machine_output_json()`](fn.machine_output_json.html) for `MachineDataKind::Json`.
+pub fn machine_output_kind<W, E, Tz, St, Sc>(kind: &MachineDataKind)
+                                             -> (fn(blog_name: &str,
+                                                    language: &LanguageTag,
+                                                    additional_data_sets: &[&BTreeMap<String, String>],
+                                                    raw_post_name: &str,
+                                                    number: usize,
+                                                    title: &str,
+                                                    author: &str,
+                                                    post_date: &DateTime<Tz>,
+                                                    tags: &[&[TagName]],
+                                                    styles: &[&[St]],
+                                                    scripts: &[&[Sc]],
+                                                    into: &mut W,
+                                                    out_name_err: E)
+                                                    -> Result<Cow<'static, str>, Error>)
     where W: Write,
           E: Into<Cow<'static, str>>,
           Tz: TimeZone,
@@ -28,21 +35,7 @@ pub fn machine_output_kind<W, E, Tz, St, Sc>(kind: &MachineDataKind, blog_name: 
           Sc: WrappedElement
 {
     match kind {
-        MachineDataKind::Json => {
-            machine_output_json(blog_name,
-                                language,
-                                additional_data_sets,
-                                raw_post_name,
-                                number,
-                                title,
-                                author,
-                                post_date,
-                                tags,
-                                styles,
-                                scripts,
-                                into,
-                                out_name_err)
-        }
+        MachineDataKind::Json => machine_output_json,
     }
 }
 
