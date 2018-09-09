@@ -101,6 +101,23 @@ fn result_main() -> Result<(), bloguen::Error> {
 
             let independent_tags = bloguen::ops::TagName::load_additional_post_tags(&p.source_dir)?;
 
+            for (ref kind, ref subpath) in &descriptor.machine_data {
+                p.generate_machine(&opts.output_dir,
+                                      subpath,
+                                      kind,
+                                      &descriptor.name,
+                                      &language,
+                                      author,
+                                      &metadata.tags,
+                                      &independent_tags,
+                                      &metadata.data,
+                                      &descriptor.data,
+                                      &metadata.styles,
+                                      &descriptor.styles,
+                                      &metadata.scripts,
+                                      &descriptor.scripts)?;
+            }
+
             for link in p.generate(&opts.output_dir,
                           &post_header,
                           &post_footer,
