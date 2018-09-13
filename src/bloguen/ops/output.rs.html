@@ -184,6 +184,34 @@
 <span id="184">184</span>
 <span id="185">185</span>
 <span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
+<span id="196">196</span>
+<span id="197">197</span>
+<span id="198">198</span>
+<span id="199">199</span>
+<span id="200">200</span>
+<span id="201">201</span>
+<span id="202">202</span>
+<span id="203">203</span>
+<span id="204">204</span>
+<span id="205">205</span>
+<span id="206">206</span>
+<span id="207">207</span>
+<span id="208">208</span>
+<span id="209">209</span>
+<span id="210">210</span>
+<span id="211">211</span>
+<span id="212">212</span>
+<span id="213">213</span>
+<span id="214">214</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">parse_date_format_specifier</span>, <span class="ident">parse_function_notation</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">FixedOffset</span>, <span class="ident">DateTime</span>, <span class="ident">TimeZone</span>, <span class="ident">Offset</span>, <span class="ident">Local</span>, <span class="ident">Utc</span>};
@@ -243,32 +271,53 @@
 <span class="doccomment">/// let global_data = vec![].into_iter().collect();</span>
 <span class="doccomment">/// let local_data = vec![(&quot;desc&quot;.to_string(), &quot;Każdy koniec to nowy początek [PL]&quot;.to_string())].into_iter().collect();</span>
 <span class="doccomment">/// let mut out = vec![];</span>
-<span class="doccomment">/// format_output(head, &amp;LANGUAGE_EN_GB, &amp;global_data, &amp;local_data, &quot;nabijaczleweli&quot;, &quot;release-front - a generic release</span>
-<span class="doccomment">/// front-end, like Patchwork&#39;s&quot;,</span>
-<span class="doccomment">///               &amp;DateTime::parse_from_rfc3339(&quot;2018-09-06T18:32:22+02:00&quot;).unwrap(), &amp;mut out).unwrap();</span>
+<span class="doccomment">/// assert_eq!(</span>
+<span class="doccomment">///     format_output(head, &quot;Блогг&quot;, &amp;LANGUAGE_EN_GB, &amp;global_data, &amp;local_data,</span>
+<span class="doccomment">///                   &quot;release-front - a generic release front-end, like Patchwork&#39;s&quot;, &quot;nabijaczleweli&quot;,</span>
+<span class="doccomment">///                   &amp;DateTime::parse_from_rfc3339(&quot;2018-09-06T18:32:22+02:00&quot;).unwrap(), &amp;mut out, &quot;test blog&quot;).unwrap(),</span>
+<span class="doccomment">///     &quot;test blog&quot;);</span>
 <span class="doccomment">/// println!(&quot;{}&quot;, String::from_utf8(out).unwrap());</span>
 <span class="doccomment">/// panic!();</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format_output</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">to_format</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">LanguageTag</span>, <span class="ident">global_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">local_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
-                               <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">post_date</span>: <span class="kw-2">&amp;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">FixedOffset</span><span class="op">&gt;</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>)
-                               <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format_output</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span>, <span class="ident">E</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span>, <span class="ident">Tz</span>: <span class="ident">TimeZone</span><span class="op">&gt;</span>(<span class="ident">to_format</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">blog_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">LanguageTag</span>,
+                                                                         <span class="ident">global_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">local_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
+                                                                         <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">post_date</span>: <span class="kw-2">&amp;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Tz</span><span class="op">&gt;</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>, <span class="ident">out_name_err</span>: <span class="ident">E</span>)
+                                                                         <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="ident">format_output_impl</span>(<span class="ident">to_format</span>,
+                       <span class="ident">blog_name</span>,
+                       <span class="ident">language</span>,
+                       <span class="ident">global_data</span>,
+                       <span class="ident">local_data</span>,
+                       <span class="ident">title</span>,
+                       <span class="ident">author</span>,
+                       <span class="ident">normalise_datetime</span>(<span class="ident">post_date</span>),
+                       <span class="ident">into</span>,
+                       <span class="ident">out_name_err</span>.<span class="ident">into</span>())
+}
+
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format_output_impl</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">to_format</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">blog_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">LanguageTag</span>, <span class="ident">global_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
+                                    <span class="ident">local_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">post_date</span>: <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">FixedOffset</span><span class="op">&gt;</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>,
+                                    <span class="ident">out_name_err</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)
+                                    <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">out_name_err</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">out_name_err</span>);
+
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">byte_pos</span> <span class="op">=</span> <span class="number">0usize</span>;
     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">idx</span>) <span class="op">=</span> <span class="ident">to_format</span>.<span class="ident">find</span>(<span class="op">|</span><span class="kw-2">ref</span> <span class="ident">c</span><span class="op">|</span> [<span class="string">&#39;{&#39;</span>, <span class="string">&#39;}&#39;</span>].<span class="ident">contains</span>(<span class="ident">c</span>)) {
         <span class="kw">let</span> (<span class="ident">before</span>, <span class="kw-2">mut</span> <span class="ident">after</span>) <span class="op">=</span> <span class="ident">to_format</span>.<span class="ident">split_at</span>(<span class="ident">idx</span>);
 
-        <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">before</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing unformatted output&quot;</span>, <span class="ident">e</span>)))<span class="question-mark">?</span>;
+        <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">before</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing unformatted output&quot;</span>, <span class="ident">e</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))<span class="question-mark">?</span>;
         <span class="ident">byte_pos</span> <span class="op">+=</span> <span class="ident">before</span>.<span class="ident">len</span>();
 
         <span class="kw">if</span> <span class="ident">after</span>.<span class="ident">starts_with</span>(<span class="string">&quot;{{&quot;</span>) {
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="string">&#39;{&#39;</span> <span class="kw">as</span> <span class="ident">u8</span>]).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing escaped opening curly brace&quot;</span>, <span class="ident">e</span>)))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="string">&#39;{&#39;</span> <span class="kw">as</span> <span class="ident">u8</span>]).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing escaped opening curly brace&quot;</span>, <span class="ident">e</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))<span class="question-mark">?</span>;
             <span class="ident">byte_pos</span> <span class="op">+=</span> <span class="number">2</span>;
             <span class="ident">after</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">after</span>[<span class="number">2</span>..];
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">after</span>.<span class="ident">starts_with</span>(<span class="string">&quot;}}&quot;</span>) {
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="string">&#39;}&#39;</span> <span class="kw">as</span> <span class="ident">u8</span>]).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing escaped closing curly brace&quot;</span>, <span class="ident">e</span>)))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="string">&#39;}&#39;</span> <span class="kw">as</span> <span class="ident">u8</span>]).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing escaped closing curly brace&quot;</span>, <span class="ident">e</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))<span class="question-mark">?</span>;
             <span class="ident">byte_pos</span> <span class="op">+=</span> <span class="number">2</span>;
             <span class="ident">after</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">after</span>[<span class="number">2</span>..];
         } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">after</span>.<span class="ident">starts_with</span>(<span class="string">&quot;}&quot;</span>) {
-            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;stray closing brace at position {}&quot;</span>, <span class="ident">byte_pos</span>)));
+            <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;stray closing brace at position {}&quot;</span>, <span class="ident">byte_pos</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()));
         } <span class="kw">else</span> {
             <span class="comment">// Must start with { – begin format sequence</span>
 
@@ -283,12 +332,13 @@
                         <span class="string">&quot;language&quot;</span> <span class="op">=&gt;</span> <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">language</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;language tag&quot;</span>.<span class="ident">into</span>())),
                         <span class="string">&quot;author&quot;</span> <span class="op">=&gt;</span> <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">author</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;author tag&quot;</span>.<span class="ident">into</span>())),
                         <span class="string">&quot;title&quot;</span> <span class="op">=&gt;</span> <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">title</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;title tag&quot;</span>.<span class="ident">into</span>())),
+                        <span class="string">&quot;blog_name&quot;</span> <span class="op">=&gt;</span> <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">blog_name</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;blog_name tag&quot;</span>.<span class="ident">into</span>())),
 
                         <span class="ident">key</span> <span class="kw">if</span> <span class="ident">key</span>.<span class="ident">starts_with</span>(<span class="string">&quot;data-&quot;</span>) <span class="op">=&gt;</span> {
                             <span class="kw">let</span> <span class="ident">key</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">key</span>[<span class="string">&quot;data-&quot;</span>.<span class="ident">len</span>()..];
                             <span class="kw">match</span> <span class="ident">local_data</span>.<span class="ident">get</span>(<span class="ident">key</span>).<span class="ident">or_else</span>(<span class="op">||</span> <span class="ident">global_data</span>.<span class="ident">get</span>(<span class="ident">key</span>)) {
                                 <span class="prelude-val">Some</span>(<span class="ident">data</span>) <span class="op">=&gt;</span> <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">data</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;data-{} tag with value {}&quot;</span>, <span class="ident">key</span>, <span class="ident">data</span>).<span class="ident">into</span>())),
-                                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;missing value for data-{}&quot;</span>, <span class="ident">key</span>))),
+                                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;missing value for data-{}&quot;</span>, <span class="ident">key</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>())),
                             }
                         }
 
@@ -299,24 +349,26 @@
                                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} is an invalid amount of arguments to two-argument `date(of_what, format)` \
                                                                       function, around position {}&quot;</span>,
                                                                      <span class="ident">args</span>.<span class="ident">len</span>(),
-                                                                     <span class="ident">byte_pos</span>)));
+                                                                     <span class="ident">byte_pos</span>),
+                                                             <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()));
                                     }
 
-                                    <span class="kw">let</span> <span class="ident">date_format</span> <span class="op">=</span>
-                                                <span class="ident">parse_date_format_specifier</span>(<span class="ident">args</span>[<span class="number">1</span>]).<span class="ident">ok_or_else</span>(<span class="op">||</span> {
-                                                        <span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;invalid date format specifier {} around position {}&quot;</span>, <span class="ident">args</span>[<span class="number">1</span>], <span class="ident">byte_pos</span>))
-                                                    })<span class="question-mark">?</span>;
+                                    <span class="kw">let</span> <span class="ident">date_format</span> <span class="op">=</span> <span class="ident">parse_date_format_specifier</span>(<span class="ident">args</span>[<span class="number">1</span>]).<span class="ident">ok_or_else</span>(<span class="op">||</span> {
+                                            <span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;invalid date format specifier {} around position {}&quot;</span>, <span class="ident">args</span>[<span class="number">1</span>], <span class="ident">byte_pos</span>),
+                                                      <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>())
+                                        })<span class="question-mark">?</span>;
                                     <span class="kw">let</span> <span class="ident">date</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">args</span>[<span class="number">0</span>] {
-                                        <span class="string">&quot;post&quot;</span> <span class="op">=&gt;</span> <span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="ident">post_date</span>),
+                                        <span class="string">&quot;post&quot;</span> <span class="op">=&gt;</span> <span class="ident">Cow</span>::<span class="ident">Borrowed</span>(<span class="kw-2">&amp;</span><span class="ident">post_date</span>),
 
-                                        <span class="string">&quot;now_utc&quot;</span> <span class="op">=&gt;</span> <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">normalise_datetime</span>(<span class="ident">Utc</span>::<span class="ident">now</span>())),
-                                        <span class="string">&quot;now_local&quot;</span> <span class="op">=&gt;</span> <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">normalise_datetime</span>(<span class="ident">Local</span>::<span class="ident">now</span>())),
+                                        <span class="string">&quot;now_utc&quot;</span> <span class="op">=&gt;</span> <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">normalise_datetime</span>(<span class="kw-2">&amp;</span><span class="ident">Utc</span>::<span class="ident">now</span>())),
+                                        <span class="string">&quot;now_local&quot;</span> <span class="op">=&gt;</span> <span class="ident">Cow</span>::<span class="ident">Owned</span>(<span class="ident">normalise_datetime</span>(<span class="kw-2">&amp;</span><span class="ident">Local</span>::<span class="ident">now</span>())),
 
                                         <span class="ident">of_what</span> <span class="op">=&gt;</span> {
                                             <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} is an unrecognised date specifier (accepted: post, now_{{utc,local}}), around \
                                                                           position {}&quot;</span>,
                                                                          <span class="ident">of_what</span>,
-                                                                         <span class="ident">byte_pos</span>)))
+                                                                         <span class="ident">byte_pos</span>),
+                                                                 <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))
                                         }
                                     };
 
@@ -325,49 +377,53 @@
                                 }
 
                                 <span class="prelude-val">Some</span>((<span class="ident">fname</span>, <span class="ident">args</span>)) <span class="op">=&gt;</span> {
-                                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unrecognised format function {} with arguments {:?} at position {}&quot;</span>, <span class="ident">fname</span>, <span class="ident">args</span>, <span class="ident">byte_pos</span>)))
+                                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unrecognised format function {} with arguments {:?} at position {}&quot;</span>, <span class="ident">fname</span>, <span class="ident">args</span>, <span class="ident">byte_pos</span>),
+                                                         <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))
                                 }
-                                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unrecognised format specifier {} at position {}&quot;</span>, <span class="ident">format_str</span>, <span class="ident">byte_pos</span>))),
+                                <span class="kw">_</span> <span class="op">=&gt;</span> {
+                                    <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unrecognised format specifier {} at position {}&quot;</span>, <span class="ident">format_str</span>, <span class="ident">byte_pos</span>),
+                                                         <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))
+                                }
                             }
                         }
-                    }.<span class="ident">map_err</span>(<span class="op">|</span>(<span class="ident">e</span>, <span class="ident">d</span>): (<span class="kw">_</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing substituted {}&quot;</span>, <span class="ident">e</span>, <span class="ident">d</span>)))<span class="question-mark">?</span>;
+                    }.<span class="ident">map_err</span>(<span class="op">|</span>(<span class="ident">e</span>, <span class="ident">d</span>): (<span class="kw">_</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing substituted {}&quot;</span>, <span class="ident">e</span>, <span class="ident">d</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))<span class="question-mark">?</span>;
             } <span class="kw">else</span> {
-                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unmatched open brace at position {}&quot;</span>, <span class="ident">byte_pos</span>)));
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">err_parse</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;unmatched open brace at position {}&quot;</span>, <span class="ident">byte_pos</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()));
             }
         }
 
         <span class="ident">to_format</span> <span class="op">=</span> <span class="ident">after</span>;
     }
 
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">to_format</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing unformatted output&quot;</span>, <span class="ident">e</span>)))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">to_format</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing unformatted output&quot;</span>, <span class="ident">e</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))<span class="question-mark">?</span>;
 
-    <span class="prelude-val">Ok</span>(())
+    <span class="prelude-val">Ok</span>(<span class="ident">out_name_err</span>.<span class="ident">unwrap</span>())
 }
 
-<span class="kw">fn</span> <span class="ident">normalise_datetime</span><span class="op">&lt;</span><span class="ident">Tz</span>: <span class="ident">TimeZone</span><span class="op">&gt;</span>(<span class="ident">whom</span>: <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Tz</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">FixedOffset</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">normalise_datetime</span><span class="op">&lt;</span><span class="ident">Tz</span>: <span class="ident">TimeZone</span><span class="op">&gt;</span>(<span class="ident">whom</span>: <span class="kw-2">&amp;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Tz</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">FixedOffset</span><span class="op">&gt;</span> {
     <span class="ident">whom</span>.<span class="ident">with_timezone</span>(<span class="kw-2">&amp;</span><span class="ident">whom</span>.<span class="ident">offset</span>().<span class="ident">fix</span>())
 }
 
-<span class="kw">fn</span> <span class="ident">err_io</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">more</span>: <span class="ident">M</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-    <span class="ident">err_io_impl</span>(<span class="ident">op</span>, <span class="ident">more</span>.<span class="ident">into</span>())
+<span class="kw">fn</span> <span class="ident">err_io</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">more</span>: <span class="ident">M</span>, <span class="ident">out_name_err</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="ident">err_io_impl</span>(<span class="ident">op</span>, <span class="ident">more</span>.<span class="ident">into</span>(), <span class="ident">out_name_err</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">err_parse</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">more</span>: <span class="ident">M</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
-    <span class="ident">err_parse_impl</span>(<span class="ident">more</span>.<span class="ident">into</span>())
+<span class="kw">fn</span> <span class="ident">err_parse</span><span class="op">&lt;</span><span class="ident">M</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">more</span>: <span class="ident">M</span>, <span class="ident">out_name_err</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+    <span class="ident">err_parse_impl</span>(<span class="ident">more</span>.<span class="ident">into</span>(), <span class="ident">out_name_err</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">err_io_impl</span>(<span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">more</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+<span class="kw">fn</span> <span class="ident">err_io_impl</span>(<span class="ident">op</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span>, <span class="ident">more</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">out_name_err</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
     <span class="ident">Error</span>::<span class="ident">Io</span> {
-        <span class="ident">desc</span>: <span class="string">&quot;formatted output&quot;</span>, <span class="comment">// TODO</span>
+        <span class="ident">desc</span>: <span class="ident">out_name_err</span>,
         <span class="ident">op</span>: <span class="ident">op</span>,
         <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="ident">more</span>),
     }
 }
 
-<span class="kw">fn</span> <span class="ident">err_parse_impl</span>(<span class="ident">more</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
+<span class="kw">fn</span> <span class="ident">err_parse_impl</span>(<span class="ident">more</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">out_name_err</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">Error</span> {
     <span class="ident">Error</span>::<span class="ident">Parse</span> {
-        <span class="ident">tp</span>: <span class="string">&quot;unformatted input&quot;</span>, <span class="comment">// TODO</span>
-        <span class="ident">wher</span>: <span class="string">&quot;formatted output&quot;</span>,
+        <span class="ident">tp</span>: <span class="string">&quot;unformatted input&quot;</span>,
+        <span class="ident">wher</span>: <span class="ident">out_name_err</span>,
         <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="ident">more</span>),
     }
 }

@@ -199,7 +199,7 @@
             }.<span class="ident">read_to_string</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">buf</span>)
             .<span class="ident">map_err</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
                 <span class="ident">Error</span>::<span class="ident">Io</span> {
-                    <span class="ident">desc</span>: <span class="string">&quot;post metadata&quot;</span>,
+                    <span class="ident">desc</span>: <span class="string">&quot;post metadata&quot;</span>.<span class="ident">into</span>(),
                     <span class="ident">op</span>: <span class="string">&quot;read&quot;</span>,
                     <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="string">&quot;not UTF-8&quot;</span>.<span class="ident">into</span>()),
                 }
@@ -207,7 +207,7 @@
 
         <span class="kw">let</span> <span class="ident">serialised</span>: <span class="ident">PostMetadataSerialised</span> <span class="op">=</span> <span class="ident">from_toml_str</span>(<span class="kw-2">&amp;</span><span class="ident">buf</span>).<span class="ident">map_err</span>(<span class="kw">move</span> <span class="op">|</span><span class="ident">err</span><span class="op">|</span> {
                 <span class="ident">Error</span>::<span class="ident">FileParsingFailed</span> {
-                    <span class="ident">desc</span>: <span class="string">&quot;post metadata&quot;</span>,
+                    <span class="ident">desc</span>: <span class="string">&quot;post metadata&quot;</span>.<span class="ident">into</span>(),
                     <span class="ident">errors</span>: <span class="prelude-val">Some</span>(<span class="ident">err</span>.<span class="ident">to_string</span>().<span class="ident">into</span>()),
                 }
             })<span class="question-mark">?</span>;
