@@ -27,6 +27,10 @@ pub struct BlogueDescriptor {
     ///
     /// Default: `"$ROOT/footer.html"`, then `"$ROOT/footer.htm"`.
     pub footer_file: (String, PathBuf),
+    /// Additional static data to substitute in header and footer.
+    ///
+    /// If not present, defaults to empty.
+    pub index: Option<BlogueDescriptorIndex>,
     /// Where and which machine datasets to put.
     ///
     /// Each value here is a prefix appended to the output directory under which to put the machine data.
@@ -53,18 +57,43 @@ pub struct BlogueDescriptor {
     pub data: BTreeMap<String, String>,
 }
 
+/// Metadata pertainign specifically to generating an index file.
+#[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+pub struct BlogueDescriptorIndex {
+    /// Data to put before index HTML, templated.
+    ///
+    /// Default: `"$ROOT/index_header.html"`, then `"$ROOT/index_header.htm"`,
+    ///     then `"$ROOT/idx_header.html"`, then `"$ROOT/idx_header.htm"`.
+    pub header_file: (String, PathBuf),
+    /// Data to put after index HTML, templated.
+    ///
+    /// Default: `"$ROOT/index_footer.html"`, then `"$ROOT/index_footer.htm"`,
+    ///     then `"$ROOT/idx_footer.html"`, then `"$ROOT/idx_footer.htm"`.
+    pub footer_file: (String, PathBuf),
+}
+
+
 #[derive(Deserialize)]
 struct BlogueDescriptorSerialised {
     pub name: String,
     pub author: Option<String>,
     pub header: Option<String>,
     pub footer: Option<String>,
+    pub index: Option<BlogueDescriptorIndexSerialised>,
     pub machine_data: Option<BTreeMap<MachineDataKind, String>>,
     pub language: Option<LanguageTag>,
     pub styles: Option<Vec<StyleElement>>,
     pub scripts: Option<Vec<ScriptElement>>,
     pub data: Option<BTreeMap<String, String>>,
 }
+
+#[derive(Deserialize)]
+struct BlogueDescriptorIndexSerialised {
+    pub generate: Option<bool>,
+    pub header: Option<String>,
+    pub footer: Option<String>,
+}
+
 
 impl BlogueDescriptor {
     /// Read the blogue descriptor from the specified root firectory.
@@ -78,6 +107,8 @@ impl BlogueDescriptor {
     ///   blogue.toml
     ///   head.html
     ///   footer.htm
+    ///   idx_head.html
+    ///   index_footer.htm
     /// ```
     ///
     /// Given `$ROOT/blogue.toml` containing:
@@ -86,6 +117,9 @@ impl BlogueDescriptor {
     /// name = "Блогг"
     /// header = "head.html"
     /// language = "pl"
+    ///
+    /// [index]
+    /// header = "idx_head.html"
     ///
     /// [[scripts]]
     /// class = "link"
@@ -105,7 +139,7 @@ impl BlogueDescriptor {
     /// The following holds:
     ///
     /// ```
-    /// # use bloguen::ops::{BlogueDescriptor, MachineDataKind, ScriptElement};
+    /// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement};
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
     /// # use std::io::Write;
@@ -115,6 +149,9 @@ impl BlogueDescriptor {
     /// #     name = \"Блогг\"\n\
     /// #     header = \"head.html\"\n\
     /// #     language = \"pl\"\n\
+    /// #     \n\
+    /// #     [index]\n\
+    /// #     header = \"idx_head.html\"\n\
     /// #     \n\
     /// #     [[scripts]]\n\
     /// #     class = \"link\"\n\
@@ -132,6 +169,8 @@ impl BlogueDescriptor {
     /// # ".as_bytes()).unwrap();
     /// # File::create(root.join("head.html")).unwrap().write_all("header".as_bytes()).unwrap();
     /// # File::create(root.join("footer.htm")).unwrap().write_all("footer".as_bytes()).unwrap();
+    /// # File::create(root.join("idx_head.html")).unwrap().write_all("index header".as_bytes()).unwrap();
+    /// # File::create(root.join("index_footer.htm")).unwrap().write_all("index footer".as_bytes()).unwrap();
     /// # /*
     /// let root: PathBuf = /* obtained elsewhere */;
     /// # */
@@ -147,6 +186,10 @@ impl BlogueDescriptor {
     ///                styles: vec![],
     ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
     ///                              ScriptElement::from_path("MathJax-config.js")],
+    ///                index: Some(BlogueDescriptorIndex {
+    ///                    header_file: ("$ROOT/idx_head.html".to_string(), root.join("idx_head.html")),
+    ///                    footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
+    ///                }),
     ///                data: vec![("preferred_system".to_string(),
     ///                            "capitalism".to_string())].into_iter().collect(),
     ///            });
@@ -191,6 +234,23 @@ impl BlogueDescriptor {
             author: serialised.author,
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
+            index:
+                match serialised.index {
+                    Some(mut si) => {
+                        match si.generate {
+                            None | Some(true) => {
+                                Some(BlogueDescriptorIndex {
+                                    header_file: additional_file(si.header.clone(), root, "index_header", "index header")
+                                                     .or_else(|_| additional_file(si.header.take(), root, "idx_header", "index header"))?,
+                                    footer_file: additional_file(si.footer.clone(), root, "index_footer", "index footer")
+                                                     .or_else(|_| additional_file(si.footer.take(), root, "idx_footer", "index footer"))?,
+                                })
+                            }
+                            Some(false) => None,
+                        }
+                    }
+                    None => None,
+                },
             machine_data: machine_data,
             language: serialised.language,
             styles: serialised.styles.unwrap_or_default(),

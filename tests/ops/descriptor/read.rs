@@ -1,4 +1,4 @@
-use bloguen::ops::{BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement};
+use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement};
 use std::fs::{self, File};
 use std::env::temp_dir;
 use std::io::Write;
@@ -21,6 +21,11 @@ fn ok_all_specified() {
                     styles = [\"link://nabijaczleweli.xyz/kaschism/assets/column.css\",\n\
                               \"literal:.indented { text-indent: 1em; }\"]\n\
                     \n\
+                    [index]\n\
+                    generate = true\n
+                    header = \"templates/idx_head\"\n\
+                    footer = \"templates\\\\idx_foot\"\n\
+                    \n\
                     [[scripts]]\n\
                     class = \"link\"\n\
                     data = \"/content/assets/syllable.js\"\n\
@@ -38,6 +43,8 @@ fn ok_all_specified() {
         .unwrap();
     File::create(root.join("templates").join("head")).unwrap();
     File::create(root.join("templates").join("foot")).unwrap();
+    File::create(root.join("templates").join("idx_head")).unwrap();
+    File::create(root.join("templates").join("idx_foot")).unwrap();
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Ok(BlogueDescriptor {
@@ -45,6 +52,10 @@ fn ok_all_specified() {
                    author: Some("nabijaczleweli".to_string()),
                    header_file: ("$ROOT/templates/head".to_string(), root.join("templates").join("head")),
                    footer_file: ("$ROOT/templates\\foot".to_string(), root.join("templates").join("foot")),
+                   index: Some(BlogueDescriptorIndex {
+                       header_file: ("$ROOT/templates/idx_head".to_string(), root.join("templates").join("idx_head")),
+                       footer_file: ("$ROOT/templates\\idx_foot".to_string(), root.join("templates").join("idx_foot")),
+                   }),
                    machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
                    language: Some("pl".parse().unwrap()),
                    styles: vec![StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
@@ -74,6 +85,81 @@ fn ok_induced() {
                    language: None,
                    styles: vec![],
                    scripts: vec![],
+                   index: None,
+                   data: vec![].into_iter().collect(),
+               }));
+}
+
+#[test]
+fn ok_induced_index() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-ok_induced_index");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [index]\n\
+                    generate = true\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+    File::create(root.join("index_header.html")).unwrap();
+    File::create(root.join("index_footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Ok(BlogueDescriptor {
+                   name: "Блогг".to_string(),
+                   author: None,
+                   header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
+                   footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+                   machine_data: vec![].into_iter().collect(),
+                   language: None,
+                   styles: vec![],
+                   scripts: vec![],
+                   index: Some(BlogueDescriptorIndex {
+                       header_file: ("$ROOT/index_header.html".to_string(), root.join("index_header.html")),
+                       footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
+                   }),
+                   data: vec![].into_iter().collect(),
+               }));
+}
+
+#[test]
+fn ok_induced_idx() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-ok_induced_idx");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [index]\n\
+                    generate = true\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+    File::create(root.join("idx_header.html")).unwrap();
+    File::create(root.join("idx_footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Ok(BlogueDescriptor {
+                   name: "Блогг".to_string(),
+                   author: None,
+                   header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
+                   footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+                   machine_data: vec![].into_iter().collect(),
+                   language: None,
+                   styles: vec![],
+                   scripts: vec![],
+                   index: Some(BlogueDescriptorIndex {
+                       header_file: ("$ROOT/idx_header.html".to_string(), root.join("idx_header.html")),
+                       footer_file: ("$ROOT/idx_footer.htm".to_string(), root.join("idx_footer.htm")),
+                   }),
                    data: vec![].into_iter().collect(),
                }));
 }
@@ -97,10 +183,10 @@ fn invalid_machine_data_empty_path() {
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::Parse {
-                    tp: "path chunk",
-                    wher: "blogue descriptor".into(),
-                    more: Some("JSON subdir selector empty".into()),
-                }));
+                   tp: "path chunk",
+                   wher: "blogue descriptor".into(),
+                   more: Some("JSON subdir selector empty".into()),
+               }));
 }
 
 #[test]
@@ -122,10 +208,10 @@ fn invalid_machine_data_slash_path() {
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::Parse {
-                    tp: "path chunk",
-                    wher: "blogue descriptor".into(),
-                    more: Some("JSON subdir selector empty".into()),
-                }));
+                   tp: "path chunk",
+                   wher: "blogue descriptor".into(),
+                   more: Some("JSON subdir selector empty".into()),
+               }));
 }
 
 #[test]
@@ -147,10 +233,10 @@ fn invalid_machine_data_invalid_kind() {
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::Parse {
-                    tp: "path chunk",
-                    wher: "blogue descriptor".into(),
-                    more: Some("JSON subdir selector empty".into()),
-                }));
+                   tp: "path chunk",
+                   wher: "blogue descriptor".into(),
+                   more: Some("JSON subdir selector empty".into()),
+               }));
 }
 
 #[test]
