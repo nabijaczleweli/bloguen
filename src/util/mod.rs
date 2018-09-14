@@ -3,6 +3,7 @@
 
 #[cfg(target_os = "windows")]
 mod windows;
+mod polywrite;
 #[cfg(not(target_os = "windows"))]
 mod non_windows;
 
@@ -28,6 +29,8 @@ use std::cmp;
 use self::windows::{current_username_impl, default_language_impl};
 #[cfg(not(target_os = "windows"))]
 use self::non_windows::{current_username_impl, default_language_impl};
+
+pub use self::polywrite::PolyWrite;
 
 
 include!(concat!(env!("OUT_DIR"), "/words.rs"));
