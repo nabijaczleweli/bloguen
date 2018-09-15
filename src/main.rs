@@ -4,6 +4,7 @@ extern crate rayon;
 extern crate url;
 
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
+use std::sync::mpsc::channel as mpsc_channel;
 use url::percent_encoding::percent_decode;
 use std::io::{Write, stderr, stdout};
 use std::iter::FromIterator;
@@ -85,8 +86,11 @@ fn result_main() -> Result<(), bloguen::Error> {
     println!("{}", global_language);
     println!("{}", global_author);
 
+
+    let (idx_sender, idx_receiver) = mpsc_channel();
+
     posts.par_iter()
-        .try_for_each(|p| {
+        .try_for_each_with(idx_sender, |idx_sender, p| {
             let mut metadata = bloguen::ops::PostMetadata::read_or_default(&p.source_dir)?;
             let language = metadata.language.as_ref().unwrap_or(&global_language);
             let author = metadata.author.as_ref().unwrap_or(&global_author);
@@ -101,21 +105,66 @@ fn result_main() -> Result<(), bloguen::Error> {
 
             let independent_tags = bloguen::ops::TagName::load_additional_post_tags(&p.source_dir)?;
 
-            for (ref kind, ref subpath) in &descriptor.machine_data {
-                p.generate_machine(&opts.output_dir,
-                                      subpath,
-                                      kind,
-                                      &descriptor.name,
-                                      &language,
-                                      author,
-                                      &metadata.tags,
-                                      &independent_tags,
-                                      &metadata.data,
-                                      &descriptor.data,
-                                      &metadata.styles,
-                                      &descriptor.styles,
-                                      &metadata.scripts,
-                                      &descriptor.scripts)?;
+            let mut index_machine_json = vec![];
+            for (kind, subpath) in &descriptor.machine_data {
+                let mut f_out = p.create_machine_output(&opts.output_dir, subpath, kind)?;
+
+                if *kind == bloguen::ops::MachineDataKind::Json && !index_machine_json.is_empty() && descriptor.index.is_some() {
+                    p.generate_machine(&mut bloguen::util::PolyWrite(f_out, &mut index_machine_json),
+                                          kind,
+                                          &descriptor.name,
+                                          &language,
+                                          author,
+                                          &metadata.tags,
+                                          &independent_tags,
+                                          &metadata.data,
+                                          &descriptor.data,
+                                          &metadata.styles,
+                                          &descriptor.styles,
+                                          &metadata.scripts,
+                                          &descriptor.scripts)?;
+                } else {
+                    p.generate_machine(&mut f_out,
+                                          kind,
+                                          &descriptor.name,
+                                          &language,
+                                          author,
+                                          &metadata.tags,
+                                          &independent_tags,
+                                          &metadata.data,
+                                          &descriptor.data,
+                                          &metadata.styles,
+                                          &descriptor.styles,
+                                          &metadata.scripts,
+                                          &descriptor.scripts)?;
+                }
+            }
+
+            if descriptor.index.is_some() {
+                if index_machine_json.is_empty() {
+                    p.generate_machine(&mut index_machine_json,
+                                          &bloguen::ops::MachineDataKind::Json,
+                                          &descriptor.name,
+                                          &language,
+                                          author,
+                                          &metadata.tags,
+                                          &independent_tags,
+                                          &metadata.data,
+                                          &descriptor.data,
+                                          &metadata.styles,
+                                          &descriptor.styles,
+                                          &metadata.scripts,
+                                          &descriptor.scripts)?;
+                }
+
+                idx_sender.send((p.number.clone(), index_machine_json))
+                    .map_err(|e| {
+                        bloguen::Error::Io {
+                            desc: format!("post {} JSON metadata ", p.number.1).into(),
+                            op: "save",
+                            more: Some(e.to_string().into()),
+                        }
+                    })?;
             }
 
             for link in p.generate(&opts.output_dir,
@@ -145,6 +194,20 @@ fn result_main() -> Result<(), bloguen::Error> {
 
             Ok(())
         })?;
+
+    if let Some(idx) = descriptor.index.as_ref() {
+        let mut posts: Vec<((usize, String), String)> = Result::from_iter(idx_receiver.iter()
+                .map(|(numb, json)| String::from_utf8(json).map(|s| (numb, s)))).map_err(|e| {
+                bloguen::Error::Parse {
+                    tp: "UTF-8 string",
+                    wher: "index file post metadata".into(),
+                    more: Some(e.to_string().into()),
+                }
+            })?;
+        posts.sort_unstable_by_key(|&((num, _), _)| num);
+
+        println!("{:?}", posts);
+    }
 
     Ok(())
 }
