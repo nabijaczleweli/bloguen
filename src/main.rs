@@ -1,5 +1,6 @@
 extern crate tabwriter;
 extern crate bloguen;
+extern crate chrono;
 extern crate rayon;
 extern crate url;
 
@@ -10,6 +11,8 @@ use std::io::{Write, stderr, stdout};
 use std::iter::FromIterator;
 use tabwriter::TabWriter;
 use std::process::exit;
+use std::fs::File;
+use chrono::Utc;
 
 
 fn main() {
@@ -196,17 +199,64 @@ fn result_main() -> Result<(), bloguen::Error> {
         })?;
 
     if let Some(idx) = descriptor.index.as_ref() {
-        let mut posts: Vec<((usize, String), String)> = Result::from_iter(idx_receiver.iter()
-                .map(|(numb, json)| String::from_utf8(json).map(|s| (numb, s)))).map_err(|e| {
+        let mut posts_data: Vec<_> = idx_receiver.into_iter().collect();
+        posts_data.sort_unstable_by_key(|&((num, _), _)| num);
+
+        let index_script = [bloguen::ops::ScriptElement::from_literal(String::from_utf8(posts_data.into_iter()
+                                    .fold("const BLOGUEN_POSTS = [".as_bytes().to_vec(), |mut acc, ((_, ns), md)| {
+                    acc.extend(md);
+
+                    if ns != posts[posts.len() - 1].number.1 {
+                        acc.extend(",\n".as_bytes());
+                    } else {
+                        acc.extend("];".as_bytes());
+                    }
+
+                    acc
+                })).map_err(|e| {
                 bloguen::Error::Parse {
                     tp: "UTF-8 string",
                     wher: "index file post metadata".into(),
                     more: Some(e.to_string().into()),
                 }
-            })?;
-        posts.sort_unstable_by_key(|&((num, _), _)| num);
+            })?)];
 
-        println!("{:?}", posts);
+        let mut index_file = File::create(opts.output_dir.1.join("index.html")).map_err(|e| {
+                bloguen::Error::Io {
+                    desc: "output index file".into(),
+                    op: "create",
+                    more: Some(e.to_string().into()),
+                }
+            })?;
+        let index_date = Utc::now();
+        bloguen::ops::format_output(&bloguen::util::read_file(&idx.header_file, "index header")?,
+                                    &descriptor.name,
+                                    &global_language,
+                                    &[&descriptor.data],
+                                    "index",
+                                    0,
+                                    "index",
+                                    &global_author,
+                                    &index_date,
+                                    &[],
+                                    &[&descriptor.styles],
+                                    &[&descriptor.scripts, &index_script],
+                                    &mut index_file,
+                                    "index")?;
+        bloguen::ops::format_output(&bloguen::util::read_file(&idx.footer_file, "index footer")?,
+                                    &descriptor.name,
+                                    &global_language,
+                                    &[&descriptor.data],
+                                    "index",
+                                    0,
+                                    "index",
+                                    &global_author,
+                                    &index_date,
+                                    &[],
+                                    &[&descriptor.styles],
+                                    &[&descriptor.scripts, &index_script],
+                                    &mut index_file,
+                                    "index")?;
     }
 
     Ok(())
