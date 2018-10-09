@@ -78,7 +78,7 @@ impl FromStr for MachineDataKind {
         MachineDataKind::from(s).ok_or_else(|| {
             Error::Parse {
                 tp: "machine data specifier",
-                wher: "expeced \"json\"".into(),
+                wher: "expected \"json\"".into(),
                 more: Some(format!("\"{}\" invalid", s).into()),
             }
         })
