@@ -15,6 +15,29 @@ lazy_static! {
 
         res
     };
+
+    static ref ERROR_WHER: String = String::from_utf8(NAME_KIND_MAP.iter()
+            .enumerate()
+            .map(|(i, v)| (i == NAME_KIND_MAP.len() - 1, v))
+            .fold((true, "expected ".as_bytes().to_vec()), |(first, mut acc), (last, (el, _))| {
+                if !first {
+                    if NAME_KIND_MAP.len() != 2 {
+                        acc.extend(b",");
+                    }
+                    acc.extend(b" ");
+                    if last {
+                        acc.extend(b"or ");
+                    }
+                }
+
+                acc.extend(b"\"");
+                acc.extend(el.as_bytes());
+                acc.extend(b"\"");
+
+                (false, acc)
+            })
+            .1)
+        .unwrap();
 }
 
 
@@ -78,7 +101,7 @@ impl FromStr for MachineDataKind {
         MachineDataKind::from(s).ok_or_else(|| {
             Error::Parse {
                 tp: "machine data specifier",
-                wher: "expected \"json\"".into(),
+                wher: (&ERROR_WHER[..]).into(),
                 more: Some(format!("\"{}\" invalid", s).into()),
             }
         })

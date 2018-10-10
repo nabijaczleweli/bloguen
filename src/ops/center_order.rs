@@ -12,6 +12,29 @@ lazy_static! {
         UniCase::new("forward") => CenterOrder::Forward,
         UniCase::new("backward") => CenterOrder::Backward,
     };
+
+    static ref ERROR_WHER: String = String::from_utf8(NAME_ORDER_MAP.first_col()
+            .enumerate()
+            .map(|(i, v)| (i == NAME_ORDER_MAP.len() - 1, v))
+            .fold((true, "expected ".as_bytes().to_vec()), |(first, mut acc), (last, el)| {
+                if !first {
+                    if NAME_ORDER_MAP.len() != 2 {
+                        acc.extend(b",");
+                    }
+                    acc.extend(b" ");
+                    if last {
+                        acc.extend(b"or ");
+                    }
+                }
+
+                acc.extend(b"\"");
+                acc.extend(el.as_bytes());
+                acc.extend(b"\"");
+
+                (false, acc)
+            })
+            .1)
+        .unwrap();
 }
 
 
@@ -63,7 +86,7 @@ impl FromStr for CenterOrder {
         CenterOrder::from(s).ok_or_else(|| {
             Error::Parse {
                 tp: "machine data specifier",
-                wher: "expected \"forward\" or \"backward\"".into(),
+                wher: (&ERROR_WHER[..]).into(),
                 more: Some(format!("\"{}\" invalid", s).into()),
             }
         })
