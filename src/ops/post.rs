@@ -7,9 +7,9 @@ use comrak::{self, Arena as ComrakArena};
 use std::collections::BTreeMap;
 use self::super::super::Error;
 use std::iter::FromIterator;
-use std::io::{self, Write};
 use std::fs::{self, File};
 use std::path::PathBuf;
+use std::io::Write;
 use regex::Regex;
 
 

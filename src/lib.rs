@@ -20,6 +20,8 @@ extern crate safe_transmute;
 extern crate serde_derive;
 #[macro_use]
 extern crate lazy_static;
+#[macro_use]
+extern crate bidir_map;
 extern crate unicase;
 extern crate walkdir;
 extern crate chrono;

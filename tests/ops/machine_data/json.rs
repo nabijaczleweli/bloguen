@@ -19,7 +19,7 @@ fn from_str_err() {
         assert_eq!(val.parse::<MachineDataKind>(),
                    Err(Error::Parse {
                        tp: "machine data specifier",
-                       wher: "expeced \"json\"".into(),
+                       wher: "expected \"json\"".into(),
                        more: Some(format!("\"{}\" invalid", val).into()),
                    }));
     }
