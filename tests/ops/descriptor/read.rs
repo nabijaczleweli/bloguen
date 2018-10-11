@@ -24,6 +24,7 @@ fn ok_all_specified() {
                     [index]\n\
                     generate = true\n
                     header = \"templates/idx_head\"\n\
+                    center = \"templates/idx_центр\"\n\
                     footer = \"templates\\\\idx_foot\"\n\
                     \n\
                     [[scripts]]\n\
@@ -44,6 +45,7 @@ fn ok_all_specified() {
     File::create(root.join("templates").join("head")).unwrap();
     File::create(root.join("templates").join("foot")).unwrap();
     File::create(root.join("templates").join("idx_head")).unwrap();
+    File::create(root.join("templates").join("idx_центр")).unwrap();
     File::create(root.join("templates").join("idx_foot")).unwrap();
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
@@ -54,6 +56,7 @@ fn ok_all_specified() {
                    footer_file: ("$ROOT/templates\\foot".to_string(), root.join("templates").join("foot")),
                    index: Some(BlogueDescriptorIndex {
                        header_file: ("$ROOT/templates/idx_head".to_string(), root.join("templates").join("idx_head")),
+                       center_file: ("$ROOT/templates/idx_центр".to_string(), root.join("templates").join("idx_центр")),
                        footer_file: ("$ROOT/templates\\idx_foot".to_string(), root.join("templates").join("idx_foot")),
                    }),
                    machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
@@ -107,6 +110,7 @@ fn ok_induced_index() {
     File::create(root.join("header.html")).unwrap();
     File::create(root.join("footer.htm")).unwrap();
     File::create(root.join("index_header.html")).unwrap();
+    File::create(root.join("index_center.html")).unwrap();
     File::create(root.join("index_footer.htm")).unwrap();
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
@@ -121,6 +125,7 @@ fn ok_induced_index() {
                    scripts: vec![],
                    index: Some(BlogueDescriptorIndex {
                        header_file: ("$ROOT/index_header.html".to_string(), root.join("index_header.html")),
+                       center_file: ("$ROOT/index_center.html".to_string(), root.join("index_center.html")),
                        footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
                    }),
                    data: vec![].into_iter().collect(),
@@ -144,6 +149,7 @@ fn ok_induced_idx() {
     File::create(root.join("header.html")).unwrap();
     File::create(root.join("footer.htm")).unwrap();
     File::create(root.join("idx_header.html")).unwrap();
+    File::create(root.join("idx_center.htm")).unwrap();
     File::create(root.join("idx_footer.htm")).unwrap();
 
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
@@ -158,6 +164,7 @@ fn ok_induced_idx() {
                    scripts: vec![],
                    index: Some(BlogueDescriptorIndex {
                        header_file: ("$ROOT/idx_header.html".to_string(), root.join("idx_header.html")),
+                       center_file: ("$ROOT/idx_center.htm".to_string(), root.join("idx_center.htm")),
                        footer_file: ("$ROOT/idx_footer.htm".to_string(), root.join("idx_footer.htm")),
                    }),
                    data: vec![].into_iter().collect(),

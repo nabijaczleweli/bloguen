@@ -60,12 +60,17 @@ pub struct BlogueDescriptor {
 /// Metadata pertainign specifically to generating an index file.
 #[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct BlogueDescriptorIndex {
-    /// Data to put before index HTML, templated.
+    /// Data to put start index HTML with, templated.
     ///
     /// Default: `"$ROOT/index_header.html"`, then `"$ROOT/index_header.htm"`,
     ///     then `"$ROOT/idx_header.html"`, then `"$ROOT/idx_header.htm"`.
     pub header_file: (String, PathBuf),
-    /// Data to put after index HTML, templated.
+    /// Data to put in index HTML for each post, templated.
+    ///
+    /// Default: `"$ROOT/index_center.html"`, then `"$ROOT/index_center.htm"`,
+    ///     then `"$ROOT/idx_center.html"`, then `"$ROOT/idx_center.htm"`.
+    pub center_file: (String, PathBuf),
+    /// Data to put to end index HTML with, templated.
     ///
     /// Default: `"$ROOT/index_footer.html"`, then `"$ROOT/index_footer.htm"`,
     ///     then `"$ROOT/idx_footer.html"`, then `"$ROOT/idx_footer.htm"`.
@@ -91,6 +96,7 @@ struct BlogueDescriptorSerialised {
 struct BlogueDescriptorIndexSerialised {
     pub generate: Option<bool>,
     pub header: Option<String>,
+    pub center: Option<String>,
     pub footer: Option<String>,
 }
 
@@ -108,6 +114,7 @@ impl BlogueDescriptor {
     ///   head.html
     ///   footer.htm
     ///   idx_head.html
+    ///   центр.html
     ///   index_footer.htm
     /// ```
     ///
@@ -120,6 +127,7 @@ impl BlogueDescriptor {
     ///
     /// [index]
     /// header = "idx_head.html"
+    /// center = "центр.html"
     ///
     /// [[scripts]]
     /// class = "link"
@@ -152,6 +160,7 @@ impl BlogueDescriptor {
     /// #     \n\
     /// #     [index]\n\
     /// #     header = \"idx_head.html\"\n\
+    /// #     center = \"центр.html\"\n\
     /// #     \n\
     /// #     [[scripts]]\n\
     /// #     class = \"link\"\n\
@@ -170,6 +179,7 @@ impl BlogueDescriptor {
     /// # File::create(root.join("head.html")).unwrap().write_all("header".as_bytes()).unwrap();
     /// # File::create(root.join("footer.htm")).unwrap().write_all("footer".as_bytes()).unwrap();
     /// # File::create(root.join("idx_head.html")).unwrap().write_all("index header".as_bytes()).unwrap();
+    /// # File::create(root.join("центр.html")).unwrap().write_all("index центр".as_bytes()).unwrap();
     /// # File::create(root.join("index_footer.htm")).unwrap().write_all("index footer".as_bytes()).unwrap();
     /// # /*
     /// let root: PathBuf = /* obtained elsewhere */;
@@ -188,6 +198,7 @@ impl BlogueDescriptor {
     ///                              ScriptElement::from_path("MathJax-config.js")],
     ///                index: Some(BlogueDescriptorIndex {
     ///                    header_file: ("$ROOT/idx_head.html".to_string(), root.join("idx_head.html")),
+    ///                    center_file: ("$ROOT/центр.html".to_string(), root.join("центр.html")),
     ///                    footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
     ///                }),
     ///                data: vec![("preferred_system".to_string(),
@@ -234,23 +245,24 @@ impl BlogueDescriptor {
             author: serialised.author,
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
-            index:
-                match serialised.index {
-                    Some(mut si) => {
-                        match si.generate {
-                            None | Some(true) => {
+            index: match serialised.index {
+                Some(mut si) => {
+                    match si.generate {
+                        None | Some(true) => {
                                 Some(BlogueDescriptorIndex {
                                     header_file: additional_file(si.header.clone(), root, "index_header", "index header")
                                                      .or_else(|_| additional_file(si.header.take(), root, "idx_header", "index header"))?,
+                                    center_file: additional_file(si.center.clone(), root, "index_center", "index center")
+                                                     .or_else(|_| additional_file(si.center.take(), root, "idx_center", "index center"))?,
                                     footer_file: additional_file(si.footer.clone(), root, "index_footer", "index footer")
                                                      .or_else(|_| additional_file(si.footer.take(), root, "idx_footer", "index footer"))?,
                                 })
                             }
-                            Some(false) => None,
-                        }
+                        Some(false) => None,
                     }
-                    None => None,
-                },
+                }
+                None => None,
+            },
             machine_data: machine_data,
             language: serialised.language,
             styles: serialised.styles.unwrap_or_default(),
