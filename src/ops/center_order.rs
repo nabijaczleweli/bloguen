@@ -114,3 +114,9 @@ impl fmt::Display for CenterOrder {
         self.name().fmt(f)
     }
 }
+
+impl Default for CenterOrder {
+    fn default() -> CenterOrder {
+        CenterOrder::Forward
+    }
+}

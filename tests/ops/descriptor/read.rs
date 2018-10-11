@@ -1,4 +1,4 @@
-use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement};
+use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement, CenterOrder};
 use std::fs::{self, File};
 use std::env::temp_dir;
 use std::io::Write;
@@ -26,6 +26,7 @@ fn ok_all_specified() {
                     header = \"templates/idx_head\"\n\
                     center = \"templates/idx_центр\"\n\
                     footer = \"templates\\\\idx_foot\"\n\
+                    order = \"backward\"\n\
                     \n\
                     [[scripts]]\n\
                     class = \"link\"\n\
@@ -58,6 +59,7 @@ fn ok_all_specified() {
                        header_file: ("$ROOT/templates/idx_head".to_string(), root.join("templates").join("idx_head")),
                        center_file: ("$ROOT/templates/idx_центр".to_string(), root.join("templates").join("idx_центр")),
                        footer_file: ("$ROOT/templates\\idx_foot".to_string(), root.join("templates").join("idx_foot")),
+                       center_order: CenterOrder::Backward,
                    }),
                    machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
                    language: Some("pl".parse().unwrap()),
@@ -127,6 +129,7 @@ fn ok_induced_index() {
                        header_file: ("$ROOT/index_header.html".to_string(), root.join("index_header.html")),
                        center_file: ("$ROOT/index_center.html".to_string(), root.join("index_center.html")),
                        footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
+                       center_order: CenterOrder::Forward,
                    }),
                    data: vec![].into_iter().collect(),
                }));
@@ -166,6 +169,7 @@ fn ok_induced_idx() {
                        header_file: ("$ROOT/idx_header.html".to_string(), root.join("idx_header.html")),
                        center_file: ("$ROOT/idx_center.htm".to_string(), root.join("idx_center.htm")),
                        footer_file: ("$ROOT/idx_footer.htm".to_string(), root.join("idx_footer.htm")),
+                       center_order: CenterOrder::Forward,
                    }),
                    data: vec![].into_iter().collect(),
                }));

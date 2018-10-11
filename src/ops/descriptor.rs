@@ -1,4 +1,4 @@
-use self::super::{MachineDataKind, ScriptElement, StyleElement, LanguageTag};
+use self::super::{MachineDataKind, ScriptElement, StyleElement, CenterOrder, LanguageTag};
 use self::super::super::util::concat_path;
 use toml::de::from_str as from_toml_str;
 use std::collections::BTreeMap;
@@ -75,6 +75,10 @@ pub struct BlogueDescriptorIndex {
     /// Default: `"$ROOT/index_footer.html"`, then `"$ROOT/index_footer.htm"`,
     ///     then `"$ROOT/idx_footer.html"`, then `"$ROOT/idx_footer.htm"`.
     pub footer_file: (String, PathBuf),
+    /// The order to put center templates in.
+    ///
+    /// If not present, defaults to forward.
+    pub center_order: CenterOrder,
 }
 
 
@@ -98,6 +102,7 @@ struct BlogueDescriptorIndexSerialised {
     pub header: Option<String>,
     pub center: Option<String>,
     pub footer: Option<String>,
+    pub order: Option<CenterOrder>,
 }
 
 
@@ -128,6 +133,7 @@ impl BlogueDescriptor {
     /// [index]
     /// header = "idx_head.html"
     /// center = "центр.html"
+    /// order = "backward"
     ///
     /// [[scripts]]
     /// class = "link"
@@ -147,7 +153,7 @@ impl BlogueDescriptor {
     /// The following holds:
     ///
     /// ```
-    /// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement};
+    /// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, CenterOrder};
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
     /// # use std::io::Write;
@@ -161,6 +167,7 @@ impl BlogueDescriptor {
     /// #     [index]\n\
     /// #     header = \"idx_head.html\"\n\
     /// #     center = \"центр.html\"\n\
+    /// #     order = \"backward\"\n\
     /// #     \n\
     /// #     [[scripts]]\n\
     /// #     class = \"link\"\n\
@@ -200,6 +207,7 @@ impl BlogueDescriptor {
     ///                    header_file: ("$ROOT/idx_head.html".to_string(), root.join("idx_head.html")),
     ///                    center_file: ("$ROOT/центр.html".to_string(), root.join("центр.html")),
     ///                    footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
+    ///                    center_order: CenterOrder::Backward,
     ///                }),
     ///                data: vec![("preferred_system".to_string(),
     ///                            "capitalism".to_string())].into_iter().collect(),
@@ -256,6 +264,7 @@ impl BlogueDescriptor {
                                                      .or_else(|_| additional_file(si.center.take(), root, "idx_center", "index center"))?,
                                     footer_file: additional_file(si.footer.clone(), root, "index_footer", "index footer")
                                                      .or_else(|_| additional_file(si.footer.take(), root, "idx_footer", "index footer"))?,
+                                    center_order: si.order.unwrap_or_default()
                                 })
                             }
                         Some(false) => None,
