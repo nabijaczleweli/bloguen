@@ -49,6 +49,13 @@ fn result_main() -> Result<(), bloguen::Error> {
 
     let mut post_header = bloguen::util::read_file(&descriptor.header_file, "post header")?;
     let mut post_footer = bloguen::util::read_file(&descriptor.footer_file, "post footer")?;
+    let (mut index_header, mut index_center, mut index_footer) = if let Some(ref idx) = descriptor.index.as_ref() {
+        (Some(bloguen::util::read_file(&idx.header_file, "index header")?),
+         Some(bloguen::util::read_file(&idx.center_file, "index center")?),
+         Some(bloguen::util::read_file(&idx.footer_file, "index footer")?))
+    } else {
+        (None, None, None)
+    };
     let global_language = descriptor.language.take().unwrap_or_else(|| match bloguen::util::default_language() {
         Some(l) => {
             match l.parse() {
@@ -75,6 +82,15 @@ fn result_main() -> Result<(), bloguen::Error> {
 
     bloguen::util::newline_pad(&mut post_header, 0, 2);
     bloguen::util::newline_pad(&mut post_footer, 2, 1);
+    if let Some(ref mut index_header) = index_header.as_mut() {
+        bloguen::util::newline_pad(index_header, 0, 2);
+    }
+    if let Some(ref mut index_center) = index_center.as_mut() {
+        bloguen::util::newline_pad(index_center, 1, 1);
+    }
+    if let Some(ref mut index_footer) = index_footer.as_mut() {
+        bloguen::util::newline_pad(index_footer, 2, 1);
+    }
 
     for s in &mut descriptor.styles {
         s.load(&opts.source_dir)?;
@@ -198,7 +214,7 @@ fn result_main() -> Result<(), bloguen::Error> {
             Ok(())
         })?;
 
-    if let Some(idx) = descriptor.index.as_ref() {
+    if descriptor.index.is_some() {
         let mut posts_data: Vec<_> = idx_receiver.into_iter().collect();
         posts_data.sort_unstable_by_key(|&((num, _), _)| num);
 
@@ -229,7 +245,7 @@ fn result_main() -> Result<(), bloguen::Error> {
                 }
             })?;
         let index_date = Utc::now();
-        bloguen::ops::format_output(&bloguen::util::read_file(&idx.header_file, "index header")?,
+        bloguen::ops::format_output(index_header.as_ref().unwrap(),
                                     &descriptor.name,
                                     &global_language,
                                     &[&descriptor.data],
@@ -243,7 +259,7 @@ fn result_main() -> Result<(), bloguen::Error> {
                                     &[&descriptor.scripts, &index_script],
                                     &mut index_file,
                                     "index")?;
-        bloguen::ops::format_output(&bloguen::util::read_file(&idx.footer_file, "index footer")?,
+        bloguen::ops::format_output(index_footer.as_ref().unwrap(),
                                     &descriptor.name,
                                     &global_language,
                                     &[&descriptor.data],
