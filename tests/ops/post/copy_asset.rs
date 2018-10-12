@@ -33,6 +33,7 @@ fn ok_copied() {
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -64,6 +65,7 @@ fn ok_copied() {
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -93,6 +95,7 @@ fn ok_copied() {
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
+                  None,
                   None,
                   "header",
                   "footer",
@@ -142,6 +145,7 @@ fn ok_not_copied() {
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -166,6 +170,7 @@ fn ok_not_copied() {
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -188,6 +193,7 @@ fn ok_not_copied() {
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
+                  None,
                   None,
                   "header",
                   "footer",
@@ -282,6 +288,7 @@ fn copy_failed() {
     fs::create_dir_all(out_dir.1.join("posts").join("assets").join("image.png")).unwrap();
     fs::create_dir_all(out_dir.1.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin")).unwrap();
     for link in post.generate(&out_dir,
+                  None,
                   None,
                   "header",
                   "footer",

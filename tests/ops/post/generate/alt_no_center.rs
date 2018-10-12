@@ -9,7 +9,7 @@ use std::str;
 
 #[test]
 fn ok() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt-ok");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-ok");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned",
                "03. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
@@ -25,6 +25,7 @@ fn ok() {
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              Some(&mut alt_buf as &mut Write),
+                             None,
                              "header",
                              "footer",
                              "Блогг",
@@ -52,6 +53,7 @@ fn ok() {
     alt_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              Some(&mut alt_buf as &mut Write),
+                             None,
                              "header",
                              "footer",
                              "Блогг",
@@ -79,6 +81,7 @@ fn ok() {
     alt_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              Some(&mut alt_buf as &mut Write),
+                             None,
                              "header",
                              "footer",
                              "Блогг",
@@ -103,7 +106,7 @@ fn ok() {
 
 #[test]
 fn not_found() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt-not_found");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-not_found");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         fs::create_dir_all(root.join("posts").join(d)).unwrap();
@@ -115,6 +118,7 @@ fn not_found() {
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              Some(&mut alt_buf as &mut Write),
+                             None,
                              "header",
                              "footer",
                              "Блогг",
@@ -137,7 +141,7 @@ fn not_found() {
 
 #[test]
 fn non_utf8() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt-not_utf8");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-not_utf8");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         let fp = root.join("posts").join(d);
@@ -154,6 +158,7 @@ fn non_utf8() {
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              Some(&mut alt_buf as &mut Write),
+                             None,
                              "header",
                              "footer",
                              "Блогг",
@@ -177,7 +182,7 @@ fn non_utf8() {
 
 #[test]
 fn posts_directory() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt-posts_directory");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-posts_directory");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         let fp = root.join("posts").join(d);
@@ -193,6 +198,7 @@ fn posts_directory() {
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              Some(&mut alt_buf as &mut Write),
+                             None,
                              "header",
                              "footer",
                              "Блогг",
@@ -221,7 +227,7 @@ fn posts_directory() {
 
 #[test]
 fn post_create() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt-post_create");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-post_create");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         let fp = root.join("posts").join(d);
@@ -236,6 +242,7 @@ fn post_create() {
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              Some(&mut alt_buf as &mut Write),
+                             None,
                              "header",
                              "footer",
                              "Блогг",

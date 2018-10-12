@@ -232,10 +232,10 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), None, "header", "footer",
+    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), None, None, "header", "footer",
     ///                       "Блогг", &LANGUAGE_EN_GB, "autheur", &[], &[], &Default::default(), &Default::default(),
     ///                       &[], &[], &[], &[]).is_ok());
-    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), None, "header", "footer",
+    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), None, None, "header", "footer",
     /// #                          "Блогг", &LANGUAGE_EN_GB, "autheur", &[], &[], &Default::default(), &Default::default(),
     /// #                          &[], &[], &[], &[]),
     /// #            Ok(vec!["url.html".to_string()]));
@@ -247,10 +247,10 @@ impl BloguePost {
     /// #                .unwrap().read_to_string(&mut read).unwrap();
     /// # assert_eq!(read, "header<p><a href=\"url.html\">Блогг</a></p>\nfooter");
     /// ```
-    pub fn generate(&self, into: &(String, PathBuf), alt_output: Option<&mut Write>, post_header: &str, post_footer: &str, blog_name: &str,
-                    language: &LanguageTag, author: &str, spec_tags: &[TagName], free_tags: &[TagName], post_data: &BTreeMap<String, String>,
-                    global_data: &BTreeMap<String, String>, post_styles: &[StyleElement], global_styles: &[StyleElement], post_scripts: &[ScriptElement],
-                    global_scripts: &[ScriptElement])
+    pub fn generate(&self, into: &(String, PathBuf), alt_output: Option<&mut Write>, center_output: Option<(&str, &mut Write)>, post_header: &str,
+                    post_footer: &str, blog_name: &str, language: &LanguageTag, author: &str, spec_tags: &[TagName], free_tags: &[TagName],
+                    post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>, post_styles: &[StyleElement],
+                    global_styles: &[StyleElement], post_scripts: &[ScriptElement], global_scripts: &[ScriptElement])
                     -> Result<Vec<String>, Error> {
         let post_text = read_file(&(format!("{}post.md", self.source_dir.0), self.source_dir.1.join("post.md")), "post text")?;
 
@@ -301,20 +301,37 @@ impl BloguePost {
                     more: Some(e.to_string().into()),
                 }
             })?;
-        format_output(post_footer,
-                      blog_name,
-                      language,
-                      &[global_data, post_data],
-                      &original_name,
-                      self.number.0,
-                      &self.name,
-                      author,
-                      &self.datetime,
-                      &[spec_tags, free_tags],
-                      &[global_styles, post_styles],
-                      &[global_scripts, post_scripts],
-                      &mut post_html_f,
-                      normalised_name)?;
+        let normalised_name = format_output(post_footer,
+                                            blog_name,
+                                            language,
+                                            &[global_data, post_data],
+                                            &original_name,
+                                            self.number.0,
+                                            &self.name,
+                                            author,
+                                            &self.datetime,
+                                            &[spec_tags, free_tags],
+                                            &[global_styles, post_styles],
+                                            &[global_scripts, post_scripts],
+                                            &mut post_html_f,
+                                            normalised_name)?;
+
+        if let Some((center, mut center_out)) = center_output {
+            format_output(center,
+                          blog_name,
+                          language,
+                          &[global_data, post_data],
+                          &original_name,
+                          self.number.0,
+                          &self.name,
+                          author,
+                          &self.datetime,
+                          &[spec_tags, free_tags],
+                          &[global_styles, post_styles],
+                          &[global_scripts, post_scripts],
+                          &mut center_out,
+                          normalised_name)?;
+        }
 
         extract_links(root)
     }
@@ -522,7 +539,7 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// for link in post.generate(&out_pair, None, "header", "footer", "Блогг", &LANGUAGE_EN_GB, "autheur",
+    /// for link in post.generate(&out_pair, None, None, "header", "footer", "Блогг", &LANGUAGE_EN_GB, "autheur",
     ///                           &[], &[], &Default::default(), &Default::default(), &[], &[], &[], &[])
     ///             .unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
     ///     let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
