@@ -25,7 +25,7 @@ fn ok() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{language}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
                              "header",
                              "footer",
                              "Блогг",
@@ -44,7 +44,8 @@ fn ok() {
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read,
                "header<p><a href=\"1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned\">lonk</a></p>\nfooter");
-    assert_eq!(str::from_utf8(&center_buf).unwrap(), "cenen-GBter");
+    assert_eq!(str::from_utf8(&center_buf).unwrap(),
+               "cen<p><a href=\"1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned\">lonk</a></p>\nter");
 
     let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's/".to_string(),
                root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
@@ -52,7 +53,7 @@ fn ok() {
     center_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{language}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
                              "header",
                              "footer",
                              "Блогг",
@@ -71,7 +72,8 @@ fn ok() {
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read,
                "header<p><a href=\"03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's\">lonk</a></p>\nfooter");
-    assert_eq!(str::from_utf8(&center_buf).unwrap(), "cenen-GBter");
+    assert_eq!(str::from_utf8(&center_buf).unwrap(),
+               "cen<p><a href=\"03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's\">lonk</a></p>\nter");
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain/".to_string(),
                root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
@@ -79,7 +81,7 @@ fn ok() {
     center_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{language}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
                              "header",
                              "footer",
                              "Блогг",
@@ -98,7 +100,8 @@ fn ok() {
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read,
                "header<p><a href=\"005.%202018-04-19%2023-19-21%20cursed%20device%20chain\">lonk</a></p>\nfooter");
-    assert_eq!(str::from_utf8(&center_buf).unwrap(), "cenen-GBter");
+    assert_eq!(str::from_utf8(&center_buf).unwrap(),
+               "cen<p><a href=\"005.%202018-04-19%2023-19-21%20cursed%20device%20chain\">lonk</a></p>\nter");
 }
 
 #[test]
@@ -115,7 +118,7 @@ fn not_found() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{language}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
                              "header",
                              "footer",
                              "Блогг",
@@ -155,7 +158,7 @@ fn non_utf8() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{language}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
                              "header",
                              "footer",
                              "Блогг",
@@ -195,7 +198,7 @@ fn posts_directory() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{language}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
                              "header",
                              "footer",
                              "Блогг",
@@ -239,7 +242,7 @@ fn post_create() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{language}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
                              "header",
                              "footer",
                              "Блогг",

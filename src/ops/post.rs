@@ -201,6 +201,9 @@ impl BloguePost {
     ///
     /// Alternate output is filled with the HTML-formatted post Markdown.
     ///
+    /// Center output is filled with the specified template filled-out with additional `post_content` data element
+    /// consisting of the HTML-formatted post Markdown.
+    ///
     /// Returns: set of links in the markdown source.
     ///
     /// # Examples
@@ -247,7 +250,7 @@ impl BloguePost {
     /// #                .unwrap().read_to_string(&mut read).unwrap();
     /// # assert_eq!(read, "header<p><a href=\"url.html\">Блогг</a></p>\nfooter");
     /// ```
-    pub fn generate(&self, into: &(String, PathBuf), alt_output: Option<&mut Write>, center_output: Option<(&str, &mut Write)>, post_header: &str,
+    pub fn generate(&self, into: &(String, PathBuf), mut alt_output: Option<&mut Write>, center_output: Option<(&str, &mut Write)>, post_header: &str,
                     post_footer: &str, blog_name: &str, language: &LanguageTag, author: &str, spec_tags: &[TagName], free_tags: &[TagName],
                     post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>, post_styles: &[StyleElement],
                     global_styles: &[StyleElement], post_scripts: &[ScriptElement], global_scripts: &[ScriptElement])
@@ -290,10 +293,14 @@ impl BloguePost {
                                             &[global_scripts, post_scripts],
                                             &mut post_html_f,
                                             normalised_name)?;
-        if let Some(alt_out) = alt_output {
-                comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, alt_out))
-            } else {
-                comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f)
+        let mut center_output = center_output.map(|(f, o)| (f, o, vec![]));
+        match (alt_output.as_mut(), center_output.as_mut()) {
+                (Some(ref mut alt_out), Some((_, _, center_tmp))) => {
+                    comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, PolyWrite(alt_out, center_tmp)))
+                }
+                (Some(ref mut alt_out), None) => comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, alt_out)),
+                (None, Some((_, _, center_tmp))) => comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, center_tmp)),
+                (None, None) => comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f),
             }.map_err(|e| {
                 Error::Io {
                     desc: "post HTML".into(),
@@ -316,11 +323,23 @@ impl BloguePost {
                                             &mut post_html_f,
                                             normalised_name)?;
 
-        if let Some((center, mut center_out)) = center_output {
+        if let Some((center, mut center_out, center_temp)) = center_output {
+            let mut temp_data = BTreeMap::new();
+            println!("{:#?}", center_temp);
+            temp_data.insert("post_content".to_string(),
+                             String::from_utf8(center_temp).map_err(|e| {
+                    Error::Parse {
+                        tp: "UTF-8 string",
+                        wher: "index file post metadata".into(),
+                        more: Some(e.to_string().into()),
+                    }
+                })?);
+            println!("{:#?}", temp_data);
+
             format_output(center,
                           blog_name,
                           language,
-                          &[global_data, post_data],
+                          &[global_data, post_data, &temp_data],
                           &original_name,
                           self.number.0,
                           &self.name,
