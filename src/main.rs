@@ -159,34 +159,25 @@ fn result_main() -> Result<(), bloguen::Error> {
                 }
             }
 
-            if descriptor.index.is_some() {
-                if index_machine_json.is_empty() {
-                    p.generate_machine(&mut index_machine_json,
-                                          &bloguen::ops::MachineDataKind::Json,
-                                          &descriptor.name,
-                                          &language,
-                                          author,
-                                          &metadata.tags,
-                                          &independent_tags,
-                                          &metadata.data,
-                                          &descriptor.data,
-                                          &metadata.styles,
-                                          &descriptor.styles,
-                                          &metadata.scripts,
-                                          &descriptor.scripts)?;
-                }
-
-                idx_sender.send((p.number.clone(), index_machine_json))
-                    .map_err(|e| {
-                        bloguen::Error::Io {
-                            desc: format!("post {} JSON metadata ", p.number.1).into(),
-                            op: "save",
-                            more: Some(e.to_string().into()),
-                        }
-                    })?;
+            if descriptor.index.is_some() && index_machine_json.is_empty() {
+                p.generate_machine(&mut index_machine_json,
+                                      &bloguen::ops::MachineDataKind::Json,
+                                      &descriptor.name,
+                                      &language,
+                                      author,
+                                      &metadata.tags,
+                                      &independent_tags,
+                                      &metadata.data,
+                                      &descriptor.data,
+                                      &metadata.styles,
+                                      &descriptor.styles,
+                                      &metadata.scripts,
+                                      &descriptor.scripts)?;
             }
 
+            let mut formatted_buffer = vec![];
             for link in p.generate(&opts.output_dir,
+                          descriptor.index.as_ref().map(|_| &mut formatted_buffer as &mut Write),
                           &post_header,
                           &post_footer,
                           &descriptor.name,
@@ -211,15 +202,26 @@ fn result_main() -> Result<(), bloguen::Error> {
                 }
             }
 
+            if descriptor.index.is_some() {
+                idx_sender.send((p.number.clone(), index_machine_json, formatted_buffer))
+                    .map_err(|e| {
+                        bloguen::Error::Io {
+                            desc: format!("post {} JSON metadata ", p.number.1).into(),
+                            op: "save",
+                            more: Some(e.to_string().into()),
+                        }
+                    })?;
+            }
+
             Ok(())
         })?;
 
     if descriptor.index.is_some() {
         let mut posts_data: Vec<_> = idx_receiver.into_iter().collect();
-        posts_data.sort_unstable_by_key(|&((num, _), _)| num);
+        posts_data.sort_unstable_by_key(|&((num, _), ..)| num);
 
         let index_script = [bloguen::ops::ScriptElement::from_literal(String::from_utf8(posts_data.into_iter()
-                                    .fold("const BLOGUEN_POSTS = [".as_bytes().to_vec(), |mut acc, ((_, ns), md)| {
+                                    .fold("const BLOGUEN_POSTS = [".as_bytes().to_vec(), |mut acc, ((_, ns), md, ..)| {
                     acc.extend(md);
 
                     if ns != posts[posts.len() - 1].number.1 {

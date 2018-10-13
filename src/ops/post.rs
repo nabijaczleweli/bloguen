@@ -1,5 +1,5 @@
 use self::super::{MachineDataKind, ScriptElement, StyleElement, LanguageTag, TagName, machine_output_kind, format_output};
-use self::super::super::util::{MARKDOWN_OPTIONS, name_based_post_time, extract_links, concat_path, read_file};
+use self::super::super::util::{PolyWrite, MARKDOWN_OPTIONS, name_based_post_time, extract_links, concat_path, read_file};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
@@ -199,6 +199,8 @@ impl BloguePost {
 
     /// Generate an HTML output from the post into the specified output directory.
     ///
+    /// Alternate output is filled with the HTML-formatted post Markdown.
+    ///
     /// Returns: set of links in the markdown source.
     ///
     /// # Examples
@@ -230,10 +232,10 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer",
+    /// assert!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), None, "header", "footer",
     ///                       "Блогг", &LANGUAGE_EN_GB, "autheur", &[], &[], &Default::default(), &Default::default(),
     ///                       &[], &[], &[], &[]).is_ok());
-    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), "header", "footer",
+    /// # assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")), None, "header", "footer",
     /// #                          "Блогг", &LANGUAGE_EN_GB, "autheur", &[], &[], &Default::default(), &Default::default(),
     /// #                          &[], &[], &[], &[]),
     /// #            Ok(vec!["url.html".to_string()]));
@@ -245,9 +247,10 @@ impl BloguePost {
     /// #                .unwrap().read_to_string(&mut read).unwrap();
     /// # assert_eq!(read, "header<p><a href=\"url.html\">Блогг</a></p>\nfooter");
     /// ```
-    pub fn generate(&self, into: &(String, PathBuf), post_header: &str, post_footer: &str, blog_name: &str, language: &LanguageTag, author: &str,
-                    spec_tags: &[TagName], free_tags: &[TagName], post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>,
-                    post_styles: &[StyleElement], global_styles: &[StyleElement], post_scripts: &[ScriptElement], global_scripts: &[ScriptElement])
+    pub fn generate(&self, into: &(String, PathBuf), alt_output: Option<&mut Write>, post_header: &str, post_footer: &str, blog_name: &str,
+                    language: &LanguageTag, author: &str, spec_tags: &[TagName], free_tags: &[TagName], post_data: &BTreeMap<String, String>,
+                    global_data: &BTreeMap<String, String>, post_styles: &[StyleElement], global_styles: &[StyleElement], post_scripts: &[ScriptElement],
+                    global_scripts: &[ScriptElement])
                     -> Result<Vec<String>, Error> {
         let post_text = read_file(&(format!("{}post.md", self.source_dir.0), self.source_dir.1.join("post.md")), "post text")?;
 
@@ -287,7 +290,11 @@ impl BloguePost {
                                             &[global_scripts, post_scripts],
                                             &mut post_html_f,
                                             normalised_name)?;
-        comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f).map_err(|e| {
+        if let Some(alt_out) = alt_output {
+                comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, alt_out))
+            } else {
+                comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f)
+            }.map_err(|e| {
                 Error::Io {
                     desc: "post HTML".into(),
                     op: "write",
@@ -515,7 +522,7 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// for link in post.generate(&out_pair, "header", "footer", "Блогг", &LANGUAGE_EN_GB, "autheur",
+    /// for link in post.generate(&out_pair, None, "header", "footer", "Блогг", &LANGUAGE_EN_GB, "autheur",
     ///                           &[], &[], &Default::default(), &Default::default(), &[], &[], &[], &[])
     ///             .unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
     ///     let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
