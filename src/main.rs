@@ -11,6 +11,7 @@ use std::io::{Write, stderr, stdout};
 use std::iter::FromIterator;
 use tabwriter::TabWriter;
 use std::process::exit;
+use std::mem::swap;
 use std::fs::File;
 use chrono::Utc;
 
@@ -221,11 +222,13 @@ fn result_main() -> Result<(), bloguen::Error> {
         let mut posts_data: Vec<_> = idx_receiver.into_iter().collect();
         posts_data.sort_unstable_by_key(|&((num, _), ..)| num);
 
-        let index_script = [bloguen::ops::ScriptElement::from_literal(String::from_utf8(posts_data.into_iter()
-                                    .fold("const BLOGUEN_POSTS = [".as_bytes().to_vec(), |mut acc, ((_, ns), md, ..)| {
+        let index_script = [bloguen::ops::ScriptElement::from_literal(String::from_utf8(posts_data.iter_mut()
+                                    .fold("const BLOGUEN_POSTS = [".as_bytes().to_vec(), |mut acc, ((_, ref ns), ref mut metadata, ..)| {
+                    let mut md = vec![];
+                    swap(&mut md, metadata);
                     acc.extend(md);
 
-                    if ns != posts[posts.len() - 1].number.1 {
+                    if ns != &posts[posts.len() - 1].number.1 {
                         acc.extend(",\n".as_bytes());
                     } else {
                         acc.extend("];".as_bytes());
