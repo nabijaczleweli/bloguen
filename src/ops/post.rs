@@ -325,7 +325,6 @@ impl BloguePost {
 
         if let Some((center, mut center_out, center_temp)) = center_output {
             let mut temp_data = BTreeMap::new();
-            println!("{:#?}", center_temp);
             temp_data.insert("post_content".to_string(),
                              String::from_utf8(center_temp).map_err(|e| {
                     Error::Parse {
@@ -334,7 +333,6 @@ impl BloguePost {
                         more: Some(e.to_string().into()),
                     }
                 })?);
-            println!("{:#?}", temp_data);
 
             format_output(center,
                           blog_name,
