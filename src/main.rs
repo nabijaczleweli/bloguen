@@ -265,6 +265,16 @@ fn result_main() -> Result<(), bloguen::Error> {
                                     &[&descriptor.scripts, &index_script],
                                     &mut index_file,
                                     "index")?;
+        for (_, _, center) in posts_data {
+            index_file.write_all(&center)
+                .map_err(|e| {
+                    bloguen::Error::Io {
+                        desc: "output index file center".into(),
+                        op: "write",
+                        more: Some(e.to_string().into()),
+                    }
+                })?;
+        }
         bloguen::ops::format_output(index_footer.as_ref().unwrap(),
                                     &descriptor.name,
                                     &global_language,
