@@ -189,148 +189,21 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
 
                 format_str = &format_str[1..].trim(); // drop open paren
 
-                match format_str {
-                        "language" => into.write_all(language.as_bytes()).map_err(|e| (e, "language tag".into())),
-                        "number" => into.write_fmt(format_args!("{}", number)).map_err(|e| (e, "number tag".into())),
-                        "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
-                        "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
-                        "raw_post_name" => into.write_all(raw_post_name.as_bytes()).map_err(|e| (e, "raw_post_name tag".into())),
-                        "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
-
-                        "bloguen-version" => into.write_all(BLOGUEN_VERSION.as_bytes()).map_err(|e| (e, "bloguen-version tag".into())),
-
-                        "tags" => write_tags(&TAG_DEFAULT_CLASS, tags, into),
-
-                        "styles" => {
-                            Result::from_iter(styles.iter().map(|ss| {
-                                Result::from_iter(ss.iter().map(|s| {
-                                    into.write_all(s.head_b()).map_err(|e| (e, "style tag header".into()))?;
-                                    into.write_all(s.content_b()).map_err(|e| (e, "style tag content".into()))?;
-                                    into.write_all(s.foot_b()).map_err(|e| (e, "style tag footer".into()))?;
-
-                                    Ok(())
-                                }))
-                            }))
-                        }
-
-                        "scripts" => {
-                            Result::from_iter(scripts.iter().map(|ss| {
-                                Result::from_iter(ss.iter().map(|s| {
-                                    into.write_all(s.head_b()).map_err(|e| (e, "script tag header".into()))?;
-                                    into.write_all(s.content_b()).map_err(|e| (e, "script tag content".into()))?;
-                                    into.write_all(s.foot_b()).map_err(|e| (e, "script tag footer".into()))?;
-
-                                    Ok(())
-                                }))
-                            }))
-                        }
-
-                        key if key.starts_with("data-") => {
-                            let key = &key["data-".len()..];
-                            match additional_data_sets.iter().rev().map(|dt| dt.get(key)).find(Option::is_some).into_iter().flatten().next() {
-                                Some(data) => into.write_all(data.as_bytes()).map_err(|e| (e, format!("data-{} tag with value {}", key, data).into())),
-                                None => return Err(err_parse(format!("missing value for data-{}", key), out_name_err.take().unwrap())),
-                            }
-                        }
-
-                        _ => {
-                            match parse_function_notation(format_str) {
-                                Some(("date", args)) => {
-                                    if args.len() != 2 {
-                                        return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `date(of_what, format)` \
-                                                                      function, around position {}",
-                                                                     args.len(),
-                                                                     byte_pos),
-                                                             out_name_err.take().unwrap()));
-                                    }
-
-                                    let date_format = parse_date_format_specifier(args[1]).ok_or_else(|| {
-                                            err_parse(format!("invalid date format specifier {} around position {}", args[1], byte_pos),
-                                                      out_name_err.take().unwrap())
-                                        })?;
-                                    let date = match args[0] {
-                                        "post" => Cow::Borrowed(&post_date),
-
-                                        "now_utc" => Cow::Owned(normalise_datetime(&Utc::now())),
-                                        "now_local" => Cow::Owned(normalise_datetime(&Local::now())),
-
-                                        of_what => {
-                                            return Err(err_parse(format!("{} is an unrecognised date specifier (accepted: post, now_{{utc,local}}), around \
-                                                                          position {}",
-                                                                         of_what,
-                                                                         byte_pos),
-                                                                 out_name_err.take().unwrap()))
-                                        }
-                                    };
-
-                                    into.write_fmt(format_args!("{}", date.format_with_items(date_format.to_vec().into_iter())))
-                                        .map_err(|e| (e, format!("{} date as {}", args[0], args[1]).into()))
-                                }
-
-                                Some(("tags", args)) => {
-                                    match args.len() {
-                                        0 => write_tags(&TAG_DEFAULT_CLASS, tags, into),
-                                        1 => write_tags(args[0], tags, into),
-                                        _ => {
-                                            return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `tags([html-class])` \
-                                                                          function, around position {}",
-                                                                         args.len(),
-                                                                         byte_pos),
-                                                                 out_name_err.take().unwrap()));
-                                        }
-                                    }
-                                }
-
-                                Some(("machine_data", args)) => {
-                                    match args.len() {
-                                        1 => {
-                                            match MachineDataKind::from(args[0]) {
-                                                Some(MachineDataKind::Json) => {
-                                                    out_name_err = Some(machine_output_json(blog_name,
-                                                                                            language,
-                                                                                            additional_data_sets,
-                                                                                            raw_post_name,
-                                                                                            number,
-                                                                                            title,
-                                                                                            author,
-                                                                                            &post_date,
-                                                                                            tags,
-                                                                                            styles,
-                                                                                            scripts,
-                                                                                            into,
-                                                                                            out_name_err.take().unwrap())?);
-                                                    Ok(())
-                                                }
-                                                None => {
-                                                    return Err(err_parse(format!("{} is an invalid data format for `machine_data([format])` function, \
-                                                                                  accepted formats: json, around position {}",
-                                                                                 args[0],
-                                                                                 byte_pos),
-                                                                         out_name_err.take().unwrap()))
-                                                }
-                                            }
-                                        }
-                                        _ => {
-                                            return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `tags([html-class])` \
-                                                                          function, around position {}",
-                                                                         args.len(),
-                                                                         byte_pos),
-                                                                 out_name_err.take().unwrap()));
-                                        }
-                                    }
-                                }
-
-                                Some((fname, args)) => {
-                                    return Err(err_parse(format!("unrecognised format function {} with arguments {:?} at position {}", fname, args, byte_pos),
-                                                         out_name_err.take().unwrap()))
-                                }
-                                _ => {
-                                    return Err(err_parse(format!("unrecognised format specifier {} at position {}", format_str, byte_pos),
-                                                         out_name_err.take().unwrap()))
-                                }
-                            }
-                        }
-                    }.map_err(|(e, d): (_, Cow<'static, str>)| err_io("write", format!("{} when writing substituted {}", e, d), out_name_err.take().unwrap()))?;
+                var_parse(format_str,
+                          byte_pos,
+                          blog_name,
+                          language,
+                          additional_data_sets,
+                          raw_post_name,
+                          number,
+                          title,
+                          author,
+                          post_date,
+                          tags,
+                          styles,
+                          scripts,
+                          into,
+                          &mut out_name_err)?;
             } else {
                 return Err(err_parse(format!("unmatched open brace at position {}", byte_pos), out_name_err.take().unwrap()));
             }
@@ -342,6 +215,158 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
     into.write_all(to_format.as_bytes()).map_err(|e| err_io("write", format!("{} when writing unformatted output", e), out_name_err.take().unwrap()))?;
 
     Ok(out_name_err.unwrap())
+}
+
+fn var_parse<W, St, Sc>(format_str: &str, byte_pos: usize, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
+                        raw_post_name: &str, number: usize, title: &str, author: &str, post_date: DateTime<FixedOffset>, tags: &[&[TagName]],
+                        styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: &mut Option<Cow<'static, str>>)
+                        -> Result<(), Error>
+    where W: Write,
+          St: WrappedElement,
+          Sc: WrappedElement
+{
+    match format_str {
+            "language" => into.write_all(language.as_bytes()).map_err(|e| (e, "language tag".into())),
+            "number" => into.write_fmt(format_args!("{}", number)).map_err(|e| (e, "number tag".into())),
+            "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
+            "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
+            "raw_post_name" => into.write_all(raw_post_name.as_bytes()).map_err(|e| (e, "raw_post_name tag".into())),
+            "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
+
+            "bloguen-version" => into.write_all(BLOGUEN_VERSION.as_bytes()).map_err(|e| (e, "bloguen-version tag".into())),
+
+            "tags" => write_tags(&TAG_DEFAULT_CLASS, tags, into),
+
+            "styles" => {
+                Result::from_iter(styles.iter().map(|ss| {
+                    Result::from_iter(ss.iter().map(|s| {
+                        into.write_all(s.head_b()).map_err(|e| (e, "style tag header".into()))?;
+                        into.write_all(s.content_b()).map_err(|e| (e, "style tag content".into()))?;
+                        into.write_all(s.foot_b()).map_err(|e| (e, "style tag footer".into()))?;
+
+                        Ok(())
+                    }))
+                }))
+            }
+
+            "scripts" => {
+                Result::from_iter(scripts.iter().map(|ss| {
+                    Result::from_iter(ss.iter().map(|s| {
+                        into.write_all(s.head_b()).map_err(|e| (e, "script tag header".into()))?;
+                        into.write_all(s.content_b()).map_err(|e| (e, "script tag content".into()))?;
+                        into.write_all(s.foot_b()).map_err(|e| (e, "script tag footer".into()))?;
+
+                        Ok(())
+                    }))
+                }))
+            }
+
+            key if key.starts_with("data-") => {
+                let key = &key["data-".len()..];
+                match additional_data_sets.iter().rev().map(|dt| dt.get(key)).find(Option::is_some).into_iter().flatten().next() {
+                    Some(data) => into.write_all(data.as_bytes()).map_err(|e| (e, format!("data-{} tag with value {}", key, data).into())),
+                    None => return Err(err_parse(format!("missing value for data-{}", key), out_name_err.take().unwrap())),
+                }
+            }
+
+            _ => {
+                match parse_function_notation(format_str) {
+                    Some(("date", args)) => {
+                        if args.len() != 2 {
+                            return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `date(of_what, format)` function, around \
+                                                          position {}",
+                                                         args.len(),
+                                                         byte_pos),
+                                                 out_name_err.take().unwrap()));
+                        }
+
+                        let date_format = parse_date_format_specifier(args[1]).ok_or_else(|| {
+                                err_parse(format!("invalid date format specifier {} around position {}", args[1], byte_pos),
+                                          out_name_err.take().unwrap())
+                            })?;
+                        let date = match args[0] {
+                            "post" => Cow::Borrowed(&post_date),
+
+                            "now_utc" => Cow::Owned(normalise_datetime(&Utc::now())),
+                            "now_local" => Cow::Owned(normalise_datetime(&Local::now())),
+
+                            of_what => {
+                                return Err(err_parse(format!("{} is an unrecognised date specifier (accepted: post, now_{{utc,local}}), around position {}",
+                                                             of_what,
+                                                             byte_pos),
+                                                     out_name_err.take().unwrap()))
+                            }
+                        };
+
+                        into.write_fmt(format_args!("{}", date.format_with_items(date_format.to_vec().into_iter())))
+                            .map_err(|e| (e, format!("{} date as {}", args[0], args[1]).into()))
+                    }
+
+                    Some(("tags", args)) => {
+                        match args.len() {
+                            0 => write_tags(&TAG_DEFAULT_CLASS, tags, into),
+                            1 => write_tags(args[0], tags, into),
+                            _ => {
+                                return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `tags([html-class])` function, around \
+                                                              position {}",
+                                                             args.len(),
+                                                             byte_pos),
+                                                     out_name_err.take().unwrap()));
+                            }
+                        }
+                    }
+
+                    Some(("machine_data", args)) => {
+                        match args.len() {
+                            1 => {
+                                match MachineDataKind::from(args[0]) {
+                                    Some(MachineDataKind::Json) => {
+                                        *out_name_err = Some(machine_output_json(blog_name,
+                                                                                 language,
+                                                                                 additional_data_sets,
+                                                                                 raw_post_name,
+                                                                                 number,
+                                                                                 title,
+                                                                                 author,
+                                                                                 &post_date,
+                                                                                 tags,
+                                                                                 styles,
+                                                                                 scripts,
+                                                                                 into,
+                                                                                 out_name_err.take().unwrap())?);
+                                        Ok(())
+                                    }
+                                    None => {
+                                        return Err(err_parse(format!("{} is an invalid data format for `machine_data([format])` function, accepted formats: \
+                                                                      json, around position {}",
+                                                                     args[0],
+                                                                     byte_pos),
+                                                             out_name_err.take().unwrap()))
+                                    }
+                                }
+                            }
+                            _ => {
+                                return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `tags([html-class])` function, around \
+                                                              position {}",
+                                                             args.len(),
+                                                             byte_pos),
+                                                     out_name_err.take().unwrap()));
+                            }
+                        }
+                    }
+
+                    Some((fname, args)) => {
+                        return Err(err_parse(format!("unrecognised format function {} with arguments {:?} at position {}", fname, args, byte_pos),
+                                             out_name_err.take().unwrap()))
+                    }
+                    _ => {
+                        return Err(err_parse(format!("unrecognised format specifier {} at position {}", format_str, byte_pos),
+                                             out_name_err.take().unwrap()))
+                    }
+                }
+            }
+        }
+        .map_err(|(e, d): (_, Cow<'static, str>)| err_io("write", format!("{} when writing substituted {}", e, d), out_name_err.take().unwrap()))
 }
 
 fn write_tags<W: Write>(class: &str, tags: &[&[TagName]], into: &mut W) -> Result<(), (IoError, Cow<'static, str>)> {
