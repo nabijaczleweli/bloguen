@@ -22,6 +22,7 @@ extern crate serde_derive;
 extern crate lazy_static;
 #[macro_use]
 extern crate bidir_map;
+extern crate jetscii;
 extern crate unicase;
 extern crate walkdir;
 extern crate chrono;
