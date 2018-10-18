@@ -35,6 +35,11 @@
 			"name": "Assets",
 			"path": "assets"
 		},
+		{
+			"follow_symlinks": true,
+			"name": "Test data",
+			"path": "test-data"
+		},
 		/*{
 			"follow_symlinks": true,
 			"name": "Examples",

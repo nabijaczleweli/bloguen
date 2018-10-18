@@ -32,9 +32,8 @@ impl<'w> ParagraphPasser<'w> {
 
         if self.depth == 1 {
             self.paras_left -= 1;
-        } else {
-            self.depth -= 1;
         }
+        self.depth -= 1;
 
         Ok(())
     }
@@ -77,6 +76,8 @@ impl<'w> Write for ParagraphPasser<'w> {
                     (Some(_), None) => {
                         self.out.write_all(buf)?;
                         self.depth += 1;
+
+                        buf = &buf[..0];
                     }
                     (None, Some(ci)) => {
                         let past_end = ci + CLOSE_LEN;
@@ -84,7 +85,10 @@ impl<'w> Write for ParagraphPasser<'w> {
 
                         close_idx = CLOSE.find(buf);
                     }
-                    (None, None) => self.out.write_all(buf)?,
+                    (None, None) => {
+                        self.out.write_all(buf)?;
+                        buf = &buf[..0];
+                    }
                 }
             }
         }

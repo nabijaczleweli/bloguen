@@ -13,6 +13,8 @@
 !src/**
 !tests
 !tests/**
+!test-data
+!test-data/**
 !assets
 !assets/**
 !examples
