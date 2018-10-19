@@ -12,12 +12,13 @@ macro_rules! all_test {
         fn $fname() {
             let mut out = vec![];
             ParagraphPasser::new(&mut out, $num).write_all(PARAGRAPHS_ALL.as_bytes()).unwrap();
-            assert_eq!(str::from_utf8(&out).unwrap(), include_str!(concat!("../../../test-data/paragraphs/", $fnum, ".html")).trim_right());
+            assert_eq!(str::from_utf8(&out).unwrap(), include_str!(concat!("../../../test-data/paragraphs/", $fnum, ".html")));
         }
     }
 }
 
 
+all_test!(all_0, 0, "00");
 all_test!(all_1, 1, "01");
 all_test!(all_2, 2, "02");
 all_test!(all_3, 3, "03");

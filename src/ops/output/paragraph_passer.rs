@@ -15,6 +15,7 @@ pub struct ParagraphPasser<'w> {
     out: &'w mut Write,
     paras_left: usize,
     depth: usize,
+    has_ended: bool,
 }
 
 impl<'w> ParagraphPasser<'w> {
@@ -23,6 +24,7 @@ impl<'w> ParagraphPasser<'w> {
             out: into,
             paras_left: count,
             depth: 0,
+            has_ended: false,
         }
     }
 
@@ -43,7 +45,7 @@ impl<'w> Write for ParagraphPasser<'w> {
     fn write(&mut self, mut buf: &[u8]) -> io::Result<usize> {
         let mut full_len = buf.len();
 
-        if self.paras_left != 0 {
+        if !self.has_ended {
             if buf.ends_with(b"</p") {
                 full_len -= 3;
             } else if buf.ends_with(b"</") || buf.ends_with(b"<p") {
@@ -56,9 +58,14 @@ impl<'w> Write for ParagraphPasser<'w> {
             let mut open_idx = OPEN.find(buf);
             let mut close_idx = CLOSE.find(buf);
 
-            while self.paras_left > 0 && !buf.is_empty() {
-                match (open_idx.take(), close_idx.take()) {
-                    (Some(oi), Some(ci)) => {
+            while !self.has_ended && !buf.is_empty() {
+                match (open_idx.take(), close_idx.take(), self.paras_left == 0) {
+                    (Some(oi), Some(_), true) |
+                    (Some(oi), None, true) => {
+                        self.out.write_all(&buf[..oi])?;
+                        self.has_ended = true;
+                    }
+                    (Some(oi), Some(ci), false) => {
                         if oi < ci {
                             self.depth += 1;
                         }
@@ -73,19 +80,19 @@ impl<'w> Write for ParagraphPasser<'w> {
                         }
                         close_idx = CLOSE.find(buf);
                     }
-                    (Some(_), None) => {
+                    (Some(_), None, false) => {
                         self.out.write_all(buf)?;
                         self.depth += 1;
 
                         buf = &buf[..0];
                     }
-                    (None, Some(ci)) => {
+                    (None, Some(ci), _) => {
                         let past_end = ci + CLOSE_LEN;
                         self.close_para(&mut buf, past_end)?;
 
                         close_idx = CLOSE.find(buf);
                     }
-                    (None, None) => {
+                    (None, None, _) => {
                         self.out.write_all(buf)?;
                         buf = &buf[..0];
                     }
