@@ -1,5 +1,5 @@
 use self::super::super::super::util::{BLOGUEN_VERSION, parse_date_format_specifier, parse_function_notation, normalise_datetime};
-use self::super::super::{MachineDataKind, WrappedElement, LanguageTag, TagName};
+use self::super::super::{MachineDataKind, ParagraphPasser, WrappedElement, LanguageTag, TagName};
 use chrono::{FixedOffset, DateTime, TimeZone, Local, Utc};
 use self::super::{machine_output_json, err_io};
 use std::io::{Error as IoError, Write};
@@ -60,12 +60,16 @@ lazy_static! {
 ///     {tags}
 ///     {tags()}
 ///     {tags(пост-таг)}
+///
+///     {pass_paragraphs(2, data-insertable)}
 /// "###;
 ///
 /// let global_data = vec![].into_iter().collect();
 /// let local_data =
 ///     vec![("desc".to_string(),
-///           "Każdy koniec to nowy początek [PL]".to_string())].into_iter().collect();
+///           "Każdy koniec to nowy początek [PL]".to_string()),
+///          ("insertable".to_string(),
+///           "<p>Hi!</p>\n<p>My name is…</p>\n<p>What?</p>\n".to_string())].into_iter().collect();
 /// let mut out = vec![];
 /// let res = format_output(
 ///     head, "Блогг", &LANGUAGE_EN_GB, &[&global_data, &local_data],
@@ -124,6 +128,10 @@ lazy_static! {
 ///     <span class="post-tag">vodka</span> <span class="post-tag">depression</span> <span class="post-tag">коммунизм</span>
 ///     <span class="post-tag">vodka</span> <span class="post-tag">depression</span> <span class="post-tag">коммунизм</span>
 ///     <span class="пост-таг">vodka</span> <span class="пост-таг">depression</span> <span class="пост-таг">коммунизм</span>
+///
+///     <p>Hi!</p>
+/// <p>My name is…</p>
+///
 /// "###);
 /// ```
 pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
@@ -348,6 +356,47 @@ fn var_parse<W, St, Sc>(format_str: &str, byte_pos: usize, blog_name: &str, lang
                             _ => {
                                 return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `tags([html-class])` function, around \
                                                               position {}",
+                                                             args.len(),
+                                                             byte_pos),
+                                                     out_name_err.take().unwrap()));
+                            }
+                        }
+                    }
+
+                    Some(("pass_paragraphs", args)) => {
+                        match args.len() {
+                            2 => {
+                                let para_count: usize = args[0].parse()
+                                    .map_err(|e| {
+                                        err_parse(format!("{} is an invalid paragraph count for `pass_paragraphs([count], [expr])` function, required: \
+                                                           unsigned integer, reason: {}, around position {}",
+                                                          args[0],
+                                                          e,
+                                                          byte_pos),
+                                                  out_name_err.take().unwrap())
+                                    })?;
+
+                                var_parse(args[1],
+                                          byte_pos,
+                                          blog_name,
+                                          language,
+                                          additional_data_sets,
+                                          raw_post_name,
+                                          number,
+                                          title,
+                                          author,
+                                          post_date,
+                                          tags,
+                                          styles,
+                                          scripts,
+                                          &mut ParagraphPasser::new(into, para_count),
+                                          out_name_err)?;
+
+                                Ok(())
+                            }
+                            _ => {
+                                return Err(err_parse(format!("{} is an invalid amount of arguments to two-argument `pass_paragraphs([count], [expr])` \
+                                                              function, around position {}",
                                                              args.len(),
                                                              byte_pos),
                                                      out_name_err.take().unwrap()));
