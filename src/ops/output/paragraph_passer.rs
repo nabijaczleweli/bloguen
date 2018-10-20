@@ -10,7 +10,51 @@ lazy_static! {
 const CLOSE_LEN: usize = 4;
 
 
-/// Cannot be templated on `W: Write` because it overflows the recursion limit when used in `format_output()`.
+/// Output sink which will allow through the specified amount of HTML paragraphs, then void all remaining data.
+///
+/// The paragraph tags take the form of `<p` and `</p>`.
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::ops::ParagraphPasser;
+/// # use std::io::Write;
+/// static INCOMING: &str = "
+///     <h1>Heading</h1>
+///     <p>Paragraph 1</p>
+///     <p>Paragraph 2</p>
+/// ";
+///
+///
+/// let mut buf = vec![];
+/// ParagraphPasser::new(&mut buf, 0).write_all(INCOMING.as_bytes()).unwrap();
+/// assert_eq!(String::from_utf8(buf).unwrap(), "
+///     <h1>Heading</h1>
+///     ");
+///
+/// let mut buf = vec![];
+/// ParagraphPasser::new(&mut buf, 1).write_all(INCOMING.as_bytes()).unwrap();
+/// assert_eq!(String::from_utf8(buf).unwrap(), "
+///     <h1>Heading</h1>
+///     <p>Paragraph 1</p>
+///     ");
+///
+/// let mut buf = vec![];
+/// ParagraphPasser::new(&mut buf, 2).write_all(INCOMING.as_bytes()).unwrap();
+/// assert_eq!(String::from_utf8(buf).unwrap(), "
+///     <h1>Heading</h1>
+///     <p>Paragraph 1</p>
+///     <p>Paragraph 2</p>
+/// ");
+///
+/// let mut buf = vec![];
+/// ParagraphPasser::new(&mut buf, 3).write_all(INCOMING.as_bytes()).unwrap();
+/// assert_eq!(String::from_utf8(buf).unwrap(), "
+///     <h1>Heading</h1>
+///     <p>Paragraph 1</p>
+///     <p>Paragraph 2</p>
+/// ");
+/// ```
 pub struct ParagraphPasser<'w> {
     out: &'w mut Write,
     paras_left: usize,
@@ -19,6 +63,10 @@ pub struct ParagraphPasser<'w> {
 }
 
 impl<'w> ParagraphPasser<'w> {
+    /// Create a passer instance, passing the specified amount of pararaphs.
+    ///
+    /// The output sink is taken by dynamic reference, as it cannot be templated on `W: Write` because then it overflows the
+    /// recursion limit when used in `format_output()`.
     pub fn new(into: &'w mut Write, count: usize) -> ParagraphPasser<'w> {
         ParagraphPasser {
             out: into,
