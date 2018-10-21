@@ -181,6 +181,18 @@
 <span id="181">181</span>
 <span id="182">182</span>
 <span id="183">183</span>
+<span id="184">184</span>
+<span id="185">185</span>
+<span id="186">186</span>
+<span id="187">187</span>
+<span id="188">188</span>
+<span id="189">189</span>
+<span id="190">190</span>
+<span id="191">191</span>
+<span id="192">192</span>
+<span id="193">193</span>
+<span id="194">194</span>
+<span id="195">195</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">read_file</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
@@ -215,6 +227,17 @@
 }
 
 <span class="kw">impl</span> <span class="ident">StyleElement</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_link</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">link</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
+        <span class="ident">StyleElement</span>::<span class="ident">from_link_impl</span>(<span class="ident">link</span>.<span class="ident">into</span>())
+    }
+
+    <span class="kw">fn</span> <span class="ident">from_link_impl</span>(<span class="ident">link</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
+        <span class="ident">StyleElement</span> {
+            <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">Link</span>,
+            <span class="ident">data</span>: <span class="ident">link</span>,
+        }
+    }
+
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_literal</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">literal</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
         <span class="ident">StyleElement</span>::<span class="ident">from_literal_impl</span>(<span class="ident">literal</span>.<span class="ident">into</span>())
     }
@@ -244,20 +267,21 @@
         })
     }
 
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_link</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">link</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
-        <span class="ident">StyleElement</span>::<span class="ident">from_link_impl</span>(<span class="ident">link</span>.<span class="ident">into</span>())
-    }
-
-    <span class="kw">fn</span> <span class="ident">from_link_impl</span>(<span class="ident">link</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
-        <span class="ident">StyleElement</span> {
-            <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">Link</span>,
-            <span class="ident">data</span>: <span class="ident">link</span>,
-        }
-    }
-
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">load</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">base</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>)) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">class</span> <span class="op">==</span> <span class="ident">StyleElementClass</span>::<span class="ident">File</span> {
-            <span class="self">self</span>.<span class="ident">data</span> <span class="op">=</span> <span class="ident">read_file</span>(<span class="kw-2">&amp;</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}{}&quot;</span>, <span class="ident">base</span>.<span class="number">0</span>, <span class="self">self</span>.<span class="ident">data</span>), <span class="ident">base</span>.<span class="number">1</span>.<span class="ident">join</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">as_ref</span>())), <span class="string">&quot;file style element&quot;</span>)<span class="question-mark">?</span>.<span class="ident">into</span>();
+            <span class="self">self</span>.<span class="ident">data</span> <span class="op">=</span> <span class="ident">read_file</span>(<span class="kw-2">&amp;</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}{}{}&quot;</span>,
+                                            <span class="ident">base</span>.<span class="number">0</span>,
+                                            <span class="kw">if</span> <span class="op">!</span>[<span class="string">&#39;/&#39;</span>, <span class="string">&#39;\\&#39;</span>].<span class="ident">contains</span>(<span class="kw-2">&amp;</span>(<span class="ident">base</span>.<span class="number">0</span>.<span class="ident">as_bytes</span>()[<span class="ident">base</span>.<span class="number">0</span>.<span class="ident">as_bytes</span>().<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>] <span class="kw">as</span> <span class="ident">char</span>)) <span class="op">&amp;&amp;</span>
+                                               <span class="op">!</span>[<span class="string">&#39;/&#39;</span>, <span class="string">&#39;\\&#39;</span>].<span class="ident">contains</span>(<span class="kw-2">&amp;</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">as_bytes</span>()[<span class="number">0</span>] <span class="kw">as</span> <span class="ident">char</span>)) {
+                                                <span class="string">&quot;/&quot;</span>
+                                            } <span class="kw">else</span> {
+                                                <span class="string">&quot;&quot;</span>
+                                            },
+                                            <span class="self">self</span>.<span class="ident">data</span>),
+                                    <span class="ident">base</span>.<span class="number">1</span>.<span class="ident">join</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">as_ref</span>())),
+                                  <span class="string">&quot;file style element&quot;</span>)
+                <span class="question-mark">?</span>
+                .<span class="ident">into</span>();
             <span class="self">self</span>.<span class="ident">class</span> <span class="op">=</span> <span class="ident">StyleElementClass</span>::<span class="ident">Literal</span>;
         }
 
