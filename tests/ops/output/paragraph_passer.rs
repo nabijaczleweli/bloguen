@@ -10,10 +10,23 @@ macro_rules! all_test {
     ($fname:ident, $num:expr, $fnum:expr) => {
         #[test]
         fn $fname() {
-            let mut out = vec![];
-            ParagraphPasser::new(&mut out, $num).write_all(PARAGRAPHS_ALL.as_bytes()).unwrap();
-            assert_eq!(str::from_utf8(&out).unwrap(), include_str!(concat!("../../../test-data/paragraphs/", $fnum, ".html")));
+            perform_test($num, include_str!(concat!("../../../test-data/paragraphs/", $fnum, ".html")));
         }
+    }
+}
+
+
+fn perform_test(count: usize, target: &str) {
+    let mut out = vec![];
+    ParagraphPasser::new(&mut out, count).write_all(PARAGRAPHS_ALL.as_bytes()).unwrap();
+    assert_eq!(str::from_utf8(&out).unwrap(), target);
+}
+
+
+#[test]
+fn too_many() {
+    for i in 22..=100 {
+        perform_test(i, PARAGRAPHS_ALL);
     }
 }
 
