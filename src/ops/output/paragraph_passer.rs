@@ -7,6 +7,7 @@ lazy_static! {
     static ref CLOSE: ByteSubstring<'static> = ByteSubstring::new(b"</p>");
 }
 
+const OPEN_LEN: usize = 2;
 const CLOSE_LEN: usize = 4;
 
 
@@ -116,6 +117,18 @@ impl<'w> Write for ParagraphPasser<'w> {
                     (Some(oi), Some(ci), false) => {
                         if oi < ci {
                             self.depth += 1;
+
+                            // Bump depth for each opened paragraph before the first closing one
+                            let mut toi = oi;
+                            while let Some(mut next_oi) = OPEN.find(&buf[toi + OPEN_LEN..]) {
+                                next_oi += toi + OPEN_LEN;
+                                if next_oi < ci {
+                                    self.depth += 1;
+                                } else {
+                                    break;
+                                }
+                                toi = next_oi;
+                            }
                         }
 
                         let past_end = ci + CLOSE_LEN;
