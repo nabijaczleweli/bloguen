@@ -23,7 +23,7 @@ const CLOSE_LEN: usize = 4;
 /// static INCOMING: &str = "
 ///     <h1>Heading</h1>
 ///     <p>Paragraph 1</p>
-///     <p>Paragraph 2</p>
+///     <p>Paragraph <p>2 nested</p></p>
 /// ";
 ///
 ///
@@ -45,7 +45,7 @@ const CLOSE_LEN: usize = 4;
 /// assert_eq!(String::from_utf8(buf).unwrap(), "
 ///     <h1>Heading</h1>
 ///     <p>Paragraph 1</p>
-///     <p>Paragraph 2</p>
+///     <p>Paragraph <p>2 nested</p></p>
 /// ");
 ///
 /// let mut buf = vec![];
@@ -53,7 +53,7 @@ const CLOSE_LEN: usize = 4;
 /// assert_eq!(String::from_utf8(buf).unwrap(), "
 ///     <h1>Heading</h1>
 ///     <p>Paragraph 1</p>
-///     <p>Paragraph 2</p>
+///     <p>Paragraph <p>2 nested</p></p>
 /// ");
 /// ```
 pub struct ParagraphPasser<'w> {
