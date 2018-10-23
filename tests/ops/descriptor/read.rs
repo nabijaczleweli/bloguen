@@ -27,6 +27,9 @@ fn ok_all_specified() {
                     center = \"templates/idx_центр\"\n\
                     footer = \"templates\\\\idx_foot\"\n\
                     order = \"backward\"\n\
+                    styles = [\"file:common.css\"]\n\
+                    scripts = [\"literal:console.log(\\\"adenosinetriphosphate\\\");\"]\n\
+                    data = { preferred-system = \"capitalism\" }\n\
                     \n\
                     [[scripts]]\n\
                     class = \"link\"\n\
@@ -60,6 +63,9 @@ fn ok_all_specified() {
                        center_file: ("$ROOT/templates/idx_центр".to_string(), root.join("templates").join("idx_центр")),
                        footer_file: ("$ROOT/templates\\idx_foot".to_string(), root.join("templates").join("idx_foot")),
                        center_order: CenterOrder::Backward,
+                       styles: vec![StyleElement::from_path("common.css")],
+                       scripts: vec![ScriptElement::from_literal("console.log(\"adenosinetriphosphate\");")],
+                       data: vec![("preferred-system".to_string(), "capitalism".to_string())].into_iter().collect(),
                    }),
                    machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
                    language: Some("pl".parse().unwrap()),
@@ -130,6 +136,9 @@ fn ok_induced_index() {
                        center_file: ("$ROOT/index_center.html".to_string(), root.join("index_center.html")),
                        footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
                        center_order: CenterOrder::Forward,
+                       styles: vec![],
+                       scripts: vec![],
+                       data: vec![].into_iter().collect(),
                    }),
                    data: vec![].into_iter().collect(),
                }));
@@ -170,6 +179,9 @@ fn ok_induced_idx() {
                        center_file: ("$ROOT/idx_center.htm".to_string(), root.join("idx_center.htm")),
                        footer_file: ("$ROOT/idx_footer.htm".to_string(), root.join("idx_footer.htm")),
                        center_order: CenterOrder::Forward,
+                       styles: vec![],
+                       scripts: vec![],
+                       data: vec![].into_iter().collect(),
                    }),
                    data: vec![].into_iter().collect(),
                }));

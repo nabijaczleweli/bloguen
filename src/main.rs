@@ -101,10 +101,10 @@ fn result_main() -> Result<(), bloguen::Error> {
         s.load(&opts.source_dir)?;
     }
 
-    println!("{}", post_header);
-    println!("{}", post_footer);
-    println!("{}", global_language);
-    println!("{}", global_author);
+    // println!("{}", post_header);
+    // println!("{}", post_footer);
+    // println!("{}", global_language);
+    // println!("{}", global_author);
 
 
     let (idx_sender, idx_receiver) = mpsc_channel();

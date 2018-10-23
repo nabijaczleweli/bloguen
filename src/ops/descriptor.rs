@@ -79,6 +79,18 @@ pub struct BlogueDescriptorIndex {
     ///
     /// If not present, defaults to forward.
     pub center_order: CenterOrder,
+    /// A set of style descriptors.
+    ///
+    /// If not present, defaults to empty.
+    pub styles: Vec<StyleElement>,
+    /// A set of style descriptors.
+    ///
+    /// If not present, defaults to empty.
+    pub scripts: Vec<ScriptElement>,
+    /// Additional static data to substitute in header and footer.
+    ///
+    /// If not present, defaults to empty.
+    pub data: BTreeMap<String, String>,
 }
 
 
@@ -103,6 +115,9 @@ struct BlogueDescriptorIndexSerialised {
     pub center: Option<String>,
     pub footer: Option<String>,
     pub order: Option<CenterOrder>,
+    pub styles: Option<Vec<StyleElement>>,
+    pub scripts: Option<Vec<ScriptElement>>,
+    pub data: Option<BTreeMap<String, String>>,
 }
 
 
@@ -134,6 +149,7 @@ impl BlogueDescriptor {
     /// header = "idx_head.html"
     /// center = "центр.html"
     /// order = "backward"
+    /// styles = ["literal:.indented { text-indent: 1em; }"]
     ///
     /// [[scripts]]
     /// class = "link"
@@ -153,7 +169,8 @@ impl BlogueDescriptor {
     /// The following holds:
     ///
     /// ```
-    /// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, CenterOrder};
+    /// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement,
+    /// #                    CenterOrder};
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
     /// # use std::io::Write;
@@ -168,6 +185,7 @@ impl BlogueDescriptor {
     /// #     header = \"idx_head.html\"\n\
     /// #     center = \"центр.html\"\n\
     /// #     order = \"backward\"\n\
+    /// #     styles = [\"literal:.indented { text-indent: 1em; }\"]\n\
     /// #     \n\
     /// #     [[scripts]]\n\
     /// #     class = \"link\"\n\
@@ -208,6 +226,9 @@ impl BlogueDescriptor {
     ///                    center_file: ("$ROOT/центр.html".to_string(), root.join("центр.html")),
     ///                    footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
     ///                    center_order: CenterOrder::Backward,
+    ///                    styles: vec![StyleElement::from_literal(".indented { text-indent: 1em; }")],
+    ///                    scripts: vec![],
+    ///                    data: vec![].into_iter().collect(),
     ///                }),
     ///                data: vec![("preferred_system".to_string(),
     ///                            "capitalism".to_string())].into_iter().collect(),
@@ -264,7 +285,10 @@ impl BlogueDescriptor {
                                                      .or_else(|_| additional_file(si.center.take(), root, "idx_center", "index center"))?,
                                     footer_file: additional_file(si.footer.clone(), root, "index_footer", "index footer")
                                                      .or_else(|_| additional_file(si.footer.take(), root, "idx_footer", "index footer"))?,
-                                    center_order: si.order.unwrap_or_default()
+                                    center_order: si.order.unwrap_or_default(),
+                                    styles: si.styles.unwrap_or_default(),
+                                    scripts: si.scripts.unwrap_or_default(),
+                                    data: si.data.unwrap_or_default(),
                                 })
                             }
                         Some(false) => None,
