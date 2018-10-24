@@ -101,6 +101,16 @@ fn result_main() -> Result<(), bloguen::Error> {
         s.load(&opts.source_dir)?;
     }
 
+    if let Some(idx) = descriptor.index.as_mut() {
+        for s in &mut idx.styles {
+            s.load(&opts.source_dir)?;
+        }
+
+        for s in &mut idx.scripts {
+            s.load(&opts.source_dir)?;
+        }
+    }
+
     // println!("{}", post_header);
     // println!("{}", post_footer);
     // println!("{}", global_language);
@@ -218,7 +228,7 @@ fn result_main() -> Result<(), bloguen::Error> {
             Ok(())
         })?;
 
-    if descriptor.index.is_some() {
+    if let Some(idx) = descriptor.index.as_ref() {
         let mut posts_data: Vec<_> = idx_receiver.into_iter().collect();
         posts_data.sort_unstable_by_key(|&((num, _), ..)| num);
 
@@ -254,15 +264,15 @@ fn result_main() -> Result<(), bloguen::Error> {
         bloguen::ops::format_output(index_header.as_ref().unwrap(),
                                     &descriptor.name,
                                     &global_language,
-                                    &[&descriptor.data],
+                                    &[&descriptor.data, &idx.data],
                                     "index",
                                     0,
                                     "index",
                                     &global_author,
                                     &index_date,
                                     &[],
-                                    &[&descriptor.styles],
-                                    &[&descriptor.scripts, &index_script],
+                                    &[&descriptor.styles, &idx.styles],
+                                    &[&descriptor.scripts, &idx.scripts, &index_script],
                                     &mut index_file,
                                     "index")?;
         for (_, _, center) in posts_data {
@@ -278,15 +288,15 @@ fn result_main() -> Result<(), bloguen::Error> {
         bloguen::ops::format_output(index_footer.as_ref().unwrap(),
                                     &descriptor.name,
                                     &global_language,
-                                    &[&descriptor.data],
+                                    &[&descriptor.data, &idx.data],
                                     "index",
                                     0,
                                     "index",
                                     &global_author,
                                     &index_date,
                                     &[],
-                                    &[&descriptor.styles],
-                                    &[&descriptor.scripts, &index_script],
+                                    &[&descriptor.styles, &idx.styles],
+                                    &[&descriptor.scripts, &idx.scripts, &index_script],
                                     &mut index_file,
                                     "index")?;
     }
