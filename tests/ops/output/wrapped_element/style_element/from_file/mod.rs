@@ -15,6 +15,6 @@ fn ok() {
     let _ = fs::create_dir_all(root.join("style"));
     File::create(root.join("style").join("common.css")).unwrap().write_all(COLUMN_CSS.as_bytes()).unwrap();
 
-    assert_eq!(StyleElement::from_file(&("$ROOT/style/henlo/../common.css".to_string(), root.join("style/henlo/../common.css"))),
+    assert_eq!(StyleElement::from_file(&("$ROOT/style/common.css".to_string(), root.join("style/common.css"))),
                Ok(StyleElement::from_literal(COLUMN_CSS)));
 }

@@ -5,6 +5,17 @@ use std::io::Write;
 use bloguen::Error;
 
 
+#[cfg(target_os = "windows")]
+static ALT_SLASH: char = '\\';
+#[cfg(not(target_os = "windows"))]
+static ALT_SLASH: char = '/';
+
+#[cfg(target_os = "windows")]
+static ALT_SLASH_ESC: &str = "\\\\";
+#[cfg(not(target_os = "windows"))]
+static ALT_SLASH_ESC: &str = "/";
+
+
 #[test]
 fn ok_all_specified() {
     let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-ok_all_specified");
@@ -13,37 +24,38 @@ fn ok_all_specified() {
 
     File::create(root.join("blogue.toml"))
         .unwrap()
-        .write_all("name = \"Блогг\"\n\
-                    author = \"nabijaczleweli\"\n\
-                    header = \"templates/head\"\n\
-                    footer = \"templates\\\\foot\"\n\
-                    language = \"pl\"\n\
-                    styles = [\"link://nabijaczleweli.xyz/kaschism/assets/column.css\",\n\
-                              \"literal:.indented { text-indent: 1em; }\"]\n\
-                    \n\
-                    [index]\n\
-                    generate = true\n
-                    header = \"templates/idx_head\"\n\
-                    center = \"templates/idx_центр\"\n\
-                    footer = \"templates\\\\idx_foot\"\n\
-                    order = \"backward\"\n\
-                    styles = [\"file:common.css\"]\n\
-                    scripts = [\"literal:console.log(\\\"adenosinetriphosphate\\\");\"]\n\
-                    data = { preferred-system = \"capitalism\" }\n\
-                    \n\
-                    [[scripts]]\n\
-                    class = \"link\"\n\
-                    data = \"/content/assets/syllable.js\"\n\
-                    \n\
-                    [[scripts]]\n\
-                    class = \"file\"\n\
-                    data = \"MathJax-config.js\"\n\
-                    \n\
-                    [machine_data]\n\
-                    JSON = \"metadata/json/\"\n\
-                    \n\
-                    [data]\n\
-                    preferred-system = \"communism\"\n"
+        .write_all(format!("name = \"Блогг\"\n\
+                            author = \"nabijaczleweli\"\n\
+                            header = \"templates/head\"\n\
+                            footer = \"templates{0}foot\"\n\
+                            language = \"pl\"\n\
+                            styles = [\"link://nabijaczleweli.xyz/kaschism/assets/column.css\",\n\
+                                      \"literal:.indented {{ text-indent: 1em; }}\"]\n\
+                            \n\
+                            [index]\n\
+                            generate = true\n
+                            header = \"templates/idx_head\"\n\
+                            center = \"templates/idx_центр\"\n\
+                            footer = \"templates{0}idx_foot\"\n\
+                            order = \"backward\"\n\
+                            styles = [\"file:common.css\"]\n\
+                            scripts = [\"literal:console.log(\\\"adenosinetriphosphate\\\");\"]\n\
+                            data = {{ preferred-system = \"capitalism\" }}\n\
+                            \n\
+                            [[scripts]]\n\
+                            class = \"link\"\n\
+                            data = \"/content/assets/syllable.js\"\n\
+                            \n\
+                            [[scripts]]\n\
+                            class = \"file\"\n\
+                            data = \"MathJax-config.js\"\n\
+                            \n\
+                            [machine_data]\n\
+                            JSON = \"metadata/json/\"\n\
+                            \n\
+                            [data]\n\
+                            preferred-system = \"communism\"\n",
+                           ALT_SLASH_ESC)
             .as_bytes())
         .unwrap();
     File::create(root.join("templates").join("head")).unwrap();
@@ -57,11 +69,11 @@ fn ok_all_specified() {
                    name: "Блогг".to_string(),
                    author: Some("nabijaczleweli".to_string()),
                    header_file: ("$ROOT/templates/head".to_string(), root.join("templates").join("head")),
-                   footer_file: ("$ROOT/templates\\foot".to_string(), root.join("templates").join("foot")),
+                   footer_file: (format!("$ROOT/templates{}foot", ALT_SLASH), root.join("templates").join("foot")),
                    index: Some(BlogueDescriptorIndex {
                        header_file: ("$ROOT/templates/idx_head".to_string(), root.join("templates").join("idx_head")),
                        center_file: ("$ROOT/templates/idx_центр".to_string(), root.join("templates").join("idx_центр")),
-                       footer_file: ("$ROOT/templates\\idx_foot".to_string(), root.join("templates").join("idx_foot")),
+                       footer_file: (format!("$ROOT/templates{}idx_foot", ALT_SLASH), root.join("templates").join("idx_foot")),
                        center_order: CenterOrder::Backward,
                        styles: vec![StyleElement::from_path("common.css")],
                        scripts: vec![ScriptElement::from_literal("console.log(\"adenosinetriphosphate\");")],
