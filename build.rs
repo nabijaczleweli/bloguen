@@ -1,6 +1,6 @@
 extern crate reqwest;
 #[cfg(not(target_os = "windows"))]
-extern crate gcc;
+extern crate cc;
 
 use std::io::{BufReader, BufRead, Write};
 use std::collections::BTreeSet;
@@ -46,7 +46,7 @@ fn get_errno_data(out_dir: &Path) {
     let errno_source = errno_dir.join("errno.c");
     File::create(&errno_source).unwrap().write_all(ERANGE_CHECK_SOURCE.as_bytes()).unwrap();
 
-    let errno_preprocessed = String::from_utf8(gcc::Build::new().file(errno_source).expand()).unwrap();
+    let errno_preprocessed = String::from_utf8(cc::Build::new().file(errno_source).expand()).unwrap();
     let errno_expr = errno_preprocessed.lines().next_back().unwrap();
 
     let errno_include = errno_dir.join("errno.rs");
