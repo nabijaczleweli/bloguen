@@ -115,6 +115,7 @@ fn result_main() -> Result<(), bloguen::Error> {
     // println!("{}", post_footer);
     // println!("{}", global_language);
     // println!("{}", global_author);
+    // println!("{:#?}", descriptor);
 
 
     let (idx_sender, idx_receiver) = mpsc_channel();
@@ -275,16 +276,24 @@ fn result_main() -> Result<(), bloguen::Error> {
                                     &[&descriptor.scripts, &idx.scripts, &index_script],
                                     &mut index_file,
                                     "index")?;
-        for (_, _, center) in posts_data {
-            index_file.write_all(&center)
-                .map_err(|e| {
-                    bloguen::Error::Io {
-                        desc: "output index file center".into(),
-                        op: "write",
-                        more: Some(e.to_string().into()),
-                    }
-                })?;
+
+        {
+            let write_center = |&(_, _, ref center): &(_, _, Vec<u8>)| {
+                index_file.write_all(&center)
+                    .map_err(|e| {
+                        bloguen::Error::Io {
+                            desc: "output index file center".into(),
+                            op: "write",
+                            more: Some(e.to_string().into()),
+                        }
+                    })
+            };
+            match idx.center_order {
+                bloguen::ops::CenterOrder::Forward => Result::from_iter(posts_data.iter().map(write_center))?,
+                bloguen::ops::CenterOrder::Backward => Result::from_iter(posts_data.iter().rev().map(write_center))?,
+            }
         }
+
         bloguen::ops::format_output(index_footer.as_ref().unwrap(),
                                     &descriptor.name,
                                     &global_language,
