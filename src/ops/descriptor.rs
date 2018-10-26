@@ -27,9 +27,13 @@ pub struct BlogueDescriptor {
     ///
     /// Default: `"$ROOT/footer.html"`, then `"$ROOT/footer.htm"`.
     pub footer_file: (String, PathBuf),
-    /// Additional static data to substitute in header and footer.
+    /// Subfolder to move assets to, relative to the output root, if present.
     ///
-    /// If not present, defaults to empty.
+    /// No override is applied if not present – assets are copied alongside the posts' HTML.
+    pub asset_dir_override: Option<String>,
+    /// Metadata specifying how to generate the blogue index file.
+    ///
+    /// If not present, index not generated.
     pub index: Option<BlogueDescriptorIndex>,
     /// Where and which machine datasets to put.
     ///
@@ -100,6 +104,7 @@ struct BlogueDescriptorSerialised {
     pub author: Option<String>,
     pub header: Option<String>,
     pub footer: Option<String>,
+    pub asset_dir: Option<String>,
     pub index: Option<BlogueDescriptorIndexSerialised>,
     pub machine_data: Option<BTreeMap<MachineDataKind, String>>,
     pub language: Option<LanguageTag>,
@@ -258,6 +263,20 @@ impl BlogueDescriptor {
                 }
             })?;
 
+        let asset_dir_override = serialised.asset_dir.map(|mut ad| {
+            if let Some(i) = ad.find(|c| !['/', '\\'].contains(&c)) {
+                ad.replace_range(..i, "");
+            }
+
+            let mut last_slash = 0;
+            while let Some(backslash) = ad[last_slash..].find('\\') {
+                ad.replace_range(last_slash + backslash..last_slash + backslash + 1, "/");
+                last_slash += backslash + 1;
+            }
+
+            ad
+        });
+
         let machine_data = serialised.machine_data.unwrap_or_default();
         for (ref k, ref v) in &machine_data {
             if v.find(|c| !['/', '\\'].contains(&c)).is_none() {
@@ -274,6 +293,7 @@ impl BlogueDescriptor {
             author: serialised.author,
             header_file: additional_file(serialised.header, root, "header", "post header")?,
             footer_file: additional_file(serialised.footer, root, "footer", "post footer")?,
+            asset_dir_override: asset_dir_override,
             index: match serialised.index {
                 Some(mut si) => {
                     match si.generate {
