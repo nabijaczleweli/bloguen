@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/ops/output/wrapped_element/style_element.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>style_element.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script src="../../../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../../../settings.html"><img src="../../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `src/ops/output/wrapped_element/script_element.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>script_element.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../../../../normalize.css"><link rel="stylesheet" type="text/css" href="../../../../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../../../../dark.css"><link rel="stylesheet" type="text/css" href="../../../../../light.css" id="themeStyle"><script src="../../../../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../../../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../../../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../../../../settings.html"><img src="../../../../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -494,6 +494,72 @@
 <span id="494">494</span>
 <span id="495">495</span>
 <span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">read_file</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
@@ -505,24 +571,24 @@
 
 
 <span class="macro">lazy_static</span><span class="macro">!</span> {
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STYLE_LINK_HEAD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../../assets/element_wrappers/style/link.head&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STYLE_LINK_FOOT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../../assets/element_wrappers/style/link.foot&quot;</span>).<span class="ident">trim_left</span>();
+    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">SCRIPT_LINK_HEAD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../../assets/element_wrappers/script/link.head&quot;</span>).<span class="ident">trim</span>();
+    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">SCRIPT_LINK_FOOT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../../assets/element_wrappers/script/link.foot&quot;</span>).<span class="ident">trim_left</span>();
 
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STYLE_LITERAL_HEAD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../../assets/element_wrappers/style/literal.head&quot;</span>).<span class="ident">trim_left</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STYLE_LITERAL_FOOT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../../assets/element_wrappers/style/literal.foot&quot;</span>);
+    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">SCRIPT_LITERAL_HEAD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../../assets/element_wrappers/script/literal.head&quot;</span>).<span class="ident">trim_left</span>();
+    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">SCRIPT_LITERAL_FOOT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../../assets/element_wrappers/script/literal.foot&quot;</span>);
 }
 
 
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Copy</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
-<span class="kw">enum</span> <span class="ident">StyleElementClass</span> {
+<span class="kw">enum</span> <span class="ident">ScriptElementClass</span> {
     <span class="ident">Link</span>,
     <span class="ident">Literal</span>,
     <span class="ident">File</span>,
 }
 
 
-<span class="doccomment">/// A style specifier.</span>
+<span class="doccomment">/// A script specifier.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// Can be a link or a literal, and a literal can be indirectly loaded from a file.</span>
 <span class="doccomment">///</span>
@@ -537,30 +603,30 @@
 <span class="doccomment">/// # extern crate bloguen;</span>
 <span class="doccomment">/// # #[macro_use]</span>
 <span class="doccomment">/// # extern crate serde_derive;</span>
-<span class="doccomment">/// # use bloguen::ops::StyleElement;</span>
+<span class="doccomment">/// # use bloguen::ops::ScriptElement;</span>
 <span class="doccomment">/// #[derive(Deserialize, Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]</span>
-<span class="doccomment">/// struct StyleContainer {</span>
-<span class="doccomment">///     pub styles: Vec&lt;StyleElement&gt;,</span>
+<span class="doccomment">/// struct ScriptContainer {</span>
+<span class="doccomment">///     pub styles: Vec&lt;ScriptElement&gt;,</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # fn main() {</span>
 <span class="doccomment">/// let styles_toml = &quot;[[styles]]</span>
 <span class="doccomment">///                    class = &#39;link&#39;</span>
-<span class="doccomment">///                    data = &#39;//nabijaczleweli.xyz/kaschism/assets/column.css&#39;</span>
+<span class="doccomment">///                    data = &#39;/content/assets/syllable.js&#39;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///                    [[styles]]</span>
 <span class="doccomment">///                    class = &#39;literal&#39;</span>
-<span class="doccomment">///                    data = &#39;.indented { text-indent: 1em; }&#39;</span>
+<span class="doccomment">///                    data = &#39;document.getElementById(\&quot;title\&quot;).innerText = \&quot;Наган\&quot;;&#39;</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///                    [[styles]]</span>
 <span class="doccomment">///                    class = &#39;file&#39;</span>
-<span class="doccomment">///                    data = &#39;common.css&#39;&quot;;</span>
+<span class="doccomment">///                    data = &#39;MathJax-config.js&#39;&quot;;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let StyleContainer { styles } = toml::from_str(styles_toml).unwrap();</span>
+<span class="doccomment">/// let ScriptContainer { styles } = toml::from_str(styles_toml).unwrap();</span>
 <span class="doccomment">/// assert_eq!(&amp;styles,</span>
-<span class="doccomment">///            &amp;[StyleElement::from_link(&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;),</span>
-<span class="doccomment">///              StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;),</span>
-<span class="doccomment">///              StyleElement::from_path(&quot;common.css&quot;)]);</span>
+<span class="doccomment">///            &amp;[ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;),</span>
+<span class="doccomment">///              ScriptElement::from_literal(&quot;document.getElementById(\&quot;title\&quot;).innerText = \&quot;Наган\&quot;;&quot;),</span>
+<span class="doccomment">///              ScriptElement::from_path(&quot;MathJax-config.js&quot;)]);</span>
 <span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">///</span>
@@ -571,203 +637,239 @@
 <span class="doccomment">/// # extern crate bloguen;</span>
 <span class="doccomment">/// # #[macro_use]</span>
 <span class="doccomment">/// # extern crate serde_derive;</span>
-<span class="doccomment">/// # use bloguen::ops::StyleElement;</span>
+<span class="doccomment">/// # use bloguen::ops::ScriptElement;</span>
 <span class="doccomment">/// #[derive(Deserialize, Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]</span>
-<span class="doccomment">/// struct StyleContainer {</span>
-<span class="doccomment">///     pub styles: Vec&lt;StyleElement&gt;,</span>
+<span class="doccomment">/// struct ScriptContainer {</span>
+<span class="doccomment">///     pub styles: Vec&lt;ScriptElement&gt;,</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # fn main() {</span>
 <span class="doccomment">/// let styles_toml = &quot;styles = [</span>
-<span class="doccomment">///                        &#39;link://nabijaczleweli.xyz/kaschism/assets/column.css&#39;,</span>
-<span class="doccomment">///                        &#39;literal:.indented { text-indent: 1em; }&#39;,</span>
-<span class="doccomment">///                        &#39;file:common.css&#39;,</span>
+<span class="doccomment">///                        &#39;link:/content/assets/syllable.js&#39;,</span>
+<span class="doccomment">///                        &#39;literal:document.getElementById(\&quot;title\&quot;).innerText = \&quot;Наган\&quot;;&#39;,</span>
+<span class="doccomment">///                        &#39;file:MathJax-config.js&#39;,</span>
 <span class="doccomment">///                    ]&quot;;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// let StyleContainer { styles } = toml::from_str(styles_toml).unwrap();</span>
+<span class="doccomment">/// let ScriptContainer { styles } = toml::from_str(styles_toml).unwrap();</span>
 <span class="doccomment">/// assert_eq!(&amp;styles,</span>
-<span class="doccomment">///            &amp;[StyleElement::from_link(&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;),</span>
-<span class="doccomment">///              StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;),</span>
-<span class="doccomment">///              StyleElement::from_path(&quot;common.css&quot;)]);</span>
+<span class="doccomment">///            &amp;[ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;),</span>
+<span class="doccomment">///              ScriptElement::from_literal(&quot;document.getElementById(\&quot;title\&quot;).innerText = \&quot;Наган\&quot;;&quot;),</span>
+<span class="doccomment">///              ScriptElement::from_path(&quot;MathJax-config.js&quot;)]);</span>
 <span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
-<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">StyleElement</span> {
-    <span class="ident">class</span>: <span class="ident">StyleElementClass</span>,
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">ScriptElement</span> {
+    <span class="ident">class</span>: <span class="ident">ScriptElementClass</span>,
     <span class="ident">data</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>,
 }
 
-<span class="kw">impl</span> <span class="ident">StyleElement</span> {
-    <span class="doccomment">/// Create a style element linking to an external resource.</span>
+<span class="kw">impl</span> <span class="ident">ScriptElement</span> {
+    <span class="doccomment">/// Create a script element linking to an external resource.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use bloguen::ops::{WrappedElement, StyleElement};</span>
-    <span class="doccomment">/// let lonk = StyleElement::from_link(&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;);</span>
+    <span class="doccomment">/// # use bloguen::ops::{WrappedElement, ScriptElement};</span>
+    <span class="doccomment">/// let lonk = ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;);</span>
     <span class="doccomment">/// assert_eq!(</span>
     <span class="doccomment">///     format!(&quot;{}{}{}&quot;, lonk.head(), lonk.content(), lonk.foot()),</span>
-    <span class="doccomment">///     &quot;&lt;link href=\&quot;//nabijaczleweli.xyz/kaschism/assets/column.css\&quot; rel=\&quot;stylesheet\&quot; /&gt;\n&quot;)</span>
+    <span class="doccomment">///     &quot;&lt;script type=\&quot;text/javascript\&quot; src=\&quot;/content/assets/syllable.js\&quot;&gt;&lt;/script&gt;\n&quot;)</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_link</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">link</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
-        <span class="ident">StyleElement</span>::<span class="ident">from_link_impl</span>(<span class="ident">link</span>.<span class="ident">into</span>())
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_link</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">link</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">ScriptElement</span> {
+        <span class="ident">ScriptElement</span>::<span class="ident">from_link_impl</span>(<span class="ident">link</span>.<span class="ident">into</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">from_link_impl</span>(<span class="ident">link</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
-        <span class="ident">StyleElement</span> {
-            <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">Link</span>,
+    <span class="kw">fn</span> <span class="ident">from_link_impl</span>(<span class="ident">link</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">ScriptElement</span> {
+        <span class="ident">ScriptElement</span> {
+            <span class="ident">class</span>: <span class="ident">ScriptElementClass</span>::<span class="ident">Link</span>,
             <span class="ident">data</span>: <span class="ident">link</span>,
         }
     }
 
-    <span class="doccomment">/// Create a style element including the specified literal literally.</span>
+    <span class="doccomment">/// Create a script element including the specified literal literally.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use bloguen::ops::{WrappedElement, StyleElement};</span>
-    <span class="doccomment">/// let lit = StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;);</span>
+    <span class="doccomment">/// # use bloguen::ops::{WrappedElement, ScriptElement};</span>
+    <span class="doccomment">/// let lit = ScriptElement::from_literal(&quot;document.getElementById(\&quot;title\&quot;).innerText = \&quot;Наган\&quot;;&quot;);</span>
     <span class="doccomment">/// assert_eq!(format!(&quot;{}{}{}&quot;, lit.head(), lit.content(), lit.foot()),</span>
-    <span class="doccomment">///            &quot;&lt;style type=\&quot;text/css\&quot;&gt;\n\n.indented { text-indent: 1em; }\n\n&lt;/style&gt;\n&quot;)</span>
+    <span class="doccomment">///            &quot;&lt;script type=\&quot;text/javascript\&quot;&gt;\n\ndocument.getElementById(\&quot;title\&quot;).innerText = \&quot;Наган\&quot;;\n\n&lt;/script&gt;\n&quot;)</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_literal</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">literal</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
-        <span class="ident">StyleElement</span>::<span class="ident">from_literal_impl</span>(<span class="ident">literal</span>.<span class="ident">into</span>())
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_literal</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">literal</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">ScriptElement</span> {
+        <span class="ident">ScriptElement</span>::<span class="ident">from_literal_impl</span>(<span class="ident">literal</span>.<span class="ident">into</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">from_literal_impl</span>(<span class="ident">literal</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
-        <span class="ident">StyleElement</span> {
-            <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">Literal</span>,
+    <span class="kw">fn</span> <span class="ident">from_literal_impl</span>(<span class="ident">literal</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">ScriptElement</span> {
+        <span class="ident">ScriptElement</span> {
+            <span class="ident">class</span>: <span class="ident">ScriptElementClass</span>::<span class="ident">Literal</span>,
             <span class="ident">data</span>: <span class="ident">literal</span>,
         }
     }
 
-    <span class="doccomment">/// Create a style element pointing to the specified relative path.</span>
+    <span class="doccomment">/// Create a script element pointing to the specified relative path.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Consult [`load()`](#fn.load) documentation for more data.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Given `$ROOT/common.css` containing:</span>
+    <span class="doccomment">/// Given `$ROOT/MathJax-config.js` containing:</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ```css</span>
-    <span class="doccomment">/// ul, ol {</span>
-    <span class="doccomment">///     margin-top: 0;</span>
-    <span class="doccomment">///     margin-bottom: 0;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a &gt; i.fa {</span>
-    <span class="doccomment">///     color: black;</span>
-    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```js</span>
+    <span class="doccomment">/// MathJax.Hub.Config({</span>
+    <span class="doccomment">///   jax: [&quot;input/AsciiMath&quot;, &quot;output/HTML-CSS&quot;],</span>
+    <span class="doccomment">///   extensions: [&quot;asciimath2jax.js&quot;],</span>
+    <span class="doccomment">///   asciimath2jax: {</span>
+    <span class="doccomment">///     delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],</span>
+    <span class="doccomment">///     preview: &quot;[[maths]]&quot;</span>
+    <span class="doccomment">///   },</span>
+    <span class="doccomment">///   AsciiMath: {</span>
+    <span class="doccomment">///     decimal: &quot;.&quot;</span>
+    <span class="doccomment">///   },</span>
+    <span class="doccomment">///   &quot;HTML-CSS&quot;: {</span>
+    <span class="doccomment">///     undefinedFamily: &quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif&quot;</span>
+    <span class="doccomment">///   }</span>
+    <span class="doccomment">/// });</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The following holds:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use bloguen::ops::{WrappedElement, StyleElement};</span>
+    <span class="doccomment">/// # use bloguen::ops::{WrappedElement, ScriptElement};</span>
     <span class="doccomment">/// # use std::fs::{self, File};</span>
     <span class="doccomment">/// # use std::env::temp_dir;</span>
     <span class="doccomment">/// # use std::io::Write;</span>
     <span class="doccomment">/// # use bloguen::Error;</span>
-    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-output-wrapped_element-style_element-from_path&quot;);</span>
+    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-output-wrapped_element-script_element-from_path&quot;);</span>
     <span class="doccomment">/// # fs::create_dir_all(&amp;root).unwrap();</span>
-    <span class="doccomment">/// # File::create(root.join(&quot;common.css&quot;)).unwrap().write_all(&quot;\</span>
-    <span class="doccomment">/// #     ul, ol {\n\</span>
-    <span class="doccomment">/// #         margin-top: 0;\n\</span>
-    <span class="doccomment">/// #         margin-bottom: 0;\n\</span>
-    <span class="doccomment">/// #     }\n\</span>
-    <span class="doccomment">/// #     \n\</span>
-    <span class="doccomment">/// #     a &gt; i.fa {\n\</span>
-    <span class="doccomment">/// #         color: black;\n\</span>
-    <span class="doccomment">/// #     }\n</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;MathJax-config.js&quot;)).unwrap().write_all(&quot;\</span>
+    <span class="doccomment">/// #     MathJax.Hub.Config({\n\</span>
+    <span class="doccomment">/// #       jax: [\&quot;input/AsciiMath\&quot;, \&quot;output/HTML-CSS\&quot;],\n\</span>
+    <span class="doccomment">/// #       extensions: [\&quot;asciimath2jax.js\&quot;],\n\</span>
+    <span class="doccomment">/// #       asciimath2jax: {\n\</span>
+    <span class="doccomment">/// #         delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],\n\</span>
+    <span class="doccomment">/// #         preview: \&quot;[[maths]]\&quot;\n\</span>
+    <span class="doccomment">/// #       },\n\</span>
+    <span class="doccomment">/// #       AsciiMath: {\n\</span>
+    <span class="doccomment">/// #         decimal: \&quot;.\&quot;\n\</span>
+    <span class="doccomment">/// #       },\n\</span>
+    <span class="doccomment">/// #       \&quot;HTML-CSS\&quot;: {\n\</span>
+    <span class="doccomment">/// #         undefinedFamily: \&quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif\&quot;\n\</span>
+    <span class="doccomment">/// #       }\n\</span>
+    <span class="doccomment">/// #     });\n\</span>
     <span class="doccomment">/// # &quot;.as_bytes()).unwrap();</span>
     <span class="doccomment">/// # /*</span>
     <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
     <span class="doccomment">/// # */</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let mut lit_p = StyleElement::from_path(&quot;common.css&quot;);</span>
+    <span class="doccomment">/// let mut lit_p = ScriptElement::from_path(&quot;MathJax-config.js&quot;);</span>
     <span class="doccomment">/// assert_eq!(lit_p.load(&amp;(&quot;$ROOT&quot;.to_string(), root.clone())), Ok(()));</span>
     <span class="doccomment">/// assert_eq!(format!(&quot;{}{}{}&quot;, lit_p.head(), lit_p.content(), lit_p.foot()),</span>
-    <span class="doccomment">/// &quot;&lt;style type=\&quot;text/css\&quot;&gt;\n\n\</span>
-    <span class="doccomment">///      ul, ol {\n\</span>
-    <span class="doccomment">///          margin-top: 0;\n\</span>
-    <span class="doccomment">///          margin-bottom: 0;\n\</span>
-    <span class="doccomment">///      }\n\</span>
-    <span class="doccomment">///      \n\</span>
-    <span class="doccomment">///      a &gt; i.fa {\n\</span>
-    <span class="doccomment">///          color: black;\n\</span>
-    <span class="doccomment">///      }\n\n\</span>
-    <span class="doccomment">/// \n\n&lt;/style&gt;\n&quot;);</span>
+    <span class="doccomment">/// &quot;&lt;script type=\&quot;text/javascript\&quot;&gt;\n\n\</span>
+    <span class="doccomment">///     MathJax.Hub.Config({\n\</span>
+    <span class="doccomment">///       jax: [\&quot;input/AsciiMath\&quot;, \&quot;output/HTML-CSS\&quot;],\n\</span>
+    <span class="doccomment">///       extensions: [\&quot;asciimath2jax.js\&quot;],\n\</span>
+    <span class="doccomment">///       asciimath2jax: {\n\</span>
+    <span class="doccomment">///         delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],\n\</span>
+    <span class="doccomment">///         preview: \&quot;[[maths]]\&quot;\n\</span>
+    <span class="doccomment">///       },\n\</span>
+    <span class="doccomment">///       AsciiMath: {\n\</span>
+    <span class="doccomment">///         decimal: \&quot;.\&quot;\n\</span>
+    <span class="doccomment">///       },\n\</span>
+    <span class="doccomment">///       \&quot;HTML-CSS\&quot;: {\n\</span>
+    <span class="doccomment">///         undefinedFamily: \&quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif\&quot;\n\</span>
+    <span class="doccomment">///       }\n\</span>
+    <span class="doccomment">///     });\n\</span>
+    <span class="doccomment">/// \n\n&lt;/script&gt;\n&quot;);</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_path</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
-        <span class="ident">StyleElement</span>::<span class="ident">from_path_impl</span>(<span class="ident">path</span>.<span class="ident">into</span>())
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_path</span><span class="op">&lt;</span><span class="ident">Dt</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>(<span class="ident">path</span>: <span class="ident">Dt</span>) <span class="op">-&gt;</span> <span class="ident">ScriptElement</span> {
+        <span class="ident">ScriptElement</span>::<span class="ident">from_path_impl</span>(<span class="ident">path</span>.<span class="ident">into</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">from_path_impl</span>(<span class="ident">path</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">StyleElement</span> {
-        <span class="ident">StyleElement</span> {
-            <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">File</span>,
+    <span class="kw">fn</span> <span class="ident">from_path_impl</span>(<span class="ident">path</span>: <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">ScriptElement</span> {
+        <span class="ident">ScriptElement</span> {
+            <span class="ident">class</span>: <span class="ident">ScriptElementClass</span>::<span class="ident">File</span>,
             <span class="ident">data</span>: <span class="ident">path</span>.<span class="ident">into</span>(),
         }
     }
 
 
-    <span class="doccomment">/// Create a literal style element from the contents of the specified file.</span>
+    <span class="doccomment">/// Create a literal script element from the contents of the specified file.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Given `$ROOT/common.css` containing:</span>
+    <span class="doccomment">/// Given `$ROOT/MathJax-config.js` containing:</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ```css</span>
-    <span class="doccomment">/// ul, ol {</span>
-    <span class="doccomment">///     margin-top: 0;</span>
-    <span class="doccomment">///     margin-bottom: 0;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a &gt; i.fa {</span>
-    <span class="doccomment">///     color: black;</span>
-    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```js</span>
+    <span class="doccomment">/// MathJax.Hub.Config({</span>
+    <span class="doccomment">///   jax: [&quot;input/AsciiMath&quot;, &quot;output/HTML-CSS&quot;],</span>
+    <span class="doccomment">///   extensions: [&quot;asciimath2jax.js&quot;],</span>
+    <span class="doccomment">///   asciimath2jax: {</span>
+    <span class="doccomment">///     delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],</span>
+    <span class="doccomment">///     preview: &quot;[[maths]]&quot;</span>
+    <span class="doccomment">///   },</span>
+    <span class="doccomment">///   AsciiMath: {</span>
+    <span class="doccomment">///     decimal: &quot;.&quot;</span>
+    <span class="doccomment">///   },</span>
+    <span class="doccomment">///   &quot;HTML-CSS&quot;: {</span>
+    <span class="doccomment">///     undefinedFamily: &quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif&quot;</span>
+    <span class="doccomment">///   }</span>
+    <span class="doccomment">/// });</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// The following holds:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use bloguen::ops::{WrappedElement, StyleElement};</span>
+    <span class="doccomment">/// # use bloguen::ops::{WrappedElement, ScriptElement};</span>
     <span class="doccomment">/// # use std::fs::{self, File};</span>
     <span class="doccomment">/// # use std::env::temp_dir;</span>
     <span class="doccomment">/// # use std::io::Write;</span>
     <span class="doccomment">/// # use bloguen::Error;</span>
-    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-output-wrapped_element-style_element-from_file&quot;);</span>
+    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-output-wrapped_element-script_element-from_file&quot;);</span>
     <span class="doccomment">/// # fs::create_dir_all(&amp;root).unwrap();</span>
-    <span class="doccomment">/// # File::create(root.join(&quot;common.css&quot;)).unwrap().write_all(&quot;\</span>
-    <span class="doccomment">/// #     ul, ol {\n\</span>
-    <span class="doccomment">/// #         margin-top: 0;\n\</span>
-    <span class="doccomment">/// #         margin-bottom: 0;\n\</span>
-    <span class="doccomment">/// #     }\n\</span>
-    <span class="doccomment">/// #     \n\</span>
-    <span class="doccomment">/// #     a &gt; i.fa {\n\</span>
-    <span class="doccomment">/// #         color: black;\n\</span>
-    <span class="doccomment">/// #     }\n</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;MathJax-config.js&quot;)).unwrap().write_all(&quot;\</span>
+    <span class="doccomment">/// #     MathJax.Hub.Config({\n\</span>
+    <span class="doccomment">/// #       jax: [\&quot;input/AsciiMath\&quot;, \&quot;output/HTML-CSS\&quot;],\n\</span>
+    <span class="doccomment">/// #       extensions: [\&quot;asciimath2jax.js\&quot;],\n\</span>
+    <span class="doccomment">/// #       asciimath2jax: {\n\</span>
+    <span class="doccomment">/// #         delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],\n\</span>
+    <span class="doccomment">/// #         preview: \&quot;[[maths]]\&quot;\n\</span>
+    <span class="doccomment">/// #       },\n\</span>
+    <span class="doccomment">/// #       AsciiMath: {\n\</span>
+    <span class="doccomment">/// #         decimal: \&quot;.\&quot;\n\</span>
+    <span class="doccomment">/// #       },\n\</span>
+    <span class="doccomment">/// #       \&quot;HTML-CSS\&quot;: {\n\</span>
+    <span class="doccomment">/// #         undefinedFamily: \&quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif\&quot;\n\</span>
+    <span class="doccomment">/// #       }\n\</span>
+    <span class="doccomment">/// #     });\n\</span>
     <span class="doccomment">/// # &quot;.as_bytes()).unwrap();</span>
     <span class="doccomment">/// # /*</span>
     <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
     <span class="doccomment">/// # */</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let lit_p = StyleElement::from_file(&amp;(&quot;$ROOT/common.cs&quot;.to_string(), root.join(&quot;common.css&quot;))).unwrap();</span>
+    <span class="doccomment">/// let lit_p = ScriptElement::from_file(&amp;(&quot;$ROOT/common.cs&quot;.to_string(), root.join(&quot;MathJax-config.js&quot;))).unwrap();</span>
     <span class="doccomment">/// assert_eq!(format!(&quot;{}{}{}&quot;, lit_p.head(), lit_p.content(), lit_p.foot()), &quot;\</span>
-    <span class="doccomment">/// &lt;style type=\&quot;text/css\&quot;&gt;\n\n\</span>
-    <span class="doccomment">///      ul, ol {\n\</span>
-    <span class="doccomment">///          margin-top: 0;\n\</span>
-    <span class="doccomment">///          margin-bottom: 0;\n\</span>
-    <span class="doccomment">///      }\n\</span>
-    <span class="doccomment">///      \n\</span>
-    <span class="doccomment">///      a &gt; i.fa {\n\</span>
-    <span class="doccomment">///          color: black;\n\</span>
-    <span class="doccomment">///      }\n\n\</span>
-    <span class="doccomment">/// \n\n&lt;/style&gt;\n&quot;);</span>
+    <span class="doccomment">/// &lt;script type=\&quot;text/javascript\&quot;&gt;\n\n\</span>
+    <span class="doccomment">///     MathJax.Hub.Config({\n\</span>
+    <span class="doccomment">///       jax: [\&quot;input/AsciiMath\&quot;, \&quot;output/HTML-CSS\&quot;],\n\</span>
+    <span class="doccomment">///       extensions: [\&quot;asciimath2jax.js\&quot;],\n\</span>
+    <span class="doccomment">///       asciimath2jax: {\n\</span>
+    <span class="doccomment">///         delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],\n\</span>
+    <span class="doccomment">///         preview: \&quot;[[maths]]\&quot;\n\</span>
+    <span class="doccomment">///       },\n\</span>
+    <span class="doccomment">///       AsciiMath: {\n\</span>
+    <span class="doccomment">///         decimal: \&quot;.\&quot;\n\</span>
+    <span class="doccomment">///       },\n\</span>
+    <span class="doccomment">///       \&quot;HTML-CSS\&quot;: {\n\</span>
+    <span class="doccomment">///         undefinedFamily: \&quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif\&quot;\n\</span>
+    <span class="doccomment">///       }\n\</span>
+    <span class="doccomment">///     });\n\</span>
+    <span class="doccomment">/// \n\n&lt;/script&gt;\n&quot;);</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_file</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>)) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">StyleElement</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="prelude-val">Ok</span>(<span class="ident">StyleElement</span> {
-            <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">Literal</span>,
-            <span class="ident">data</span>: <span class="ident">read_file</span>(<span class="ident">path</span>, <span class="string">&quot;literal style element from path&quot;</span>)<span class="question-mark">?</span>.<span class="ident">into</span>(),
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">from_file</span>(<span class="ident">path</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>)) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScriptElement</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">ScriptElement</span> {
+            <span class="ident">class</span>: <span class="ident">ScriptElementClass</span>::<span class="ident">Literal</span>,
+            <span class="ident">data</span>: <span class="ident">read_file</span>(<span class="ident">path</span>, <span class="string">&quot;literal script element from path&quot;</span>)<span class="question-mark">?</span>.<span class="ident">into</span>(),
         })
     }
 
@@ -783,27 +885,33 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```plaintext</span>
     <span class="doccomment">/// $ROOT</span>
-    <span class="doccomment">///   common.css</span>
+    <span class="doccomment">///   MathJax-config.js</span>
     <span class="doccomment">///   assets</span>
-    <span class="doccomment">///     effects.css</span>
+    <span class="doccomment">///     octicons.js</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Given `$ROOT/common.css` containing:</span>
+    <span class="doccomment">/// Given `$ROOT/MathJax-config.js` containing:</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ```css</span>
-    <span class="doccomment">/// ul, ol {</span>
-    <span class="doccomment">///     margin-top: 0;</span>
-    <span class="doccomment">///     margin-bottom: 0;</span>
-    <span class="doccomment">/// }</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// a &gt; i.fa {</span>
-    <span class="doccomment">///     color: black;</span>
-    <span class="doccomment">/// }</span>
+    <span class="doccomment">/// ```js</span>
+    <span class="doccomment">/// MathJax.Hub.Config({</span>
+    <span class="doccomment">///   jax: [&quot;input/AsciiMath&quot;, &quot;output/HTML-CSS&quot;],</span>
+    <span class="doccomment">///   extensions: [&quot;asciimath2jax.js&quot;],</span>
+    <span class="doccomment">///   asciimath2jax: {</span>
+    <span class="doccomment">///     delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],</span>
+    <span class="doccomment">///     preview: &quot;[[maths]]&quot;</span>
+    <span class="doccomment">///   },</span>
+    <span class="doccomment">///   AsciiMath: {</span>
+    <span class="doccomment">///     decimal: &quot;.&quot;</span>
+    <span class="doccomment">///   },</span>
+    <span class="doccomment">///   &quot;HTML-CSS&quot;: {</span>
+    <span class="doccomment">///     undefinedFamily: &quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif&quot;</span>
+    <span class="doccomment">///   }</span>
+    <span class="doccomment">/// });</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Given `$ROOT/assets/effects.css` containing:</span>
+    <span class="doccomment">/// Given `$ROOT/assets/octicons.js` containing:</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// ```css</span>
+    <span class="doccomment">/// ```js</span>
     <span class="doccomment">/// .ruby {</span>
     <span class="doccomment">///     /* That&#39;s Ruby according to https://en.wikipedia.org/wiki/Ruby_(color). */</span>
     <span class="doccomment">///     color: #E0115F;</span>
@@ -813,64 +921,88 @@
     <span class="doccomment">/// The following holds:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use bloguen::ops::StyleElement;</span>
+    <span class="doccomment">/// # use bloguen::ops::ScriptElement;</span>
     <span class="doccomment">/// # use std::fs::{self, File};</span>
     <span class="doccomment">/// # use std::env::temp_dir;</span>
     <span class="doccomment">/// # use std::io::Write;</span>
     <span class="doccomment">/// # use bloguen::Error;</span>
-    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-output-wrapped_element-style_element-load&quot;);</span>
+    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-output-wrapped_element-script_element-load&quot;);</span>
     <span class="doccomment">/// # fs::create_dir_all(root.join(&quot;assets&quot;)).unwrap();</span>
-    <span class="doccomment">/// # File::create(root.join(&quot;common.css&quot;)).unwrap().write_all(&quot;\</span>
-    <span class="doccomment">/// #     ul, ol {\n\</span>
-    <span class="doccomment">/// #         margin-top: 0;\n\</span>
-    <span class="doccomment">/// #         margin-bottom: 0;\n\</span>
-    <span class="doccomment">/// #     }\n\</span>
-    <span class="doccomment">/// #     \n\</span>
-    <span class="doccomment">/// #     a &gt; i.fa {\n\</span>
-    <span class="doccomment">/// #         color: black;\n\</span>
-    <span class="doccomment">/// #     }\n</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;MathJax-config.js&quot;)).unwrap().write_all(&quot;\</span>
+    <span class="doccomment">/// #     MathJax.Hub.Config({\n\</span>
+    <span class="doccomment">/// #       jax: [\&quot;input/AsciiMath\&quot;, \&quot;output/HTML-CSS\&quot;],\n\</span>
+    <span class="doccomment">/// #       extensions: [\&quot;asciimath2jax.js\&quot;],\n\</span>
+    <span class="doccomment">/// #       asciimath2jax: {\n\</span>
+    <span class="doccomment">/// #         delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],\n\</span>
+    <span class="doccomment">/// #         preview: \&quot;[[maths]]\&quot;\n\</span>
+    <span class="doccomment">/// #       },\n\</span>
+    <span class="doccomment">/// #       AsciiMath: {\n\</span>
+    <span class="doccomment">/// #         decimal: \&quot;.\&quot;\n\</span>
+    <span class="doccomment">/// #       },\n\</span>
+    <span class="doccomment">/// #       \&quot;HTML-CSS\&quot;: {\n\</span>
+    <span class="doccomment">/// #         undefinedFamily: \&quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif\&quot;\n\</span>
+    <span class="doccomment">/// #       }\n\</span>
+    <span class="doccomment">/// #     });\n\</span>
     <span class="doccomment">/// # &quot;.as_bytes()).unwrap();</span>
-    <span class="doccomment">/// # File::create(root.join(&quot;assets&quot;).join(&quot;effects.css&quot;)).unwrap().write_all(&quot;\</span>
-    <span class="doccomment">/// #     .ruby {\n\</span>
-    <span class="doccomment">/// #         /* That&#39;s Ruby according to https://en.wikipedia.org/wiki/Ruby_(color). */\n\</span>
-    <span class="doccomment">/// #         color: #E0115F;\n\</span>
-    <span class="doccomment">/// #     }\n</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;assets&quot;).join(&quot;octicons.js&quot;)).unwrap().write_all(&quot;\</span>
+    <span class="doccomment">/// #     window.addEventListener(\&quot;load\&quot;, function() {\n\</span>
+    <span class="doccomment">/// #         const PLACEHOLDER = document.getElementById(\&quot;octicons-placeholder\&quot;);\n\</span>
+    <span class="doccomment">/// #         \n\</span>
+    <span class="doccomment">/// #         const request = new XMLHttpRequest();\n\</span>
+    <span class="doccomment">/// #         request.open(\&quot;GET\&quot;, \&quot;/content/assets/octicons/sprite.octicons.svg\&quot;);\n\</span>
+    <span class="doccomment">/// #         request.onload = function(load) {\n\</span>
+    <span class="doccomment">/// #             PLACEHOLDER.outerHTML = load.target.responseText.replace(\&quot;&lt;svg\&quot;, \&quot;&lt;svg class=\\\&quot;hidden\\\&quot;\&quot;);\n\</span>
+    <span class="doccomment">/// #         };\n\</span>
+    <span class="doccomment">/// #         request.send();\n\</span>
+    <span class="doccomment">/// #     });\n\</span>
     <span class="doccomment">/// # &quot;.as_bytes()).unwrap();</span>
     <span class="doccomment">/// # /*</span>
     <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
     <span class="doccomment">/// # */</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let mut elem = StyleElement::from_path(&quot;common.css&quot;);</span>
+    <span class="doccomment">/// let mut elem = ScriptElement::from_path(&quot;MathJax-config.js&quot;);</span>
     <span class="doccomment">/// assert_eq!(elem.load(&amp;(&quot;$ROOT&quot;.to_string(), root.clone())), Ok(()));</span>
-    <span class="doccomment">/// assert_eq!(elem, StyleElement::from_literal(&quot;\</span>
-    <span class="doccomment">///     ul, ol {\n\</span>
-    <span class="doccomment">///         margin-top: 0;\n\</span>
-    <span class="doccomment">///         margin-bottom: 0;\n\</span>
-    <span class="doccomment">///     }\n\</span>
-    <span class="doccomment">///     \n\</span>
-    <span class="doccomment">///     a &gt; i.fa {\n\</span>
-    <span class="doccomment">///         color: black;\n\</span>
-    <span class="doccomment">///     }\n</span>
+    <span class="doccomment">/// assert_eq!(elem, ScriptElement::from_literal(&quot;\</span>
+    <span class="doccomment">///     MathJax.Hub.Config({\n\</span>
+    <span class="doccomment">///       jax: [\&quot;input/AsciiMath\&quot;, \&quot;output/HTML-CSS\&quot;],\n\</span>
+    <span class="doccomment">///       extensions: [\&quot;asciimath2jax.js\&quot;],\n\</span>
+    <span class="doccomment">///       asciimath2jax: {\n\</span>
+    <span class="doccomment">///         delimiters: [[&#39;[​[​&#39;, &#39;​]​]&#39;]],\n\</span>
+    <span class="doccomment">///         preview: \&quot;[[maths]]\&quot;\n\</span>
+    <span class="doccomment">///       },\n\</span>
+    <span class="doccomment">///       AsciiMath: {\n\</span>
+    <span class="doccomment">///         decimal: \&quot;.\&quot;\n\</span>
+    <span class="doccomment">///       },\n\</span>
+    <span class="doccomment">///       \&quot;HTML-CSS\&quot;: {\n\</span>
+    <span class="doccomment">///         undefinedFamily: \&quot;STIXGeneral,&#39;DejaVu Sans Mono&#39;,&#39;Arial Unicode MS&#39;,serif\&quot;\n\</span>
+    <span class="doccomment">///       }\n\</span>
+    <span class="doccomment">///     });\n\</span>
     <span class="doccomment">/// &quot;));</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let mut elem = StyleElement::from_path(&quot;assets/.././assets/effects.css&quot;);</span>
+    <span class="doccomment">/// let mut elem = ScriptElement::from_path(&quot;assets/.././assets/octicons.js&quot;);</span>
     <span class="doccomment">/// assert_eq!(elem.load(&amp;(&quot;$ROOT&quot;.to_string(), root.clone())), Ok(()));</span>
-    <span class="doccomment">/// assert_eq!(elem, StyleElement::from_literal(&quot;\</span>
-    <span class="doccomment">///    .ruby {\n\</span>
-    <span class="doccomment">///         /* That&#39;s Ruby according to https://en.wikipedia.org/wiki/Ruby_(color). */\n\</span>
-    <span class="doccomment">///         color: #E0115F;\n\</span>
-    <span class="doccomment">///     }\n</span>
+    <span class="doccomment">/// assert_eq!(elem, ScriptElement::from_literal(&quot;\</span>
+    <span class="doccomment">///     window.addEventListener(\&quot;load\&quot;, function() {\n\</span>
+    <span class="doccomment">///         const PLACEHOLDER = document.getElementById(\&quot;octicons-placeholder\&quot;);\n\</span>
+    <span class="doccomment">///         \n\</span>
+    <span class="doccomment">///         const request = new XMLHttpRequest();\n\</span>
+    <span class="doccomment">///         request.open(\&quot;GET\&quot;, \&quot;/content/assets/octicons/sprite.octicons.svg\&quot;);\n\</span>
+    <span class="doccomment">///         request.onload = function(load) {\n\</span>
+    <span class="doccomment">///             PLACEHOLDER.outerHTML = load.target.responseText.replace(\&quot;&lt;svg\&quot;, \&quot;&lt;svg class=\\\&quot;hidden\\\&quot;\&quot;);\n\</span>
+    <span class="doccomment">///         };\n\</span>
+    <span class="doccomment">///         request.send();\n\</span>
+    <span class="doccomment">///     });\n\</span>
     <span class="doccomment">/// &quot;));</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// let mut elem = StyleElement::from_path(&quot;assets/nonexistant.css&quot;);</span>
+    <span class="doccomment">/// let mut elem = ScriptElement::from_path(&quot;assets/nonexistant.css&quot;);</span>
     <span class="doccomment">/// assert_eq!(elem.load(&amp;(&quot;$ROOT&quot;.to_string(), root.clone())), Err(Error::FileNotFound {</span>
-    <span class="doccomment">///     who: &quot;file style element&quot;,</span>
+    <span class="doccomment">///     who: &quot;file script element&quot;,</span>
     <span class="doccomment">///     path: &quot;$ROOT/assets/nonexistant.css&quot;.into(),</span>
     <span class="doccomment">/// }));</span>
-    <span class="doccomment">/// assert_eq!(elem, StyleElement::from_path(&quot;assets/nonexistant.css&quot;));</span>
+    <span class="doccomment">/// assert_eq!(elem, ScriptElement::from_path(&quot;assets/nonexistant.css&quot;));</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">load</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">base</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>)) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">class</span> <span class="op">==</span> <span class="ident">StyleElementClass</span>::<span class="ident">File</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">class</span> <span class="op">==</span> <span class="ident">ScriptElementClass</span>::<span class="ident">File</span> {
             <span class="self">self</span>.<span class="ident">data</span> <span class="op">=</span> <span class="ident">read_file</span>(<span class="kw-2">&amp;</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}{}{}&quot;</span>,
                                             <span class="ident">base</span>.<span class="number">0</span>,
                                             <span class="kw">if</span> <span class="op">!</span>[<span class="string">&#39;/&#39;</span>, <span class="string">&#39;\\&#39;</span>].<span class="ident">contains</span>(<span class="kw-2">&amp;</span>(<span class="ident">base</span>.<span class="number">0</span>.<span class="ident">as_bytes</span>()[<span class="ident">base</span>.<span class="number">0</span>.<span class="ident">as_bytes</span>().<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>] <span class="kw">as</span> <span class="ident">char</span>)) <span class="op">&amp;&amp;</span>
@@ -881,22 +1013,22 @@
                                             },
                                             <span class="self">self</span>.<span class="ident">data</span>),
                                     <span class="ident">base</span>.<span class="number">1</span>.<span class="ident">join</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">as_ref</span>())),
-                                  <span class="string">&quot;file style element&quot;</span>)
+                                  <span class="string">&quot;file script element&quot;</span>)
                 <span class="question-mark">?</span>
                 .<span class="ident">into</span>();
-            <span class="self">self</span>.<span class="ident">class</span> <span class="op">=</span> <span class="ident">StyleElementClass</span>::<span class="ident">Literal</span>;
+            <span class="self">self</span>.<span class="ident">class</span> <span class="op">=</span> <span class="ident">ScriptElementClass</span>::<span class="ident">Literal</span>;
         }
 
         <span class="prelude-val">Ok</span>(())
     }
 }
 
-<span class="kw">impl</span> <span class="ident">WrappedElement</span> <span class="kw">for</span> <span class="ident">StyleElement</span> {
+<span class="kw">impl</span> <span class="ident">WrappedElement</span> <span class="kw">for</span> <span class="ident">ScriptElement</span> {
     <span class="kw">fn</span> <span class="ident">head</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">class</span> {
-            <span class="ident">StyleElementClass</span>::<span class="ident">Link</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">STYLE_LINK_HEAD</span>,
-            <span class="ident">StyleElementClass</span>::<span class="ident">Literal</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">STYLE_LITERAL_HEAD</span>,
-            <span class="ident">StyleElementClass</span>::<span class="ident">File</span> <span class="op">=&gt;</span> <span class="string">&quot;&amp;lt;&quot;</span>,
+            <span class="ident">ScriptElementClass</span>::<span class="ident">Link</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">SCRIPT_LINK_HEAD</span>,
+            <span class="ident">ScriptElementClass</span>::<span class="ident">Literal</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">SCRIPT_LITERAL_HEAD</span>,
+            <span class="ident">ScriptElementClass</span>::<span class="ident">File</span> <span class="op">=&gt;</span> <span class="string">&quot;&amp;lt;&quot;</span>,
         }
     }
 
@@ -906,44 +1038,44 @@
 
     <span class="kw">fn</span> <span class="ident">foot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span> {
         <span class="kw">match</span> <span class="self">self</span>.<span class="ident">class</span> {
-            <span class="ident">StyleElementClass</span>::<span class="ident">Link</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">STYLE_LINK_FOOT</span>,
-            <span class="ident">StyleElementClass</span>::<span class="ident">Literal</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">STYLE_LITERAL_FOOT</span>,
-            <span class="ident">StyleElementClass</span>::<span class="ident">File</span> <span class="op">=&gt;</span> <span class="string">&quot;&amp;gt;\n&quot;</span>,
+            <span class="ident">ScriptElementClass</span>::<span class="ident">Link</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">SCRIPT_LINK_FOOT</span>,
+            <span class="ident">ScriptElementClass</span>::<span class="ident">Literal</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="ident">SCRIPT_LITERAL_FOOT</span>,
+            <span class="ident">ScriptElementClass</span>::<span class="ident">File</span> <span class="op">=&gt;</span> <span class="string">&quot;&amp;gt;\n&quot;</span>,
         }
     }
 }
 
 
-<span class="kw">const</span> <span class="ident">STYLE_FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;class&quot;</span>, <span class="string">&quot;data&quot;</span>];
+<span class="kw">const</span> <span class="ident">SCRIPT_FIELDS</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">str</span>] <span class="op">=</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;class&quot;</span>, <span class="string">&quot;data&quot;</span>];
 
-<span class="kw">struct</span> <span class="ident">StyleElementVisitor</span>;
+<span class="kw">struct</span> <span class="ident">ScriptElementVisitor</span>;
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de</span>::<span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">StyleElementVisitor</span> {
-    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">StyleElement</span>;
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de</span>::<span class="ident">Visitor</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ScriptElementVisitor</span> {
+    <span class="kw">type</span> <span class="ident">Value</span> <span class="op">=</span> <span class="ident">ScriptElement</span>;
 
     <span class="kw">fn</span> <span class="ident">expecting</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">formatter</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
-        <span class="ident">formatter</span>.<span class="ident">write_str</span>(<span class="string">&quot;struct StyleElement&quot;</span>)
+        <span class="ident">formatter</span>.<span class="ident">write_str</span>(<span class="string">&quot;struct ScriptElement&quot;</span>)
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_str</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">de</span>::<span class="ident">Error</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">StyleElement</span>, <span class="ident">E</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">visit_str</span><span class="op">&lt;</span><span class="ident">E</span>: <span class="ident">de</span>::<span class="ident">Error</span><span class="op">&gt;</span>(<span class="self">self</span>, <span class="ident">v</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScriptElement</span>, <span class="ident">E</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">itr</span> <span class="op">=</span> <span class="ident">v</span>.<span class="ident">splitn</span>(<span class="number">2</span>, <span class="string">&quot;:&quot;</span>);
         <span class="prelude-val">Ok</span>(<span class="kw">match</span> (<span class="ident">itr</span>.<span class="ident">next</span>(), <span class="ident">itr</span>.<span class="ident">next</span>()) {
             (<span class="prelude-val">Some</span>(<span class="ident">val</span>), <span class="prelude-val">None</span>) <span class="op">|</span>
             (<span class="prelude-val">Some</span>(<span class="string">&quot;literal&quot;</span>), <span class="prelude-val">Some</span>(<span class="ident">val</span>)) <span class="op">=&gt;</span> {
-                <span class="ident">StyleElement</span> {
-                    <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">Literal</span>,
+                <span class="ident">ScriptElement</span> {
+                    <span class="ident">class</span>: <span class="ident">ScriptElementClass</span>::<span class="ident">Literal</span>,
                     <span class="ident">data</span>: <span class="ident">val</span>.<span class="ident">to_string</span>().<span class="ident">into</span>(),
                 }
             }
             (<span class="prelude-val">Some</span>(<span class="string">&quot;link&quot;</span>), <span class="prelude-val">Some</span>(<span class="ident">val</span>)) <span class="op">=&gt;</span> {
-                <span class="ident">StyleElement</span> {
-                    <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">Link</span>,
+                <span class="ident">ScriptElement</span> {
+                    <span class="ident">class</span>: <span class="ident">ScriptElementClass</span>::<span class="ident">Link</span>,
                     <span class="ident">data</span>: <span class="ident">val</span>.<span class="ident">to_string</span>().<span class="ident">into</span>(),
                 }
             }
             (<span class="prelude-val">Some</span>(<span class="string">&quot;file&quot;</span>), <span class="prelude-val">Some</span>(<span class="ident">val</span>)) <span class="op">=&gt;</span> {
-                <span class="ident">StyleElement</span> {
-                    <span class="ident">class</span>: <span class="ident">StyleElementClass</span>::<span class="ident">File</span>,
+                <span class="ident">ScriptElement</span> {
+                    <span class="ident">class</span>: <span class="ident">ScriptElementClass</span>::<span class="ident">File</span>,
                     <span class="ident">data</span>: <span class="ident">val</span>.<span class="ident">to_string</span>().<span class="ident">into</span>(),
                 }
             }
@@ -953,7 +1085,7 @@
         })
     }
 
-    <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">de</span>::<span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">StyleElement</span>, <span class="ident">V</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">visit_map</span><span class="op">&lt;</span><span class="ident">V</span>: <span class="ident">de</span>::<span class="ident">MapAccess</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>(<span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">map</span>: <span class="ident">V</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">ScriptElement</span>, <span class="ident">V</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">class</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">data</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">key</span>) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">next_key</span>()<span class="question-mark">?</span> {
@@ -963,9 +1095,9 @@
                         <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">duplicate_field</span>(<span class="string">&quot;class&quot;</span>));
                     }
                     <span class="ident">class</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="kw">match</span> <span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span> {
-                        <span class="string">&quot;literal&quot;</span> <span class="op">=&gt;</span> <span class="ident">StyleElementClass</span>::<span class="ident">Literal</span>,
-                        <span class="string">&quot;link&quot;</span> <span class="op">=&gt;</span> <span class="ident">StyleElementClass</span>::<span class="ident">Link</span>,
-                        <span class="string">&quot;file&quot;</span> <span class="op">=&gt;</span> <span class="ident">StyleElementClass</span>::<span class="ident">File</span>,
+                        <span class="string">&quot;literal&quot;</span> <span class="op">=&gt;</span> <span class="ident">ScriptElementClass</span>::<span class="ident">Literal</span>,
+                        <span class="string">&quot;link&quot;</span> <span class="op">=&gt;</span> <span class="ident">ScriptElementClass</span>::<span class="ident">Link</span>,
+                        <span class="string">&quot;file&quot;</span> <span class="op">=&gt;</span> <span class="ident">ScriptElementClass</span>::<span class="ident">File</span>,
                         <span class="ident">val</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">invalid_value</span>(<span class="ident">de</span>::<span class="ident">Unexpected</span>::<span class="ident">Str</span>(<span class="ident">val</span>), <span class="kw-2">&amp;</span><span class="string">r#&quot;&quot;literal&quot;, &quot;link&quot;, or &quot;file&quot;&quot;#</span>)),
                     });
                 }
@@ -975,20 +1107,20 @@
                     }
                     <span class="ident">data</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">map</span>.<span class="ident">next_value</span>()<span class="question-mark">?</span>);
                 }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">unknown_field</span>(<span class="ident">key</span>, <span class="ident">STYLE_FIELDS</span>)),
+                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">unknown_field</span>(<span class="ident">key</span>, <span class="ident">SCRIPT_FIELDS</span>)),
             }
         }
 
-        <span class="prelude-val">Ok</span>(<span class="ident">StyleElement</span> {
+        <span class="prelude-val">Ok</span>(<span class="ident">ScriptElement</span> {
             <span class="ident">class</span>: <span class="ident">class</span>.<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">missing_field</span>(<span class="string">&quot;class&quot;</span>))<span class="question-mark">?</span>,
             <span class="ident">data</span>: <span class="ident">data</span>.<span class="ident">ok_or_else</span>(<span class="op">||</span> <span class="ident">de</span>::<span class="ident">Error</span>::<span class="ident">missing_field</span>(<span class="string">&quot;data&quot;</span>))<span class="question-mark">?</span>,
         })
     }
 }
 
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de</span>::<span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">StyleElement</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="ident">de</span>::<span class="ident">Deserialize</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">ScriptElement</span> {
     <span class="kw">fn</span> <span class="ident">deserialize</span><span class="op">&lt;</span><span class="ident">D</span>: <span class="ident">de</span>::<span class="ident">Deserializer</span><span class="op">&lt;</span><span class="lifetime">&#39;de</span><span class="op">&gt;&gt;</span>(<span class="ident">deserializer</span>: <span class="ident">D</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">D</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
-        <span class="ident">deserializer</span>.<span class="ident">deserialize_struct</span>(<span class="string">&quot;StyleElement&quot;</span>, <span class="ident">STYLE_FIELDS</span>, <span class="ident">StyleElementVisitor</span>)
+        <span class="ident">deserializer</span>.<span class="ident">deserialize_struct</span>(<span class="string">&quot;ScriptElement&quot;</span>, <span class="ident">SCRIPT_FIELDS</span>, <span class="ident">ScriptElementVisitor</span>)
     }
 }
 </pre>
