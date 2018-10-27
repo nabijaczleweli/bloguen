@@ -6,14 +6,14 @@ use bloguen::Error;
 
 
 #[cfg(target_os = "windows")]
-static ALT_SLASH: char = '\\';
+const ALT_SLASH: char = '\\';
 #[cfg(not(target_os = "windows"))]
-static ALT_SLASH: char = '/';
+const ALT_SLASH: char = '/';
 
 #[cfg(target_os = "windows")]
-static ALT_SLASH_ESC: &str = "\\\\";
+const ALT_SLASH_ESC: &str = "\\\\";
 #[cfg(not(target_os = "windows"))]
-static ALT_SLASH_ESC: &str = "/";
+const ALT_SLASH_ESC: &str = "/";
 
 
 #[test]
@@ -28,6 +28,7 @@ fn ok_all_specified() {
                             author = \"nabijaczleweli\"\n\
                             header = \"templates/head\"\n\
                             footer = \"templates{0}foot\"\n\
+                            asset_dir = \"{0}/as{0}set/dir\"\n\
                             language = \"pl\"\n\
                             styles = [\"link://nabijaczleweli.xyz/kaschism/assets/column.css\",\n\
                                       \"literal:.indented {{ text-indent: 1em; }}\"]\n\
@@ -70,6 +71,7 @@ fn ok_all_specified() {
                    author: Some("nabijaczleweli".to_string()),
                    header_file: ("$ROOT/templates/head".to_string(), root.join("templates").join("head")),
                    footer_file: (format!("$ROOT/templates{}foot", ALT_SLASH), root.join("templates").join("foot")),
+                   asset_dir_override: Some("as/set/dir/".to_string()),
                    index: Some(BlogueDescriptorIndex {
                        header_file: ("$ROOT/templates/idx_head".to_string(), root.join("templates").join("idx_head")),
                        center_file: ("$ROOT/templates/idx_центр".to_string(), root.join("templates").join("idx_центр")),
@@ -104,6 +106,7 @@ fn ok_induced() {
                    author: None,
                    header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+                   asset_dir_override: None,
                    machine_data: vec![].into_iter().collect(),
                    language: None,
                    styles: vec![],
@@ -139,6 +142,7 @@ fn ok_induced_index() {
                    author: None,
                    header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+                   asset_dir_override: None,
                    machine_data: vec![].into_iter().collect(),
                    language: None,
                    styles: vec![],
@@ -182,6 +186,7 @@ fn ok_induced_idx() {
                    author: None,
                    header_file: ("$ROOT/header.html".to_string(), root.join("header.html")),
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+                   asset_dir_override: None,
                    machine_data: vec![].into_iter().collect(),
                    language: None,
                    styles: vec![],

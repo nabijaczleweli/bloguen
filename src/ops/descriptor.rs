@@ -29,6 +29,9 @@ pub struct BlogueDescriptor {
     pub footer_file: (String, PathBuf),
     /// Subfolder to move assets to, relative to the output root, if present.
     ///
+    /// The value is stripped of leading slashes. All backslashes are normalised to forward ones.
+    /// The value is ended off with a slash, if not already specified.
+    ///
     /// No override is applied if not present – assets are copied alongside the posts' HTML.
     pub asset_dir_override: Option<String>,
     /// Metadata specifying how to generate the blogue index file.
@@ -149,6 +152,7 @@ impl BlogueDescriptor {
     /// name = "Блогг"
     /// header = "head.html"
     /// language = "pl"
+    /// asset_dir = "assets"
     ///
     /// [index]
     /// header = "idx_head.html"
@@ -185,6 +189,7 @@ impl BlogueDescriptor {
     /// #     name = \"Блогг\"\n\
     /// #     header = \"head.html\"\n\
     /// #     language = \"pl\"\n\
+    /// #     asset_dir = \"assets\"\n\
     /// #     \n\
     /// #     [index]\n\
     /// #     header = \"idx_head.html\"\n\
@@ -221,6 +226,7 @@ impl BlogueDescriptor {
     ///                author: None,
     ///                header_file: ("$ROOT/head.html".to_string(), root.join("head.html")),
     ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+    ///                asset_dir_override: Some("assets/".to_string()),
     ///                machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
     ///                language: Some("pl".parse().unwrap()),
     ///                styles: vec![],
@@ -272,6 +278,10 @@ impl BlogueDescriptor {
             while let Some(backslash) = ad[last_slash..].find('\\') {
                 ad.replace_range(last_slash + backslash..last_slash + backslash + 1, "/");
                 last_slash += backslash + 1;
+            }
+
+            if !ad.ends_with('/') {
+                ad.push('/');
             }
 
             ad
