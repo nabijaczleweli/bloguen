@@ -13,17 +13,17 @@ use chrono::{FixedOffset, NaiveTime, DateTime, TimeZone, Offset};
 use safe_transmute::guarded_transmute_to_bytes_pod;
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
+use std::path::{self, PathBuf, Path};
 use self::super::ops::LanguageTag;
-use std::path::{self, PathBuf};
 use rand::{SeedableRng, Rng};
 use rand::prng::XorShiftRng;
 use comrak::ComrakOptions;
+use std::{iter, cmp, str};
 use self::super::Error;
 use std::borrow::Cow;
 use std::fs::File;
 use regex::Regex;
 use url::Url;
-use std::cmp;
 
 #[cfg(target_os = "windows")]
 use self::windows::{current_username_impl, default_language_impl};
@@ -188,6 +188,96 @@ pub fn extract_links<'a>(ast: &'a ComrakAstNode<'a>) -> Result<Vec<String>, Erro
     }
 
     Ok(out)
+}
+
+/// Apply the asset override to the specified AST.
+///
+/// The `depth` argument specifies how many `"../"` segments are how deep the output file is relative to root parent directory.
+///
+/// Remember: this funxion *modifies the passed-in AST*, despite the reference being immutable.
+///
+/// # Examples
+///
+/// Given the following directory layout:
+///
+/// ```plaintext
+/// $ROOT/
+///   image.png
+/// ```
+///
+/// The following holds:
+///
+/// ```
+/// # extern crate bloguen;
+/// # extern crate comrak;
+/// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement,
+/// #                    CenterOrder};
+/// # use bloguen::util::{override_assets, MARKDOWN_OPTIONS};
+/// # use std::fs::{self, File};
+/// # use std::borrow::Borrow;
+/// # use std::env::temp_dir;
+/// # use std::io::Write;
+/// # let root = temp_dir().join("bloguen-doctest").join("util-override_assets");
+/// # fs::create_dir_all(&root).unwrap();
+/// # File::create(root.join("image.png")).unwrap().write_all("image.png".as_bytes()).unwrap();
+/// # /*
+/// let root: PathBuf = /* obtained elsewhere */;
+/// # */
+/// let mut alloc = comrak::Arena::new();
+///
+/// let mut ast =
+///     comrak::parse_document(&alloc, r#"[link](link.html)
+///                                       ![img](image.png)"#, &MARKDOWN_OPTIONS);
+/// assert_eq!(override_assets(&root, "assets/", 1, &mut ast), Ok(()));
+///
+/// let expected_ast =
+///     comrak::parse_document(&alloc, r#"[link](link.html)
+///                                       ![img](../assets/image.png)"#, &MARKDOWN_OPTIONS);
+/// # /*
+/// assert_eq!(ast, expected_ast);
+/// # */
+/// # for (ov, ex) in ast.descendants().zip(expected_ast.descendants()) {
+/// #     assert_eq!(format!("{:?}", &ov.data.borrow().value), format!("{:?}", &ex.data.borrow().value));
+/// # }
+/// ```
+pub fn override_assets<'a, P: AsRef<Path>>(post_source_dir: P, override_dir: &str, depth: usize, ast: &'a ComrakAstNode<'a>) -> Result<(), Error> {
+    override_assets_impl(post_source_dir.as_ref(), override_dir, depth, ast)
+}
+
+fn override_assets_impl<'a>(post_source_dir: &Path, override_dir: &str, depth: usize, ast: &'a ComrakAstNode<'a>) -> Result<(), Error> {
+    for n in ast.descendants() {
+        match n.data.borrow_mut().value {
+            ComrakNodeValue::Link(ref mut link) |
+            ComrakNodeValue::Image(ref mut link) => {
+                {
+                    let url = str::from_utf8(&link.url).map_err(|_| {
+                            Error::Parse {
+                                tp: "UTF-8 string",
+                                wher: "URL list".into(),
+                                more: None,
+                            }
+                        })?;
+
+                    if !is_asset_link(url) {
+                        continue;
+                    }
+
+                    let orig_path = concat_path(post_source_dir, url);
+                    if !orig_path.exists() {
+                        continue;
+                    }
+                }
+
+                link.url.splice(0..0, override_dir.as_bytes().iter().cloned());
+                if depth != 0 {
+                    link.url.splice(0..0, iter::repeat(b"../").take(depth).flatten().cloned());
+                }
+            }
+            _ => {}
+        }
+    }
+
+    Ok(())
 }
 
 /// Check if the link points to a local relative asset.
