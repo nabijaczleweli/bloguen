@@ -410,6 +410,38 @@
 <span id="410">410</span>
 <span id="411">411</span>
 <span id="412">412</span>
+<span id="413">413</span>
+<span id="414">414</span>
+<span id="415">415</span>
+<span id="416">416</span>
+<span id="417">417</span>
+<span id="418">418</span>
+<span id="419">419</span>
+<span id="420">420</span>
+<span id="421">421</span>
+<span id="422">422</span>
+<span id="423">423</span>
+<span id="424">424</span>
+<span id="425">425</span>
+<span id="426">426</span>
+<span id="427">427</span>
+<span id="428">428</span>
+<span id="429">429</span>
+<span id="430">430</span>
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+<span id="434">434</span>
+<span id="435">435</span>
+<span id="436">436</span>
+<span id="437">437</span>
+<span id="438">438</span>
+<span id="439">439</span>
+<span id="440">440</span>
+<span id="441">441</span>
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Module containing various utility functions.</span>
 
@@ -425,11 +457,11 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">ErrorKind</span> <span class="kw">as</span> <span class="ident">IoErrorKind</span>, <span class="ident">Read</span>};
 <span class="kw">use</span> <span class="ident">crc</span>::<span class="ident">crc32</span>::<span class="ident">checksum_ieee</span> <span class="kw">as</span> <span class="ident">crc32_ieee</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">ops</span>::<span class="ident">LanguageTag</span>;
+<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::{<span class="self">self</span>, <span class="ident">PathBuf</span>};
 <span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">SeedableRng</span>, <span class="ident">Rng</span>};
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">prng</span>::<span class="ident">XorShiftRng</span>;
 <span class="kw">use</span> <span class="ident">comrak</span>::<span class="ident">ComrakOptions</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
-<span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
 <span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">NaiveTime</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
@@ -790,6 +822,38 @@
         }
         (<span class="prelude-val">Some</span>(<span class="ident">lparen</span>), <span class="kw">_</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>((<span class="kw-2">&amp;</span><span class="ident">from</span>[<span class="number">0</span>..<span class="ident">lparen</span>], <span class="macro">vec</span><span class="macro">!</span>[])),
     }
+}
+
+<span class="doccomment">/// Correctly append the specified string onto the specified path.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Works well even for `&quot;\\?\&quot;` paths on Windows, which don&#39;t handle `&quot;..&quot;`, e.g., well.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// Only really required for user input.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// # Examples</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```</span>
+<span class="doccomment">/// # use bloguen::util::concat_path;</span>
+<span class="doccomment">/// # use std::path::Path;</span>
+<span class="doccomment">/// assert_eq!(concat_path(&quot;hi/my/name/is&quot;, &quot;what&quot;),                    Path::new(&quot;hi/my/name/is/what&quot;));</span>
+<span class="doccomment">/// assert_eq!(concat_path(&quot;/hi/my/name/is/slim/shady&quot;, &quot;.././../who&quot;), Path::new(&quot;/hi/my/name/is/who&quot;));</span>
+<span class="doccomment">/// ```</span>
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">concat_path</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Into</span><span class="op">&lt;</span><span class="ident">PathBuf</span><span class="op">&gt;&gt;</span>(<span class="ident">whom</span>: <span class="ident">W</span>, <span class="ident">with</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">PathBuf</span> {
+    <span class="ident">concat_path_impl</span>(<span class="ident">whom</span>.<span class="ident">into</span>(), <span class="ident">with</span>)
+}
+
+<span class="kw">fn</span> <span class="ident">concat_path_impl</span>(<span class="kw-2">mut</span> <span class="ident">whom</span>: <span class="ident">PathBuf</span>, <span class="ident">with</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="ident">PathBuf</span> {
+    <span class="kw">for</span> <span class="ident">seg</span> <span class="kw">in</span> <span class="ident">with</span>.<span class="ident">split</span>(<span class="ident">path</span>::<span class="ident">is_separator</span>) {
+        <span class="kw">match</span> <span class="ident">seg</span> {
+            <span class="string">&quot;&quot;</span> <span class="op">|</span> <span class="string">&quot;.&quot;</span> <span class="op">=&gt;</span> {}
+            <span class="string">&quot;..&quot;</span> <span class="op">=&gt;</span> {
+                <span class="ident">whom</span>.<span class="ident">pop</span>();
+            }
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">whom</span>.<span class="ident">push</span>(<span class="ident">seg</span>),
+        }
+    }
+
+    <span class="ident">whom</span>
 }
 
 <span class="doccomment">/// Try to get the default language for the system/user/environment.</span>

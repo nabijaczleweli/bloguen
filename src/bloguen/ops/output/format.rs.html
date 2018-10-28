@@ -249,6 +249,8 @@
 <span id="249">249</span>
 <span id="250">250</span>
 <span id="251">251</span>
+<span id="252">252</span>
+<span id="253">253</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">parse_date_format_specifier</span>, <span class="ident">parse_function_notation</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">FixedOffset</span>, <span class="ident">DateTime</span>, <span class="ident">TimeZone</span>, <span class="ident">Offset</span>, <span class="ident">Local</span>, <span class="ident">Utc</span>};
@@ -269,8 +271,8 @@
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// # extern crate bloguen;</span>
 <span class="doccomment">/// # extern crate chrono;</span>
+<span class="doccomment">/// # use bloguen::ops::{ScriptElement, StyleElement, format_output};</span>
 <span class="doccomment">/// # use bloguen::util::LANGUAGE_EN_GB;</span>
-<span class="doccomment">/// # use bloguen::ops::format_output;</span>
 <span class="doccomment">/// # use chrono::DateTime;</span>
 <span class="doccomment">/// let head = r###&quot;&lt;!--</span>
 <span class="doccomment">/// nabijaczleweli.xyz (c) by nabijaczleweli@gmail.com (nabijaczleweli)</span>
@@ -298,11 +300,8 @@
 <span class="doccomment">///     &lt;link href=&quot;../Roboto-font.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
 <span class="doccomment">///     &lt;link href=&quot;../the_taste_of_mi/Merriweather-font.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
 <span class="doccomment">///     &lt;link href=&quot;/content/assets/common.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
-<span class="doccomment">///     &lt;style type=&quot;text/css&quot;&gt;</span>
-<span class="doccomment">///         {{style}}</span>
-<span class="doccomment">///     &lt;/style&gt;</span>
-<span class="doccomment">///     {{style_links}}</span>
-<span class="doccomment">///     {{script_links}}</span>
+<span class="doccomment">///     {styles}</span>
+<span class="doccomment">///     {scripts}</span>
 <span class="doccomment">/// &lt;/head&gt;</span>
 <span class="doccomment">///     &lt;body&gt;</span>
 <span class="doccomment">/// &quot;###;</span>
@@ -312,7 +311,12 @@
 <span class="doccomment">/// assert_eq!(</span>
 <span class="doccomment">///     format_output(head, &quot;Блогг&quot;, &amp;LANGUAGE_EN_GB, &amp;global_data, &amp;local_data,</span>
 <span class="doccomment">///                   &quot;release-front - a generic release front-end, like Patchwork&#39;s&quot;, &quot;nabijaczleweli&quot;,</span>
-<span class="doccomment">///                   &amp;DateTime::parse_from_rfc3339(&quot;2018-09-06T18:32:22+02:00&quot;).unwrap(), &amp;mut out, &quot;test blog&quot;).unwrap(),</span>
+<span class="doccomment">///                   &amp;DateTime::parse_from_rfc3339(&quot;2018-09-06T18:32:22+02:00&quot;).unwrap(),</span>
+<span class="doccomment">///                   &amp;[&amp;[StyleElement::from_link(&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;)],</span>
+<span class="doccomment">///                     &amp;[StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;)]],</span>
+<span class="doccomment">///                   &amp;[&amp;[ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;)],</span>
+<span class="doccomment">///                     &amp;[ScriptElement::from_literal(&quot;document.getElementById(\&quot;title\&quot;).innerText = \&quot;Наган\&quot;;&quot;)]],</span>
+<span class="doccomment">///                   &amp;mut out, &quot;test blog&quot;).unwrap(),</span>
 <span class="doccomment">///     &quot;test blog&quot;);</span>
 <span class="doccomment">/// println!(&quot;{}&quot;, String::from_utf8(out).unwrap());</span>
 <span class="doccomment">/// panic!();</span>

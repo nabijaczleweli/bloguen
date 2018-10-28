@@ -494,8 +494,9 @@
 <span id="494">494</span>
 <span id="495">495</span>
 <span id="496">496</span>
+<span id="497">497</span>
 </pre><pre class="rust ">
-<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">read_file</span>;
+<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">concat_path</span>, <span class="ident">read_file</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">WrappedElement</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">path</span>::<span class="ident">PathBuf</span>;
@@ -773,7 +774,8 @@
 
     <span class="doccomment">/// Read data from the filesystem, if appropriate.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Path elements are concatenated with the specified root, then [`read_file()`](../util/fn.read_file.html)d in, becoming literals.</span>
+    <span class="doccomment">/// Path elements are concatenated with the specified root, then [`read_file()`](../util/fn.read_file.html)d in, becoming</span>
+    <span class="doccomment">/// literals.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Non-path elements are unaffected.</span>
     <span class="doccomment">///</span>
@@ -880,7 +882,7 @@
                                                 <span class="string">&quot;&quot;</span>
                                             },
                                             <span class="self">self</span>.<span class="ident">data</span>),
-                                    <span class="ident">base</span>.<span class="number">1</span>.<span class="ident">join</span>(<span class="self">self</span>.<span class="ident">data</span>.<span class="ident">as_ref</span>())),
+                                    <span class="ident">concat_path</span>(<span class="ident">base</span>.<span class="number">1</span>.<span class="ident">clone</span>(), <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">data</span>)),
                                   <span class="string">&quot;file style element&quot;</span>)
                 <span class="question-mark">?</span>
                 .<span class="ident">into</span>();
