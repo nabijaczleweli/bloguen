@@ -4,6 +4,7 @@ use bloguen::util;
 
 mod parse_date_format_specifier;
 mod parse_function_notation;
+mod override_assets;
 mod uppercase_first;
 mod is_asset_link;
 mod read_file;
