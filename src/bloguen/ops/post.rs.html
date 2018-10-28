@@ -394,6 +394,7 @@
 <span id="394">394</span>
 <span id="395">395</span>
 <span id="396">396</span>
+<span id="397">397</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">MARKDOWN_OPTIONS</span>, <span class="ident">name_based_post_time</span>, <span class="ident">extract_links</span>, <span class="ident">concat_path</span>, <span class="ident">read_file</span>};
 <span class="kw">use</span> <span class="ident">walkdir</span>::{<span class="ident">Error</span> <span class="kw">as</span> <span class="ident">WalkDirError</span>, <span class="ident">DirEntry</span>, <span class="ident">WalkDir</span>};
@@ -759,8 +760,9 @@
     <span class="doccomment">/// let post =</span>
     <span class="doccomment">///     BloguePost::new((&quot;$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting&quot;.to_string(),</span>
     <span class="doccomment">///         root.join(&quot;src&quot;).join(&quot;01. 2018-01-08 16-52 The venture into crocheting&quot;))).unwrap();</span>
-    <span class="doccomment">/// for link in post.generate(&amp;out_pair, &quot;header&quot;, &quot;footer&quot;, &quot;Блогг&quot;, &amp;LANGUAGE_EN_GB, &quot;autheur&quot;, &amp;Default::default(),</span>
-    <span class="doccomment">///                           &amp;Default::default(), &amp;[], &amp;[], &amp;[], &amp;[]).unwrap().into_iter().filter(|l| util::is_asset_link(l)) {</span>
+    <span class="doccomment">/// for link in post.generate(&amp;out_pair, &quot;header&quot;, &quot;footer&quot;, &quot;Блогг&quot;, &amp;LANGUAGE_EN_GB, &quot;autheur&quot;,</span>
+    <span class="doccomment">///                           &amp;Default::default(), &amp;Default::default(), &amp;[], &amp;[], &amp;[], &amp;[])</span>
+    <span class="doccomment">///             .unwrap().into_iter().filter(|l| util::is_asset_link(l)) {</span>
     <span class="doccomment">///     let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();</span>
     <span class="doccomment">///     println!(&quot;Copying {}: {:?}&quot;, link, post.copy_asset(&amp;out_pair, &amp;link));</span>
     <span class="doccomment">/// }</span>

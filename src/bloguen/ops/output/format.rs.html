@@ -251,6 +251,45 @@
 <span id="251">251</span>
 <span id="252">252</span>
 <span id="253">253</span>
+<span id="254">254</span>
+<span id="255">255</span>
+<span id="256">256</span>
+<span id="257">257</span>
+<span id="258">258</span>
+<span id="259">259</span>
+<span id="260">260</span>
+<span id="261">261</span>
+<span id="262">262</span>
+<span id="263">263</span>
+<span id="264">264</span>
+<span id="265">265</span>
+<span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
+<span id="272">272</span>
+<span id="273">273</span>
+<span id="274">274</span>
+<span id="275">275</span>
+<span id="276">276</span>
+<span id="277">277</span>
+<span id="278">278</span>
+<span id="279">279</span>
+<span id="280">280</span>
+<span id="281">281</span>
+<span id="282">282</span>
+<span id="283">283</span>
+<span id="284">284</span>
+<span id="285">285</span>
+<span id="286">286</span>
+<span id="287">287</span>
+<span id="288">288</span>
+<span id="289">289</span>
+<span id="290">290</span>
+<span id="291">291</span>
+<span id="292">292</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">parse_date_format_specifier</span>, <span class="ident">parse_function_notation</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::{<span class="ident">FixedOffset</span>, <span class="ident">DateTime</span>, <span class="ident">TimeZone</span>, <span class="ident">Offset</span>, <span class="ident">Local</span>, <span class="ident">Utc</span>};
@@ -274,7 +313,8 @@
 <span class="doccomment">/// # use bloguen::ops::{ScriptElement, StyleElement, format_output};</span>
 <span class="doccomment">/// # use bloguen::util::LANGUAGE_EN_GB;</span>
 <span class="doccomment">/// # use chrono::DateTime;</span>
-<span class="doccomment">/// let head = r###&quot;&lt;!--</span>
+<span class="doccomment">/// let head = r###&quot;</span>
+<span class="doccomment">/// &lt;!--</span>
 <span class="doccomment">/// nabijaczleweli.xyz (c) by nabijaczleweli@gmail.com (nabijaczleweli)</span>
 <span class="doccomment">/// ​</span>
 <span class="doccomment">/// nabijaczleweli.xyz is licensed under a</span>
@@ -294,32 +334,70 @@
 <span class="doccomment">///     &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;</span>
 <span class="doccomment">///     &lt;meta name=&quot;author&quot; content=&quot;{author}&quot;&gt;</span>
 <span class="doccomment">///     &lt;meta name=&quot;description&quot; content=&quot;{data-desc}&quot;&gt;</span>
-<span class="doccomment">///     &lt;title&gt;{title} – generated { date ( now_utc, rfc3339 ) }&lt;/title&gt;</span>
+<span class="doccomment">///     &lt;title&gt;{title}&lt;/title&gt;</span>
 <span class="doccomment">///</span>
-<span class="doccomment">///     &lt;link href=&quot;/kaschism/assets/column.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
-<span class="doccomment">///     &lt;link href=&quot;../Roboto-font.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
-<span class="doccomment">///     &lt;link href=&quot;../the_taste_of_mi/Merriweather-font.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
-<span class="doccomment">///     &lt;link href=&quot;/content/assets/common.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
 <span class="doccomment">///     {styles}</span>
 <span class="doccomment">///     {scripts}</span>
 <span class="doccomment">/// &lt;/head&gt;</span>
 <span class="doccomment">///     &lt;body&gt;</span>
 <span class="doccomment">/// &quot;###;</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// let global_data = vec![].into_iter().collect();</span>
-<span class="doccomment">/// let local_data = vec![(&quot;desc&quot;.to_string(), &quot;Każdy koniec to nowy początek [PL]&quot;.to_string())].into_iter().collect();</span>
+<span class="doccomment">/// let local_data =</span>
+<span class="doccomment">///     vec![(&quot;desc&quot;.to_string(),</span>
+<span class="doccomment">///           &quot;Każdy koniec to nowy początek [PL]&quot;.to_string())].into_iter().collect();</span>
 <span class="doccomment">/// let mut out = vec![];</span>
-<span class="doccomment">/// assert_eq!(</span>
-<span class="doccomment">///     format_output(head, &quot;Блогг&quot;, &amp;LANGUAGE_EN_GB, &amp;global_data, &amp;local_data,</span>
-<span class="doccomment">///                   &quot;release-front - a generic release front-end, like Patchwork&#39;s&quot;, &quot;nabijaczleweli&quot;,</span>
-<span class="doccomment">///                   &amp;DateTime::parse_from_rfc3339(&quot;2018-09-06T18:32:22+02:00&quot;).unwrap(),</span>
-<span class="doccomment">///                   &amp;[&amp;[StyleElement::from_link(&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;)],</span>
-<span class="doccomment">///                     &amp;[StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;)]],</span>
-<span class="doccomment">///                   &amp;[&amp;[ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;)],</span>
-<span class="doccomment">///                     &amp;[ScriptElement::from_literal(&quot;document.getElementById(\&quot;title\&quot;).innerText = \&quot;Наган\&quot;;&quot;)]],</span>
-<span class="doccomment">///                   &amp;mut out, &quot;test blog&quot;).unwrap(),</span>
-<span class="doccomment">///     &quot;test blog&quot;);</span>
-<span class="doccomment">/// println!(&quot;{}&quot;, String::from_utf8(out).unwrap());</span>
-<span class="doccomment">/// panic!();</span>
+<span class="doccomment">/// let res = format_output(</span>
+<span class="doccomment">///     head, &quot;Блогг&quot;, &amp;LANGUAGE_EN_GB, &amp;global_data, &amp;local_data,</span>
+<span class="doccomment">///     &quot;release-front - a generic release front-end, like Patchwork&#39;s&quot;, &quot;nabijaczleweli&quot;,</span>
+<span class="doccomment">///     &amp;DateTime::parse_from_rfc3339(&quot;2018-09-06T18:32:22+02:00&quot;).unwrap(),</span>
+<span class="doccomment">///     &amp;[&amp;[StyleElement::from_link(&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;)],</span>
+<span class="doccomment">///       &amp;[StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;)]],</span>
+<span class="doccomment">///     &amp;[&amp;[ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;)],</span>
+<span class="doccomment">///       &amp;[ScriptElement::from_literal(&quot;alert(\&quot;You&#39;re the 1`000`000th visitor!\&quot;);&quot;)]],</span>
+<span class="doccomment">///     &amp;mut out, &quot;test blog&quot;);</span>
+<span class="doccomment">/// assert_eq!(res, Ok(&quot;test blog&quot;.into()));</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// assert_eq!(String::from_utf8(out).unwrap(), r###&quot;</span>
+<span class="doccomment">/// &lt;!--</span>
+<span class="doccomment">/// nabijaczleweli.xyz (c) by nabijaczleweli@gmail.com (nabijaczleweli)</span>
+<span class="doccomment">/// ​</span>
+<span class="doccomment">/// nabijaczleweli.xyz is licensed under a</span>
+<span class="doccomment">/// Creative Commons Attribution 4.0 International License.</span>
+<span class="doccomment">/// ​</span>
+<span class="doccomment">/// You should have received a copy of the license along with this</span>
+<span class="doccomment">/// work. If not, see &lt;https://creativecommons.org/licenses/by/4.0/&gt;.</span>
+<span class="doccomment">/// --&gt;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &lt;!-- RSS_PUB_DATE: &quot;Thu,  6 Sep 2018 18:32:22 +0200&quot; --&gt;</span>
+<span class="doccomment">/// &lt;!DOCTYPE html&gt;</span>
+<span class="doccomment">/// &lt;html lang=&quot;en-GB&quot;&gt;</span>
+<span class="doccomment">/// &lt;head&gt;</span>
+<span class="doccomment">///     &lt;meta charset=&quot;utf-8&quot;&gt;</span>
+<span class="doccomment">///     &lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=Edge&quot;&gt;</span>
+<span class="doccomment">///     &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;</span>
+<span class="doccomment">///     &lt;meta name=&quot;author&quot; content=&quot;nabijaczleweli&quot;&gt;</span>
+<span class="doccomment">///     &lt;meta name=&quot;description&quot; content=&quot;Każdy koniec to nowy początek [PL]&quot;&gt;</span>
+<span class="doccomment">///     &lt;title&gt;release-front - a generic release front-end, like Patchwork&#39;s&lt;/title&gt;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///     &lt;link href=&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot; rel=&quot;stylesheet&quot; /&gt;</span>
+<span class="doccomment">/// &lt;style type=&quot;text/css&quot;&gt;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// .indented { text-indent: 1em; }</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &lt;/style&gt;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">///     &lt;script type=&quot;text/javascript&quot; src=&quot;/content/assets/syllable.js&quot;&gt;&lt;/script&gt;</span>
+<span class="doccomment">/// &lt;script type=&quot;text/javascript&quot;&gt;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// alert(&quot;You&#39;re the 1`000`000th visitor!&quot;);</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &lt;/script&gt;</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// &lt;/head&gt;</span>
+<span class="doccomment">///     &lt;body&gt;</span>
+<span class="doccomment">/// &quot;###);</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">format_output</span><span class="op">&lt;</span><span class="ident">W</span>, <span class="ident">E</span>, <span class="ident">Tz</span>, <span class="ident">St</span>, <span class="ident">Sc</span><span class="op">&gt;</span>(<span class="ident">to_format</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">blog_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">LanguageTag</span>, <span class="ident">global_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
                                        <span class="ident">local_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">post_date</span>: <span class="kw-2">&amp;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Tz</span><span class="op">&gt;</span>, <span class="ident">styles</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">St</span>]],

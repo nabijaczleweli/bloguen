@@ -25,6 +25,16 @@
 <span id="25">25</span>
 <span id="26">26</span>
 <span id="27">27</span>
+<span id="28">28</span>
+<span id="29">29</span>
+<span id="30">30</span>
+<span id="31">31</span>
+<span id="32">32</span>
+<span id="33">33</span>
+<span id="34">34</span>
+<span id="35">35</span>
+<span id="36">36</span>
+<span id="37">37</span>
 </pre><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">style_element</span>;
 <span class="kw">mod</span> <span class="ident">script_element</span>;
@@ -36,19 +46,29 @@
 <span class="doccomment">/// An element with a preface, a content, and a postface.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// More efficient than concatting them together.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// The `*_b()` versions are I/O helpers.</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">WrappedElement</span> {
+    <span class="doccomment">/// Characters to put before the content.</span>
     <span class="kw">fn</span> <span class="ident">head</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span>;
+
+    <span class="doccomment">/// The content itself.</span>
     <span class="kw">fn</span> <span class="ident">content</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span>;
+
+    <span class="doccomment">/// Characters to put after the content.</span>
     <span class="kw">fn</span> <span class="ident">foot</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span>;
 
+    <span class="doccomment">/// Byte representation of pre-content.</span>
     <span class="kw">fn</span> <span class="ident">head_b</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
         <span class="self">self</span>.<span class="ident">head</span>().<span class="ident">as_bytes</span>()
     }
 
+    <span class="doccomment">/// Byte representation of the content.</span>
     <span class="kw">fn</span> <span class="ident">content_b</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
         <span class="self">self</span>.<span class="ident">content</span>().<span class="ident">as_bytes</span>()
     }
 
+    <span class="doccomment">/// Byte representation of post-content.</span>
     <span class="kw">fn</span> <span class="ident">foot_b</span>(<span class="kw-2">&amp;</span><span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
         <span class="self">self</span>.<span class="ident">foot</span>().<span class="ident">as_bytes</span>()
     }

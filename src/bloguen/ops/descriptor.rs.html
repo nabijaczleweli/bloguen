@@ -211,6 +211,7 @@
 <span id="211">211</span>
 <span id="212">212</span>
 <span id="213">213</span>
+<span id="214">214</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">concat_path</span>;
@@ -347,7 +348,8 @@
     <span class="doccomment">///                styles: vec![],</span>
     <span class="doccomment">///                scripts: vec![ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;),</span>
     <span class="doccomment">///                              ScriptElement::from_path(&quot;MathJax-config.js&quot;)],</span>
-    <span class="doccomment">///                data: vec![(&quot;preferred_system&quot;.to_string(), &quot;capitalism&quot;.to_string())].into_iter().collect(),</span>
+    <span class="doccomment">///                data: vec![(&quot;preferred_system&quot;.to_string(),</span>
+    <span class="doccomment">///                            &quot;capitalism&quot;.to_string())].into_iter().collect(),</span>
     <span class="doccomment">///            });</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">root</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>)) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BlogueDescriptor</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
