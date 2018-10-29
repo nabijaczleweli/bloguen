@@ -39,19 +39,19 @@ fn extract_links() {
 fn extract_actual_assets() {
     let root = temp_dir().join("bloguen-test").join("util-extract_actual_assets");
     fs::create_dir_all(root.join("images")).unwrap();
-    File::create(root.join("images").join("image.png")).unwrap().write_all("images/image.png".as_bytes()).unwrap();
+    File::create(root.join("images").join("i mage.png")).unwrap().write_all("images/i mage.png".as_bytes()).unwrap();
     File::create(root.join("link.html")).unwrap().write_all("link.html".as_bytes()).unwrap();
 
     let doc_arena = ComrakArena::new();
     let ast = comrak::parse_document(&doc_arena,
                                      r#"[not-link](not-link.html)
                                         [link](link.html)
-                                        ![img](images/image.png)
+                                        ![img](images/i%20mage.png)
                                         [наб](https://nabijaczleweli.xyz)"#,
                                      &util::MARKDOWN_OPTIONS);
 
     let actual_asset_links = util::extract_actual_assets(&root, &ast).unwrap();
-    for (link, &expected) in actual_asset_links.into_iter().zip(["link.html", "images/image.png"].iter()) {
+    for (link, &expected) in actual_asset_links.into_iter().zip(["link.html", "images/i%20mage.png"].iter()) {
         assert_eq!(str::from_utf8(&link[..]), Ok(expected));
     }
 }

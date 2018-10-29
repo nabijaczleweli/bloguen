@@ -13,6 +13,7 @@ use chrono::{FixedOffset, NaiveTime, DateTime, TimeZone, Offset};
 use safe_transmute::guarded_transmute_to_bytes_pod;
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
+use url::percent_encoding::percent_decode;
 use std::path::{self, PathBuf, Path};
 use self::super::ops::LanguageTag;
 use rand::{SeedableRng, Rng};
@@ -190,11 +191,7 @@ pub fn extract_links<'a>(ast: &'a ComrakAstNode<'a>) -> Result<Vec<String>, Erro
     Ok(out)
 }
 
-/// Apply the asset override to the specified AST.
-///
-/// The `depth` argument specifies how many `"../"` segments are how deep the output file is relative to root parent directory.
-///
-/// Remember: this funxion *modifies the passed-in AST*, despite the reference being immutable.
+/// Get a list of all actual (i.e. existant) assets in the specified AST.
 ///
 /// # Examples
 ///
@@ -253,16 +250,20 @@ fn extract_actual_assets_impl<'a>(post_source_dir: &Path, ast: &'a ComrakAstNode
                     if !is_asset_link(url) {
                         continue;
                     }
+                }
 
-                    let orig_path = concat_path(post_source_dir, url);
+                if let Ok(subpath) = percent_decode(&link.url).decode_utf8() {
+                    let orig_path = concat_path(post_source_dir, &subpath);
                     if !orig_path.exists() {
                         continue;
                     }
+                } else {
+                    continue;
                 }
 
                 // The references are valid as long as the allocation arena is (i.e. 'a),
                 // but there's only so much you can express :v
-                out.push(unsafe {&mut *(&mut link.url as *mut Vec<u8>) as &'a mut Vec<u8>});
+                out.push(unsafe { &mut *(&mut link.url as *mut Vec<u8>) as &'a mut Vec<u8> });
             }
             _ => {}
         }
