@@ -1,10 +1,13 @@
 use comrak::{self, Arena as ComrakArena};
+use std::fs::{self, File};
+use std::env::temp_dir;
 use chrono::NaiveTime;
+use std::io::Write;
 use bloguen::util;
+use std::str;
 
 mod parse_date_format_specifier;
 mod parse_function_notation;
-mod override_assets;
 mod uppercase_first;
 mod is_asset_link;
 mod read_file;
@@ -29,6 +32,28 @@ fn extract_links() {
                                      &util::MARKDOWN_OPTIONS);
     assert_eq!(util::extract_links(ast),
                Ok(vec!["assets/link.html".to_string(), "assets/image.png".to_string(), "https://nabijaczleweli.xyz".to_string()]));
+}
+
+/// Not quite sure how to test the non-UTF-8 error case, since the document is parsed from a UTF-8 string
+#[test]
+fn extract_actual_assets() {
+    let root = temp_dir().join("bloguen-test").join("util-extract_actual_assets");
+    fs::create_dir_all(root.join("images")).unwrap();
+    File::create(root.join("images").join("image.png")).unwrap().write_all("images/image.png".as_bytes()).unwrap();
+    File::create(root.join("link.html")).unwrap().write_all("link.html".as_bytes()).unwrap();
+
+    let doc_arena = ComrakArena::new();
+    let ast = comrak::parse_document(&doc_arena,
+                                     r#"[not-link](not-link.html)
+                                        [link](link.html)
+                                        ![img](images/image.png)
+                                        [наб](https://nabijaczleweli.xyz)"#,
+                                     &util::MARKDOWN_OPTIONS);
+
+    let actual_asset_links = util::extract_actual_assets(&root, &ast).unwrap();
+    for (link, &expected) in actual_asset_links.into_iter().zip(["link.html", "images/image.png"].iter()) {
+        assert_eq!(str::from_utf8(&link[..]), Ok(expected));
+    }
 }
 
 // default_language() is untestable :v

@@ -18,9 +18,9 @@ use self::super::ops::LanguageTag;
 use rand::{SeedableRng, Rng};
 use rand::prng::XorShiftRng;
 use comrak::ComrakOptions;
-use std::{iter, cmp, str};
 use self::super::Error;
 use std::borrow::Cow;
+use std::{cmp, str};
 use std::fs::File;
 use regex::Regex;
 use url::Url;
@@ -212,12 +212,12 @@ pub fn extract_links<'a>(ast: &'a ComrakAstNode<'a>) -> Result<Vec<String>, Erro
 /// # extern crate comrak;
 /// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement,
 /// #                    CenterOrder};
-/// # use bloguen::util::{override_assets, MARKDOWN_OPTIONS};
+/// # use bloguen::util::{extract_actual_assets, MARKDOWN_OPTIONS};
 /// # use std::fs::{self, File};
 /// # use std::borrow::Borrow;
 /// # use std::env::temp_dir;
 /// # use std::io::Write;
-/// # let root = temp_dir().join("bloguen-doctest").join("util-override_assets");
+/// # let root = temp_dir().join("bloguen-doctest").join("util-extract_actual_assets");
 /// # fs::create_dir_all(&root).unwrap();
 /// # File::create(root.join("image.png")).unwrap().write_all("image.png".as_bytes()).unwrap();
 /// # /*
@@ -228,23 +228,15 @@ pub fn extract_links<'a>(ast: &'a ComrakAstNode<'a>) -> Result<Vec<String>, Erro
 /// let mut ast =
 ///     comrak::parse_document(&alloc, r#"[link](link.html)
 ///                                       ![img](image.png)"#, &MARKDOWN_OPTIONS);
-/// assert_eq!(override_assets(&root, "assets/", 1, &mut ast), Ok(()));
-///
-/// let expected_ast =
-///     comrak::parse_document(&alloc, r#"[link](link.html)
-///                                       ![img](../assets/image.png)"#, &MARKDOWN_OPTIONS);
-/// # /*
-/// assert_eq!(ast, expected_ast);
-/// # */
-/// # for (ov, ex) in ast.descendants().zip(expected_ast.descendants()) {
-/// #     assert_eq!(format!("{:?}", &ov.data.borrow().value), format!("{:?}", &ex.data.borrow().value));
-/// # }
+/// assert_eq!(extract_actual_assets(&root, &mut ast), Ok(vec![&mut b"image.png".to_vec()]));
 /// ```
-pub fn override_assets<'a, P: AsRef<Path>>(post_source_dir: P, override_dir: &str, depth: usize, ast: &'a ComrakAstNode<'a>) -> Result<(), Error> {
-    override_assets_impl(post_source_dir.as_ref(), override_dir, depth, ast)
+pub fn extract_actual_assets<'a, P: AsRef<Path>>(post_source_dir: P, ast: &'a ComrakAstNode<'a>) -> Result<Vec<&'a mut Vec<u8>>, Error> {
+    extract_actual_assets_impl(post_source_dir.as_ref(), ast)
 }
 
-fn override_assets_impl<'a>(post_source_dir: &Path, override_dir: &str, depth: usize, ast: &'a ComrakAstNode<'a>) -> Result<(), Error> {
+fn extract_actual_assets_impl<'a>(post_source_dir: &Path, ast: &'a ComrakAstNode<'a>) -> Result<Vec<&'a mut Vec<u8>>, Error> {
+    let mut out = vec![];
+
     for n in ast.descendants() {
         match n.data.borrow_mut().value {
             ComrakNodeValue::Link(ref mut link) |
@@ -268,16 +260,15 @@ fn override_assets_impl<'a>(post_source_dir: &Path, override_dir: &str, depth: u
                     }
                 }
 
-                link.url.splice(0..0, override_dir.as_bytes().iter().cloned());
-                if depth != 0 {
-                    link.url.splice(0..0, iter::repeat(b"../").take(depth).flatten().cloned());
-                }
+                // The references are valid as long as the allocation arena is (i.e. 'a),
+                // but there's only so much you can express :v
+                out.push(unsafe {&mut *(&mut link.url as *mut Vec<u8>) as &'a mut Vec<u8>});
             }
             _ => {}
         }
     }
 
-    Ok(())
+    Ok(out)
 }
 
 /// Check if the link points to a local relative asset.
