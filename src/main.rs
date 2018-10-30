@@ -191,6 +191,7 @@ fn result_main() -> Result<(), bloguen::Error> {
             for link in p.generate(&opts.output_dir,
                           None,
                           index_center.as_ref().map(|ic| (&ic[..], &mut center_buffer as &mut Write)),
+                          descriptor.asset_dir_override.as_ref().map(|s| &s[..]),
                           &post_header,
                           &post_footer,
                           &descriptor.name,
@@ -207,7 +208,7 @@ fn result_main() -> Result<(), bloguen::Error> {
                 .into_iter()
                 .filter(|l| bloguen::util::is_asset_link(l)) {
                 if let Ok(link) = percent_decode(link.as_bytes()).decode_utf8() {
-                    if !p.copy_asset(&opts.output_dir, &link)? {
+                    if !p.copy_asset(&opts.output_dir, descriptor.asset_dir_override.as_ref().map(|s| &s[..]), &link)? {
                         eprintln!("Couldn't find \"{}\" for \"{}\" post.", link, p.normalised_name());
                     }
                 } else {

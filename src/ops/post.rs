@@ -590,10 +590,15 @@ impl BloguePost {
     ///     println!("Copying {}: {:?}", link, post.copy_asset(&out_pair, &link));
     /// }
     /// ```
-    pub fn copy_asset(&self, into: &(String, PathBuf), link: &str) -> Result<bool, Error> {
+    pub fn copy_asset(&self, into: &(String, PathBuf), asset_override: Option<&str>, link: &str) -> Result<bool, Error> {
         let source = concat_path(self.source_dir.1.clone(), link);
         if source.exists() {
-            let output = concat_path(into.1.join("posts"), link);
+            let output = concat_path(if let Some(ass_dir) = asset_override {
+                                         concat_path(&into.1, ass_dir)
+                                     } else {
+                                         into.1.join("posts")
+                                     },
+                                     link);
 
             fs::create_dir_all(output.parent().unwrap()).map_err(|e| {
                     Error::Io {
