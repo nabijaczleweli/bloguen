@@ -1,16 +1,17 @@
+use self::super::super::util::{PolyWrite, MARKDOWN_OPTIONS, extract_actual_assets, name_based_post_time, extract_links, concat_path, read_file};
 use self::super::{MachineDataKind, ScriptElement, StyleElement, LanguageTag, TagName, machine_output_kind, format_output};
-use self::super::super::util::{PolyWrite, MARKDOWN_OPTIONS, name_based_post_time, extract_links, concat_path, read_file};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
 use comrak::{self, Arena as ComrakArena};
+use std::io::{Error as IoError, Write};
 use std::collections::BTreeMap;
 use self::super::super::Error;
 use std::iter::FromIterator;
 use std::fs::{self, File};
 use std::path::PathBuf;
-use std::io::Write;
 use regex::Regex;
+use std::str;
 
 
 lazy_static! {
@@ -250,15 +251,25 @@ impl BloguePost {
     /// #                .unwrap().read_to_string(&mut read).unwrap();
     /// # assert_eq!(read, "header<p><a href=\"url.html\">Блогг</a></p>\nfooter");
     /// ```
-    pub fn generate(&self, into: &(String, PathBuf), mut alt_output: Option<&mut Write>, center_output: Option<(&str, &mut Write)>, post_header: &str,
-                    post_footer: &str, blog_name: &str, language: &LanguageTag, author: &str, spec_tags: &[TagName], free_tags: &[TagName],
-                    post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>, post_styles: &[StyleElement],
-                    global_styles: &[StyleElement], post_scripts: &[ScriptElement], global_scripts: &[ScriptElement])
+    pub fn generate(&self, into: &(String, PathBuf), mut alt_output: Option<&mut Write>, center_output: Option<(&str, &mut Write)>,
+                    asset_override: Option<&str>, post_header: &str, post_footer: &str, blog_name: &str, language: &LanguageTag, author: &str,
+                    spec_tags: &[TagName], free_tags: &[TagName], post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>,
+                    post_styles: &[StyleElement], global_styles: &[StyleElement], post_scripts: &[ScriptElement], global_scripts: &[ScriptElement])
                     -> Result<Vec<String>, Error> {
+        fn write_err(err: IoError, desc: &'static str) -> Error {
+            Error::Io {
+                desc: desc.into(),
+                op: "write",
+                more: Some(err.to_string().into()),
+            }
+        }
+
+
         let post_text = read_file(&(format!("{}post.md", self.source_dir.0), self.source_dir.1.join("post.md")), "post text")?;
 
         let arena = ComrakArena::new();
         let root = comrak::parse_document(&arena, &post_text, &MARKDOWN_OPTIONS);
+        let out_links = extract_links(root)?;
 
         fs::create_dir_all(into.1.join("posts")).map_err(|e| {
                 Error::Io {
@@ -293,21 +304,37 @@ impl BloguePost {
                                             &[global_scripts, post_scripts],
                                             &mut post_html_f,
                                             normalised_name)?;
+
         let mut center_output = center_output.map(|(f, o)| (f, o, vec![]));
-        match (alt_output.as_mut(), center_output.as_mut()) {
-                (Some(ref mut alt_out), Some((_, _, center_tmp))) => {
-                    comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, PolyWrite(alt_out, center_tmp)))
-                }
-                (Some(ref mut alt_out), None) => comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, alt_out)),
-                (None, Some((_, _, center_tmp))) => comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, center_tmp)),
-                (None, None) => comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f),
-            }.map_err(|e| {
-                Error::Io {
-                    desc: "post HTML".into(),
-                    op: "write",
-                    more: Some(e.to_string().into()),
-                }
-            })?;
+        if let Some(asset_override) = asset_override {
+            let mut asset_set = extract_actual_assets(&self.source_dir.1, root)?;
+
+            asset_set.iter_mut().for_each(|url| { url.splice(0..0, asset_override.as_bytes().iter().cloned()); });
+            if let Some((_, _, center_tmp)) = center_output.as_mut() {
+                comrak::format_html(root, &MARKDOWN_OPTIONS, center_tmp).map_err(|e| write_err(e, "post center HTML"))?;
+            }
+
+            asset_set.iter_mut().for_each(|url| { url.splice(0..0, b"../".iter().cloned()); });
+            if let Some(ref mut alt_out) = alt_output.as_mut() {
+                    comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, alt_out))
+                } else {
+                    comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f)
+                }.map_err(|e| write_err(e, "post HTML"))?;
+        } else {
+            if let Some(ref mut alt_out) = alt_output.as_mut() {
+                    comrak::format_html(root, &MARKDOWN_OPTIONS, &mut PolyWrite(&mut post_html_f, alt_out))
+                } else {
+                    comrak::format_html(root, &MARKDOWN_OPTIONS, &mut post_html_f)
+                }.map_err(|e| write_err(e, "post HTML"))?;
+
+            if let Some((_, _, center_tmp)) = center_output.as_mut() {
+                let mut asset_set = extract_actual_assets(&self.source_dir.1, root)?;
+                asset_set.iter_mut().for_each(|url| { url.splice(0..0, b"posts/".iter().cloned()); });
+
+                comrak::format_html(root, &MARKDOWN_OPTIONS, center_tmp).map_err(|e| write_err(e, "post center HTML"))?;
+            }
+        }
+
         let normalised_name = format_output(post_footer,
                                             blog_name,
                                             language,
@@ -350,7 +377,7 @@ impl BloguePost {
                           normalised_name)?;
         }
 
-        extract_links(root)
+        Ok(out_links)
     }
 
     /// Generate machine output of the specified kind from the post into the specified subpath in the specified output
