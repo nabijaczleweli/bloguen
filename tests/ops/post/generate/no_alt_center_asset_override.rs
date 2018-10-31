@@ -9,7 +9,7 @@ use std::str;
 
 #[test]
 fn ok() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-ok");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-no_alt_center_asset_override-ok");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned",
                "03. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
@@ -22,10 +22,11 @@ fn ok() {
     let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned/".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    let mut alt_buf = vec![];
+    let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
                              None,
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some("overriden-assets"),
                              "header",
                              "footer",
                              "Блогг",
@@ -44,16 +45,17 @@ fn ok() {
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read,
                "header<p><a href=\"1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned\">lonk</a></p>\nfooter");
-    assert_eq!(str::from_utf8(&alt_buf).unwrap(),
-               "<p><a href=\"1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned\">lonk</a></p>\n");
+    assert_eq!(str::from_utf8(&center_buf).unwrap(),
+               "cen<p><a href=\"1.%202018-01-08%2016-52%20My%20first%20venture%20into%20crocheting,%20and%20what%20I've%20learned\">lonk</a></p>\nter");
 
     let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's/".to_string(),
                root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    alt_buf.clear();
+    center_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
                              None,
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some("overriden-assets"),
                              "header",
                              "footer",
                              "Блогг",
@@ -72,16 +74,17 @@ fn ok() {
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read,
                "header<p><a href=\"03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's\">lonk</a></p>\nfooter");
-    assert_eq!(str::from_utf8(&alt_buf).unwrap(),
-               "<p><a href=\"03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's\">lonk</a></p>\n");
+    assert_eq!(str::from_utf8(&center_buf).unwrap(),
+               "cen<p><a href=\"03.%202018-02-05%20release-front%20-%20a%20generic%20release%20front-end,%20like%20Patchwork's\">lonk</a></p>\nter");
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain/".to_string(),
                root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    alt_buf.clear();
+    center_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
                              None,
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some("overriden-assets"),
                              "header",
                              "footer",
                              "Блогг",
@@ -100,13 +103,13 @@ fn ok() {
     File::open(root.join("out").join("posts").join(post.normalised_name() + ".html")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read,
                "header<p><a href=\"005.%202018-04-19%2023-19-21%20cursed%20device%20chain\">lonk</a></p>\nfooter");
-    assert_eq!(str::from_utf8(&alt_buf).unwrap(),
-               "<p><a href=\"005.%202018-04-19%2023-19-21%20cursed%20device%20chain\">lonk</a></p>\n");
+    assert_eq!(str::from_utf8(&center_buf).unwrap(),
+               "cen<p><a href=\"005.%202018-04-19%2023-19-21%20cursed%20device%20chain\">lonk</a></p>\nter");
 }
 
 #[test]
 fn not_found() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-not_found");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-no_alt_center_asset_override-not_found");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         fs::create_dir_all(root.join("posts").join(d)).unwrap();
@@ -115,10 +118,11 @@ fn not_found() {
     let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned/".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    let mut alt_buf = vec![];
+    let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
                              None,
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some("overriden-assets"),
                              "header",
                              "footer",
                              "Блогг",
@@ -136,12 +140,12 @@ fn not_found() {
                    who: "post text",
                    path: format!("{}post.md", dir.0).into(),
                }));
-    assert!(alt_buf.is_empty());
+    assert!(center_buf.is_empty());
 }
 
 #[test]
 fn non_utf8() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-not_utf8");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-no_alt_center_asset_override-not_utf8");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         let fp = root.join("posts").join(d);
@@ -155,10 +159,11 @@ fn non_utf8() {
     let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned/".to_string(),
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
-    let mut alt_buf = vec![];
+    let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
                              None,
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some("overriden-assets"),
                              "header",
                              "footer",
                              "Блогг",
@@ -177,12 +182,12 @@ fn non_utf8() {
                    wher: "post text".into(),
                    more: None,
                }));
-    assert!(alt_buf.is_empty());
+    assert!(center_buf.is_empty());
 }
 
 #[test]
 fn posts_directory() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-posts_directory");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-no_alt_center_asset_override-posts_directory");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         let fp = root.join("posts").join(d);
@@ -195,10 +200,11 @@ fn posts_directory() {
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(root.join("out")).unwrap();
     File::create(root.join("out").join("posts")).unwrap().write_all("henlo".as_bytes()).unwrap();
-    let mut alt_buf = vec![];
+    let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
                              None,
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some("overriden-assets"),
                              "header",
                              "footer",
                              "Блогг",
@@ -222,12 +228,12 @@ fn posts_directory() {
                        }
                        .into()),
                }));
-    assert!(alt_buf.is_empty());
+    assert!(center_buf.is_empty());
 }
 
 #[test]
 fn post_create() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-generate-alt_no_center-post_create");
+    let root = temp_dir().join("bloguen-test").join("ops-post-generate-no_alt_center_asset_override-post_create");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         let fp = root.join("posts").join(d);
@@ -239,10 +245,11 @@ fn post_create() {
                root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(root.join("out").join("posts").join("1. 2018-01-08 16-52-00 My first venture into crocheting, and what I've learned.html")).unwrap();
-    let mut alt_buf = vec![];
+    let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
                              None,
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some("overriden-assets"),
                              "header",
                              "footer",
                              "Блогг",
@@ -266,5 +273,5 @@ fn post_create() {
                        }
                        .into()),
                }));
-    assert!(alt_buf.is_empty());
+    assert!(center_buf.is_empty());
 }
