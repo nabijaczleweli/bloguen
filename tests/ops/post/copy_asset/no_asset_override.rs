@@ -9,7 +9,7 @@ use bloguen::Error;
 
 #[test]
 fn ok_copied() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-ok_copied");
+    let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-no_asset_override-ok_copied");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned",
                "03. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
@@ -34,6 +34,7 @@ fn ok_copied() {
     for link in post.generate(&out_dir,
                   None,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -48,7 +49,8 @@ fn ok_copied() {
                   &[],
                   &[])
         .unwrap() {
-        assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
+        assert_eq!(post.copy_asset(&out_dir, None, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
+                   Ok(true));
     }
     let mut read = String::new();
     File::open(out_dir.1.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin"))
@@ -66,6 +68,7 @@ fn ok_copied() {
     for link in post.generate(&out_dir,
                   None,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -80,7 +83,8 @@ fn ok_copied() {
                   &[],
                   &[])
         .unwrap() {
-        assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
+        assert_eq!(post.copy_asset(&out_dir, None, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
+                   Ok(true));
     }
     read.clear();
     File::open(out_dir.1.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's.bin"))
@@ -97,6 +101,7 @@ fn ok_copied() {
     for link in post.generate(&out_dir,
                   None,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -111,7 +116,8 @@ fn ok_copied() {
                   &[],
                   &[])
         .unwrap() {
-        assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(true));
+        assert_eq!(post.copy_asset(&out_dir, None, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
+                   Ok(true));
     }
     read.clear();
     File::open(out_dir.1.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain.bin")).unwrap().read_to_string(&mut read).unwrap();
@@ -123,7 +129,7 @@ fn ok_copied() {
 
 #[test]
 fn ok_not_copied() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-ok_not_copied");
+    let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-no_asset_override-ok_not_copied");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned",
                "03. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
@@ -146,6 +152,7 @@ fn ok_not_copied() {
     for link in post.generate(&out_dir,
                   None,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -160,7 +167,8 @@ fn ok_not_copied() {
                   &[],
                   &[])
         .unwrap() {
-        assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
+        assert_eq!(post.copy_asset(&out_dir, None, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
+                   Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin")).is_err());
     assert!(File::open(out_dir.1.join("posts").join("assets").join("image.png")).is_err());
@@ -171,6 +179,7 @@ fn ok_not_copied() {
     for link in post.generate(&out_dir,
                   None,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -185,7 +194,8 @@ fn ok_not_copied() {
                   &[],
                   &[])
         .unwrap() {
-        assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
+        assert_eq!(post.copy_asset(&out_dir, None, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
+                   Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's.bin")).is_err());
     assert!(File::open(out_dir.1.join("posts").join("assets").join("image.png")).is_err());
@@ -195,6 +205,7 @@ fn ok_not_copied() {
     for link in post.generate(&out_dir,
                   None,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -209,7 +220,8 @@ fn ok_not_copied() {
                   &[],
                   &[])
         .unwrap() {
-        assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()), Ok(false));
+        assert_eq!(post.copy_asset(&out_dir, None, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
+                   Ok(false));
     }
     assert!(File::open(out_dir.1.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain.bin")).is_err());
     assert!(File::open(out_dir.1.join("posts").join("assets").join("image.png")).is_err());
@@ -217,7 +229,7 @@ fn ok_not_copied() {
 
 #[test]
 fn posts_directory() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-posts_directory");
+    let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-no_asset_override-posts_directory");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         let fp = root.join("posts").join(d);
@@ -239,7 +251,7 @@ fn posts_directory() {
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(&out_dir.1).unwrap();
     File::create(out_dir.1.join("posts")).unwrap();
-    assert_eq!(post.copy_asset(&out_dir, "assets/image.png"),
+    assert_eq!(post.copy_asset(&out_dir, None, "assets/image.png"),
                Err(Error::Io {
                    desc: "asset parent dir".into(),
                    op: "create",
@@ -250,7 +262,9 @@ fn posts_directory() {
                        }
                        .into()),
                }));
-    assert_eq!(post.copy_asset(&out_dir, "1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin"),
+    assert_eq!(post.copy_asset(&out_dir,
+                               None,
+                               "1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin"),
                Err(Error::Io {
                    desc: "asset parent dir".into(),
                    op: "create",
@@ -265,7 +279,7 @@ fn posts_directory() {
 
 #[test]
 fn copy_failed() {
-    let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-copy_failed");
+    let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-no_asset_override-copy_failed");
     let _ = fs::remove_dir_all(&root);
     for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
         let fp = root.join("posts").join(d);
@@ -290,6 +304,7 @@ fn copy_failed() {
     for link in post.generate(&out_dir,
                   None,
                   None,
+                  None,
                   "header",
                   "footer",
                   "Блогг",
@@ -304,7 +319,7 @@ fn copy_failed() {
                   &[],
                   &[])
         .unwrap() {
-        assert_eq!(post.copy_asset(&out_dir, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
+        assert_eq!(post.copy_asset(&out_dir, None, &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
                    Err(Error::Io {
                        desc: "asset".into(),
                        op: "copy",
