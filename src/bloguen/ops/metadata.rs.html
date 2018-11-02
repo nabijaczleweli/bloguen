@@ -149,6 +149,14 @@
 <span id="149">149</span>
 <span id="150">150</span>
 <span id="151">151</span>
+<span id="152">152</span>
+<span id="153">153</span>
+<span id="154">154</span>
+<span id="155">155</span>
+<span id="156">156</span>
+<span id="157">157</span>
+<span id="158">158</span>
+<span id="159">159</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>};
 <span class="kw">use</span> <span class="ident">toml</span>::<span class="ident">de</span>::<span class="ident">from_str</span> <span class="kw">as</span> <span class="ident">from_toml_str</span>;
@@ -171,6 +179,10 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not present, default post author is used.</span>
     <span class="kw">pub</span> <span class="ident">author</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// A set of tags.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If not present, defaults to empty.</span>
+    <span class="kw">pub</span> <span class="ident">tags</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// A set of style descriptors.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not present, defaults to empty.</span>
@@ -189,6 +201,7 @@
 <span class="kw">struct</span> <span class="ident">PostMetadataSerialised</span> {
     <span class="kw">pub</span> <span class="ident">language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LanguageTag</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">author</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">tags</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;&gt;</span>,
     <span class="kw">pub</span> <span class="ident">styles</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StyleElement</span><span class="op">&gt;&gt;</span>,
     <span class="kw">pub</span> <span class="ident">scripts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScriptElement</span><span class="op">&gt;&gt;</span>,
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;&gt;</span>,
@@ -250,6 +263,7 @@
     <span class="doccomment">///            PostMetadata {</span>
     <span class="doccomment">///                language: Some(&quot;pl&quot;.parse().unwrap()),</span>
     <span class="doccomment">///                author: None,</span>
+    <span class="doccomment">///                tags: vec![],</span>
     <span class="doccomment">///                styles: vec![],</span>
     <span class="doccomment">///                scripts: vec![ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;),</span>
     <span class="doccomment">///                              ScriptElement::from_path(&quot;MathJax-config.js&quot;)],</span>
@@ -283,6 +297,7 @@
         <span class="prelude-val">Ok</span>(<span class="ident">PostMetadata</span> {
             <span class="ident">language</span>: <span class="ident">serialised</span>.<span class="ident">language</span>,
             <span class="ident">author</span>: <span class="ident">serialised</span>.<span class="ident">author</span>,
+            <span class="ident">tags</span>: <span class="ident">serialised</span>.<span class="ident">tags</span>.<span class="ident">unwrap_or_default</span>(),
             <span class="ident">styles</span>: <span class="ident">serialised</span>.<span class="ident">styles</span>.<span class="ident">unwrap_or_default</span>(),
             <span class="ident">scripts</span>: <span class="ident">serialised</span>.<span class="ident">scripts</span>.<span class="ident">unwrap_or_default</span>(),
             <span class="ident">data</span>: <span class="ident">serialised</span>.<span class="ident">data</span>.<span class="ident">unwrap_or_default</span>(),
@@ -295,6 +310,7 @@
         <span class="ident">PostMetadata</span> {
             <span class="ident">language</span>: <span class="prelude-val">None</span>,
             <span class="ident">author</span>: <span class="prelude-val">None</span>,
+            <span class="ident">tags</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">styles</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">scripts</span>: <span class="macro">vec</span><span class="macro">!</span>[],
             <span class="ident">data</span>: <span class="ident">BTreeMap</span>::<span class="ident">new</span>(),
