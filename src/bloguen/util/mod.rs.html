@@ -453,8 +453,8 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>))]</span>
 <span class="kw">mod</span> <span class="ident">non_windows</span>;
 
-<span class="kw">use</span> <span class="ident">comrak</span>::<span class="ident">nodes</span>::{<span class="ident">NodeValue</span> <span class="kw">as</span> <span class="ident">ComrakNodeValue</span>, <span class="ident">AstNode</span> <span class="kw">as</span> <span class="ident">ComrakAstNode</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">format</span>::{<span class="ident">StrftimeItems</span> <span class="kw">as</span> <span class="ident">StrftimeFormatItems</span>, <span class="ident">Fixed</span> <span class="kw">as</span> <span class="ident">FixedTimeFormatItem</span>, <span class="ident">Item</span> <span class="kw">as</span> <span class="ident">TimeFormatItem</span>};
+<span class="kw">use</span> <span class="ident">comrak</span>::<span class="ident">nodes</span>::{<span class="ident">NodeValue</span> <span class="kw">as</span> <span class="ident">ComrakNodeValue</span>, <span class="ident">AstNode</span> <span class="kw">as</span> <span class="ident">ComrakAstNode</span>};
 <span class="kw">use</span> <span class="ident">safe_transmute</span>::<span class="ident">guarded_transmute_to_bytes_pod</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="ident">ErrorKind</span> <span class="kw">as</span> <span class="ident">IoErrorKind</span>, <span class="ident">Read</span>};
 <span class="kw">use</span> <span class="ident">crc</span>::<span class="ident">crc32</span>::<span class="ident">checksum_ieee</span> <span class="kw">as</span> <span class="ident">crc32_ieee</span>;
