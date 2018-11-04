@@ -395,6 +395,9 @@
 <span id="395">395</span>
 <span id="396">396</span>
 <span id="397">397</span>
+<span id="398">398</span>
+<span id="399">399</span>
+<span id="400">400</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">MARKDOWN_OPTIONS</span>, <span class="ident">name_based_post_time</span>, <span class="ident">extract_links</span>, <span class="ident">concat_path</span>, <span class="ident">read_file</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>, <span class="ident">TagName</span>, <span class="ident">format_output</span>};
@@ -669,10 +672,12 @@
                 }
             })<span class="question-mark">?</span>;
 
+        <span class="kw">let</span> <span class="ident">original_name</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">source_dir</span>.<span class="number">1</span>.<span class="ident">file_name</span>().<span class="ident">unwrap</span>().<span class="ident">to_str</span>().<span class="ident">unwrap</span>();
         <span class="kw">let</span> <span class="ident">normalised_name</span> <span class="op">=</span> <span class="ident">format_output</span>(<span class="ident">post_header</span>,
                                             <span class="ident">blog_name</span>,
                                             <span class="ident">language</span>,
                                             <span class="kw-2">&amp;</span>[<span class="ident">global_data</span>, <span class="ident">post_data</span>],
+                                            <span class="kw-2">&amp;</span><span class="ident">original_name</span>,
                                             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>,
                                             <span class="ident">author</span>,
                                             <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">datetime</span>,
@@ -692,6 +697,7 @@
                       <span class="ident">blog_name</span>,
                       <span class="ident">language</span>,
                       <span class="kw-2">&amp;</span>[<span class="ident">global_data</span>, <span class="ident">post_data</span>],
+                      <span class="kw-2">&amp;</span><span class="ident">original_name</span>,
                       <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>,
                       <span class="ident">author</span>,
                       <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">datetime</span>,
