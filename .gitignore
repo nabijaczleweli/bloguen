@@ -11,6 +11,8 @@
 !LICENSE
 !src
 !src/**
+!ext
+!ext/**
 !tests
 !tests/**
 !test-data

@@ -1,0 +1,4 @@
+[submodule "ext/machine-usable-words"]
+	path = ext/machine-usable-words
+    url = https://github.com/nabijaczleweli/machine-usable-words
+	branch = v0.1.0
