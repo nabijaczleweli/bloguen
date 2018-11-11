@@ -236,51 +236,6 @@
 <span id="236">236</span>
 <span id="237">237</span>
 <span id="238">238</span>
-<span id="239">239</span>
-<span id="240">240</span>
-<span id="241">241</span>
-<span id="242">242</span>
-<span id="243">243</span>
-<span id="244">244</span>
-<span id="245">245</span>
-<span id="246">246</span>
-<span id="247">247</span>
-<span id="248">248</span>
-<span id="249">249</span>
-<span id="250">250</span>
-<span id="251">251</span>
-<span id="252">252</span>
-<span id="253">253</span>
-<span id="254">254</span>
-<span id="255">255</span>
-<span id="256">256</span>
-<span id="257">257</span>
-<span id="258">258</span>
-<span id="259">259</span>
-<span id="260">260</span>
-<span id="261">261</span>
-<span id="262">262</span>
-<span id="263">263</span>
-<span id="264">264</span>
-<span id="265">265</span>
-<span id="266">266</span>
-<span id="267">267</span>
-<span id="268">268</span>
-<span id="269">269</span>
-<span id="270">270</span>
-<span id="271">271</span>
-<span id="272">272</span>
-<span id="273">273</span>
-<span id="274">274</span>
-<span id="275">275</span>
-<span id="276">276</span>
-<span id="277">277</span>
-<span id="278">278</span>
-<span id="279">279</span>
-<span id="280">280</span>
-<span id="281">281</span>
-<span id="282">282</span>
-<span id="283">283</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">BLOGUEN_VERSION</span>, <span class="ident">normalise_datetime</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">format</span>::{<span class="ident">Fixed</span> <span class="kw">as</span> <span class="ident">FixedTimeFormatItem</span>, <span class="ident">Item</span> <span class="kw">as</span> <span class="ident">TimeFormatItem</span>};
@@ -292,35 +247,6 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">iter</span>::<span class="ident">FromIterator</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">err_io</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
-
-
-<span class="macro">lazy_static</span><span class="macro">!</span> {
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">HEAD</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/head.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">FOOT</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/foot.json&quot;</span>).<span class="ident">trim</span>();
-
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">NUMBER_PRE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/number-pre.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">NUMBER_CENTER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/number-center.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">NUMBER_POST</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/number-post.json&quot;</span>).<span class="ident">trim</span>();
-
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STRING_PRE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/string-pre.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STRING_CENTER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/string-center.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STRING_POST</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/string-post.json&quot;</span>).<span class="ident">trim</span>();
-
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">MAP_PRE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/map-pre.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">MAP_CENTER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/map-center.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">MAP_POST</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/map-post.json&quot;</span>).<span class="ident">trim</span>();
-
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">ARRAY_PRE</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/array-pre.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">ARRAY_CENTER</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/array-center.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">ARRAY_POST</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/array-post.json&quot;</span>).<span class="ident">trim</span>();
-
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">ARRAY_STRING_POST</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/array-string-post.json&quot;</span>).<span class="ident">trim</span>();
-    <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">ARRAY_STRING_POST_LAST</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> <span class="ident">str</span> <span class="op">=</span> <span class="macro">include_str</span><span class="macro">!</span>(<span class="string">&quot;../../../assets/machine_wrappers/json/array-string-post-last.json&quot;</span>).<span class="ident">trim</span>();
-}
-
-<span class="kw">static</span> <span class="ident">NEWLINE</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\n    &quot;</span>;
-<span class="kw">static</span> <span class="ident">NEWLINE_INDENTED</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot;\n        &quot;</span>;
-<span class="kw">static</span> <span class="ident">CENTER_VALUE_SEPARATOR</span>: <span class="kw-2">&amp;</span><span class="ident">str</span> <span class="op">=</span> <span class="string">&quot; &quot;</span>;
 
 
 <span class="doccomment">/// Fill out an HTML template.</span>
@@ -336,8 +262,8 @@
 <span class="doccomment">/// # extern crate bloguen;</span>
 <span class="doccomment">/// # extern crate chrono;</span>
 <span class="doccomment">/// # use bloguen::ops::{ScriptElement, StyleElement, machine_output_json};</span>
-<span class="doccomment">/// # use bloguen::util::LANGUAGE_EN_GB;</span>
-<span class="doccomment">/// # use chrono::DateTime;</span>
+<span class="doccomment">/// # use bloguen::util::{LANGUAGE_EN_GB, normalise_datetime};</span>
+<span class="doccomment">/// # use chrono::{DateTime, Local, Utc};</span>
 <span class="doccomment">/// let global_data = vec![].into_iter().collect();</span>
 <span class="doccomment">/// let local_data =</span>
 <span class="doccomment">///     vec![(&quot;desc&quot;.to_string(),</span>
@@ -357,34 +283,34 @@
 <span class="doccomment">///     &amp;mut out, &quot;test blog&quot;);</span>
 <span class="doccomment">/// assert_eq!(res, Ok(&quot;test blog&quot;.into()));</span>
 <span class="doccomment">///</span>
-<span class="doccomment">/// assert_eq!(String::from_utf8(out).unwrap(), r###&quot;{</span>
+<span class="doccomment">/// assert_eq!(String::from_utf8(out).unwrap(), format!(r###&quot;{{</span>
 <span class="doccomment">///     &quot;number&quot;: 3,</span>
 <span class="doccomment">///     &quot;language&quot;: &quot;en-GB&quot;,</span>
-<span class="doccomment">///     &quot;title&quot;: &quot;release-front - a generic release front-end, like Patchwork&#39;s&quot;,</span>
+<span class="doccomment">///     &quot;title&quot;: &quot;release-front - a generic release front-end, like Patchwork\&#39;s&quot;,</span>
 <span class="doccomment">///     &quot;author&quot;: &quot;nabijaczleweli&quot;,</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     &quot;raw_post_name&quot;: &quot;003. 2018-02-05 release-front - a generic release front-end, like Patchwork\&#39;s&quot;,</span>
 <span class="doccomment">///     &quot;blog_name&quot;: &quot;Блогг&quot;,</span>
 <span class="doccomment">///</span>
-<span class="doccomment">///     &quot;post_date_rfc3339&quot;: &quot;2018-09-06T18:32:22 +0200&quot;,</span>
+<span class="doccomment">///     &quot;post_date_rfc3339&quot;: &quot;2018-09-06T18:32:22+02:00&quot;,</span>
 <span class="doccomment">///     &quot;post_date_rfc2822&quot;: &quot;Thu,  6 Sep 2018 18:32:22 +0200&quot;,</span>
-<span class="doccomment">///     &quot;generation_date_utc_rfc3339&quot;: &quot;2018-09-06T18:32:22 +0200&quot;,</span>
-<span class="doccomment">///     &quot;generation_date_utc_rfc2822&quot;: &quot;Thu,  6 Sep 2018 18:32:22 +0200&quot;,</span>
-<span class="doccomment">///     &quot;generation_date_local_rfc3339&quot;: &quot;2018-09-06T18:32:22 +0200&quot;,</span>
-<span class="doccomment">///     &quot;generation_date_local_rfc2822&quot;: &quot;Thu,  6 Sep 2018 18:32:22 +0200&quot;,</span>
+<span class="doccomment">///     &quot;generation_date_utc_rfc3339&quot;: &quot;{}&quot;,</span>
+<span class="doccomment">///     &quot;generation_date_utc_rfc2822&quot;: &quot;{}&quot;,</span>
+<span class="doccomment">///     &quot;generation_date_local_rfc3339&quot;: &quot;{}&quot;,</span>
+<span class="doccomment">///     &quot;generation_date_local_rfc2822&quot;: &quot;{}&quot;,</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     &quot;tags&quot;: [</span>
 <span class="doccomment">///         &quot;vodka&quot;,</span>
 <span class="doccomment">///         &quot;depression&quot;,</span>
 <span class="doccomment">///         &quot;коммунизм&quot;</span>
 <span class="doccomment">///     ],</span>
-<span class="doccomment">///     &quot;additional_data&quot;: {</span>
-<span class="doccomment">///         &quot;data&quot;: &quot;Każdy koniec to nowy początek [PL]&quot;</span>
-<span class="doccomment">///     }</span>
+<span class="doccomment">///     &quot;additional_data&quot;: {{</span>
+<span class="doccomment">///         &quot;desc&quot;: &quot;Każdy koniec to nowy początek [PL]&quot;,</span>
+<span class="doccomment">///     }},</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     &quot;styles&quot;: [</span>
 <span class="doccomment">///         &quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;,</span>
-<span class="doccomment">///         &quot;.indented { text-indent: 1em; }&quot;</span>
+<span class="doccomment">///         &quot;.indented {{ text-indent: 1em; }}&quot;</span>
 <span class="doccomment">///     ],</span>
 <span class="doccomment">///     &quot;scripts&quot;: [</span>
 <span class="doccomment">///         &quot;/content/assets/syllable.js&quot;,</span>
@@ -392,8 +318,8 @@
 <span class="doccomment">///     ],</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     &quot;bloguen-version&quot;: &quot;0.1.0&quot;</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// }&quot;###);</span>
+<span class="doccomment">///     //</span>
+<span class="doccomment">/// }}&quot;###, normalise_datetime(&amp;Utc::now()).to_rfc3339(), normalise_datetime(&amp;Utc::now()).to_rfc2822(), normalise_datetime(&amp;Local::now()).to_rfc3339(), normalise_datetime(&amp;Local::now()).to_rfc2822()).replace(&quot;//&quot;, &quot;&quot;));</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">machine_output_json</span><span class="op">&lt;</span><span class="ident">W</span>, <span class="ident">E</span>, <span class="ident">Tz</span>, <span class="ident">St</span>, <span class="ident">Sc</span><span class="op">&gt;</span>(<span class="ident">blog_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">LanguageTag</span>, <span class="ident">additional_data_sets</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>],
                                              <span class="ident">raw_post_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">number</span>: <span class="ident">usize</span>, <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">post_date</span>: <span class="kw-2">&amp;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Tz</span><span class="op">&gt;</span>, <span class="ident">tags</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">TagName</span>]],
@@ -431,25 +357,20 @@
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">out_name_err</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">out_name_err</span>);
 
     (<span class="op">||</span> {
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">HEAD</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;header&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;{\n    &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;header&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NUMBER_PRE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;number pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">&quot;number&quot;</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;post number field name&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NUMBER_CENTER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;number center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">CENTER_VALUE_SEPARATOR</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;number center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;number\&quot;: &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;post number pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
             <span class="ident">into</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">number</span>)).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;post number&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NUMBER_POST</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;number post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;,\n&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;post number post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="ident">write_string_variable</span>(<span class="string">&quot;language&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">language</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
             <span class="ident">write_string_variable</span>(<span class="string">&quot;title&quot;</span>, <span class="ident">title</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
             <span class="ident">write_string_variable</span>(<span class="string">&quot;author&quot;</span>, <span class="ident">author</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="ident">write_string_variable</span>(<span class="string">&quot;raw_post_name&quot;</span>, <span class="ident">raw_post_name</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
             <span class="ident">write_string_variable</span>(<span class="string">&quot;blog_name&quot;</span>, <span class="ident">blog_name</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="ident">write_date</span>(<span class="string">&quot;post_date_rfc3339&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">post_date</span>, <span class="ident">FixedTimeFormatItem</span>::<span class="ident">RFC3339</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
             <span class="ident">write_date</span>(<span class="string">&quot;post_date_rfc2822&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">post_date</span>, <span class="ident">FixedTimeFormatItem</span>::<span class="ident">RFC2822</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
@@ -461,20 +382,19 @@
             <span class="kw">let</span> <span class="ident">now_local</span> <span class="op">=</span> <span class="ident">normalise_datetime</span>(<span class="kw-2">&amp;</span><span class="ident">Local</span>::<span class="ident">now</span>());
             <span class="ident">write_date</span>(<span class="string">&quot;generation_date_local_rfc3339&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">now_local</span>, <span class="ident">FixedTimeFormatItem</span>::<span class="ident">RFC3339</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
             <span class="ident">write_date</span>(<span class="string">&quot;generation_date_local_rfc2822&quot;</span>, <span class="kw-2">&amp;</span><span class="ident">now_local</span>, <span class="ident">FixedTimeFormatItem</span>::<span class="ident">RFC2822</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="ident">write_array</span>(<span class="string">&quot;tags&quot;</span>, <span class="ident">tags</span>, <span class="op">|</span><span class="ident">t</span><span class="op">|</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">t</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
             <span class="ident">write_data</span>(<span class="string">&quot;additional_data&quot;</span>, <span class="ident">additional_data_sets</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="ident">write_array</span>(<span class="string">&quot;styles&quot;</span>, <span class="ident">styles</span>, <span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">content</span>(), <span class="ident">into</span>)<span class="question-mark">?</span>;
             <span class="ident">write_array</span>(<span class="string">&quot;scripts&quot;</span>, <span class="ident">scripts</span>, <span class="op">|</span><span class="ident">s</span><span class="op">|</span> <span class="ident">s</span>.<span class="ident">content</span>(), <span class="ident">into</span>)<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="ident">write_string_variable</span>(<span class="string">&quot;bloguen-version&quot;</span>, <span class="ident">BLOGUEN_VERSION</span>, <span class="ident">into</span>)<span class="question-mark">?</span>;
 
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">&quot;\n&quot;</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;header&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">FOOT</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;header&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">&quot;\n}&quot;</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;footer&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="prelude-val">Ok</span>(())
         })().<span class="ident">map_err</span>(<span class="op">|</span>(<span class="ident">e</span>, <span class="ident">d</span>): (<span class="kw">_</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">|</span> <span class="ident">err_io</span>(<span class="string">&quot;write&quot;</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} when writing JSON machine output {}&quot;</span>, <span class="ident">e</span>, <span class="ident">d</span>), <span class="ident">out_name_err</span>.<span class="ident">take</span>().<span class="ident">unwrap</span>()))<span class="question-mark">?</span>;
@@ -483,61 +403,53 @@
 }
 
 <span class="kw">fn</span> <span class="ident">write_date</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">FixedOffset</span><span class="op">&gt;</span>, <span class="ident">format</span>: <span class="ident">FixedTimeFormatItem</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), (<span class="ident">IoError</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_PRE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
     <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">name</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} field name&quot;</span>, <span class="ident">name</span>).<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_CENTER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">CENTER_VALUE_SEPARATOR</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;: \&quot;&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
     <span class="ident">into</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">value</span>.<span class="ident">format_with_items</span>([<span class="ident">TimeFormatItem</span>::<span class="ident">Fixed</span>(<span class="ident">format</span>)].<span class="ident">iter</span>().<span class="ident">cloned</span>())))
         .<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} date&quot;</span>, <span class="ident">name</span>).<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_POST</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;,\n    &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
 }
 
 <span class="kw">fn</span> <span class="ident">write_string_variable</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">value</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), (<span class="ident">IoError</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_PRE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
     <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">name</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} field name&quot;</span>, <span class="ident">name</span>).<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_CENTER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">CENTER_VALUE_SEPARATOR</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;: &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
     <span class="ident">into</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">value</span>)).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} field content&quot;</span>, <span class="ident">name</span>).<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_POST</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;,\n    &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
 }
 
 <span class="kw">fn</span> <span class="ident">write_array</span><span class="op">&lt;</span><span class="ident">El</span>, <span class="ident">M</span>: <span class="ident">Fn</span>(<span class="kw-2">&amp;</span><span class="ident">El</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">arrs</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">El</span>]], <span class="ident">map</span>: <span class="ident">M</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), (<span class="ident">IoError</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">ARRAY_PRE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;array pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;array pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
     <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">name</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} field name&quot;</span>, <span class="ident">name</span>).<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">ARRAY_CENTER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;array center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;: [&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;array center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
     <span class="prelude-ty">Result</span>::<span class="ident">from_iter</span>(<span class="ident">arrs</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">arr</span>)<span class="op">|</span> (<span class="ident">i</span> <span class="op">==</span> <span class="ident">arrs</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="ident">arr</span>)).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">ee</span>, <span class="ident">arr</span>)<span class="op">|</span> {
         <span class="prelude-ty">Result</span>::<span class="ident">from_iter</span>(<span class="ident">arr</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">i</span>, <span class="ident">a</span>)<span class="op">|</span> (<span class="ident">i</span> <span class="op">==</span> <span class="ident">arr</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>, <span class="ident">a</span>)).<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">e</span>, <span class="ident">a</span>)<span class="op">|</span> {
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE_INDENTED</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;indented newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n        &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;indented newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="ident">into</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">map</span>(<span class="ident">a</span>))).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string array element&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
             <span class="kw">if</span> <span class="op">!</span>(<span class="ident">e</span> <span class="op">&amp;&amp;</span> <span class="ident">ee</span>) {
-                <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">ARRAY_STRING_POST</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string array post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            } <span class="kw">else</span> {
-                <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">ARRAY_STRING_POST_LAST</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string array post lasts&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+                <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;,&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;string array post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
             }
 
             <span class="prelude-val">Ok</span>(())
         }))
     }))<span class="question-mark">?</span>;
 
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">ARRAY_POST</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;array post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n    ],\n    &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;aray post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
 }
 
 <span class="kw">fn</span> <span class="ident">write_data</span><span class="op">&lt;</span><span class="ident">W</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="ident">name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">datas</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>], <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">W</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), (<span class="ident">IoError</span>, <span class="ident">Cow</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">str</span><span class="op">&gt;</span>)<span class="op">&gt;</span> {
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">MAP_PRE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;map pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;map pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
     <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">name</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} field name&quot;</span>, <span class="ident">name</span>).<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">MAP_CENTER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;map center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\&quot;: {&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;map center&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
     <span class="ident">datas</span>.<span class="ident">iter</span>()
         .<span class="ident">rev</span>()
@@ -547,21 +459,19 @@
                 <span class="kw">return</span> <span class="ident">acc</span>;
             }
 
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE_INDENTED</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;indented newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n        &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;indented newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_PRE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;aux data string map pre&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
             <span class="ident">into</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">el</span>.<span class="number">0</span>)).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;aux data string map element&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_CENTER</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;aux data string map post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;: &quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;aux data string map post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
             <span class="ident">into</span>.<span class="ident">write_fmt</span>(<span class="macro">format_args</span><span class="macro">!</span>(<span class="string">&quot;{:?}&quot;</span>, <span class="ident">el</span>.<span class="number">1</span>)).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;aux data string map element&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">STRING_POST</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;aux data string map post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+            <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;,&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;aux data string map post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
             <span class="ident">acc</span>.<span class="ident">as_mut</span>().<span class="ident">unwrap</span>().<span class="ident">insert</span>(<span class="ident">el</span>.<span class="number">0</span>);
 
             <span class="ident">acc</span>
         })<span class="question-mark">?</span>;
 
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">NEWLINE</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
-    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="ident">MAP_POST</span>.<span class="ident">as_bytes</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;map post&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
+    <span class="ident">into</span>.<span class="ident">write_all</span>(<span class="string">b&quot;\n    },&quot;</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>, <span class="string">&quot;newline&quot;</span>.<span class="ident">into</span>()))<span class="question-mark">?</span>;
 
     <span class="prelude-val">Ok</span>(())
 }
