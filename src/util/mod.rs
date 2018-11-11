@@ -34,7 +34,8 @@ use self::non_windows::{current_username_impl, default_language_impl};
 pub use self::polywrite::PolyWrite;
 
 
-include!(concat!(env!("OUT_DIR"), "/words.rs"));
+include!("../../ext/machine-usable-words/rust/words.rs");
+
 
 lazy_static! {
     /// Options to use for parsing Markdown.
@@ -113,13 +114,13 @@ pub fn name_based_post_time(name: &str) -> NaiveTime {
 ///
 /// ```
 /// # use bloguen::util::name_based_full_name;
-/// assert_eq!(name_based_full_name("Блогг"),          "Specifically Shopper");
-/// assert_eq!(name_based_full_name("Blogue"),         "Very Turban");
+/// assert_eq!(name_based_full_name("Блогг"),          "Specifically Shortage");
+/// assert_eq!(name_based_full_name("Blogue"),         "Very Tunnel");
 ///
 /// assert_eq!(name_based_full_name("Ben's Blog"),     "Properly P. Postbox");
 /// assert_eq!(name_based_full_name("Benjojo's Blog"), "Why W. Wannabe");
 ///
-/// assert_eq!(name_based_full_name("Inquiescence"),   "Always Basket Baritone");
+/// assert_eq!(name_based_full_name("Dehydration"),    "Away Prompt Larch");
 /// ```
 pub fn name_based_full_name(name: &str) -> String {
     let digest = crc32_ieee(name.as_bytes());
