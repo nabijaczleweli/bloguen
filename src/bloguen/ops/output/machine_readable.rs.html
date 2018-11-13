@@ -264,6 +264,11 @@
 <span id="264">264</span>
 <span id="265">265</span>
 <span id="266">266</span>
+<span id="267">267</span>
+<span id="268">268</span>
+<span id="269">269</span>
+<span id="270">270</span>
+<span id="271">271</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">BLOGUEN_VERSION</span>, <span class="ident">normalise_datetime</span>};
 <span class="kw">use</span> <span class="ident">chrono</span>::<span class="ident">format</span>::{<span class="ident">Fixed</span> <span class="kw">as</span> <span class="ident">FixedTimeFormatItem</span>, <span class="ident">Item</span> <span class="kw">as</span> <span class="ident">TimeFormatItem</span>};
@@ -313,20 +318,24 @@
 <span class="doccomment">/// assert_eq!(res, Ok(&quot;test blog&quot;.into()));</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// let out = str::from_utf8(&amp;out).unwrap();</span>
-<span class="doccomment">/// let (mut gendate_utc_rfc3339, mut gendate_utc_rfc2822, mut gendate_local_rfc3339, mut gendate_local_rfc2822) = (&quot;&quot;, &quot;&quot;, &quot;&quot;,</span>
-<span class="doccomment">/// &quot;&quot;);</span>
-<span class="doccomment">/// for l in out.split_terminator(&#39;\n&#39;) {</span>
-<span class="doccomment">///     let val = l.find(&quot;\&quot;: \&quot;&quot;).map(|i| &amp;l[i + 4..l.len() - 2]);</span>
-<span class="doccomment">///     if l.contains(&quot;generation_date_utc_rfc3339&quot;) {</span>
-<span class="doccomment">///         gendate_utc_rfc3339 = val.unwrap();</span>
-<span class="doccomment">///     } else if l.contains(&quot;generation_date_utc_rfc2822&quot;) {</span>
-<span class="doccomment">///         gendate_utc_rfc2822 = val.unwrap();</span>
-<span class="doccomment">///     } else if l.contains(&quot;generation_date_local_rfc3339&quot;) {</span>
-<span class="doccomment">///         gendate_local_rfc3339 = val.unwrap();</span>
-<span class="doccomment">///     } else if l.contains(&quot;generation_date_local_rfc2822&quot;) {</span>
-<span class="doccomment">///         gendate_local_rfc2822 = val.unwrap();</span>
-<span class="doccomment">///     }</span>
-<span class="doccomment">/// }</span>
+<span class="doccomment">/// # let (mut gendate_utc_rfc3339, mut gendate_utc_rfc2822, mut gendate_local_rfc3339, mut gendate_local_rfc2822) =</span>
+<span class="doccomment">/// #     (&quot;&quot;, &quot;&quot;, &quot;&quot;, &quot;&quot;);</span>
+<span class="doccomment">/// # for l in out.split_terminator(&#39;\n&#39;) {</span>
+<span class="doccomment">/// #     let val = l.find(&quot;\&quot;: \&quot;&quot;).map(|i| &amp;l[i + 4..l.len() - 2]);</span>
+<span class="doccomment">/// #     if l.contains(&quot;generation_date_utc_rfc3339&quot;) {</span>
+<span class="doccomment">/// #         gendate_utc_rfc3339 = val.unwrap();</span>
+<span class="doccomment">/// #     } else if l.contains(&quot;generation_date_utc_rfc2822&quot;) {</span>
+<span class="doccomment">/// #         gendate_utc_rfc2822 = val.unwrap();</span>
+<span class="doccomment">/// #     } else if l.contains(&quot;generation_date_local_rfc3339&quot;) {</span>
+<span class="doccomment">/// #         gendate_local_rfc3339 = val.unwrap();</span>
+<span class="doccomment">/// #     } else if l.contains(&quot;generation_date_local_rfc2822&quot;) {</span>
+<span class="doccomment">/// #         gendate_local_rfc2822 = val.unwrap();</span>
+<span class="doccomment">/// #     }</span>
+<span class="doccomment">/// # }</span>
+<span class="doccomment">/// # /*</span>
+<span class="doccomment">/// let (gendate_utc_rfc3339, gendate_utc_rfc2822, gendate_local_rfc3339, gendate_local_rfc2822) =</span>
+<span class="doccomment">///     /* extracted from output, format p.a. to post_date_* */;</span>
+<span class="doccomment">/// # */</span>
 <span class="doccomment">/// assert_eq!(out, format!(r###&quot;{{</span>
 <span class="doccomment">///     &quot;number&quot;: 3,</span>
 <span class="doccomment">///     &quot;language&quot;: &quot;en-GB&quot;,</span>
@@ -362,7 +371,8 @@
 <span class="doccomment">///     ],</span>
 <span class="doccomment">///</span>
 <span class="doccomment">///     &quot;bloguen-version&quot;: &quot;0.1.0&quot;</span>
-<span class="doccomment">/// }}&quot;###, gendate_utc_rfc3339, gendate_utc_rfc2822, gendate_local_rfc3339, gendate_local_rfc2822));</span>
+<span class="doccomment">/// }}&quot;###,</span>
+<span class="doccomment">///     gendate_utc_rfc3339, gendate_utc_rfc2822, gendate_local_rfc3339, gendate_local_rfc2822));</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">machine_output_json</span><span class="op">&lt;</span><span class="ident">W</span>, <span class="ident">E</span>, <span class="ident">Tz</span>, <span class="ident">St</span>, <span class="ident">Sc</span><span class="op">&gt;</span>(<span class="ident">blog_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">LanguageTag</span>, <span class="ident">additional_data_sets</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>],
                                              <span class="ident">raw_post_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">number</span>: <span class="ident">usize</span>, <span class="ident">title</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">post_date</span>: <span class="kw-2">&amp;</span><span class="ident">DateTime</span><span class="op">&lt;</span><span class="ident">Tz</span><span class="op">&gt;</span>, <span class="ident">tags</span>: <span class="kw-2">&amp;</span>[<span class="kw-2">&amp;</span>[<span class="ident">TagName</span>]],
