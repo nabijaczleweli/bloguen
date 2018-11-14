@@ -16,8 +16,9 @@ use crc::crc32::checksum_ieee as crc32_ieee;
 use url::percent_encoding::percent_decode;
 use std::path::{self, PathBuf, Path};
 use self::super::ops::LanguageTag;
+use rand_xorshift::XorShiftRng;
 use rand::{SeedableRng, Rng};
-use rand::prng::XorShiftRng;
+use rand::seq::SliceRandom;
 use comrak::ComrakOptions;
 use self::super::Error;
 use std::borrow::Cow;
@@ -41,6 +42,7 @@ lazy_static! {
     /// Options to use for parsing Markdown.
     pub static ref MARKDOWN_OPTIONS: ComrakOptions = ComrakOptions {
         hardbreaks: true,
+        unsafe_: true,
         ext_strikethrough: true,
         ext_table: true,
         ext_autolink: true,
@@ -141,10 +143,10 @@ pub fn name_based_full_name(name: &str) -> String {
     }
     let mut rng = XorShiftRng::from_seed(seed);
 
-    let first_name = rng.choose(ADVERBS).unwrap();
-    let last_name = rng.choose(NOUNS).unwrap();
+    let first_name = ADVERBS.choose(&mut rng).unwrap();
+    let last_name = NOUNS.choose(&mut rng).unwrap();
     if rng.gen_bool(0.2) {
-        let middle_name = rng.choose(ADJECTIVES).unwrap();
+        let middle_name = ADJECTIVES.choose(&mut rng).unwrap();
         if rng.gen_bool(0.25) {
             format!("{} {} {}", first_name, middle_name, last_name)
         } else {

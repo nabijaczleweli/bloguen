@@ -16,6 +16,7 @@
 
 
 extern crate safe_transmute;
+extern crate rand_xorshift;
 #[macro_use]
 extern crate serde_derive;
 #[macro_use]
