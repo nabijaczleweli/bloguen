@@ -55,6 +55,7 @@ ALIASES['toml'] = {};
 ALIASES['twoway'] = {};
 ALIASES['typed_arena'] = {};
 ALIASES['ucd_util'] = {};
+ALIASES['unicase'] = {};
 ALIASES['unicode_bidi'] = {};
 ALIASES['unicode_categories'] = {};
 ALIASES['unicode_normalization'] = {};
