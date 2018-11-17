@@ -212,8 +212,34 @@
 <span id="212">212</span>
 <span id="213">213</span>
 <span id="214">214</span>
+<span id="215">215</span>
+<span id="216">216</span>
+<span id="217">217</span>
+<span id="218">218</span>
+<span id="219">219</span>
+<span id="220">220</span>
+<span id="221">221</span>
+<span id="222">222</span>
+<span id="223">223</span>
+<span id="224">224</span>
+<span id="225">225</span>
+<span id="226">226</span>
+<span id="227">227</span>
+<span id="228">228</span>
+<span id="229">229</span>
+<span id="230">230</span>
+<span id="231">231</span>
+<span id="232">232</span>
+<span id="233">233</span>
+<span id="234">234</span>
+<span id="235">235</span>
+<span id="236">236</span>
+<span id="237">237</span>
+<span id="238">238</span>
+<span id="239">239</span>
+<span id="240">240</span>
 </pre><pre class="rust ">
-<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>};
+<span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">MachineDataKind</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">concat_path</span>;
 <span class="kw">use</span> <span class="ident">toml</span>::<span class="ident">de</span>::<span class="ident">from_str</span> <span class="kw">as</span> <span class="ident">from_toml_str</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">collections</span>::<span class="ident">BTreeMap</span>;
@@ -242,6 +268,12 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default: `&quot;$ROOT/footer.html&quot;`, then `&quot;$ROOT/footer.htm&quot;`.</span>
     <span class="kw">pub</span> <span class="ident">footer_file</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
+    <span class="doccomment">/// Where and which machine datasets to put.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Each value here is a prefix appended to the output directory under which to put the machine data.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Values can&#39;t be empty (to put machine data at post root use &quot;./&quot;).</span>
+    <span class="kw">pub</span> <span class="ident">machine_data</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">MachineDataKind</span>, <span class="ident">String</span><span class="op">&gt;</span>,
     <span class="doccomment">/// Default post language.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Overriden by post metadata, if present.</span>
@@ -268,6 +300,7 @@
     <span class="kw">pub</span> <span class="ident">author</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">header</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">footer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">machine_data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">MachineDataKind</span>, <span class="ident">String</span><span class="op">&gt;&gt;</span>,
     <span class="kw">pub</span> <span class="ident">language</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">LanguageTag</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">styles</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StyleElement</span><span class="op">&gt;&gt;</span>,
     <span class="kw">pub</span> <span class="ident">scripts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScriptElement</span><span class="op">&gt;&gt;</span>,
@@ -303,6 +336,9 @@
     <span class="doccomment">/// class = &quot;file&quot;</span>
     <span class="doccomment">/// data = &quot;MathJax-config.js&quot;</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// [machine_data]</span>
+    <span class="doccomment">/// JSON = &quot;metadata/json/&quot;</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// [data]</span>
     <span class="doccomment">/// preferred_system = &quot;capitalism&quot;</span>
     <span class="doccomment">/// ```</span>
@@ -310,7 +346,7 @@
     <span class="doccomment">/// The following holds:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use bloguen::ops::{BlogueDescriptor, ScriptElement};</span>
+    <span class="doccomment">/// # use bloguen::ops::{BlogueDescriptor, MachineDataKind, ScriptElement};</span>
     <span class="doccomment">/// # use std::fs::{self, File};</span>
     <span class="doccomment">/// # use std::env::temp_dir;</span>
     <span class="doccomment">/// # use std::io::Write;</span>
@@ -329,6 +365,9 @@
     <span class="doccomment">/// #     class = \&quot;file\&quot;\n\</span>
     <span class="doccomment">/// #     data = \&quot;MathJax-config.js\&quot;\n\</span>
     <span class="doccomment">/// #     \n\</span>
+    <span class="doccomment">/// #     [machine_data]\n\</span>
+    <span class="doccomment">/// #     JSON = \&quot;metadata/json/\&quot;\n\</span>
+    <span class="doccomment">/// #     \n\</span>
     <span class="doccomment">/// #     [data]\n\</span>
     <span class="doccomment">/// #     preferred_system = \&quot;capitalism\&quot;\n\</span>
     <span class="doccomment">/// # &quot;.as_bytes()).unwrap();</span>
@@ -344,6 +383,7 @@
     <span class="doccomment">///                author: None,</span>
     <span class="doccomment">///                header_file: (&quot;$ROOT/head.html&quot;.to_string(), root.join(&quot;head.html&quot;)),</span>
     <span class="doccomment">///                footer_file: (&quot;$ROOT/footer.htm&quot;.to_string(), root.join(&quot;footer.htm&quot;)),</span>
+    <span class="doccomment">///                machine_data: vec![(MachineDataKind::Json, &quot;metadata/json/&quot;.to_string())].into_iter().collect(),</span>
     <span class="doccomment">///                language: Some(&quot;pl&quot;.parse().unwrap()),</span>
     <span class="doccomment">///                styles: vec![],</span>
     <span class="doccomment">///                scripts: vec![ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;),</span>
@@ -376,11 +416,23 @@
                 }
             })<span class="question-mark">?</span>;
 
+        <span class="kw">let</span> <span class="ident">machine_data</span> <span class="op">=</span> <span class="ident">serialised</span>.<span class="ident">machine_data</span>.<span class="ident">unwrap_or_default</span>();
+        <span class="kw">for</span> (<span class="kw-2">ref</span> <span class="ident">k</span>, <span class="kw-2">ref</span> <span class="ident">v</span>) <span class="kw">in</span> <span class="kw-2">&amp;</span><span class="ident">machine_data</span> {
+            <span class="kw">if</span> <span class="ident">v</span>.<span class="ident">find</span>(<span class="op">|</span><span class="ident">c</span><span class="op">|</span> <span class="op">!</span>[<span class="string">&#39;/&#39;</span>, <span class="string">&#39;\\&#39;</span>].<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="ident">c</span>)).<span class="ident">is_none</span>() {
+                <span class="kw">return</span> <span class="prelude-val">Err</span>(<span class="ident">Error</span>::<span class="ident">Parse</span> {
+                    <span class="ident">tp</span>: <span class="string">&quot;path chunk&quot;</span>,
+                    <span class="ident">wher</span>: <span class="string">&quot;blogue descriptor&quot;</span>.<span class="ident">into</span>(),
+                    <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} subdir selector empty&quot;</span>, <span class="ident">k</span>).<span class="ident">into</span>()),
+                });
+            }
+        }
+
         <span class="prelude-val">Ok</span>(<span class="ident">BlogueDescriptor</span> {
             <span class="ident">name</span>: <span class="ident">serialised</span>.<span class="ident">name</span>,
             <span class="ident">author</span>: <span class="ident">serialised</span>.<span class="ident">author</span>,
             <span class="ident">header_file</span>: <span class="ident">additional_file</span>(<span class="ident">serialised</span>.<span class="ident">header</span>, <span class="ident">root</span>, <span class="string">&quot;header&quot;</span>, <span class="string">&quot;post header&quot;</span>)<span class="question-mark">?</span>,
             <span class="ident">footer_file</span>: <span class="ident">additional_file</span>(<span class="ident">serialised</span>.<span class="ident">footer</span>, <span class="ident">root</span>, <span class="string">&quot;footer&quot;</span>, <span class="string">&quot;post footer&quot;</span>)<span class="question-mark">?</span>,
+            <span class="ident">machine_data</span>: <span class="ident">machine_data</span>,
             <span class="ident">language</span>: <span class="ident">serialised</span>.<span class="ident">language</span>,
             <span class="ident">styles</span>: <span class="ident">serialised</span>.<span class="ident">styles</span>.<span class="ident">unwrap_or_default</span>(),
             <span class="ident">scripts</span>: <span class="ident">serialised</span>.<span class="ident">scripts</span>.<span class="ident">unwrap_or_default</span>(),
