@@ -463,12 +463,16 @@
 <span id="463">463</span>
 <span id="464">464</span>
 <span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Module containing various utility functions.</span>
 
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>)]</span>
 <span class="kw">mod</span> <span class="ident">windows</span>;
+<span class="kw">mod</span> <span class="ident">polywrite</span>;
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>))]</span>
 <span class="kw">mod</span> <span class="ident">non_windows</span>;
 
@@ -494,6 +498,8 @@
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">windows</span>::{<span class="ident">current_username_impl</span>, <span class="ident">default_language_impl</span>};
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">not</span>(<span class="ident">target_os</span> <span class="op">=</span> <span class="string">&quot;windows&quot;</span>))]</span>
 <span class="kw">use</span> <span class="self">self</span>::<span class="ident">non_windows</span>::{<span class="ident">current_username_impl</span>, <span class="ident">default_language_impl</span>};
+
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">polywrite</span>::<span class="ident">PolyWrite</span>;
 
 
 <span class="macro">include</span><span class="macro">!</span>(<span class="macro">concat</span><span class="macro">!</span>(<span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;OUT_DIR&quot;</span>), <span class="string">&quot;/words.rs&quot;</span>));
