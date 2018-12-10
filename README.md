@@ -1,1 +1,1 @@
-# [bloguen documentation](https://cdn.rawgit.com/nabijaczleweli/bloguen/doc/bloguen/index.html)
+# [bloguen documentation](https://rawcdn.githack.com/nabijaczleweli/bloguen/doc/bloguen/index.html)
