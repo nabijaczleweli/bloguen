@@ -3,6 +3,7 @@ ALIASES['aho_corasick'] = {};
 ALIASES['ansi_term'] = {};
 ALIASES['arrayvec'] = {};
 ALIASES['atty'] = {};
+ALIASES['bidir_map'] = {};
 ALIASES['bitflags'] = {};
 ALIASES['bloguen'] = {};
 ALIASES['cfg_if'] = {};
