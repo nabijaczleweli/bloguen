@@ -298,6 +298,18 @@
 <span id="298">298</span>
 <span id="299">299</span>
 <span id="300">300</span>
+<span id="301">301</span>
+<span id="302">302</span>
+<span id="303">303</span>
+<span id="304">304</span>
+<span id="305">305</span>
+<span id="306">306</span>
+<span id="307">307</span>
+<span id="308">308</span>
+<span id="309">309</span>
+<span id="310">310</span>
+<span id="311">311</span>
+<span id="312">312</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">MachineDataKind</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">concat_path</span>;
@@ -361,12 +373,17 @@
 <span class="doccomment">/// Metadata pertainign specifically to generating an index file.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">BlogueDescriptorIndex</span> {
-    <span class="doccomment">/// Data to put before index HTML, templated.</span>
+    <span class="doccomment">/// Data to put start index HTML with, templated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default: `&quot;$ROOT/index_header.html&quot;`, then `&quot;$ROOT/index_header.htm&quot;`,</span>
     <span class="doccomment">///     then `&quot;$ROOT/idx_header.html&quot;`, then `&quot;$ROOT/idx_header.htm&quot;`.</span>
     <span class="kw">pub</span> <span class="ident">header_file</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
-    <span class="doccomment">/// Data to put after index HTML, templated.</span>
+    <span class="doccomment">/// Data to put in index HTML for each post, templated.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Default: `&quot;$ROOT/index_center.html&quot;`, then `&quot;$ROOT/index_center.htm&quot;`,</span>
+    <span class="doccomment">///     then `&quot;$ROOT/idx_center.html&quot;`, then `&quot;$ROOT/idx_center.htm&quot;`.</span>
+    <span class="kw">pub</span> <span class="ident">center_file</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
+    <span class="doccomment">/// Data to put to end index HTML with, templated.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// Default: `&quot;$ROOT/index_footer.html&quot;`, then `&quot;$ROOT/index_footer.htm&quot;`,</span>
     <span class="doccomment">///     then `&quot;$ROOT/idx_footer.html&quot;`, then `&quot;$ROOT/idx_footer.htm&quot;`.</span>
@@ -392,6 +409,7 @@
 <span class="kw">struct</span> <span class="ident">BlogueDescriptorIndexSerialised</span> {
     <span class="kw">pub</span> <span class="ident">generate</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">header</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">center</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">footer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
 }
 
@@ -409,6 +427,7 @@
     <span class="doccomment">///   head.html</span>
     <span class="doccomment">///   footer.htm</span>
     <span class="doccomment">///   idx_head.html</span>
+    <span class="doccomment">///   центр.html</span>
     <span class="doccomment">///   index_footer.htm</span>
     <span class="doccomment">/// ```</span>
     <span class="doccomment">///</span>
@@ -421,6 +440,7 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// [index]</span>
     <span class="doccomment">/// header = &quot;idx_head.html&quot;</span>
+    <span class="doccomment">/// center = &quot;центр.html&quot;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [[scripts]]</span>
     <span class="doccomment">/// class = &quot;link&quot;</span>
@@ -453,6 +473,7 @@
     <span class="doccomment">/// #     \n\</span>
     <span class="doccomment">/// #     [index]\n\</span>
     <span class="doccomment">/// #     header = \&quot;idx_head.html\&quot;\n\</span>
+    <span class="doccomment">/// #     center = \&quot;центр.html\&quot;\n\</span>
     <span class="doccomment">/// #     \n\</span>
     <span class="doccomment">/// #     [[scripts]]\n\</span>
     <span class="doccomment">/// #     class = \&quot;link\&quot;\n\</span>
@@ -471,6 +492,7 @@
     <span class="doccomment">/// # File::create(root.join(&quot;head.html&quot;)).unwrap().write_all(&quot;header&quot;.as_bytes()).unwrap();</span>
     <span class="doccomment">/// # File::create(root.join(&quot;footer.htm&quot;)).unwrap().write_all(&quot;footer&quot;.as_bytes()).unwrap();</span>
     <span class="doccomment">/// # File::create(root.join(&quot;idx_head.html&quot;)).unwrap().write_all(&quot;index header&quot;.as_bytes()).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;центр.html&quot;)).unwrap().write_all(&quot;index центр&quot;.as_bytes()).unwrap();</span>
     <span class="doccomment">/// # File::create(root.join(&quot;index_footer.htm&quot;)).unwrap().write_all(&quot;index footer&quot;.as_bytes()).unwrap();</span>
     <span class="doccomment">/// # /*</span>
     <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
@@ -489,6 +511,7 @@
     <span class="doccomment">///                              ScriptElement::from_path(&quot;MathJax-config.js&quot;)],</span>
     <span class="doccomment">///                index: Some(BlogueDescriptorIndex {</span>
     <span class="doccomment">///                    header_file: (&quot;$ROOT/idx_head.html&quot;.to_string(), root.join(&quot;idx_head.html&quot;)),</span>
+    <span class="doccomment">///                    center_file: (&quot;$ROOT/центр.html&quot;.to_string(), root.join(&quot;центр.html&quot;)),</span>
     <span class="doccomment">///                    footer_file: (&quot;$ROOT/index_footer.htm&quot;.to_string(), root.join(&quot;index_footer.htm&quot;)),</span>
     <span class="doccomment">///                }),</span>
     <span class="doccomment">///                data: vec![(&quot;preferred_system&quot;.to_string(),</span>
@@ -535,23 +558,24 @@
             <span class="ident">author</span>: <span class="ident">serialised</span>.<span class="ident">author</span>,
             <span class="ident">header_file</span>: <span class="ident">additional_file</span>(<span class="ident">serialised</span>.<span class="ident">header</span>, <span class="ident">root</span>, <span class="string">&quot;header&quot;</span>, <span class="string">&quot;post header&quot;</span>)<span class="question-mark">?</span>,
             <span class="ident">footer_file</span>: <span class="ident">additional_file</span>(<span class="ident">serialised</span>.<span class="ident">footer</span>, <span class="ident">root</span>, <span class="string">&quot;footer&quot;</span>, <span class="string">&quot;post footer&quot;</span>)<span class="question-mark">?</span>,
-            <span class="ident">index</span>:
-                <span class="kw">match</span> <span class="ident">serialised</span>.<span class="ident">index</span> {
-                    <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">si</span>) <span class="op">=&gt;</span> {
-                        <span class="kw">match</span> <span class="ident">si</span>.<span class="ident">generate</span> {
-                            <span class="prelude-val">None</span> <span class="op">|</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) <span class="op">=&gt;</span> {
+            <span class="ident">index</span>: <span class="kw">match</span> <span class="ident">serialised</span>.<span class="ident">index</span> {
+                <span class="prelude-val">Some</span>(<span class="kw-2">mut</span> <span class="ident">si</span>) <span class="op">=&gt;</span> {
+                    <span class="kw">match</span> <span class="ident">si</span>.<span class="ident">generate</span> {
+                        <span class="prelude-val">None</span> <span class="op">|</span> <span class="prelude-val">Some</span>(<span class="bool-val">true</span>) <span class="op">=&gt;</span> {
                                 <span class="prelude-val">Some</span>(<span class="ident">BlogueDescriptorIndex</span> {
                                     <span class="ident">header_file</span>: <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">header</span>.<span class="ident">clone</span>(), <span class="ident">root</span>, <span class="string">&quot;index_header&quot;</span>, <span class="string">&quot;index header&quot;</span>)
                                                      .<span class="ident">or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">header</span>.<span class="ident">take</span>(), <span class="ident">root</span>, <span class="string">&quot;idx_header&quot;</span>, <span class="string">&quot;index header&quot;</span>))<span class="question-mark">?</span>,
+                                    <span class="ident">center_file</span>: <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">center</span>.<span class="ident">clone</span>(), <span class="ident">root</span>, <span class="string">&quot;index_center&quot;</span>, <span class="string">&quot;index center&quot;</span>)
+                                                     .<span class="ident">or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">center</span>.<span class="ident">take</span>(), <span class="ident">root</span>, <span class="string">&quot;idx_center&quot;</span>, <span class="string">&quot;index center&quot;</span>))<span class="question-mark">?</span>,
                                     <span class="ident">footer_file</span>: <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">footer</span>.<span class="ident">clone</span>(), <span class="ident">root</span>, <span class="string">&quot;index_footer&quot;</span>, <span class="string">&quot;index footer&quot;</span>)
                                                      .<span class="ident">or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">footer</span>.<span class="ident">take</span>(), <span class="ident">root</span>, <span class="string">&quot;idx_footer&quot;</span>, <span class="string">&quot;index footer&quot;</span>))<span class="question-mark">?</span>,
                                 })
                             }
-                            <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-                        }
+                        <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
                     }
-                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
-                },
+                }
+                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+            },
             <span class="ident">machine_data</span>: <span class="ident">machine_data</span>,
             <span class="ident">language</span>: <span class="ident">serialised</span>.<span class="ident">language</span>,
             <span class="ident">styles</span>: <span class="ident">serialised</span>.<span class="ident">styles</span>.<span class="ident">unwrap_or_default</span>(),
