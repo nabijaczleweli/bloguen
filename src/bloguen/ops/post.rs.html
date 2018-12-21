@@ -589,8 +589,6 @@
 <span id="589">589</span>
 <span id="590">590</span>
 <span id="591">591</span>
-<span id="592">592</span>
-<span id="593">593</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">MachineDataKind</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>, <span class="ident">TagName</span>, <span class="ident">machine_output_kind</span>, <span class="ident">format_output</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">PolyWrite</span>, <span class="ident">MARKDOWN_OPTIONS</span>, <span class="ident">name_based_post_time</span>, <span class="ident">extract_links</span>, <span class="ident">concat_path</span>, <span class="ident">read_file</span>};
@@ -919,7 +917,6 @@
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">center</span>, <span class="kw-2">mut</span> <span class="ident">center_out</span>, <span class="ident">center_temp</span>)) <span class="op">=</span> <span class="ident">center_output</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">temp_data</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
-            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">center_temp</span>);
             <span class="ident">temp_data</span>.<span class="ident">insert</span>(<span class="string">&quot;post_content&quot;</span>.<span class="ident">to_string</span>(),
                              <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">center_temp</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
                     <span class="ident">Error</span>::<span class="ident">Parse</span> {
@@ -928,7 +925,6 @@
                         <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="ident">e</span>.<span class="ident">to_string</span>().<span class="ident">into</span>()),
                     }
                 })<span class="question-mark">?</span>);
-            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">temp_data</span>);
 
             <span class="ident">format_output</span>(<span class="ident">center</span>,
                           <span class="ident">blog_name</span>,
