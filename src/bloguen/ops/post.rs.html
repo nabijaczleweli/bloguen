@@ -572,6 +572,25 @@
 <span id="572">572</span>
 <span id="573">573</span>
 <span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">MachineDataKind</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>, <span class="ident">TagName</span>, <span class="ident">machine_output_kind</span>, <span class="ident">format_output</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">PolyWrite</span>, <span class="ident">MARKDOWN_OPTIONS</span>, <span class="ident">name_based_post_time</span>, <span class="ident">extract_links</span>, <span class="ident">concat_path</span>, <span class="ident">read_file</span>};
@@ -776,6 +795,9 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// Alternate output is filled with the HTML-formatted post Markdown.</span>
     <span class="doccomment">///</span>
+    <span class="doccomment">/// Center output is filled with the specified template filled-out with additional `post_content` data element</span>
+    <span class="doccomment">/// consisting of the HTML-formatted post Markdown.</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Returns: set of links in the markdown source.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// # Examples</span>
@@ -822,7 +844,7 @@
     <span class="doccomment">/// #                .unwrap().read_to_string(&amp;mut read).unwrap();</span>
     <span class="doccomment">/// # assert_eq!(read, &quot;header&lt;p&gt;&lt;a href=\&quot;url.html\&quot;&gt;Блогг&lt;/a&gt;&lt;/p&gt;\nfooter&quot;);</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>), <span class="ident">alt_output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span><span class="op">&gt;</span>, <span class="ident">center_output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span>)<span class="op">&gt;</span>, <span class="ident">post_header</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>), <span class="kw-2">mut</span> <span class="ident">alt_output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span><span class="op">&gt;</span>, <span class="ident">center_output</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span>)<span class="op">&gt;</span>, <span class="ident">post_header</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
                     <span class="ident">post_footer</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">blog_name</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">LanguageTag</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">spec_tags</span>: <span class="kw-2">&amp;</span>[<span class="ident">TagName</span>], <span class="ident">free_tags</span>: <span class="kw-2">&amp;</span>[<span class="ident">TagName</span>],
                     <span class="ident">post_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">global_data</span>: <span class="kw-2">&amp;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>, <span class="ident">post_styles</span>: <span class="kw-2">&amp;</span>[<span class="ident">StyleElement</span>],
                     <span class="ident">global_styles</span>: <span class="kw-2">&amp;</span>[<span class="ident">StyleElement</span>], <span class="ident">post_scripts</span>: <span class="kw-2">&amp;</span>[<span class="ident">ScriptElement</span>], <span class="ident">global_scripts</span>: <span class="kw-2">&amp;</span>[<span class="ident">ScriptElement</span>])
@@ -865,10 +887,14 @@
                                             <span class="kw-2">&amp;</span>[<span class="ident">global_scripts</span>, <span class="ident">post_scripts</span>],
                                             <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">post_html_f</span>,
                                             <span class="ident">normalised_name</span>)<span class="question-mark">?</span>;
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">alt_out</span>) <span class="op">=</span> <span class="ident">alt_output</span> {
-                <span class="ident">comrak</span>::<span class="ident">format_html</span>(<span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">MARKDOWN_OPTIONS</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PolyWrite</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">post_html_f</span>, <span class="ident">alt_out</span>))
-            } <span class="kw">else</span> {
-                <span class="ident">comrak</span>::<span class="ident">format_html</span>(<span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">MARKDOWN_OPTIONS</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">post_html_f</span>)
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">center_output</span> <span class="op">=</span> <span class="ident">center_output</span>.<span class="ident">map</span>(<span class="op">|</span>(<span class="ident">f</span>, <span class="ident">o</span>)<span class="op">|</span> (<span class="ident">f</span>, <span class="ident">o</span>, <span class="macro">vec</span><span class="macro">!</span>[]));
+        <span class="kw">match</span> (<span class="ident">alt_output</span>.<span class="ident">as_mut</span>(), <span class="ident">center_output</span>.<span class="ident">as_mut</span>()) {
+                (<span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">alt_out</span>), <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">center_tmp</span>))) <span class="op">=&gt;</span> {
+                    <span class="ident">comrak</span>::<span class="ident">format_html</span>(<span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">MARKDOWN_OPTIONS</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PolyWrite</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">post_html_f</span>, <span class="ident">PolyWrite</span>(<span class="ident">alt_out</span>, <span class="ident">center_tmp</span>)))
+                }
+                (<span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">alt_out</span>), <span class="prelude-val">None</span>) <span class="op">=&gt;</span> <span class="ident">comrak</span>::<span class="ident">format_html</span>(<span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">MARKDOWN_OPTIONS</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PolyWrite</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">post_html_f</span>, <span class="ident">alt_out</span>)),
+                (<span class="prelude-val">None</span>, <span class="prelude-val">Some</span>((<span class="kw">_</span>, <span class="kw">_</span>, <span class="ident">center_tmp</span>))) <span class="op">=&gt;</span> <span class="ident">comrak</span>::<span class="ident">format_html</span>(<span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">MARKDOWN_OPTIONS</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">PolyWrite</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">post_html_f</span>, <span class="ident">center_tmp</span>)),
+                (<span class="prelude-val">None</span>, <span class="prelude-val">None</span>) <span class="op">=&gt;</span> <span class="ident">comrak</span>::<span class="ident">format_html</span>(<span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="ident">MARKDOWN_OPTIONS</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">post_html_f</span>),
             }.<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
                 <span class="ident">Error</span>::<span class="ident">Io</span> {
                     <span class="ident">desc</span>: <span class="string">&quot;post HTML&quot;</span>.<span class="ident">into</span>(),
@@ -891,11 +917,23 @@
                                             <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">post_html_f</span>,
                                             <span class="ident">normalised_name</span>)<span class="question-mark">?</span>;
 
-        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">center</span>, <span class="kw-2">mut</span> <span class="ident">center_out</span>)) <span class="op">=</span> <span class="ident">center_output</span> {
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">center</span>, <span class="kw-2">mut</span> <span class="ident">center_out</span>, <span class="ident">center_temp</span>)) <span class="op">=</span> <span class="ident">center_output</span> {
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">temp_data</span> <span class="op">=</span> <span class="ident">BTreeMap</span>::<span class="ident">new</span>();
+            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">center_temp</span>);
+            <span class="ident">temp_data</span>.<span class="ident">insert</span>(<span class="string">&quot;post_content&quot;</span>.<span class="ident">to_string</span>(),
+                             <span class="ident">String</span>::<span class="ident">from_utf8</span>(<span class="ident">center_temp</span>).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
+                    <span class="ident">Error</span>::<span class="ident">Parse</span> {
+                        <span class="ident">tp</span>: <span class="string">&quot;UTF-8 string&quot;</span>,
+                        <span class="ident">wher</span>: <span class="string">&quot;index file post metadata&quot;</span>.<span class="ident">into</span>(),
+                        <span class="ident">more</span>: <span class="prelude-val">Some</span>(<span class="ident">e</span>.<span class="ident">to_string</span>().<span class="ident">into</span>()),
+                    }
+                })<span class="question-mark">?</span>);
+            <span class="macro">println</span><span class="macro">!</span>(<span class="string">&quot;{:#?}&quot;</span>, <span class="ident">temp_data</span>);
+
             <span class="ident">format_output</span>(<span class="ident">center</span>,
                           <span class="ident">blog_name</span>,
                           <span class="ident">language</span>,
-                          <span class="kw-2">&amp;</span>[<span class="ident">global_data</span>, <span class="ident">post_data</span>],
+                          <span class="kw-2">&amp;</span>[<span class="ident">global_data</span>, <span class="ident">post_data</span>, <span class="kw-2">&amp;</span><span class="ident">temp_data</span>],
                           <span class="kw-2">&amp;</span><span class="ident">original_name</span>,
                           <span class="self">self</span>.<span class="ident">number</span>.<span class="number">0</span>,
                           <span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>,
