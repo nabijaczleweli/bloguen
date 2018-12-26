@@ -17,6 +17,7 @@ ALIASES['crossbeam_utils'] = {};
 ALIASES['either'] = {};
 ALIASES['entities'] = {};
 ALIASES['idna'] = {};
+ALIASES['jetscii'] = {};
 ALIASES['lazy_static'] = {};
 ALIASES['libc'] = {};
 ALIASES['matches'] = {};
