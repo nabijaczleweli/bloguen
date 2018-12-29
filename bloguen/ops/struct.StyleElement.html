@@ -107,7 +107,7 @@ a &gt; i.fa {
 <pre class="rust rust-example-rendered">
 <span class="kw">let</span> <span class="ident">root</span>: <span class="ident">PathBuf</span> <span class="op">=</span> <span class="comment">/* obtained elsewhere */</span>;
 
-<span class="kw">let</span> <span class="ident">lit_p</span> <span class="op">=</span> <span class="ident">StyleElement</span>::<span class="ident">from_file</span>(<span class="kw-2">&amp;</span>(<span class="string">&quot;$ROOT/common.cs&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;common.css&quot;</span>))).<span class="ident">unwrap</span>();
+<span class="kw">let</span> <span class="ident">lit_p</span> <span class="op">=</span> <span class="ident">StyleElement</span>::<span class="ident">from_file</span>(<span class="kw-2">&amp;</span>(<span class="string">&quot;$ROOT/common.css&quot;</span>.<span class="ident">to_string</span>(), <span class="ident">root</span>.<span class="ident">join</span>(<span class="string">&quot;common.css&quot;</span>))).<span class="ident">unwrap</span>();
 <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}{}{}&quot;</span>, <span class="ident">lit_p</span>.<span class="ident">head</span>(), <span class="ident">lit_p</span>.<span class="ident">content</span>(), <span class="ident">lit_p</span>.<span class="ident">foot</span>()), <span class="string">&quot;\
 &lt;style type=\&quot;text/css\&quot;&gt;\n\n\
      ul, ol {\n\
