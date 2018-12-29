@@ -319,6 +319,30 @@
 <span id="319">319</span>
 <span id="320">320</span>
 <span id="321">321</span>
+<span id="322">322</span>
+<span id="323">323</span>
+<span id="324">324</span>
+<span id="325">325</span>
+<span id="326">326</span>
+<span id="327">327</span>
+<span id="328">328</span>
+<span id="329">329</span>
+<span id="330">330</span>
+<span id="331">331</span>
+<span id="332">332</span>
+<span id="333">333</span>
+<span id="334">334</span>
+<span id="335">335</span>
+<span id="336">336</span>
+<span id="337">337</span>
+<span id="338">338</span>
+<span id="339">339</span>
+<span id="340">340</span>
+<span id="341">341</span>
+<span id="342">342</span>
+<span id="343">343</span>
+<span id="344">344</span>
+<span id="345">345</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">MachineDataKind</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">CenterOrder</span>, <span class="ident">LanguageTag</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">concat_path</span>;
@@ -401,6 +425,18 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// If not present, defaults to forward.</span>
     <span class="kw">pub</span> <span class="ident">center_order</span>: <span class="ident">CenterOrder</span>,
+    <span class="doccomment">/// A set of style descriptors.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If not present, defaults to empty.</span>
+    <span class="kw">pub</span> <span class="ident">styles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StyleElement</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// A set of style descriptors.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If not present, defaults to empty.</span>
+    <span class="kw">pub</span> <span class="ident">scripts</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScriptElement</span><span class="op">&gt;</span>,
+    <span class="doccomment">/// Additional static data to substitute in header and footer.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If not present, defaults to empty.</span>
+    <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;</span>,
 }
 
 
@@ -425,6 +461,9 @@
     <span class="kw">pub</span> <span class="ident">center</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">footer</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
     <span class="kw">pub</span> <span class="ident">order</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">CenterOrder</span><span class="op">&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">styles</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StyleElement</span><span class="op">&gt;&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">scripts</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">ScriptElement</span><span class="op">&gt;&gt;</span>,
+    <span class="kw">pub</span> <span class="ident">data</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">BTreeMap</span><span class="op">&lt;</span><span class="ident">String</span>, <span class="ident">String</span><span class="op">&gt;&gt;</span>,
 }
 
 
@@ -456,6 +495,7 @@
     <span class="doccomment">/// header = &quot;idx_head.html&quot;</span>
     <span class="doccomment">/// center = &quot;центр.html&quot;</span>
     <span class="doccomment">/// order = &quot;backward&quot;</span>
+    <span class="doccomment">/// styles = [&quot;literal:.indented { text-indent: 1em; }&quot;]</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [[scripts]]</span>
     <span class="doccomment">/// class = &quot;link&quot;</span>
@@ -475,7 +515,8 @@
     <span class="doccomment">/// The following holds:</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// ```</span>
-    <span class="doccomment">/// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, CenterOrder};</span>
+    <span class="doccomment">/// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement,</span>
+    <span class="doccomment">/// #                    CenterOrder};</span>
     <span class="doccomment">/// # use std::fs::{self, File};</span>
     <span class="doccomment">/// # use std::env::temp_dir;</span>
     <span class="doccomment">/// # use std::io::Write;</span>
@@ -490,6 +531,7 @@
     <span class="doccomment">/// #     header = \&quot;idx_head.html\&quot;\n\</span>
     <span class="doccomment">/// #     center = \&quot;центр.html\&quot;\n\</span>
     <span class="doccomment">/// #     order = \&quot;backward\&quot;\n\</span>
+    <span class="doccomment">/// #     styles = [\&quot;literal:.indented { text-indent: 1em; }\&quot;]\n\</span>
     <span class="doccomment">/// #     \n\</span>
     <span class="doccomment">/// #     [[scripts]]\n\</span>
     <span class="doccomment">/// #     class = \&quot;link\&quot;\n\</span>
@@ -530,6 +572,9 @@
     <span class="doccomment">///                    center_file: (&quot;$ROOT/центр.html&quot;.to_string(), root.join(&quot;центр.html&quot;)),</span>
     <span class="doccomment">///                    footer_file: (&quot;$ROOT/index_footer.htm&quot;.to_string(), root.join(&quot;index_footer.htm&quot;)),</span>
     <span class="doccomment">///                    center_order: CenterOrder::Backward,</span>
+    <span class="doccomment">///                    styles: vec![StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;)],</span>
+    <span class="doccomment">///                    scripts: vec![],</span>
+    <span class="doccomment">///                    data: vec![].into_iter().collect(),</span>
     <span class="doccomment">///                }),</span>
     <span class="doccomment">///                data: vec![(&quot;preferred_system&quot;.to_string(),</span>
     <span class="doccomment">///                            &quot;capitalism&quot;.to_string())].into_iter().collect(),</span>
@@ -586,7 +631,10 @@
                                                      .<span class="ident">or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">center</span>.<span class="ident">take</span>(), <span class="ident">root</span>, <span class="string">&quot;idx_center&quot;</span>, <span class="string">&quot;index center&quot;</span>))<span class="question-mark">?</span>,
                                     <span class="ident">footer_file</span>: <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">footer</span>.<span class="ident">clone</span>(), <span class="ident">root</span>, <span class="string">&quot;index_footer&quot;</span>, <span class="string">&quot;index footer&quot;</span>)
                                                      .<span class="ident">or_else</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> <span class="ident">additional_file</span>(<span class="ident">si</span>.<span class="ident">footer</span>.<span class="ident">take</span>(), <span class="ident">root</span>, <span class="string">&quot;idx_footer&quot;</span>, <span class="string">&quot;index footer&quot;</span>))<span class="question-mark">?</span>,
-                                    <span class="ident">center_order</span>: <span class="ident">si</span>.<span class="ident">order</span>.<span class="ident">unwrap_or_default</span>()
+                                    <span class="ident">center_order</span>: <span class="ident">si</span>.<span class="ident">order</span>.<span class="ident">unwrap_or_default</span>(),
+                                    <span class="ident">styles</span>: <span class="ident">si</span>.<span class="ident">styles</span>.<span class="ident">unwrap_or_default</span>(),
+                                    <span class="ident">scripts</span>: <span class="ident">si</span>.<span class="ident">scripts</span>.<span class="ident">unwrap_or_default</span>(),
+                                    <span class="ident">data</span>: <span class="ident">si</span>.<span class="ident">data</span>.<span class="ident">unwrap_or_default</span>(),
                                 })
                             }
                         <span class="prelude-val">Some</span>(<span class="bool-val">false</span>) <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
