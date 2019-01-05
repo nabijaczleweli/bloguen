@@ -363,6 +363,16 @@
 <span id="363">363</span>
 <span id="364">364</span>
 <span id="365">365</span>
+<span id="366">366</span>
+<span id="367">367</span>
+<span id="368">368</span>
+<span id="369">369</span>
+<span id="370">370</span>
+<span id="371">371</span>
+<span id="372">372</span>
+<span id="373">373</span>
+<span id="374">374</span>
+<span id="375">375</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">MachineDataKind</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">CenterOrder</span>, <span class="ident">LanguageTag</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::<span class="ident">concat_path</span>;
@@ -394,6 +404,9 @@
     <span class="doccomment">/// Default: `&quot;$ROOT/footer.html&quot;`, then `&quot;$ROOT/footer.htm&quot;`.</span>
     <span class="kw">pub</span> <span class="ident">footer_file</span>: (<span class="ident">String</span>, <span class="ident">PathBuf</span>),
     <span class="doccomment">/// Subfolder to move assets to, relative to the output root, if present.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The value is stripped of leading slashes. All backslashes are normalised to forward ones.</span>
+    <span class="doccomment">/// The value is ended off with a slash, if not already specified.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// No override is applied if not present – assets are copied alongside the posts&#39; HTML.</span>
     <span class="kw">pub</span> <span class="ident">asset_dir_override</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span>,
@@ -515,6 +528,7 @@
     <span class="doccomment">/// name = &quot;Блогг&quot;</span>
     <span class="doccomment">/// header = &quot;head.html&quot;</span>
     <span class="doccomment">/// language = &quot;pl&quot;</span>
+    <span class="doccomment">/// asset_dir = &quot;assets&quot;</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// [index]</span>
     <span class="doccomment">/// header = &quot;idx_head.html&quot;</span>
@@ -551,6 +565,7 @@
     <span class="doccomment">/// #     name = \&quot;Блогг\&quot;\n\</span>
     <span class="doccomment">/// #     header = \&quot;head.html\&quot;\n\</span>
     <span class="doccomment">/// #     language = \&quot;pl\&quot;\n\</span>
+    <span class="doccomment">/// #     asset_dir = \&quot;assets\&quot;\n\</span>
     <span class="doccomment">/// #     \n\</span>
     <span class="doccomment">/// #     [index]\n\</span>
     <span class="doccomment">/// #     header = \&quot;idx_head.html\&quot;\n\</span>
@@ -587,6 +602,7 @@
     <span class="doccomment">///                author: None,</span>
     <span class="doccomment">///                header_file: (&quot;$ROOT/head.html&quot;.to_string(), root.join(&quot;head.html&quot;)),</span>
     <span class="doccomment">///                footer_file: (&quot;$ROOT/footer.htm&quot;.to_string(), root.join(&quot;footer.htm&quot;)),</span>
+    <span class="doccomment">///                asset_dir_override: Some(&quot;assets/&quot;.to_string()),</span>
     <span class="doccomment">///                machine_data: vec![(MachineDataKind::Json, &quot;metadata/json/&quot;.to_string())].into_iter().collect(),</span>
     <span class="doccomment">///                language: Some(&quot;pl&quot;.parse().unwrap()),</span>
     <span class="doccomment">///                styles: vec![],</span>
@@ -638,6 +654,10 @@
             <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">backslash</span>) <span class="op">=</span> <span class="ident">ad</span>[<span class="ident">last_slash</span>..].<span class="ident">find</span>(<span class="string">&#39;\\&#39;</span>) {
                 <span class="ident">ad</span>.<span class="ident">replace_range</span>(<span class="ident">last_slash</span> <span class="op">+</span> <span class="ident">backslash</span>..<span class="ident">last_slash</span> <span class="op">+</span> <span class="ident">backslash</span> <span class="op">+</span> <span class="number">1</span>, <span class="string">&quot;/&quot;</span>);
                 <span class="ident">last_slash</span> <span class="op">+=</span> <span class="ident">backslash</span> <span class="op">+</span> <span class="number">1</span>;
+            }
+
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">ad</span>.<span class="ident">ends_with</span>(<span class="string">&#39;/&#39;</span>) {
+                <span class="ident">ad</span>.<span class="ident">push</span>(<span class="string">&#39;/&#39;</span>);
             }
 
             <span class="ident">ad</span>
