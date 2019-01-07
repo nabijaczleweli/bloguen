@@ -547,15 +547,6 @@
 <span id="547">547</span>
 <span id="548">548</span>
 <span id="549">549</span>
-<span id="550">550</span>
-<span id="551">551</span>
-<span id="552">552</span>
-<span id="553">553</span>
-<span id="554">554</span>
-<span id="555">555</span>
-<span id="556">556</span>
-<span id="557">557</span>
-<span id="558">558</span>
 </pre><pre class="rust ">
 <span class="doccomment">//! Module containing various utility functions.</span>
 
@@ -577,9 +568,9 @@
 <span class="kw">use</span> <span class="ident">rand</span>::{<span class="ident">SeedableRng</span>, <span class="ident">Rng</span>};
 <span class="kw">use</span> <span class="ident">rand</span>::<span class="ident">prng</span>::<span class="ident">XorShiftRng</span>;
 <span class="kw">use</span> <span class="ident">comrak</span>::<span class="ident">ComrakOptions</span>;
-<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">iter</span>, <span class="ident">cmp</span>, <span class="ident">str</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
+<span class="kw">use</span> <span class="ident">std</span>::{<span class="ident">cmp</span>, <span class="ident">str</span>};
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">fs</span>::<span class="ident">File</span>;
 <span class="kw">use</span> <span class="ident">regex</span>::<span class="ident">Regex</span>;
 <span class="kw">use</span> <span class="ident">url</span>::<span class="ident">Url</span>;
@@ -771,12 +762,12 @@
 <span class="doccomment">/// # extern crate comrak;</span>
 <span class="doccomment">/// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement,</span>
 <span class="doccomment">/// #                    CenterOrder};</span>
-<span class="doccomment">/// # use bloguen::util::{override_assets, MARKDOWN_OPTIONS};</span>
+<span class="doccomment">/// # use bloguen::util::{extract_actual_assets, MARKDOWN_OPTIONS};</span>
 <span class="doccomment">/// # use std::fs::{self, File};</span>
 <span class="doccomment">/// # use std::borrow::Borrow;</span>
 <span class="doccomment">/// # use std::env::temp_dir;</span>
 <span class="doccomment">/// # use std::io::Write;</span>
-<span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;util-override_assets&quot;);</span>
+<span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;util-extract_actual_assets&quot;);</span>
 <span class="doccomment">/// # fs::create_dir_all(&amp;root).unwrap();</span>
 <span class="doccomment">/// # File::create(root.join(&quot;image.png&quot;)).unwrap().write_all(&quot;image.png&quot;.as_bytes()).unwrap();</span>
 <span class="doccomment">/// # /*</span>
@@ -787,23 +778,15 @@
 <span class="doccomment">/// let mut ast =</span>
 <span class="doccomment">///     comrak::parse_document(&amp;alloc, r#&quot;[link](link.html)</span>
 <span class="doccomment">///                                       ![img](image.png)&quot;#, &amp;MARKDOWN_OPTIONS);</span>
-<span class="doccomment">/// assert_eq!(override_assets(&amp;root, &quot;assets/&quot;, 1, &amp;mut ast), Ok(()));</span>
-<span class="doccomment">///</span>
-<span class="doccomment">/// let expected_ast =</span>
-<span class="doccomment">///     comrak::parse_document(&amp;alloc, r#&quot;[link](link.html)</span>
-<span class="doccomment">///                                       ![img](../assets/image.png)&quot;#, &amp;MARKDOWN_OPTIONS);</span>
-<span class="doccomment">/// # /*</span>
-<span class="doccomment">/// assert_eq!(ast, expected_ast);</span>
-<span class="doccomment">/// # */</span>
-<span class="doccomment">/// # for (ov, ex) in ast.descendants().zip(expected_ast.descendants()) {</span>
-<span class="doccomment">/// #     assert_eq!(format!(&quot;{:?}&quot;, &amp;ov.data.borrow().value), format!(&quot;{:?}&quot;, &amp;ex.data.borrow().value));</span>
-<span class="doccomment">/// # }</span>
+<span class="doccomment">/// assert_eq!(extract_actual_assets(&amp;root, &amp;mut ast), Ok(vec![&amp;mut b&quot;image.png&quot;.to_vec()]));</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">override_assets</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">post_source_dir</span>: <span class="ident">P</span>, <span class="ident">override_dir</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">depth</span>: <span class="ident">usize</span>, <span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ComrakAstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
-    <span class="ident">override_assets_impl</span>(<span class="ident">post_source_dir</span>.<span class="ident">as_ref</span>(), <span class="ident">override_dir</span>, <span class="ident">depth</span>, <span class="ident">ast</span>)
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">extract_actual_assets</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">P</span>: <span class="ident">AsRef</span><span class="op">&lt;</span><span class="ident">Path</span><span class="op">&gt;&gt;</span>(<span class="ident">post_source_dir</span>: <span class="ident">P</span>, <span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ComrakAstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="ident">extract_actual_assets_impl</span>(<span class="ident">post_source_dir</span>.<span class="ident">as_ref</span>(), <span class="ident">ast</span>)
 }
 
-<span class="kw">fn</span> <span class="ident">override_assets_impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">post_source_dir</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">override_dir</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">depth</span>: <span class="ident">usize</span>, <span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ComrakAstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">extract_actual_assets_impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">post_source_dir</span>: <span class="kw-2">&amp;</span><span class="ident">Path</span>, <span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">ComrakAstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;&gt;</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">out</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
+
     <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">ast</span>.<span class="ident">descendants</span>() {
         <span class="kw">match</span> <span class="ident">n</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>().<span class="ident">value</span> {
             <span class="ident">ComrakNodeValue</span>::<span class="ident">Link</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">link</span>) <span class="op">|</span>
@@ -827,16 +810,15 @@
                     }
                 }
 
-                <span class="ident">link</span>.<span class="ident">url</span>.<span class="ident">splice</span>(<span class="number">0</span>..<span class="number">0</span>, <span class="ident">override_dir</span>.<span class="ident">as_bytes</span>().<span class="ident">iter</span>().<span class="ident">cloned</span>());
-                <span class="kw">if</span> <span class="ident">depth</span> <span class="op">!=</span> <span class="number">0</span> {
-                    <span class="ident">link</span>.<span class="ident">url</span>.<span class="ident">splice</span>(<span class="number">0</span>..<span class="number">0</span>, <span class="ident">iter</span>::<span class="ident">repeat</span>(<span class="string">b&quot;../&quot;</span>).<span class="ident">take</span>(<span class="ident">depth</span>).<span class="ident">flatten</span>().<span class="ident">cloned</span>());
-                }
+                <span class="comment">// The references are valid as long as the allocation arena is (i.e. &#39;a),</span>
+                <span class="comment">// but there&#39;s only so much you can express :v</span>
+                <span class="ident">out</span>.<span class="ident">push</span>(<span class="kw">unsafe</span> {<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">link</span>.<span class="ident">url</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="kw">as</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>});
             }
             <span class="kw">_</span> <span class="op">=&gt;</span> {}
         }
     }
 
-    <span class="prelude-val">Ok</span>(())
+    <span class="prelude-val">Ok</span>(<span class="ident">out</span>)
 }
 
 <span class="doccomment">/// Check if the link points to a local relative asset.</span>
