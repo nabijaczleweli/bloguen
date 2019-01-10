@@ -616,6 +616,11 @@
 <span id="616">616</span>
 <span id="617">617</span>
 <span id="618">618</span>
+<span id="619">619</span>
+<span id="620">620</span>
+<span id="621">621</span>
+<span id="622">622</span>
+<span id="623">623</span>
 </pre><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">PolyWrite</span>, <span class="ident">MARKDOWN_OPTIONS</span>, <span class="ident">extract_actual_assets</span>, <span class="ident">name_based_post_time</span>, <span class="ident">extract_links</span>, <span class="ident">concat_path</span>, <span class="ident">read_file</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">MachineDataKind</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">LanguageTag</span>, <span class="ident">TagName</span>, <span class="ident">machine_output_kind</span>, <span class="ident">format_output</span>};
@@ -1209,10 +1214,15 @@
     <span class="doccomment">///     println!(&quot;Copying {}: {:?}&quot;, link, post.copy_asset(&amp;out_pair, &amp;link));</span>
     <span class="doccomment">/// }</span>
     <span class="doccomment">/// ```</span>
-    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_asset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>), <span class="ident">link</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">copy_asset</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>), <span class="ident">asset_override</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">str</span><span class="op">&gt;</span>, <span class="ident">link</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">bool</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">source</span> <span class="op">=</span> <span class="ident">concat_path</span>(<span class="self">self</span>.<span class="ident">source_dir</span>.<span class="number">1</span>.<span class="ident">clone</span>(), <span class="ident">link</span>);
         <span class="kw">if</span> <span class="ident">source</span>.<span class="ident">exists</span>() {
-            <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">concat_path</span>(<span class="ident">into</span>.<span class="number">1</span>.<span class="ident">join</span>(<span class="string">&quot;posts&quot;</span>), <span class="ident">link</span>);
+            <span class="kw">let</span> <span class="ident">output</span> <span class="op">=</span> <span class="ident">concat_path</span>(<span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">ass_dir</span>) <span class="op">=</span> <span class="ident">asset_override</span> {
+                                         <span class="ident">concat_path</span>(<span class="kw-2">&amp;</span><span class="ident">into</span>.<span class="number">1</span>, <span class="ident">ass_dir</span>)
+                                     } <span class="kw">else</span> {
+                                         <span class="ident">into</span>.<span class="number">1</span>.<span class="ident">join</span>(<span class="string">&quot;posts&quot;</span>)
+                                     },
+                                     <span class="ident">link</span>);
 
             <span class="ident">fs</span>::<span class="ident">create_dir_all</span>(<span class="ident">output</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>()).<span class="ident">map_err</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> {
                     <span class="ident">Error</span>::<span class="ident">Io</span> {
