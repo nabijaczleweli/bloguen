@@ -57,7 +57,7 @@ const CLOSE_LEN: usize = 4;
 /// ");
 /// ```
 pub struct ParagraphPasser<'w> {
-    out: &'w mut Write,
+    out: &'w mut dyn Write,
     paras_left: usize,
     depth: usize,
     has_ended: bool,
@@ -68,7 +68,7 @@ impl<'w> ParagraphPasser<'w> {
     ///
     /// The output sink is taken by dynamic reference, as it cannot be templated on `W: Write` because then it overflows the
     /// recursion limit when used in `format_output()`.
-    pub fn new(into: &'w mut Write, count: usize) -> ParagraphPasser<'w> {
+    pub fn new(into: &'w mut dyn Write, count: usize) -> ParagraphPasser<'w> {
         ParagraphPasser {
             out: into,
             paras_left: count,

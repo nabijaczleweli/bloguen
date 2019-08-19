@@ -297,7 +297,7 @@ fn invalid_language() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
-                   errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language`".into()),
+                   errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language` at line 1 column 1".into()),
                }));
 }
 
@@ -317,7 +317,7 @@ fn invalid_style_element() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
-                   errors: Some("invalid value: string \"henlo\", expected \"literal\", \"link\", or \"file\" for key `styles`".into()),
+                   errors: Some("invalid value: string \"henlo\", expected \"literal\", \"link\", or \"file\" for key `styles` at line 1 column 11".into()),
                }));
 }
 
@@ -368,6 +368,6 @@ fn invalid_toml() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".into(), root)),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
-                   errors: Some("expected a right bracket, found a newline at line 1".into()),
+                   errors: Some("expected a right bracket, found a newline at line 1 column 13".into()),
                }));
 }

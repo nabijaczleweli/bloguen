@@ -9,9 +9,9 @@ use std::fmt;
 
 lazy_static! {
     static ref SCRIPT_LINK_HEAD: &'static str = include_str!("../../../../assets/element_wrappers/script/link.head").trim();
-    static ref SCRIPT_LINK_FOOT: &'static str = include_str!("../../../../assets/element_wrappers/script/link.foot").trim_left();
+    static ref SCRIPT_LINK_FOOT: &'static str = include_str!("../../../../assets/element_wrappers/script/link.foot").trim_start();
 
-    static ref SCRIPT_LITERAL_HEAD: &'static str = include_str!("../../../../assets/element_wrappers/script/literal.head").trim_left();
+    static ref SCRIPT_LITERAL_HEAD: &'static str = include_str!("../../../../assets/element_wrappers/script/literal.head").trim_start();
     static ref SCRIPT_LITERAL_FOOT: &'static str = include_str!("../../../../assets/element_wrappers/script/literal.foot");
 }
 

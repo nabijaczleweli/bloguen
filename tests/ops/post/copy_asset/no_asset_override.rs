@@ -1,4 +1,4 @@
-use url::percent_encoding::percent_decode;
+use percent_encoding::percent_decode;
 use bloguen::util::LANGUAGE_EN_GB;
 use bloguen::ops::BloguePost;
 use std::io::{Write, Read};

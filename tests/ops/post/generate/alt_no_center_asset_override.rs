@@ -24,7 +24,7 @@ fn ok() {
     let post = BloguePost::new(dir.clone()).unwrap();
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
+                             Some(&mut alt_buf as &mut dyn Write),
                              None,
                              Some("overriden-assets"),
                              "header",
@@ -53,7 +53,7 @@ fn ok() {
     let post = BloguePost::new(dir.clone()).unwrap();
     alt_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
+                             Some(&mut alt_buf as &mut dyn Write),
                              None,
                              Some("overriden-assets"),
                              "header",
@@ -82,7 +82,7 @@ fn ok() {
     let post = BloguePost::new(dir.clone()).unwrap();
     alt_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
+                             Some(&mut alt_buf as &mut dyn Write),
                              None,
                              Some("overriden-assets"),
                              "header",
@@ -120,7 +120,7 @@ fn not_found() {
     let post = BloguePost::new(dir.clone()).unwrap();
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
+                             Some(&mut alt_buf as &mut dyn Write),
                              None,
                              Some("overriden-assets"),
                              "header",
@@ -161,7 +161,7 @@ fn non_utf8() {
     let post = BloguePost::new(dir.clone()).unwrap();
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
+                             Some(&mut alt_buf as &mut dyn Write),
                              None,
                              Some("overriden-assets"),
                              "header",
@@ -202,7 +202,7 @@ fn posts_directory() {
     File::create(root.join("out").join("posts")).unwrap().write_all("henlo".as_bytes()).unwrap();
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
+                             Some(&mut alt_buf as &mut dyn Write),
                              None,
                              Some("overriden-assets"),
                              "header",
@@ -247,7 +247,7 @@ fn post_create() {
     fs::create_dir_all(root.join("out").join("posts").join("1. 2018-01-08 16-52-00 My first venture into crocheting, and what I've learned.html")).unwrap();
     let mut alt_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
+                             Some(&mut alt_buf as &mut dyn Write),
                              None,
                              Some("overriden-assets"),
                              "header",

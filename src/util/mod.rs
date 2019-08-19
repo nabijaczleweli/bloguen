@@ -10,10 +10,10 @@ mod non_windows;
 use chrono::format::{StrftimeItems as StrftimeFormatItems, Fixed as FixedTimeFormatItem, Item as TimeFormatItem};
 use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
 use chrono::{FixedOffset, NaiveTime, DateTime, TimeZone, Offset};
-use safe_transmute::guarded_transmute_to_bytes_pod;
+use safe_transmute::to_bytes::transmute_one_to_bytes;
 use std::io::{ErrorKind as IoErrorKind, Read};
 use crc::crc32::checksum_ieee as crc32_ieee;
-use url::percent_encoding::percent_decode;
+use percent_encoding::percent_decode;
 use std::path::{self, PathBuf, Path};
 use self::super::ops::LanguageTag;
 use rand_xorshift::XorShiftRng;
@@ -111,30 +111,17 @@ pub fn name_based_post_time(name: &str) -> NaiveTime {
 ///
 /// The generated name has a `.2` probability of including a middle portion, then a `.25` probability of it being full,
 /// as opposed to just an initial.
-///
-/// # Examples
-///
-/// ```
-/// # use bloguen::util::name_based_full_name;
-/// assert_eq!(name_based_full_name("Блогг"),          "Specifically Shortage");
-/// assert_eq!(name_based_full_name("Blogue"),         "Very Tunnel");
-///
-/// assert_eq!(name_based_full_name("Ben's Blog"),     "Properly P. Postbox");
-/// assert_eq!(name_based_full_name("Benjojo's Blog"), "Why W. Wannabe");
-///
-/// assert_eq!(name_based_full_name("Dehydration"),    "Away Prompt Larch");
-/// ```
 pub fn name_based_full_name(name: &str) -> String {
     let digest = crc32_ieee(name.as_bytes());
     let mut seed = [0u8; 16];
     if cfg!(target_endian = "little") {
-        guarded_transmute_to_bytes_pod(&digest)
+        transmute_one_to_bytes(&digest)
             .iter()
             .cycle()
             .zip(seed.iter_mut())
             .for_each(|(d, s)| *s = *d);
     } else {
-        guarded_transmute_to_bytes_pod(&digest)
+        transmute_one_to_bytes(&digest)
             .iter()
             .rev()
             .cycle()

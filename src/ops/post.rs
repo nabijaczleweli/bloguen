@@ -251,7 +251,7 @@ impl BloguePost {
     /// #                .unwrap().read_to_string(&mut read).unwrap();
     /// # assert_eq!(read, "header<p><a href=\"url.html\">Блогг</a></p>\nfooter");
     /// ```
-    pub fn generate(&self, into: &(String, PathBuf), mut alt_output: Option<&mut Write>, center_output: Option<(&str, &mut Write)>,
+    pub fn generate(&self, into: &(String, PathBuf), mut alt_output: Option<&mut dyn Write>, center_output: Option<(&str, &mut dyn Write)>,
                     asset_override: Option<&str>, post_header: &str, post_footer: &str, blog_name: &str, language: &LanguageTag, author: &str,
                     spec_tags: &[TagName], free_tags: &[TagName], post_data: &BTreeMap<String, String>, global_data: &BTreeMap<String, String>,
                     post_styles: &[StyleElement], global_styles: &[StyleElement], post_scripts: &[ScriptElement], global_scripts: &[ScriptElement])
@@ -560,9 +560,9 @@ impl BloguePost {
     /// # Examples
     ///
     /// ```
+    /// # extern crate percent_encoding;
     /// # extern crate bloguen;
-    /// # extern crate url;
-    /// # use url::percent_encoding::percent_decode;
+    /// # use percent_encoding::percent_decode;
     /// # use bloguen::util::LANGUAGE_EN_GB;
     /// # use bloguen::ops::BloguePost;
     /// # use std::io::{Write, Read};

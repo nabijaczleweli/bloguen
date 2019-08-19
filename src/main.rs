@@ -1,3 +1,4 @@
+extern crate percent_encoding;
 extern crate tabwriter;
 extern crate bloguen;
 extern crate chrono;
@@ -6,7 +7,7 @@ extern crate url;
 
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use std::sync::mpsc::channel as mpsc_channel;
-use url::percent_encoding::percent_decode;
+use percent_encoding::percent_decode;
 use std::io::{Write, stderr, stdout};
 use std::iter::FromIterator;
 use tabwriter::TabWriter;
@@ -190,7 +191,7 @@ fn result_main() -> Result<(), bloguen::Error> {
             let mut center_buffer = vec![];
             for link in p.generate(&opts.output_dir,
                           None,
-                          index_center.as_ref().map(|ic| (&ic[..], &mut center_buffer as &mut Write)),
+                          index_center.as_ref().map(|ic| (&ic[..], &mut center_buffer as &mut dyn Write)),
                           descriptor.asset_dir_override.as_ref().map(|s| &s[..]),
                           &post_header,
                           &post_footer,

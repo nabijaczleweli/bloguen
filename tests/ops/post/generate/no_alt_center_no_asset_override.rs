@@ -25,7 +25,7 @@ fn ok() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              None,
                              "header",
                              "footer",
@@ -54,7 +54,7 @@ fn ok() {
     center_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              None,
                              "header",
                              "footer",
@@ -83,7 +83,7 @@ fn ok() {
     center_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              None,
                              "header",
                              "footer",
@@ -121,7 +121,7 @@ fn not_found() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              None,
                              "header",
                              "footer",
@@ -162,7 +162,7 @@ fn non_utf8() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              None,
                              "header",
                              "footer",
@@ -203,7 +203,7 @@ fn posts_directory() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              None,
                              "header",
                              "footer",
@@ -248,7 +248,7 @@ fn post_create() {
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
                              None,
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              None,
                              "header",
                              "footer",

@@ -15,6 +15,7 @@
 //! ```
 
 
+extern crate percent_encoding;
 extern crate safe_transmute;
 extern crate rand_xorshift;
 #[macro_use]
@@ -39,6 +40,7 @@ extern crate clap;
 extern crate libc;
 extern crate toml;
 extern crate crc;
+extern crate rss;
 extern crate url;
 
 pub mod ops;

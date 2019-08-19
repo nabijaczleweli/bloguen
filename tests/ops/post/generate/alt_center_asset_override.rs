@@ -25,8 +25,8 @@ fn ok() {
     let mut alt_buf = vec![];
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(&mut alt_buf as &mut dyn Write),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              Some("overriden-assets"),
                              "header",
                              "footer",
@@ -57,8 +57,8 @@ fn ok() {
     alt_buf.clear();
     center_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(&mut alt_buf as &mut dyn Write),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              Some("overriden-assets"),
                              "header",
                              "footer",
@@ -89,8 +89,8 @@ fn ok() {
     alt_buf.clear();
     center_buf.clear();
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(&mut alt_buf as &mut dyn Write),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              Some("overriden-assets"),
                              "header",
                              "footer",
@@ -130,8 +130,8 @@ fn not_found() {
     let mut alt_buf = vec![];
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(&mut alt_buf as &mut dyn Write),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              Some("overriden-assets"),
                              "header",
                              "footer",
@@ -173,8 +173,8 @@ fn non_utf8() {
     let mut alt_buf = vec![];
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(&mut alt_buf as &mut dyn Write),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              Some("overriden-assets"),
                              "header",
                              "footer",
@@ -216,8 +216,8 @@ fn posts_directory() {
     let mut alt_buf = vec![];
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(&mut alt_buf as &mut dyn Write),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              Some("overriden-assets"),
                              "header",
                              "footer",
@@ -263,8 +263,8 @@ fn post_create() {
     let mut alt_buf = vec![];
     let mut center_buf = vec![];
     assert_eq!(post.generate(&("$ROOT/out/".to_string(), root.join("out")),
-                             Some(&mut alt_buf as &mut Write),
-                             Some(("cen{data-post_content}ter", &mut center_buf as &mut Write)),
+                             Some(&mut alt_buf as &mut dyn Write),
+                             Some(("cen{data-post_content}ter", &mut center_buf as &mut dyn Write)),
                              Some("overriden-assets"),
                              "header",
                              "footer",
