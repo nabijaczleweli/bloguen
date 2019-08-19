@@ -3,3 +3,9 @@ Generate a blogue from Markdown (again).
 
 ## [Manpage](https://rawcdn.githack.com/nabijaczleweli/bloguen/man/bloguen.1.html)
 ## [Documentation](https://rawcdn.githack.com/nabijaczleweli/bloguen/doc/bloguen/index.html)
+
+## Special thanks
+
+To all who support further development on Patreon, in particular:
+
+  * ThePhD

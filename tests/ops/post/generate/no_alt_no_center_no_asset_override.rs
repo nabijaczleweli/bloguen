@@ -167,7 +167,7 @@ fn non_utf8() {
                Err(Error::Parse {
                    tp: "UTF-8 string",
                    wher: "post text".into(),
-                   more: None,
+                   more: "stream did not contain valid UTF-8".into(),
                }));
 }
 
@@ -206,12 +206,12 @@ fn posts_directory() {
                Err(Error::Io {
                    desc: "posts directory".into(),
                    op: "create",
-                   more: Some(if cfg!(target_os = "windows") {
+                   more: if cfg!(target_os = "windows") {
                            "Cannot create a file when that file already exists. (os error 183)"
                        } else {
                            "File exists (os error 17)"
                        }
-                       .into()),
+                       .into(),
                }));
 }
 
@@ -249,11 +249,11 @@ fn post_create() {
                Err(Error::Io {
                    desc: "post HTML".into(),
                    op: "create",
-                   more: Some(if cfg!(target_os = "windows") {
+                   more: if cfg!(target_os = "windows") {
                            "Access is denied. (os error 5)"
                        } else {
                            "Is a directory (os error 21)"
                        }
-                       .into()),
+                       .into(),
                }));
 }

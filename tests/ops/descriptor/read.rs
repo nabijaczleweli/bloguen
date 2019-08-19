@@ -225,7 +225,7 @@ fn invalid_machine_data_empty_path() {
                Err(Error::Parse {
                    tp: "path chunk",
                    wher: "blogue descriptor".into(),
-                   more: Some("JSON subdir selector empty".into()),
+                   more: "JSON subdir selector empty".into(),
                }));
 }
 
@@ -250,7 +250,7 @@ fn invalid_machine_data_slash_path() {
                Err(Error::Parse {
                    tp: "path chunk",
                    wher: "blogue descriptor".into(),
-                   more: Some("JSON subdir selector empty".into()),
+                   more: "JSON subdir selector empty".into(),
                }));
 }
 
@@ -275,7 +275,7 @@ fn invalid_machine_data_invalid_kind() {
                Err(Error::Parse {
                    tp: "path chunk",
                    wher: "blogue descriptor".into(),
-                   more: Some("JSON subdir selector empty".into()),
+                   more: "JSON subdir selector empty".into(),
                }));
 }
 
@@ -297,7 +297,7 @@ fn invalid_language() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
-                   errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language` at line 1 column 1".into()),
+                   errors: "Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language` at line 1 column 1".into()
                }));
 }
 
@@ -317,7 +317,7 @@ fn invalid_style_element() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
-                   errors: Some("invalid value: string \"henlo\", expected \"literal\", \"link\", or \"file\" for key `styles` at line 1 column 11".into()),
+                   errors: "invalid value: string \"henlo\", expected \"literal\", \"link\", or \"file\" for key `styles` at line 1 column 11".into(),
                }));
 }
 
@@ -350,7 +350,7 @@ fn non_utf8() {
                Err(Error::Io {
                    desc: "blogue descriptor".into(),
                    op: "read",
-                   more: Some("not UTF-8".into()),
+                   more: "not UTF-8".into(),
                }));
 }
 
@@ -368,6 +368,6 @@ fn invalid_toml() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".into(), root)),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
-                   errors: Some("expected a right bracket, found a newline at line 1 column 13".into()),
+                   errors: "expected a right bracket, found a newline at line 1 column 13".into(),
                }));
 }

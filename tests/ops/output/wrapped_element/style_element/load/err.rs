@@ -37,7 +37,7 @@ fn path_non_utf8() {
                Err(Error::Parse {
                    tp: "UTF-8 string",
                    wher: "file style element".into(),
-                   more: None,
+                   more: "stream did not contain valid UTF-8".into(),
                }));
     assert_eq!(dt, bkp);
 }

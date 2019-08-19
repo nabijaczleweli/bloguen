@@ -42,7 +42,7 @@ fn from_str_err() {
                    Err(Error::Parse {
                        tp: "machine data specifier",
                        wher: "expected \"forward\" or \"backward\"".into(),
-                       more: Some(format!("\"{}\" invalid", val).into()),
+                       more: format!("\"{}\" invalid", val).into(),
                    }));
     }
 }

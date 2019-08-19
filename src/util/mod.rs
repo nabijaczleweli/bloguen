@@ -166,11 +166,11 @@ pub fn extract_links<'a>(ast: &'a ComrakAstNode<'a>) -> Result<Vec<String>, Erro
         match n.data.borrow().value {
             ComrakNodeValue::Link(ref link) |
             ComrakNodeValue::Image(ref link) => {
-                out.push(String::from_utf8(link.url.clone()).map_err(|_| {
+                out.push(String::from_utf8(link.url.clone()).map_err(|e| {
                         Error::Parse {
                             tp: "UTF-8 string",
                             wher: "URL list".into(),
-                            more: None,
+                            more: e.to_string().into(),
                         }
                     })?);
             }
@@ -229,11 +229,11 @@ fn extract_actual_assets_impl<'a>(post_source_dir: &Path, ast: &'a ComrakAstNode
             ComrakNodeValue::Link(ref mut link) |
             ComrakNodeValue::Image(ref mut link) => {
                 {
-                    let url = str::from_utf8(&link.url).map_err(|_| {
+                    let url = str::from_utf8(&link.url).map_err(|e| {
                             Error::Parse {
                                 tp: "UTF-8 string",
                                 wher: "URL list".into(),
-                                more: None,
+                                more: e.to_string().into(),
                             }
                         })?;
 
@@ -316,7 +316,7 @@ pub fn is_asset_link(link: &str) -> bool {
 ///            Err(Error::Parse {
 ///                tp: "UTF-8 string",
 ///                wher: "image".into(),
-///                more: None,
+///                more: "stream did not contain valid UTF-8".into(),
 ///            }));
 /// assert_eq!(read_file(&("$ROOT/nonexistant".to_string(), root.join("nonexistant")), "∅"),
 ///            Err(Error::FileNotFound {
@@ -335,15 +335,15 @@ pub fn read_file(whom: &(String, PathBuf), what_for: &'static str) -> Result<Str
             Error::Io {
                 desc: what_for.into(),
                 op: "open",
-                more: Some(e.to_string().into()),
+                more: e.to_string().into(),
             }
         })?
         .read_to_string(&mut buf)
-        .map_err(|_| {
+        .map_err(|e| {
             Error::Parse {
                 tp: "UTF-8 string",
                 wher: what_for.into(),
-                more: None,
+                more: e.to_string().into(),
             }
         })?;
     Ok(buf)

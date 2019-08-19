@@ -7,6 +7,7 @@ use comrak::{self, Arena as ComrakArena};
 use std::io::{Error as IoError, Write};
 use std::collections::BTreeMap;
 use self::super::super::Error;
+use std::num::ParseIntError;
 use std::iter::FromIterator;
 use std::fs::{self, File};
 use std::path::PathBuf;
@@ -89,7 +90,7 @@ impl BloguePost {
                 Error::Io {
                     desc: "post list".into(),
                     op: "list",
-                    more: Some(e.to_string().into()),
+                    more: e.to_string().into(),
                 }
             })?
             .into_iter()
@@ -148,15 +149,15 @@ impl BloguePost {
     ///            Err(Error::Parse {
     ///                tp: "post directory filename",
     ///                wher: "blogue post".into(),
-    ///                more: None,
+    ///                more: "not found".into(),
     ///            }));
     /// ```
     pub fn new(wher: (String, PathBuf)) -> Result<BloguePost, Error> {
-        fn uint_err(wher: &'static str) -> Error {
+        fn uint_err(wher: &'static str, err: ParseIntError) -> Error {
             Error::Parse {
                 tp: "unsigned int",
                 wher: wher.into(),
-                more: None,
+                more: err.to_string().into(),
             }
         }
 
@@ -167,7 +168,7 @@ impl BloguePost {
                     Error::Parse {
                         tp: "post directory filename",
                         wher: "blogue post".into(),
-                        more: None,
+                        more: "not found".into(),
                     }
                 })?;
             let name = mch.name("name").unwrap().as_str();
@@ -175,16 +176,16 @@ impl BloguePost {
 
             BloguePost {
                 source_dir: (String::new(), PathBuf::from(String::new())),
-                number: (number.parse().map_err(|_| uint_err("post number"))?, number.to_string()),
+                number: (number.parse().map_err(|e| uint_err("post number", e))?, number.to_string()),
                 name: name.to_string(),
-                datetime: LocalOffset.ymd(mch.name("date_year").unwrap().as_str().parse().map_err(|_| uint_err("post date year"))?,
-                         mch.name("date_month").unwrap().as_str().parse().map_err(|_| uint_err("post date month"))?,
-                         mch.name("date_day").unwrap().as_str().parse().map_err(|_| uint_err("post date day"))?)
+                datetime: LocalOffset.ymd(mch.name("date_year").unwrap().as_str().parse().map_err(|e| uint_err("post date year", e))?,
+                         mch.name("date_month").unwrap().as_str().parse().map_err(|e| uint_err("post date month", e))?,
+                         mch.name("date_day").unwrap().as_str().parse().map_err(|e| uint_err("post date day", e))?)
                     .and_time(if let Some(hour) = mch.name("time_hour") {
-                        NaiveTime::from_hms(hour.as_str().parse().map_err(|_| uint_err("post time hour"))?,
-                                            mch.name("time_minute").unwrap().as_str().parse().map_err(|_| uint_err("post time minute"))?,
+                        NaiveTime::from_hms(hour.as_str().parse().map_err(|e| uint_err("post time hour", e))?,
+                                            mch.name("time_minute").unwrap().as_str().parse().map_err(|e| uint_err("post time minute", e))?,
                                             if let Some(second) = mch.name("time_second") {
-                                                second.as_str().parse().map_err(|_| uint_err("post time second"))?
+                                                second.as_str().parse().map_err(|e| uint_err("post time second", e))?
                                             } else {
                                                 0
                                             })
@@ -260,7 +261,7 @@ impl BloguePost {
             Error::Io {
                 desc: desc.into(),
                 op: "write",
-                more: Some(err.to_string().into()),
+                more: err.to_string().into(),
             }
         }
 
@@ -275,7 +276,7 @@ impl BloguePost {
                 Error::Io {
                     desc: "posts directory".into(),
                     op: "create",
-                    more: Some(e.to_string().into()),
+                    more: e.to_string().into(),
                 }
             })?;
 
@@ -285,7 +286,7 @@ impl BloguePost {
                 Error::Io {
                     desc: "post HTML".into(),
                     op: "create",
-                    more: Some(e.to_string().into()),
+                    more: e.to_string().into(),
                 }
             })?;
 
@@ -357,7 +358,7 @@ impl BloguePost {
                     Error::Parse {
                         tp: "UTF-8 string",
                         wher: "index file post metadata".into(),
-                        more: Some(e.to_string().into()),
+                        more: e.to_string().into(),
                     }
                 })?);
 
@@ -425,7 +426,7 @@ impl BloguePost {
                 Error::Io {
                     desc: format!("{} directory", subpath).into(),
                     op: "create",
-                    more: Some(e.to_string().into()),
+                    more: e.to_string().into(),
                 }
             })?;
 
@@ -434,7 +435,7 @@ impl BloguePost {
                 Error::Io {
                     desc: format!("post {}", kind).into(),
                     op: "create",
-                    more: Some(e.to_string().into()),
+                    more: e.to_string().into(),
                 }
             })?;
 
@@ -604,14 +605,14 @@ impl BloguePost {
                     Error::Io {
                         desc: "asset parent dir".into(),
                         op: "create",
-                        more: Some(e.to_string().into()),
+                        more: e.to_string().into(),
                     }
                 })?;
             fs::copy(source, output).map_err(|e| {
                     Error::Io {
                         desc: "asset".into(),
                         op: "copy",
-                        more: Some(e.to_string().into()),
+                        more: e.to_string().into(),
                     }
                 })?;
 

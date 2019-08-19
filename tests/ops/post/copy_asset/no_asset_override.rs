@@ -255,12 +255,12 @@ fn posts_directory() {
                Err(Error::Io {
                    desc: "asset parent dir".into(),
                    op: "create",
-                   more: Some(if cfg!(target_os = "windows") {
+                   more: if cfg!(target_os = "windows") {
                            "Cannot create a file when that file already exists. (os error 183)"
                        } else {
                            "Not a directory (os error 20)"
                        }
-                       .into()),
+                       .into(),
                }));
     assert_eq!(post.copy_asset(&out_dir,
                                None,
@@ -268,12 +268,12 @@ fn posts_directory() {
                Err(Error::Io {
                    desc: "asset parent dir".into(),
                    op: "create",
-                   more: Some(if cfg!(target_os = "windows") {
+                   more: if cfg!(target_os = "windows") {
                            "Cannot create a file when that file already exists. (os error 183)"
                        } else {
                            "File exists (os error 17)"
                        }
-                       .into()),
+                       .into(),
                }));
 }
 
@@ -323,12 +323,12 @@ fn copy_failed() {
                    Err(Error::Io {
                        desc: "asset".into(),
                        op: "copy",
-                       more: Some(if cfg!(target_os = "windows") {
+                       more: if cfg!(target_os = "windows") {
                                "Access is denied. (os error 5)"
                            } else {
                                "Is a directory (os error 21)"
                            }
-                           .into()),
+                           .into(),
                    }));
     }
 }

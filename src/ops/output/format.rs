@@ -444,6 +444,6 @@ fn err_parse_impl(more: Cow<'static, str>, out_name_err: Cow<'static, str>) -> E
     Error::Parse {
         tp: "unformatted input",
         wher: out_name_err,
-        more: Some(more),
+        more: more,
     }
 }

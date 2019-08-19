@@ -127,7 +127,7 @@ fn invalid_style_element() {
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Err(Error::FileParsingFailed {
                    desc: "post metadata".into(),
-                   errors: Some("invalid value: string \"henlo\", expected \"literal\", \"link\", or \"file\" for key `styles` at line 1 column 11".into()),
+                   errors: "invalid value: string \"henlo\", expected \"literal\", \"link\", or \"file\" for key `styles` at line 1 column 11".into(),
                }));
 }
 
@@ -149,7 +149,7 @@ fn invalid_language() {
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Err(Error::FileParsingFailed {
                    desc: "post metadata".into(),
-                   errors: Some("Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language` at line 1 column 1".into()),
+                   errors: "Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language` at line 1 column 1".into(),
                }));
 }
 
@@ -176,7 +176,7 @@ fn non_utf8() {
                Err(Error::Io {
                    desc: "post metadata".into(),
                    op: "read",
-                   more: Some("not UTF-8".into()),
+                   more: "not UTF-8".into(),
                }));
 }
 
@@ -194,6 +194,6 @@ fn invalid_toml() {
     assert_eq!(PostMetadata::read_or_default(&("$POST_ROOT/".to_string(), post_root)),
                Err(Error::FileParsingFailed {
                    desc: "post metadata".into(),
-                   errors: Some("expected a right bracket, found a newline at line 1 column 13".into()),
+                   errors: "expected a right bracket, found a newline at line 1 column 13".into(),
                }));
 }

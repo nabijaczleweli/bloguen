@@ -87,7 +87,7 @@ impl FromStr for CenterOrder {
             Error::Parse {
                 tp: "machine data specifier",
                 wher: (&ERROR_WHER[..]).into(),
-                more: Some(format!("\"{}\" invalid", s).into()),
+                more: format!("\"{}\" invalid", s).into(),
             }
         })
     }
@@ -96,9 +96,8 @@ impl FromStr for CenterOrder {
 impl<'de> Deserialize<'de> for CenterOrder {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         CenterOrder::from_str(<&'de str>::deserialize(deserializer)?).map_err(|e| {
-            let mut buf = vec![];
-            e.print_error(&mut buf);
-            D::Error::custom(String::from_utf8_lossy(&buf[..buf.len() - 2])) // Drop dot and newline
+            let buf = e.to_string();
+            D::Error::custom(&buf[..buf.len() - 1]) // Drop dot
         })
     }
 }

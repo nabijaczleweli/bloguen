@@ -61,7 +61,7 @@ impl TagName {
                 Error::Io {
                     desc: "additional post tags".into(),
                     op: "read",
-                    more: Some("not UTF-8".into()),
+                    more: "not UTF-8".into(),
                 }
             })?;
 
@@ -80,7 +80,7 @@ impl FromStr for TagName {
             Err(Error::Parse {
                 tp: "non-empty WS- and controlless string",
                 wher: "post tag name".into(),
-                more: Some(format!("\"{}\" invalid", s).into()),
+                more: format!("\"{}\" invalid", s).into(),
             })
         }
     }
@@ -89,9 +89,8 @@ impl FromStr for TagName {
 impl<'de> Deserialize<'de> for TagName {
     fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         TagName::from_str(<&'de str>::deserialize(deserializer)?).map_err(|e| {
-            let mut buf = vec![];
-            e.print_error(&mut buf);
-            D::Error::custom(String::from_utf8_lossy(&buf[..buf.len() - 2])) // Drop dot and newline
+            let buf = e.to_string();
+            D::Error::custom(&buf[..buf.len() - 1]) // Drop dot
         })
     }
 }

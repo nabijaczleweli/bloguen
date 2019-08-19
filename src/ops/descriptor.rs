@@ -258,14 +258,14 @@ impl BlogueDescriptor {
                 Error::Io {
                     desc: "blogue descriptor".into(),
                     op: "read",
-                    more: Some("not UTF-8".into()),
+                    more: "not UTF-8".into(),
                 }
             })?;
 
         let serialised: BlogueDescriptorSerialised = from_toml_str(&buf).map_err(move |err| {
                 Error::FileParsingFailed {
                     desc: "blogue descriptor".into(),
-                    errors: Some(err.to_string().into()),
+                    errors: err.to_string().into(),
                 }
             })?;
 
@@ -293,7 +293,7 @@ impl BlogueDescriptor {
                 return Err(Error::Parse {
                     tp: "path chunk",
                     wher: "blogue descriptor".into(),
-                    more: Some(format!("{} subdir selector empty", k).into()),
+                    more: format!("{} subdir selector empty", k).into(),
                 });
             }
         }

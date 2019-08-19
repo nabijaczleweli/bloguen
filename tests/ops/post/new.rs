@@ -59,7 +59,7 @@ fn invalid_name() {
                Err(Error::Parse {
                    tp: "post directory filename",
                    wher: "blogue post".into(),
-                   more: None,
+                   more: "not found".into(),
                }));
 }
 
@@ -77,6 +77,6 @@ fn invalid_post_number() {
                Err(Error::Parse {
                    tp: "unsigned int",
                    wher: "post number".into(),
-                   more: None,
+                   more: "number too large to fit in target type".into(),
                }));
 }

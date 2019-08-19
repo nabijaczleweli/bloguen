@@ -70,6 +70,6 @@ fn not_utf8() {
                Err(Error::Parse {
                    tp: "UTF-8 string",
                    wher: "data".into(),
-                   more: None,
+                   more: "stream did not contain valid UTF-8".into(),
                }));
 }

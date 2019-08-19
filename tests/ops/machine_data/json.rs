@@ -20,7 +20,7 @@ fn from_str_err() {
                    Err(Error::Parse {
                        tp: "machine data specifier",
                        wher: "expected \"json\"".into(),
-                       more: Some(format!("\"{}\" invalid", val).into()),
+                       more: format!("\"{}\" invalid", val).into(),
                    }));
     }
 }

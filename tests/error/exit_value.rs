@@ -6,14 +6,7 @@ fn io() {
     assert_eq!(Error::Io {
                        desc: "".into(),
                        op: "",
-                       more: None,
-                   }
-                   .exit_value(),
-               1);
-    assert_eq!(Error::Io {
-                       desc: "".into(),
-                       op: "",
-                       more: Some("".into()),
+                       more: "stream did not contain valid UTF-8".into(),
                    }
                    .exit_value(),
                1);
@@ -24,14 +17,7 @@ fn parse() {
     assert_eq!(Error::Parse {
                        tp: "",
                        wher: "".into(),
-                       more: None,
-                   }
-                   .exit_value(),
-               2);
-    assert_eq!(Error::Parse {
-                       tp: "",
-                       wher: "".into(),
-                       more: Some("".into()),
+                       more: "stream did not contain valid UTF-8".into(),
                    }
                    .exit_value(),
                2);
@@ -61,13 +47,7 @@ fn wrong_file_state() {
 fn file_parsing_failed() {
     assert_eq!(Error::FileParsingFailed {
                        desc: "".into(),
-                       errors: None,
-                   }
-                   .exit_value(),
-               5);
-    assert_eq!(Error::FileParsingFailed {
-                       desc: "".into(),
-                       errors: Some("".into()),
+                       errors: "".into(),
                    }
                    .exit_value(),
                5);

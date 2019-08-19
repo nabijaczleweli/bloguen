@@ -20,6 +20,6 @@ fn err_io_impl(op: &'static str, more: Cow<'static, str>, out_name_err: Cow<'sta
     Error::Io {
         desc: out_name_err,
         op: op,
-        more: Some(more),
+        more: more,
     }
 }

@@ -8,7 +8,7 @@ extern crate url;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use std::sync::mpsc::channel as mpsc_channel;
 use percent_encoding::percent_decode;
-use std::io::{Write, stderr, stdout};
+use std::io::{Write, stdout};
 use std::iter::FromIterator;
 use tabwriter::TabWriter;
 use std::process::exit;
@@ -24,7 +24,7 @@ fn main() {
 
 fn actual_main() -> i32 {
     if let Err(err) = result_main() {
-        err.print_error(&mut stderr());
+        eprintln!("{}", err);
         err.exit_value()
     } else {
         0
@@ -223,7 +223,7 @@ fn result_main() -> Result<(), bloguen::Error> {
                         bloguen::Error::Io {
                             desc: format!("post {} JSON metadata ", p.number.1).into(),
                             op: "save",
-                            more: Some(e.to_string().into()),
+                            more: e.to_string().into(),
                         }
                     })?;
             }
@@ -252,7 +252,7 @@ fn result_main() -> Result<(), bloguen::Error> {
                 bloguen::Error::Parse {
                     tp: "UTF-8 string",
                     wher: "index file post metadata".into(),
-                    more: Some(e.to_string().into()),
+                    more: e.to_string().into(),
                 }
             })?)];
 
@@ -260,7 +260,7 @@ fn result_main() -> Result<(), bloguen::Error> {
                 bloguen::Error::Io {
                     desc: "output index file".into(),
                     op: "create",
-                    more: Some(e.to_string().into()),
+                    more: e.to_string().into(),
                 }
             })?;
         let index_date = Utc::now();
@@ -286,7 +286,7 @@ fn result_main() -> Result<(), bloguen::Error> {
                         bloguen::Error::Io {
                             desc: "output index file center".into(),
                             op: "write",
-                            more: Some(e.to_string().into()),
+                            more: e.to_string().into(),
                         }
                     })
             };
