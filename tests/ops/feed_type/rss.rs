@@ -18,7 +18,7 @@ fn from_str_err() {
     for val in INVALID {
         assert_eq!(val.parse::<FeedType>(),
                    Err(Error::Parse {
-                       tp: "machine data specifier",
+                       tp: "feed type",
                        wher: "expected \"RSS\" or \"Atom\"".into(),
                        more: format!("\"{}\" invalid", val).into(),
                    }));

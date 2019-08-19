@@ -1,4 +1,4 @@
-use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement, CenterOrder};
+use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement, CenterOrder, FeedType};
 use std::fs::{self, File};
 use std::env::temp_dir;
 use std::io::Write;
@@ -54,6 +54,10 @@ fn ok_all_specified() {
                             [machine_data]\n\
                             JSON = \"metadata/json/\"\n\
                             \n\
+                            [feeds]\n\
+                            RSS = \"feed.rss\"\n\
+                            Atom = \"feed.atom\"\n\
+                            \n\
                             [data]\n\
                             preferred-system = \"communism\"\n",
                            ALT_SLASH_ESC)
@@ -82,6 +86,7 @@ fn ok_all_specified() {
                        data: vec![("preferred-system".to_string(), "capitalism".to_string())].into_iter().collect(),
                    }),
                    machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
+                   feeds: vec![(FeedType::Rss, "feed.rss".to_string()), (FeedType::Atom, "feed.atom".to_string())].into_iter().collect(),
                    language: Some("pl".parse().unwrap()),
                    styles: vec![StyleElement::from_link("//nabijaczleweli.xyz/kaschism/assets/column.css"),
                                 StyleElement::from_literal(".indented { text-indent: 1em; }")],
@@ -108,6 +113,7 @@ fn ok_induced() {
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
                    asset_dir_override: None,
                    machine_data: vec![].into_iter().collect(),
+                   feeds: vec![].into_iter().collect(),
                    language: None,
                    styles: vec![],
                    scripts: vec![],
@@ -144,6 +150,7 @@ fn ok_induced_index() {
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
                    asset_dir_override: None,
                    machine_data: vec![].into_iter().collect(),
+                   feeds: vec![].into_iter().collect(),
                    language: None,
                    styles: vec![],
                    scripts: vec![],
@@ -188,6 +195,7 @@ fn ok_induced_idx() {
                    footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
                    asset_dir_override: None,
                    machine_data: vec![].into_iter().collect(),
+                   feeds: vec![].into_iter().collect(),
                    language: None,
                    styles: vec![],
                    scripts: vec![],
@@ -265,7 +273,31 @@ fn invalid_machine_data_invalid_kind() {
         .write_all("name = \"Блогг\"\n\
                     \n\
                     [machine_data]\n\
-                    JSON = \"\"\n"
+                    RSS = \"\"\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Err(Error::FileParsingFailed {
+                   desc: "blogue descriptor".into(),
+                   errors: "Failed to parse machine data specifier for expected \"json\": \"RSS\" invalid for key `machine_data` at line 3 column 1".into(),
+               }));
+}
+
+#[test]
+fn invalid_feeds_empty_path() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_feeds_empty_path");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [feeds]\n\
+                    RSS = \"\"\n"
             .as_bytes())
         .unwrap();
     File::create(root.join("header.html")).unwrap();
@@ -275,7 +307,82 @@ fn invalid_machine_data_invalid_kind() {
                Err(Error::Parse {
                    tp: "path chunk",
                    wher: "blogue descriptor".into(),
-                   more: "JSON subdir selector empty".into(),
+                   more: "RSS filename empty".into(),
+               }));
+}
+
+#[test]
+fn invalid_feeds_slash_end_path() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_feeds_slash_end_path");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [feeds]\n\
+                    RSS = \"hewwo/\"\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Err(Error::Parse {
+                   tp: "path chunk",
+                   wher: "blogue descriptor".into(),
+                   more: "RSS filename \"hewwo/\" ends with path separator".into(),
+               }));
+}
+
+#[test]
+fn invalid_feeds_path_duplicate() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_feeds_path_duplicate");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [feeds]\n\
+                    RSS = \"hewwo\"\n\
+                    Atom = \"hewwo\"\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Err(Error::Parse {
+                   tp: "path chunk",
+                   wher: "blogue descriptor".into(),
+                   more: "feed filename \"hewwo\" duplicate".into(),
+               }));
+}
+
+#[test]
+fn invalid_feeds_invalid_kind() {
+    let root = temp_dir().join("bloguen-test").join("ops-descriptor-read-invalid_feeds_invalid_kind");
+    let _ = fs::remove_dir_all(&root);
+    fs::create_dir_all(root.join("templates")).unwrap();
+
+    File::create(root.join("blogue.toml"))
+        .unwrap()
+        .write_all("name = \"Блогг\"\n\
+                    \n\
+                    [feeds]\n\
+                    JSON = \"\"\n"
+            .as_bytes())
+        .unwrap();
+    File::create(root.join("header.html")).unwrap();
+    File::create(root.join("footer.htm")).unwrap();
+
+    assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
+               Err(Error::FileParsingFailed {
+                   desc: "blogue descriptor".into(),
+                   errors: "Failed to parse feed type for expected \"RSS\" or \"Atom\": \"JSON\" invalid for key `feeds` at line 3 column 1".into(),
                }));
 }
 
@@ -297,7 +404,7 @@ fn invalid_language() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
-                   errors: "Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language` at line 1 column 1".into()
+                   errors: "Failed to parse BCP-47 language tag for language specifier: \"en*\" invalid for key `language` at line 1 column 1".into(),
                }));
 }
 

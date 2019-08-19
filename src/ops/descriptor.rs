@@ -1,7 +1,7 @@
-use self::super::{MachineDataKind, ScriptElement, StyleElement, CenterOrder, LanguageTag};
+use self::super::{MachineDataKind, ScriptElement, StyleElement, CenterOrder, LanguageTag, FeedType};
+use std::collections::{BTreeMap, BTreeSet};
 use self::super::super::util::concat_path;
 use toml::de::from_str as from_toml_str;
-use std::collections::BTreeMap;
 use self::super::super::Error;
 use std::path::PathBuf;
 use std::fs::File;
@@ -44,6 +44,10 @@ pub struct BlogueDescriptor {
     ///
     /// Values can't be empty (to put machine data at post root use "./").
     pub machine_data: BTreeMap<MachineDataKind, String>,
+    /// Where and which feeds to put.
+    ///
+    /// Each value here is a file path appended to the output directory into which to put the machine data.
+    pub feeds: BTreeMap<FeedType, String>,
     /// Default post language.
     ///
     /// Overriden by post metadata, if present.
@@ -64,7 +68,7 @@ pub struct BlogueDescriptor {
     pub data: BTreeMap<String, String>,
 }
 
-/// Metadata pertainign specifically to generating an index file.
+/// Metadata pertaining specifically to generating an index file.
 #[derive(Debug, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub struct BlogueDescriptorIndex {
     /// Data to put start index HTML with, templated.
@@ -110,6 +114,7 @@ struct BlogueDescriptorSerialised {
     pub asset_dir: Option<String>,
     pub index: Option<BlogueDescriptorIndexSerialised>,
     pub machine_data: Option<BTreeMap<MachineDataKind, String>>,
+    pub feeds: Option<BTreeMap<FeedType, String>>,
     pub language: Option<LanguageTag>,
     pub styles: Option<Vec<StyleElement>>,
     pub scripts: Option<Vec<ScriptElement>>,
@@ -171,6 +176,10 @@ impl BlogueDescriptor {
     /// [machine_data]
     /// JSON = "metadata/json/"
     ///
+    /// [feeds]
+    /// RSS = "feed.rss"
+    /// ATOM = "feed.atom"
+    ///
     /// [data]
     /// preferred_system = "capitalism"
     /// ```
@@ -179,7 +188,7 @@ impl BlogueDescriptor {
     ///
     /// ```
     /// # use bloguen::ops::{BlogueDescriptorIndex, BlogueDescriptor, MachineDataKind, ScriptElement, StyleElement,
-    /// #                    CenterOrder};
+    /// #                    CenterOrder, FeedType};
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
     /// # use std::io::Write;
@@ -208,6 +217,10 @@ impl BlogueDescriptor {
     /// #     [machine_data]\n\
     /// #     JSON = \"metadata/json/\"\n\
     /// #     \n\
+    /// #     [feeds]\n\
+    /// #     RSS = \"feed.rss\"\n\
+    /// #     Atom = \"feed.atom\"\n\
+    /// #     \n\
     /// #     [data]\n\
     /// #     preferred_system = \"capitalism\"\n\
     /// # ".as_bytes()).unwrap();
@@ -228,6 +241,8 @@ impl BlogueDescriptor {
     ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
     ///                asset_dir_override: Some("assets/".to_string()),
     ///                machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
+    ///                feeds: vec![(FeedType::Rss, "feed.rss".to_string()),
+    ///                            (FeedType::Atom, "feed.atom".to_string())].into_iter().collect(),
     ///                language: Some("pl".parse().unwrap()),
     ///                styles: vec![],
     ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
@@ -298,6 +313,37 @@ impl BlogueDescriptor {
             }
         }
 
+        let feeds = serialised.feeds.unwrap_or_default();
+        for (ref k, ref v) in &feeds {
+            let more = if v.is_empty() {
+                Some(format!("{} filename empty", k))
+            } else if v.ends_with(|c| ['/', '\\'].contains(&c)) {
+                Some(format!("{} filename {:?} ends with path separator", k, v))
+            } else {
+                None
+            };
+
+            if let Some(more) = more {
+                return Err(Error::Parse {
+                    tp: "path chunk",
+                    wher: "blogue descriptor".into(),
+                    more: more.into(),
+                });
+            }
+        }
+        {
+            let mut feeds_fnames = BTreeSet::new();
+            for v in feeds.values() {
+                if !feeds_fnames.insert(v) {
+                    return Err(Error::Parse {
+                        tp: "path chunk",
+                        wher: "blogue descriptor".into(),
+                        more: format!("feed filename {:?} duplicate", v).into(),
+                    });
+                }
+            }
+        }
+
         Ok(BlogueDescriptor {
             name: serialised.name,
             author: serialised.author,
@@ -327,6 +373,7 @@ impl BlogueDescriptor {
                 None => None,
             },
             machine_data: machine_data,
+            feeds: feeds,
             language: serialised.language,
             styles: serialised.styles.unwrap_or_default(),
             scripts: serialised.scripts.unwrap_or_default(),

@@ -38,12 +38,12 @@ lazy_static! {
 }
 
 
-/// A specifier of index centerpiece ordering.
+/// A feed type specifier.
 #[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FeedType {
-    /// Low-to-high
+    /// [RSS](https://en.wikipedia.org/wiki/RSS)
     Rss,
-    /// High-to-low
+    /// [Atom](https://en.wikipedia.org/wiki/Atom_(Web_standard))
     Atom,
 }
 
@@ -85,7 +85,7 @@ impl FromStr for FeedType {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         FeedType::from(s).ok_or_else(|| {
             Error::Parse {
-                tp: "machine data specifier",
+                tp: "feed type",
                 wher: ERROR_WHER[..].into(),
                 more: format!("\"{}\" invalid", s).into(),
             }
