@@ -6,6 +6,7 @@ mod windows;
 mod polywrite;
 #[cfg(not(target_os = "windows"))]
 mod non_windows;
+mod xml_escape_write;
 
 use chrono::format::{StrftimeItems as StrftimeFormatItems, Fixed as FixedTimeFormatItem, Item as TimeFormatItem};
 use comrak::nodes::{NodeValue as ComrakNodeValue, AstNode as ComrakAstNode};
@@ -33,6 +34,7 @@ use self::windows::{current_username_impl, default_language_impl};
 use self::non_windows::{current_username_impl, default_language_impl};
 
 pub use self::polywrite::PolyWrite;
+pub use self::xml_escape_write::XmlEscapeWrite;
 
 
 include!("../../ext/machine-usable-words/rust/words.rs");
