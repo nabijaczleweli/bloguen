@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/comrak-0.2.14/src/arena_tree.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arena_tree.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/comrak-0.6.2/src/arena_tree.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>arena_tree.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../comrak/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -428,10 +428,12 @@
 <span id="428">428</span>
 <span id="429">429</span>
 <span id="430">430</span>
-</pre><pre class="rust ">
+<span id="431">431</span>
+<span id="432">432</span>
+<span id="433">433</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">/*!
-  Included from https://github.com/SimonSapin/rust-forest/blob/
-  5783c8be8680b84c0438638bdee07d4e4aca40ac/arena-tree/lib.rs.
+  Included from &lt;https://github.com/SimonSapin/rust-forest/blob/5783c8be8680b84c0438638bdee07d4e4aca40ac/arena-tree/lib.rs&gt;.
   MIT license (per Cargo.toml).
 
 A DOM-like tree data structure based on `&amp;Node` references.
@@ -459,12 +461,17 @@ make it a cell (`Cell` or `RefCell`) or use cells inside of it.
     <span class="ident">next_sibling</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Node</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
     <span class="ident">first_child</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Node</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
     <span class="ident">last_child</span>: <span class="ident">Cell</span><span class="op">&lt;</span><span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Node</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;&gt;</span><span class="op">&gt;</span>,
+
+    <span class="doccomment">/// The data held by the node.</span>
     <span class="kw">pub</span> <span class="ident">data</span>: <span class="ident">T</span>,
 }
 
 <span class="doccomment">/// A simple Debug implementation that prints the children as a tree, without</span>
 <span class="doccomment">/// ilooping through the various interior pointer cycles.</span>
-<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Node</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span> <span class="kw">where</span> <span class="ident">T</span>: <span class="ident">fmt</span>::<span class="ident">Debug</span> {
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Debug</span> <span class="kw">for</span> <span class="ident">Node</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;</span>
+<span class="kw">where</span>
+    <span class="ident">T</span>: <span class="ident">fmt</span>::<span class="ident">Debug</span>,
+{
     <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">fmt</span>::<span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="comment">// FIXME: would be better not to build a vector for the children but I</span>
         <span class="comment">// can&#39;t presently figure out the borrowing to use the debug_list API</span>
@@ -674,7 +681,7 @@ make it a cell (`Cell` or `RefCell`) or use cells inside of it.
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">axis_iterator</span> {
-    (<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">meta</span>]</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>: <span class="ident">ident</span>) <span class="op">=&gt;</span> {
+    (<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">meta</span>]</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> {
         <span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>]</span>
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
         <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Node</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span><span class="op">&gt;&gt;</span>);
@@ -688,11 +695,11 @@ make it a cell (`Cell` or `RefCell`) or use cells inside of it.
                         <span class="self">self</span>.<span class="number">0</span> <span class="op">=</span> <span class="ident">node</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">next</span>.<span class="ident">get</span>();
                         <span class="prelude-val">Some</span>(<span class="ident">node</span>)
                     }
-                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
                 }
             }
         }
-    }
+    };
 }
 
 <span class="macro">axis_iterator</span><span class="macro">!</span> {
@@ -738,6 +745,7 @@ make it a cell (`Cell` or `RefCell`) or use cells inside of it.
     }
 }
 
+<span class="doccomment">/// An edge of the node graph returned by a traversal iterator.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">NodeEdge</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span> {
     <span class="doccomment">/// Indicates that start of a node that has children.</span>
@@ -752,7 +760,7 @@ make it a cell (`Cell` or `RefCell`) or use cells inside of it.
 }
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">traverse_iterator</span> {
-    (<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">meta</span>]</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>: <span class="ident">ident</span>: <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_child</span>: <span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_sibling</span>: <span class="ident">ident</span>) <span class="op">=&gt;</span> {
+    (<span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>:<span class="ident">meta</span>]</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span>:<span class="ident">ident</span> : <span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_child</span>:<span class="ident">ident</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">next_sibling</span>:<span class="ident">ident</span>) <span class="op">=&gt;</span> {
         <span class="attribute">#[<span class="macro-nonterminal">$</span><span class="macro-nonterminal">attr</span>]</span>
         <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>)]</span>
         <span class="kw">pub</span> <span class="kw">struct</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">name</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">T</span>: <span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
@@ -767,12 +775,10 @@ make it a cell (`Cell` or `RefCell`) or use cells inside of it.
                 <span class="kw">match</span> <span class="self">self</span>.<span class="ident">next</span>.<span class="ident">take</span>() {
                     <span class="prelude-val">Some</span>(<span class="ident">item</span>) <span class="op">=&gt;</span> {
                         <span class="self">self</span>.<span class="ident">next</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">item</span> {
-                            <span class="ident">NodeEdge</span>::<span class="ident">Start</span>(<span class="ident">node</span>) <span class="op">=&gt;</span> {
-                                <span class="kw">match</span> <span class="ident">node</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_child</span>.<span class="ident">get</span>() {
-                                    <span class="prelude-val">Some</span>(<span class="ident">child</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">NodeEdge</span>::<span class="ident">Start</span>(<span class="ident">child</span>)),
-                                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">NodeEdge</span>::<span class="ident">End</span>(<span class="ident">node</span>))
-                                }
-                            }
+                            <span class="ident">NodeEdge</span>::<span class="ident">Start</span>(<span class="ident">node</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="macro-nonterminal">$</span><span class="macro-nonterminal">first_child</span>.<span class="ident">get</span>() {
+                                <span class="prelude-val">Some</span>(<span class="ident">child</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">NodeEdge</span>::<span class="ident">Start</span>(<span class="ident">child</span>)),
+                                <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">NodeEdge</span>::<span class="ident">End</span>(<span class="ident">node</span>)),
+                            },
                             <span class="ident">NodeEdge</span>::<span class="ident">End</span>(<span class="ident">node</span>) <span class="op">=&gt;</span> {
                                 <span class="kw">if</span> <span class="ident">node</span>.<span class="ident">same_node</span>(<span class="self">self</span>.<span class="ident">root</span>) {
                                     <span class="prelude-val">None</span>
@@ -786,19 +792,19 @@ make it a cell (`Cell` or `RefCell`) or use cells inside of it.
                                             <span class="comment">// if the tree has been modified during iteration,</span>
                                             <span class="comment">// but silently stoping iteration</span>
                                             <span class="comment">// seems a more sensible behavior than panicking.</span>
-                                            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>
-                                        }
+                                            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+                                        },
                                     }
                                 }
                             }
                         };
                         <span class="prelude-val">Some</span>(<span class="ident">item</span>)
                     }
-                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>
+                    <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
                 }
             }
         }
-    }
+    };
 }
 
 <span class="macro">traverse_iterator</span><span class="macro">!</span> {
@@ -859,5 +865,5 @@ make it a cell (`Cell` or `RefCell`) or use cells inside of it.
 
     <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">drop_counter</span>.<span class="ident">get</span>(), <span class="number">10</span>);
 }
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "comrak";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "comrak";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rand_core-0.3.0/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><link rel="shortcut icon" href="https://www.rust-lang.org/favicon.ico"></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../rand_core/index.html'><img src='https://www.rust-lang.org/logos/rust-logo-128x128-blk.png' alt='logo' width='100'></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/rand_core-0.5.0/src/lib.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>lib.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="https://www.rust-lang.org/favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../rand_core/index.html'><div class='logo-container'><img src='https://www.rust-lang.org/logos/rust-logo-128x128-blk.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -484,7 +484,14 @@
 <span id="484">484</span>
 <span id="485">485</span>
 <span id="486">486</span>
-</pre><pre class="rust ">
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="comment">// Copyright 2018 Developers of the Rand project.</span>
 <span class="comment">// Copyright 2017-2018 The Rust Project Developers.</span>
 <span class="comment">//</span>
@@ -495,33 +502,28 @@
 <span class="comment">// except according to those terms.</span>
 
 <span class="doccomment">//! Random number generation traits</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! This crate is mainly of interest to crates publishing implementations of</span>
-<span class="doccomment">//! [`RngCore`]. Other users are encouraged to use the [rand] crate instead</span>
+<span class="doccomment">//! [`RngCore`]. Other users are encouraged to use the [`rand`] crate instead</span>
 <span class="doccomment">//! which re-exports the main traits and error types.</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [`RngCore`] is the core trait implemented by algorithmic pseudo-random number</span>
 <span class="doccomment">//! generators and external random-number sources.</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! [`SeedableRng`] is an extension trait for construction from fixed seeds and</span>
 <span class="doccomment">//! other random number generators.</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! [`Error`] is provided for error-handling. It is safe to use in `no_std`</span>
 <span class="doccomment">//! environments.</span>
-<span class="doccomment">//! </span>
+<span class="doccomment">//!</span>
 <span class="doccomment">//! The [`impls`] and [`le`] sub-modules include a few small functions to assist</span>
 <span class="doccomment">//! implementation of [`RngCore`].</span>
-<span class="doccomment">//! </span>
-<span class="doccomment">//! [rand]: https://crates.io/crates/rand</span>
-<span class="doccomment">//! [`RngCore`]: trait.RngCore.html</span>
-<span class="doccomment">//! [`SeedableRng`]: trait.SeedableRng.html</span>
-<span class="doccomment">//! [`Error`]: struct.Error.html</span>
-<span class="doccomment">//! [`impls`]: impls/index.html</span>
-<span class="doccomment">//! [`le`]: le/index.html</span>
+<span class="doccomment">//!</span>
+<span class="doccomment">//! [`rand`]: https://docs.rs/rand</span>
 
 <span class="attribute">#![<span class="ident">doc</span>(<span class="ident">html_logo_url</span> <span class="op">=</span> <span class="string">&quot;https://www.rust-lang.org/logos/rust-logo-128x128-blk.png&quot;</span>,
        <span class="ident">html_favicon_url</span> <span class="op">=</span> <span class="string">&quot;https://www.rust-lang.org/favicon.ico&quot;</span>,
-       <span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://docs.rs/rand_core/0.3.0&quot;</span>)]</span>
+       <span class="ident">html_root_url</span> <span class="op">=</span> <span class="string">&quot;https://rust-random.github.io/rand/&quot;</span>)]</span>
 
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_docs</span>)]</span>
 <span class="attribute">#![<span class="ident">deny</span>(<span class="ident">missing_debug_implementations</span>)]</span>
@@ -542,7 +544,7 @@
 
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">all</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;alloc&quot;</span>, <span class="ident">not</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;std&quot;</span>)))]</span> <span class="kw">use</span> <span class="ident">alloc</span>::<span class="ident">boxed</span>::<span class="ident">Box</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">error</span>::{<span class="ident">ErrorKind</span>, <span class="ident">Error</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="ident">error</span>::<span class="ident">Error</span>;
 
 
 <span class="kw">mod</span> <span class="ident">error</span>;
@@ -552,34 +554,34 @@
 
 
 <span class="doccomment">/// The core of a random number generator.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// This trait encapsulates the low-level functionality common to all</span>
 <span class="doccomment">/// generators, and is the &quot;back end&quot;, to be implemented by generators.</span>
-<span class="doccomment">/// End users should normally use [`Rng`] from the [rand] crate, which is</span>
-<span class="doccomment">/// automatically implemented for every type implementing `RngCore`.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">/// End users should normally use the `Rng` trait from the [`rand`] crate,</span>
+<span class="doccomment">/// which is automatically implemented for every type implementing `RngCore`.</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// Three different methods for generating random data are provided since the</span>
 <span class="doccomment">/// optimal implementation of each is dependent on the type of generator. There</span>
 <span class="doccomment">/// is no required relationship between the output of each; e.g. many</span>
 <span class="doccomment">/// implementations of [`fill_bytes`] consume a whole number of `u32` or `u64`</span>
 <span class="doccomment">/// values and drop any remaining unused bytes.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// The [`try_fill_bytes`] method is a variant of [`fill_bytes`] allowing error</span>
 <span class="doccomment">/// handling; it is not deemed sufficiently useful to add equivalents for</span>
 <span class="doccomment">/// [`next_u32`] or [`next_u64`] since the latter methods are almost always used</span>
 <span class="doccomment">/// with algorithmic generators (PRNGs), which are normally infallible.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// Algorithmic generators implementing [`SeedableRng`] should normally have</span>
 <span class="doccomment">/// *portable, reproducible* output, i.e. fix Endianness when converting values</span>
 <span class="doccomment">/// to avoid platform differences, and avoid making any changes which affect</span>
 <span class="doccomment">/// output (except by communicating that the release has breaking changes).</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// Typically implementators will implement only one of the methods available</span>
 <span class="doccomment">/// in this trait directly, then use the helper functions from the</span>
-<span class="doccomment">/// [`rand_core::impls`] module to implement the other methods.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">/// [`impls`] module to implement the other methods.</span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// It is recommended that implementations also implement:</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// - `Debug` with a custom implementation which *does not* print any internal</span>
 <span class="doccomment">///   state (at least, [`CryptoRng`]s should not risk leaking state through</span>
 <span class="doccomment">///   `Debug`).</span>
@@ -591,72 +593,69 @@
 <span class="doccomment">///   implement [`SeedableRng`], to guide users towards proper seeding.</span>
 <span class="doccomment">///   External / hardware RNGs can choose to implement `Default`.</span>
 <span class="doccomment">/// - `Eq` and `PartialEq` could be implemented, but are probably not useful.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// # Example</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// A simple example, obviously not generating very *random* output:</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// ```</span>
 <span class="doccomment">/// #![allow(dead_code)]</span>
 <span class="doccomment">/// use rand_core::{RngCore, Error, impls};</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// struct CountingRng(u64);</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// impl RngCore for CountingRng {</span>
 <span class="doccomment">///     fn next_u32(&amp;mut self) -&gt; u32 {</span>
 <span class="doccomment">///         self.next_u64() as u32</span>
 <span class="doccomment">///     }</span>
-<span class="doccomment">///     </span>
+<span class="doccomment">///</span>
 <span class="doccomment">///     fn next_u64(&amp;mut self) -&gt; u64 {</span>
 <span class="doccomment">///         self.0 += 1;</span>
 <span class="doccomment">///         self.0</span>
 <span class="doccomment">///     }</span>
-<span class="doccomment">///     </span>
+<span class="doccomment">///</span>
 <span class="doccomment">///     fn fill_bytes(&amp;mut self, dest: &amp;mut [u8]) {</span>
 <span class="doccomment">///         impls::fill_bytes_via_next(self, dest)</span>
 <span class="doccomment">///     }</span>
-<span class="doccomment">///     </span>
+<span class="doccomment">///</span>
 <span class="doccomment">///     fn try_fill_bytes(&amp;mut self, dest: &amp;mut [u8]) -&gt; Result&lt;(), Error&gt; {</span>
 <span class="doccomment">///         Ok(self.fill_bytes(dest))</span>
 <span class="doccomment">///     }</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
-<span class="doccomment">/// </span>
-<span class="doccomment">/// [rand]: https://crates.io/crates/rand</span>
-<span class="doccomment">/// [`Rng`]: ../rand/trait.Rng.html</span>
-<span class="doccomment">/// [`SeedableRng`]: trait.SeedableRng.html</span>
-<span class="doccomment">/// [`rand_core::impls`]: ../rand_core/impls/index.html</span>
-<span class="doccomment">/// [`try_fill_bytes`]: trait.RngCore.html#tymethod.try_fill_bytes</span>
-<span class="doccomment">/// [`fill_bytes`]: trait.RngCore.html#tymethod.fill_bytes</span>
-<span class="doccomment">/// [`next_u32`]: trait.RngCore.html#tymethod.next_u32</span>
-<span class="doccomment">/// [`next_u64`]: trait.RngCore.html#tymethod.next_u64</span>
-<span class="doccomment">/// [`CryptoRng`]: trait.CryptoRng.html</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`rand`]: https://docs.rs/rand</span>
+<span class="doccomment">/// [`try_fill_bytes`]: RngCore::try_fill_bytes</span>
+<span class="doccomment">/// [`fill_bytes`]: RngCore::fill_bytes</span>
+<span class="doccomment">/// [`next_u32`]: RngCore::next_u32</span>
+<span class="doccomment">/// [`next_u64`]: RngCore::next_u64</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">RngCore</span> {
     <span class="doccomment">/// Return the next random `u32`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// RNGs must implement at least one method from this trait directly. In</span>
     <span class="doccomment">/// the case this method is not implemented directly, it can be implemented</span>
-    <span class="doccomment">/// using `self.next_u64() as u32` or</span>
-    <span class="doccomment">/// [via `fill_bytes`](../rand_core/impls/fn.next_u32_via_fill.html).</span>
+    <span class="doccomment">/// using `self.next_u64() as u32` or via</span>
+    <span class="doccomment">/// [`fill_bytes`][impls::next_u32_via_fill].</span>
     <span class="kw">fn</span> <span class="ident">next_u32</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u32</span>;
 
     <span class="doccomment">/// Return the next random `u64`.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// RNGs must implement at least one method from this trait directly. In</span>
     <span class="doccomment">/// the case this method is not implemented directly, it can be implemented</span>
-    <span class="doccomment">/// [via `next_u32`](../rand_core/impls/fn.next_u64_via_u32.html) or</span>
-    <span class="doccomment">/// [via `fill_bytes`](../rand_core/impls/fn.next_u64_via_fill.html).</span>
+    <span class="doccomment">/// via [`next_u32`][impls::next_u64_via_u32] or via</span>
+    <span class="doccomment">/// [`fill_bytes`][impls::next_u64_via_fill].</span>
     <span class="kw">fn</span> <span class="ident">next_u64</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">u64</span>;
 
     <span class="doccomment">/// Fill `dest` with random data.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// RNGs must implement at least one method from this trait directly. In</span>
     <span class="doccomment">/// the case this method is not implemented directly, it can be implemented</span>
-    <span class="doccomment">/// [via `next_u*`](../rand_core/impls/fn.fill_bytes_via_next.html) or</span>
-    <span class="doccomment">/// via `try_fill_bytes`; if this generator can fail the implementation</span>
-    <span class="doccomment">/// must choose how best to handle errors here (e.g. panic with a</span>
-    <span class="doccomment">/// descriptive message or log a warning and retry a few times).</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">/// via [`next_u*`][impls::fill_bytes_via_next] or</span>
+    <span class="doccomment">/// via [`try_fill_bytes`][RngCore::try_fill_bytes]; if this generator can</span>
+    <span class="doccomment">/// fail the implementation must choose how best to handle errors here</span>
+    <span class="doccomment">/// (e.g. panic with a descriptive message or log a warning and retry a few</span>
+    <span class="doccomment">/// times).</span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// This method should guarantee that `dest` is entirely filled</span>
     <span class="doccomment">/// with new data, and may panic if this is impossible</span>
     <span class="doccomment">/// (e.g. reading past the end of a file that is being used as the</span>
@@ -669,51 +668,46 @@
     <span class="doccomment">/// generating random data thus making this the primary method implemented</span>
     <span class="doccomment">/// by external (true) RNGs (e.g. `OsRng`) which can fail. It may be used</span>
     <span class="doccomment">/// directly to generate keys and to seed (infallible) PRNGs.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Other than error handling, this method is identical to [`fill_bytes`];</span>
     <span class="doccomment">/// thus this may be implemented using `Ok(self.fill_bytes(dest))` or</span>
     <span class="doccomment">/// `fill_bytes` may be implemented with</span>
     <span class="doccomment">/// `self.try_fill_bytes(dest).unwrap()` or more specific error handling.</span>
-    <span class="doccomment">/// </span>
-    <span class="doccomment">/// [`fill_bytes`]: trait.RngCore.html#method.fill_bytes</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`fill_bytes`]: RngCore::fill_bytes</span>
     <span class="kw">fn</span> <span class="ident">try_fill_bytes</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">dest</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span>;
 }
 
 <span class="doccomment">/// A marker trait used to indicate that an [`RngCore`] or [`BlockRngCore`]</span>
 <span class="doccomment">/// implementation is supposed to be cryptographically secure.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// *Cryptographically secure generators*, also known as *CSPRNGs*, should</span>
 <span class="doccomment">/// satisfy an additional properties over other generators: given the first</span>
 <span class="doccomment">/// *k* bits of an algorithm&#39;s output</span>
 <span class="doccomment">/// sequence, it should not be possible using polynomial-time algorithms to</span>
 <span class="doccomment">/// predict the next bit with probability significantly greater than 50%.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// Some generators may satisfy an additional property, however this is not</span>
 <span class="doccomment">/// required by this trait: if the CSPRNG&#39;s state is revealed, it should not be</span>
 <span class="doccomment">/// computationally-feasible to reconstruct output prior to this. Some other</span>
 <span class="doccomment">/// generators allow backwards-computation and are consided *reversible*.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// Note that this trait is provided for guidance only and cannot guarantee</span>
 <span class="doccomment">/// suitability for cryptographic applications. In general it should only be</span>
 <span class="doccomment">/// implemented for well-reviewed code implementing well-regarded algorithms.</span>
-<span class="doccomment">/// </span>
+<span class="doccomment">///</span>
 <span class="doccomment">/// Note also that use of a `CryptoRng` does not protect against other</span>
 <span class="doccomment">/// weaknesses such as seeding from a weak entropy source or leaking state.</span>
-<span class="doccomment">/// </span>
-<span class="doccomment">/// [`RngCore`]: trait.RngCore.html</span>
-<span class="doccomment">/// [`BlockRngCore`]: ../rand_core/block/trait.BlockRngCore.html</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`BlockRngCore`]: block::BlockRngCore</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">CryptoRng</span> {}
 
 <span class="doccomment">/// A random number generator that can be explicitly seeded.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// This trait encapsulates the low-level functionality common to all</span>
 <span class="doccomment">/// pseudo-random number generators (PRNGs, or algorithmic generators).</span>
-<span class="doccomment">/// </span>
-<span class="doccomment">/// The [`rand::FromEntropy`] trait is automatically implemented for every type</span>
-<span class="doccomment">/// implementing `SeedableRng`, providing a convenient `from_entropy()`</span>
-<span class="doccomment">/// constructor.</span>
-<span class="doccomment">/// </span>
-<span class="doccomment">/// [`rand::FromEntropy`]: ../rand/trait.FromEntropy.html</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// [`rand`]: https://docs.rs/rand</span>
 <span class="kw">pub</span> <span class="kw">trait</span> <span class="ident">SeedableRng</span>: <span class="ident">Sized</span> {
     <span class="doccomment">/// Seed type, which is restricted to types mutably-dereferencable as `u8`</span>
     <span class="doccomment">/// arrays (we recommend `[u8; N]` for some `N`).</span>
@@ -766,14 +760,18 @@
     <span class="doccomment">///</span>
     <span class="doccomment">/// PRNG implementations are allowed to assume that bits in the seed are</span>
     <span class="doccomment">/// well distributed. That means usually that the number of one and zero</span>
-    <span class="doccomment">/// bits are about equal, and values like 0, 1 and (size - 1) are unlikely.</span>
+    <span class="doccomment">/// bits are roughly equal, and values like 0, 1 and (size - 1) are unlikely.</span>
+    <span class="doccomment">/// Note that many non-cryptographic PRNGs will show poor quality output</span>
+    <span class="doccomment">/// if this is not adhered to. If you wish to seed from simple numbers, use</span>
+    <span class="doccomment">/// `seed_from_u64` instead.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// PRNG implementations are recommended to be reproducible. A PRNG seeded</span>
-    <span class="doccomment">/// using this function with a fixed seed should produce the same sequence</span>
-    <span class="doccomment">/// of output in the future and on different architectures (with for example</span>
-    <span class="doccomment">/// different endianness).</span>
+    <span class="doccomment">/// All PRNG implementations should be reproducible unless otherwise noted:</span>
+    <span class="doccomment">/// given a fixed `seed`, the same sequence of output should be produced</span>
+    <span class="doccomment">/// on all runs, library versions and architectures (e.g. check endianness).</span>
+    <span class="doccomment">/// Any &quot;value-breaking&quot; changes to the generator should require bumping at</span>
+    <span class="doccomment">/// least the minor version and documentation of the change.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// It is however not required that this function yield the same state as a</span>
+    <span class="doccomment">/// It is not required that this function yield the same state as a</span>
     <span class="doccomment">/// reference implementation of the PRNG given equivalent seed; if necessary</span>
     <span class="doccomment">/// another constructor replicating behaviour from a reference</span>
     <span class="doccomment">/// implementation can be added.</span>
@@ -784,17 +782,17 @@
     <span class="doccomment">/// for example `0xBAD5EEDu32` or `0x0DDB1A5E5BAD5EEDu64` (&quot;odd biases? bad</span>
     <span class="doccomment">/// seed&quot;). This is assuming only a small number of values must be rejected.</span>
     <span class="kw">fn</span> <span class="ident">from_seed</span>(<span class="ident">seed</span>: <span class="self">Self</span>::<span class="ident">Seed</span>) <span class="op">-&gt;</span> <span class="self">Self</span>;
-    
+
     <span class="doccomment">/// Create a new PRNG using a `u64` seed.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// This is a convenience-wrapper around `from_seed` to allow construction</span>
     <span class="doccomment">/// of any `SeedableRng` from a simple `u64` value. It is designed such that</span>
     <span class="doccomment">/// low Hamming Weight numbers like 0 and 1 can be used and should still</span>
     <span class="doccomment">/// result in good, independent seeds to the PRNG which is returned.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// This **is not suitable for cryptography**, as should be clear given that</span>
     <span class="doccomment">/// the input size is only 64 bits.</span>
-    <span class="doccomment">/// </span>
+    <span class="doccomment">///</span>
     <span class="doccomment">/// Implementations for PRNGs *may* provide their own implementations of</span>
     <span class="doccomment">/// this function, but the default implementation should be good enough for</span>
     <span class="doccomment">/// all purposes. *Changing* the implementation of this function should be</span>
@@ -803,63 +801,79 @@
         <span class="comment">// We use PCG32 to generate a u32 sequence, and copy to the seed</span>
         <span class="kw">const</span> <span class="ident">MUL</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">6364136223846793005</span>;
         <span class="kw">const</span> <span class="ident">INC</span>: <span class="ident">u64</span> <span class="op">=</span> <span class="number">11634580027462260723</span>;
-        
+
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">seed</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Seed</span>::<span class="ident">default</span>();
         <span class="kw">for</span> <span class="ident">chunk</span> <span class="kw">in</span> <span class="ident">seed</span>.<span class="ident">as_mut</span>().<span class="ident">chunks_mut</span>(<span class="number">4</span>) {
             <span class="comment">// We advance the state first (to get away from the input value,</span>
             <span class="comment">// in case it has low Hamming Weight).</span>
             <span class="ident">state</span> <span class="op">=</span> <span class="ident">state</span>.<span class="ident">wrapping_mul</span>(<span class="ident">MUL</span>).<span class="ident">wrapping_add</span>(<span class="ident">INC</span>);
-            
+
             <span class="comment">// Use PCG output function with to_le to generate x:</span>
             <span class="kw">let</span> <span class="ident">xorshifted</span> <span class="op">=</span> (((<span class="ident">state</span> <span class="op">&gt;&gt;</span> <span class="number">18</span>) <span class="op">^</span> <span class="ident">state</span>) <span class="op">&gt;&gt;</span> <span class="number">27</span>) <span class="kw">as</span> <span class="ident">u32</span>;
             <span class="kw">let</span> <span class="ident">rot</span> <span class="op">=</span> (<span class="ident">state</span> <span class="op">&gt;&gt;</span> <span class="number">59</span>) <span class="kw">as</span> <span class="ident">u32</span>;
             <span class="kw">let</span> <span class="ident">x</span> <span class="op">=</span> <span class="ident">xorshifted</span>.<span class="ident">rotate_right</span>(<span class="ident">rot</span>).<span class="ident">to_le</span>();
-            
+
             <span class="kw">unsafe</span> {
                 <span class="kw">let</span> <span class="ident">p</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">x</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u32</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>;
                 <span class="ident">copy_nonoverlapping</span>(<span class="ident">p</span>, <span class="ident">chunk</span>.<span class="ident">as_mut_ptr</span>(), <span class="ident">chunk</span>.<span class="ident">len</span>());
             }
         }
-        
+
         <span class="self">Self</span>::<span class="ident">from_seed</span>(<span class="ident">seed</span>)
     }
-    
+
     <span class="doccomment">/// Create a new PRNG seeded from another `Rng`.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// This is the recommended way to initialize PRNGs with fresh entropy. The</span>
-    <span class="doccomment">/// [`FromEntropy`] trait provides a convenient `from_entropy` method</span>
-    <span class="doccomment">/// based on `from_rng`.</span>
-    <span class="doccomment">/// </span>
-    <span class="doccomment">/// Usage of this method is not recommended when reproducibility is required</span>
-    <span class="doccomment">/// since implementing PRNGs are not required to fix Endianness and are</span>
-    <span class="doccomment">/// allowed to modify implementations in new releases.</span>
+    <span class="doccomment">/// This may be useful when needing to rapidly seed many PRNGs from a master</span>
+    <span class="doccomment">/// PRNG, and to allow forking of PRNGs. It may be considered deterministic.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// It is important to use a good source of randomness to initialize the</span>
-    <span class="doccomment">/// PRNG. Cryptographic PRNG may be rendered insecure when seeded from a</span>
-    <span class="doccomment">/// non-cryptographic PRNG or with insufficient entropy.</span>
-    <span class="doccomment">/// Many non-cryptographic PRNGs will show statistical bias in their first</span>
-    <span class="doccomment">/// results if their seed numbers are small or if there is a simple pattern</span>
-    <span class="doccomment">/// between them.</span>
+    <span class="doccomment">/// The master PRNG should be at least as high quality as the child PRNGs.</span>
+    <span class="doccomment">/// When seeding non-cryptographic child PRNGs, we recommend using a</span>
+    <span class="doccomment">/// different algorithm for the master PRNG (ideally a CSPRNG) to avoid</span>
+    <span class="doccomment">/// correlations between the child PRNGs. If this is not possible (e.g.</span>
+    <span class="doccomment">/// forking using small non-crypto PRNGs) ensure that your PRNG has a good</span>
+    <span class="doccomment">/// mixing function on the output or consider use of a hash function with</span>
+    <span class="doccomment">/// `from_seed`.</span>
     <span class="doccomment">///</span>
-    <span class="doccomment">/// Prefer to seed from a strong external entropy source like [`OsRng`] or</span>
-    <span class="doccomment">/// from a cryptographic PRNG; if creating a new generator for cryptographic</span>
-    <span class="doccomment">/// uses you *must* seed from a strong source.</span>
-    <span class="doccomment">///</span>
-    <span class="doccomment">/// Seeding a small PRNG from another small PRNG is possible, but</span>
-    <span class="doccomment">/// something to be careful with. An extreme example of how this can go</span>
-    <span class="doccomment">/// wrong is seeding an Xorshift RNG from another Xorshift RNG, which</span>
-    <span class="doccomment">/// will effectively clone the generator. In general seeding from a</span>
-    <span class="doccomment">/// generator which is hard to predict is probably okay.</span>
+    <span class="doccomment">/// Note that seeding `XorShiftRng` from another `XorShiftRng` provides an</span>
+    <span class="doccomment">/// extreme example of what can go wrong: the new PRNG will be a clone</span>
+    <span class="doccomment">/// of the parent.</span>
     <span class="doccomment">///</span>
     <span class="doccomment">/// PRNG implementations are allowed to assume that a good RNG is provided</span>
     <span class="doccomment">/// for seeding, and that it is cryptographically secure when appropriate.</span>
-    <span class="doccomment">/// </span>
-    <span class="doccomment">/// [`FromEntropy`]: ../rand/trait.FromEntropy.html</span>
-    <span class="doccomment">/// [`OsRng`]: ../rand/rngs/struct.OsRng.html</span>
+    <span class="doccomment">/// As of `rand` 0.7 / `rand_core` 0.5, implementations overriding this</span>
+    <span class="doccomment">/// method should ensure the implementation satisfies reproducibility</span>
+    <span class="doccomment">/// (in prior versions this was not required).</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`rand`]: https://docs.rs/rand</span>
+    <span class="doccomment">/// [`rand_os`]: https://docs.rs/rand_os</span>
     <span class="kw">fn</span> <span class="ident">from_rng</span><span class="op">&lt;</span><span class="ident">R</span>: <span class="ident">RngCore</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">rng</span>: <span class="ident">R</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="self">Self</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">seed</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Seed</span>::<span class="ident">default</span>();
         <span class="ident">rng</span>.<span class="ident">try_fill_bytes</span>(<span class="ident">seed</span>.<span class="ident">as_mut</span>())<span class="question-mark">?</span>;
         <span class="prelude-val">Ok</span>(<span class="self">Self</span>::<span class="ident">from_seed</span>(<span class="ident">seed</span>))
+    }
+
+    <span class="doccomment">/// Creates a new instance of the RNG seeded via [`getrandom`].</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// This method is the recommended way to construct non-deterministic PRNGs</span>
+    <span class="doccomment">/// since it is convenient and secure.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// In case the overhead of using [`getrandom`] to seed *many* PRNGs is an</span>
+    <span class="doccomment">/// issue, one may prefer to seed from a local PRNG, e.g.</span>
+    <span class="doccomment">/// `from_rng(thread_rng()).unwrap()`.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Panics</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// If [`getrandom`] is unable to provide secure entropy this method will panic.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// [`getrandom`]: https://docs.rs/getrandom</span>
+    <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span><span class="op">=</span><span class="string">&quot;getrandom&quot;</span>)]</span>
+    <span class="kw">fn</span> <span class="ident">from_entropy</span>() <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">seed</span> <span class="op">=</span> <span class="self">Self</span>::<span class="ident">Seed</span>::<span class="ident">default</span>();
+        <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Err</span>(<span class="ident">err</span>) <span class="op">=</span> <span class="ident">getrandom</span>::<span class="ident">getrandom</span>(<span class="ident">seed</span>.<span class="ident">as_mut</span>()) {
+            <span class="macro">panic</span><span class="macro">!</span>(<span class="string">&quot;from_entropy failed: {}&quot;</span>, <span class="ident">err</span>);
+        }
+        <span class="self">Self</span>::<span class="ident">from_seed</span>(<span class="ident">seed</span>)
     }
 }
 
@@ -932,7 +946,7 @@
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">test</span>)]</span>
 <span class="kw">mod</span> <span class="ident">test</span> {
     <span class="kw">use</span> <span class="kw">super</span>::<span class="kw-2">*</span>;
-    
+
     <span class="attribute">#[<span class="ident">test</span>]</span>
     <span class="kw">fn</span> <span class="ident">test_seed_from_u64</span>() {
         <span class="kw">struct</span> <span class="ident">SeedableNum</span>(<span class="ident">u64</span>);
@@ -944,7 +958,7 @@
                 <span class="ident">SeedableNum</span>(<span class="ident">x</span>[<span class="number">0</span>])
             }
         }
-        
+
         <span class="kw">const</span> <span class="ident">N</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">8</span>;
         <span class="kw">const</span> <span class="ident">SEEDS</span>: [<span class="ident">u64</span>; <span class="ident">N</span>] <span class="op">=</span> [<span class="number">0u64</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">8</span>, <span class="number">16</span>, <span class="op">-</span><span class="number">1i64</span> <span class="kw">as</span> <span class="ident">u64</span>];
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">results</span> <span class="op">=</span> [<span class="number">0u64</span>; <span class="ident">N</span>];
@@ -952,24 +966,24 @@
             <span class="kw">let</span> <span class="ident">SeedableNum</span>(<span class="ident">x</span>) <span class="op">=</span> <span class="ident">SeedableNum</span>::<span class="ident">seed_from_u64</span>(<span class="kw-2">*</span><span class="ident">seed</span>);
             <span class="ident">results</span>[<span class="ident">i</span>] <span class="op">=</span> <span class="ident">x</span>;
         }
-        
+
         <span class="kw">for</span> (<span class="ident">i1</span>, <span class="ident">r1</span>) <span class="kw">in</span> <span class="ident">results</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
             <span class="kw">let</span> <span class="ident">weight</span> <span class="op">=</span> <span class="ident">r1</span>.<span class="ident">count_ones</span>();
             <span class="comment">// This is the binomial distribution B(64, 0.5), so chance of</span>
             <span class="comment">// weight &lt; 20 is binocdf(19, 64, 0.5) = 7.8e-4, and same for</span>
             <span class="comment">// weight &gt; 44.</span>
             <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">weight</span> <span class="op">&gt;=</span> <span class="number">20</span> <span class="op">&amp;&amp;</span> <span class="ident">weight</span> <span class="op">&lt;=</span> <span class="number">44</span>);
-            
+
             <span class="kw">for</span> (<span class="ident">i2</span>, <span class="ident">r2</span>) <span class="kw">in</span> <span class="ident">results</span>.<span class="ident">iter</span>().<span class="ident">enumerate</span>() {
                 <span class="kw">if</span> <span class="ident">i1</span> <span class="op">==</span> <span class="ident">i2</span> { <span class="kw">continue</span>; }
                 <span class="kw">let</span> <span class="ident">diff_weight</span> <span class="op">=</span> (<span class="ident">r1</span> <span class="op">^</span> <span class="ident">r2</span>).<span class="ident">count_ones</span>();
                 <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">diff_weight</span> <span class="op">&gt;=</span> <span class="number">20</span>);
             }
         }
-        
+
         <span class="comment">// value-breakage test:</span>
         <span class="macro">assert_eq</span><span class="macro">!</span>(<span class="ident">results</span>[<span class="number">0</span>], <span class="number">5029875928683246316</span>);
     }
 }
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "rand_core";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "rand_core";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/comrak-0.2.14/src/nodes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>nodes.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="Source to the Rust file `/home/travis/.cargo/registry/src/github.com-1ecc6299db9ec823/comrak-0.6.2/src/nodes.rs`."><meta name="keywords" content="rust, rustlang, rust-lang"><title>nodes.rs.html -- source</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc source"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../comrak/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><pre class="line-numbers"><span id="1">  1</span>
 <span id="2">  2</span>
 <span id="3">  3</span>
 <span id="4">  4</span>
@@ -439,7 +439,66 @@
 <span id="439">439</span>
 <span id="440">440</span>
 <span id="441">441</span>
-</pre><pre class="rust ">
+<span id="442">442</span>
+<span id="443">443</span>
+<span id="444">444</span>
+<span id="445">445</span>
+<span id="446">446</span>
+<span id="447">447</span>
+<span id="448">448</span>
+<span id="449">449</span>
+<span id="450">450</span>
+<span id="451">451</span>
+<span id="452">452</span>
+<span id="453">453</span>
+<span id="454">454</span>
+<span id="455">455</span>
+<span id="456">456</span>
+<span id="457">457</span>
+<span id="458">458</span>
+<span id="459">459</span>
+<span id="460">460</span>
+<span id="461">461</span>
+<span id="462">462</span>
+<span id="463">463</span>
+<span id="464">464</span>
+<span id="465">465</span>
+<span id="466">466</span>
+<span id="467">467</span>
+<span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+</pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! The CommonMark AST.</span>
 
 <span class="kw">use</span> <span class="ident">arena_tree</span>::<span class="ident">Node</span>;
@@ -474,6 +533,31 @@
     <span class="doccomment">/// **Block**.  A [list item](https://github.github.com/gfm/#list-items).  Contains other</span>
     <span class="doccomment">/// **blocks**.</span>
     <span class="ident">Item</span>(<span class="ident">NodeList</span>),
+
+    <span class="doccomment">/// **Block**. A description list, enabled with `ext_description_lists` option.  Contains</span>
+    <span class="doccomment">/// description items.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// It is required to put a blank line between terms and details.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ``` md</span>
+    <span class="doccomment">/// Term 1</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// : Details 1</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Term 2</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// : Details 2</span>
+    <span class="doccomment">/// ```</span>
+    <span class="ident">DescriptionList</span>,
+
+    <span class="doccomment">/// *Block**. An item of a description list.  Contains a term and one details block.</span>
+    <span class="ident">DescriptionItem</span>(<span class="ident">NodeDescriptionItem</span>),
+
+    <span class="doccomment">/// **Block**. Term of an item in a definition list.</span>
+    <span class="ident">DescriptionTerm</span>,
+
+    <span class="doccomment">/// **Block**. Details of an item in a definition list.</span>
+    <span class="ident">DescriptionDetails</span>,
 
     <span class="doccomment">/// **Block**. A code block; may be [fenced](https://github.github.com/gfm/#fenced-code-blocks)</span>
     <span class="doccomment">/// or [indented](https://github.github.com/gfm/#indented-code-blocks).  Contains raw text</span>
@@ -514,6 +598,10 @@
     <span class="doccomment">/// **Inline**.  [Textual content](https://github.github.com/gfm/#textual-content).  All text</span>
     <span class="doccomment">/// in a document will be contained in a `Text` node.</span>
     <span class="ident">Text</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>),
+
+    <span class="doccomment">/// **Inline**. [Task list item](https://github.github.com/gfm/#task-list-items-extension-). The</span>
+    <span class="doccomment">/// `bool` indicates whether it is checked or not.</span>
+    <span class="ident">TaskItem</span>(<span class="ident">bool</span>),
 
     <span class="doccomment">/// **Inline**.  A [soft line break](https://github.github.com/gfm/#soft-line-breaks).  If</span>
     <span class="doccomment">/// the `hardbreaks` option is set in `ComrakOptions` during formatting, it will be formatted</span>
@@ -609,6 +697,16 @@
     <span class="kw">pub</span> <span class="ident">tight</span>: <span class="ident">bool</span>,
 }
 
+<span class="doccomment">/// The metadata of a description list</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>)]</span>
+<span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NodeDescriptionItem</span> {
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">marker_offset</span>: <span class="ident">usize</span>,
+
+    <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
+    <span class="kw">pub</span> <span class="ident">padding</span>: <span class="ident">usize</span>,
+}
+
 <span class="doccomment">/// The type of list.</span>
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Copy</span>, <span class="ident">PartialEq</span>)]</span>
 <span class="kw">pub</span> <span class="kw">enum</span> <span class="ident">ListType</span> {
@@ -677,7 +775,7 @@
 }
 
 <span class="doccomment">/// The metadata of an included HTML block.</span>
-<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Debug</span>, <span class="ident">Default</span>, <span class="ident">Clone</span>)]</span>
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">NodeHtmlBlock</span> {
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="kw">pub</span> <span class="ident">block_type</span>: <span class="ident">u8</span>,
@@ -695,6 +793,10 @@
             <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span>
             <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="kw">_</span>)
             <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">List</span>(..)
+            <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">DescriptionList</span>
+            <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">DescriptionItem</span>(<span class="kw">_</span>)
+            <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">DescriptionTerm</span>
+            <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">DescriptionDetails</span>
             <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..)
             <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..)
             <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(..)
@@ -757,15 +859,6 @@
     <span class="doccomment">/// The line in the input document the node starts at.</span>
     <span class="kw">pub</span> <span class="ident">start_line</span>: <span class="ident">u32</span>,
 
-    <span class="doccomment">/// The column in the input document the node starts at.</span>
-    <span class="kw">pub</span> <span class="ident">start_column</span>: <span class="ident">usize</span>,
-
-    <span class="doccomment">/// The line in the input document the node ends at.</span>
-    <span class="kw">pub</span> <span class="ident">end_line</span>: <span class="ident">u32</span>,
-
-    <span class="doccomment">/// The column in the input document the node ends at.</span>
-    <span class="kw">pub</span> <span class="ident">end_column</span>: <span class="ident">usize</span>,
-
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
     <span class="kw">pub</span> <span class="ident">content</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>,
     <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
@@ -774,17 +867,16 @@
     <span class="kw">pub</span> <span class="ident">last_line_blank</span>: <span class="ident">bool</span>,
 }
 
-<span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">make_block</span>(<span class="ident">value</span>: <span class="ident">NodeValue</span>, <span class="ident">start_line</span>: <span class="ident">u32</span>, <span class="ident">start_column</span>: <span class="ident">usize</span>) <span class="op">-&gt;</span> <span class="ident">Ast</span> {
-    <span class="ident">Ast</span> {
-        <span class="ident">value</span>: <span class="ident">value</span>,
-        <span class="ident">content</span>: <span class="macro">vec</span><span class="macro">!</span>[],
-        <span class="ident">start_line</span>: <span class="ident">start_line</span>,
-        <span class="ident">start_column</span>: <span class="ident">start_column</span>,
-        <span class="ident">end_line</span>: <span class="ident">start_line</span>,
-        <span class="ident">end_column</span>: <span class="number">0</span>,
-        <span class="ident">open</span>: <span class="bool-val">true</span>,
-        <span class="ident">last_line_blank</span>: <span class="bool-val">false</span>,
+<span class="kw">impl</span> <span class="ident">Ast</span> {
+    <span class="doccomment">/// Create a new AST node with the given value.</span>
+    <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">value</span>: <span class="ident">NodeValue</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Ast</span> {
+            <span class="ident">value</span>: <span class="ident">value</span>,
+            <span class="ident">content</span>: <span class="macro">vec</span><span class="macro">!</span>[],
+            <span class="ident">start_line</span>: <span class="number">0</span>,
+            <span class="ident">open</span>: <span class="bool-val">true</span>,
+            <span class="ident">last_line_blank</span>: <span class="bool-val">false</span>,
+        }
     }
 }
 
@@ -793,7 +885,21 @@
 <span class="doccomment">/// It is bound by the lifetime `&#39;a`, which corresponds to the `Arena` nodes are allocated in.</span>
 <span class="doccomment">/// `AstNode`s are almost handled as a reference itself bound by `&#39;a`.  Child `Ast`s are wrapped in</span>
 <span class="doccomment">/// `RefCell` for interior mutability.</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// You can construct a new `AstNode` from a `NodeValue` using the `From` trait:</span>
+<span class="doccomment">///</span>
+<span class="doccomment">/// ```no_run</span>
+<span class="doccomment">/// # use comrak::nodes::{AstNode, NodeValue};</span>
+<span class="doccomment">/// let root = AstNode::from(NodeValue::Document);</span>
+<span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">type</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">Node</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="ident">RefCell</span><span class="op">&lt;</span><span class="ident">Ast</span><span class="op">&gt;&gt;</span>;
+
+<span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">NodeValue</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="doccomment">/// Create a new AST node with the given value.</span>
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">value</span>: <span class="ident">NodeValue</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">Node</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">Ast</span>::<span class="ident">new</span>(<span class="ident">value</span>)))
+    }
+}
 
 <span class="attribute">#[<span class="ident">doc</span>(<span class="ident">hidden</span>)]</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">last_child_is_open</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
@@ -810,6 +916,8 @@
         <span class="ident">NodeValue</span>::<span class="ident">Document</span>
         <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span>
         <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="kw">_</span>)
+        <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">DescriptionTerm</span>
+        <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">DescriptionDetails</span>
         <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=&gt;</span> {
             <span class="ident">child</span>.<span class="ident">block</span>() <span class="op">&amp;&amp;</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">child</span> {
                 <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
@@ -819,6 +927,16 @@
 
         <span class="ident">NodeValue</span>::<span class="ident">List</span>(..) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">child</span> {
             <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        },
+
+        <span class="ident">NodeValue</span>::<span class="ident">DescriptionList</span> <span class="op">=&gt;</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">child</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">DescriptionItem</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        },
+
+        <span class="ident">NodeValue</span>::<span class="ident">DescriptionItem</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">child</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">DescriptionTerm</span> <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">DescriptionDetails</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
             <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
         },
 
@@ -881,5 +999,5 @@
     }
     <span class="prelude-val">None</span>
 }
-</pre>
-</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g. <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g. <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g. <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "comrak";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>
+</pre></div>
+</section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "comrak";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script src="../../source-script.js"></script><script src="../../source-files.js"></script><script defer src="../../search-index.js"></script></body></html>
