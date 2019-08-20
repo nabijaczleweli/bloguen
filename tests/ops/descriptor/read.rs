@@ -282,7 +282,7 @@ fn invalid_machine_data_invalid_kind() {
     assert_eq!(BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())),
                Err(Error::FileParsingFailed {
                    desc: "blogue descriptor".into(),
-                   errors: "Failed to parse machine data specifier for expected \"json\": \"RSS\" invalid for key `machine_data` at line 3 column 1".into(),
+                   errors: "Failed to parse machine data specifier for expected \"JSON\": \"RSS\" invalid for key `machine_data` at line 3 column 1".into(),
                }));
 }
 

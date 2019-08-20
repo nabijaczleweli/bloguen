@@ -40,7 +40,7 @@ fn from_str_err() {
     for val in INVALID {
         assert_eq!(val.parse::<CenterOrder>(),
                    Err(Error::Parse {
-                       tp: "machine data specifier",
+                       tp: "center order",
                        wher: "expected \"forward\" or \"backward\"".into(),
                        more: format!("\"{}\" invalid", val).into(),
                    }));
