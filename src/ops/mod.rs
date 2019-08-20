@@ -5,7 +5,8 @@ mod tag_name;
 mod output;
 mod post;
 
-pub use self::output::{ParagraphPasser, WrappedElement, ScriptElement, StyleElement, machine_output_json, machine_output_kind, format_output};
+pub use self::output::{ParagraphPasser, WrappedElement, ScriptElement, StyleElement, machine_output_json, machine_output_kind, feed_type_header,
+                       feed_rss_header, format_output};
 pub use self::descriptor::{BlogueDescriptorIndex, BlogueDescriptor};
 pub use self::machine_data::MachineDataKind;
 pub use self::center_order::CenterOrder;

@@ -37,7 +37,7 @@ impl<Wr1: Write> Write for XmlEscapeWrite<Wr1> {
 
         written += self.0.write(&buf[last_end..])?;
 
-        Ok(buf.len())
+        Ok(written)
     }
 
     #[inline]

@@ -8,6 +8,7 @@ extern crate url;
 use rayon::iter::{IntoParallelRefIterator, ParallelIterator};
 use std::sync::mpsc::channel as mpsc_channel;
 use percent_encoding::percent_decode;
+use std::collections::BTreeMap;
 use std::io::{Write, stdout};
 use std::iter::FromIterator;
 use tabwriter::TabWriter;
@@ -117,6 +118,13 @@ fn result_main() -> Result<(), bloguen::Error> {
     // println!("{}", global_language);
     // println!("{}", global_author);
     // println!("{:#?}", descriptor);
+
+
+    let mut feed_files: BTreeMap<_, _> =
+        Result::from_iter(descriptor.feeds.iter().map(|(tp, fname)| descriptor.create_feed_output(&opts.output_dir, fname, tp).map(|f| (*tp, f))))?;
+    for (tp, ff) in &mut feed_files {
+        descriptor.generate_feed_head(ff, tp, &global_language, &global_author);
+    }
 
 
     let (idx_sender, idx_receiver) = mpsc_channel();

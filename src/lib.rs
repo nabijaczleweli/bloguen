@@ -40,7 +40,6 @@ extern crate clap;
 extern crate libc;
 extern crate toml;
 extern crate crc;
-extern crate rss;
 extern crate url;
 
 pub mod ops;
