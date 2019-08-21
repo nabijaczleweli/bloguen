@@ -239,6 +239,10 @@ fn result_main() -> Result<(), bloguen::Error> {
             Ok(())
         })?;
 
+    for (tp, ff) in &mut feed_files {
+        descriptor.generate_feed_foot(ff, tp);
+    }
+
     if let Some(idx) = descriptor.index.as_ref() {
         let mut posts_data: Vec<_> = idx_receiver.into_iter().collect();
         posts_data.sort_unstable_by_key(|&((num, _), ..)| num);

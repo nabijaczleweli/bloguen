@@ -7,9 +7,9 @@ mod feed;
 use std::borrow::Cow;
 use self::super::super::Error;
 
+pub use self::feed::{feed_type_footer, feed_type_header, feed_rss_footer, feed_rss_header};
 pub use self::wrapped_element::{WrappedElement, ScriptElement, StyleElement};
 pub use self::machine_readable::{machine_output_json, machine_output_kind};
-pub use self::feed::{feed_type_header, feed_rss_header};
 pub use self::paragraph_passer::ParagraphPasser;
 pub use self::format::format_output;
 

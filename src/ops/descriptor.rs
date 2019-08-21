@@ -1,4 +1,4 @@
-use self::super::{MachineDataKind, ScriptElement, StyleElement, CenterOrder, LanguageTag, FeedType, feed_type_header};
+use self::super::{MachineDataKind, ScriptElement, StyleElement, CenterOrder, LanguageTag, FeedType, feed_type_footer, feed_type_header};
 use std::collections::{BTreeMap, BTreeSet};
 use self::super::super::util::concat_path;
 use toml::de::from_str as from_toml_str;
@@ -381,45 +381,6 @@ impl BlogueDescriptor {
         })
     }
 
-    /// Generate machine output of the specified kind from the post into the specified subpath in the specified output
-    /// directory.
-    ///
-    /// # Examples
-    ///
-    /// Given the following:
-    ///
-    /// ```plaintext
-    /// src/
-    ///   01. 2018-01-08 16-52 The venture into crocheting/
-    ///     post.md
-    /// ```
-    ///
-    /// The following holds:
-    ///
-    /// ```
-    /// # use bloguen::ops::{MachineDataKind, BloguePost};
-    /// # use bloguen::util::LANGUAGE_EN_GB;
-    /// # use std::io::{Write, Read};
-    /// # use std::fs::{self, File};
-    /// # use std::env::temp_dir;
-    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-create_machine_output");
-    /// # let _ = fs::remove_dir_all(&root);
-    /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
-    /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
-    /// #                  .join("post.md")).unwrap().write_all("[Блогг](url.html)".as_bytes()).unwrap();
-    /// # /*
-    /// let root: PathBuf = /* obtained elsewhere */;
-    /// # */
-    /// let post =
-    ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
-    ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// let machine_output_file =
-    ///     post.create_machine_output(&("$ROOT/out/".to_string(), root.join("out")), "machine/",
-    ///                                &MachineDataKind::Json).unwrap();
-    ///
-    /// assert!(root.join("out").join("machine")
-    ///             .join("01. 2018-01-08 16-52-00 The venture into crocheting.json").is_file());
-    /// ```
     pub fn create_feed_output(&self, into: &(String, PathBuf), fname: &str, tp: &FeedType) -> Result<File, Error> {
         let feed_path = concat_path(&into.1, fname);
 
@@ -442,71 +403,14 @@ impl BlogueDescriptor {
         })
     }
 
-    /// Generate machine output of the specified kind from the post into the specified subpath in the specified output
-    /// directory.
-    ///
-    /// # Examples
-    ///
-    /// Given the following:
-    ///
-    /// ```plaintext
-    /// src/
-    ///   01. 2018-01-08 16-52 The venture into crocheting/
-    ///     post.md
-    /// ```
-    ///
-    /// The following holds:
-    ///
-    /// ```
-    /// # use bloguen::ops::{MachineDataKind, BloguePost};
-    /// # use bloguen::util::LANGUAGE_EN_GB;
-    /// # use std::io::{Write, Read};
-    /// # use std::fs::{self, File};
-    /// # use std::env::temp_dir;
-    /// # use std::str;
-    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-generate_machine");
-    /// # let _ = fs::remove_dir_all(&root);
-    /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
-    /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
-    /// #                  .join("post.md")).unwrap().write_all("[Блогг](url.html)".as_bytes()).unwrap();
-    /// # /*
-    /// let root: PathBuf = /* obtained elsewhere */;
-    /// # */
-    /// let post =
-    ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
-    ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    ///
-    /// let mut out = vec![];
-    /// assert!(post.generate_machine(&mut out, &MachineDataKind::Json,
-    ///                               "Блогг", &LANGUAGE_EN_GB, "autheur", &[], &[], &Default::default(), &Default::default(),
-    ///                               &[], &[], &[], &[]).is_ok());
-    ///
-    /// assert!(!out.is_empty());
-    /// assert!(str::from_utf8(&out).unwrap().contains("The venture into crocheting"));  // &c.
-    /// # assert!(out.starts_with(r##"{
-    /// #     "number": 1,
-    /// #     "language": "en-GB",
-    /// #     "title": "The venture into crocheting",
-    /// #     "author": "autheur",
-    /// #
-    /// #     "raw_post_name": "01. 2018-01-08 16-52 The venture into crocheting",
-    /// #     "blog_name": "Блогг","##.as_bytes()));
-    /// # assert!(out.ends_with(r##"
-    /// #     "tags": [
-    /// #     ],
-    /// #     "additional_data": {
-    /// #     },
-    /// #
-    /// #     "styles": [
-    /// #     ],
-    /// #     "scripts": [
-    /// #     ],
-    /// #
-    /// #     "bloguen-version": "0.1.0"
-    /// # }"##.as_bytes()));
-    /// ```
     pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, language: &LanguageTag, author: &str) -> Result<(), Error> {
         feed_type_header(tp)(&self.name, language, author, into, format!("{} feed output", tp.name()))?;
+
+        Ok(())
+    }
+
+    pub fn generate_feed_foot<T: Write>(&self, into: &mut T, tp: &FeedType) -> Result<(), Error> {
+        feed_type_footer(tp)(into, format!("{} feed output", tp.name()))?;
 
         Ok(())
     }
