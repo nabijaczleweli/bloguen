@@ -1,5 +1,6 @@
+use self::super::{MachineDataKind, ScriptElement, StyleElement, LanguageTag, FeedType, TagName, feed_type_post_footer, feed_type_post_header,
+                  machine_output_kind, format_output};
 use self::super::super::util::{PolyWrite, MARKDOWN_OPTIONS, extract_actual_assets, name_based_post_time, extract_links, concat_path, read_file};
-use self::super::{MachineDataKind, ScriptElement, StyleElement, LanguageTag, TagName, machine_output_kind, format_output};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
@@ -524,6 +525,18 @@ impl BloguePost {
                                   &[global_scripts, post_scripts],
                                   into,
                                   self.normalised_name())?;
+
+        Ok(())
+    }
+
+    pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, author: &str) -> Result<(), Error> {
+        feed_type_post_header(tp)(&self.name, &self.normalised_name(), author, &self.datetime, into, self.normalised_name())?;
+
+        Ok(())
+    }
+
+    pub fn generate_feed_foot<T: Write>(&self, into: &mut T, tp: &FeedType) -> Result<(), Error> {
+        feed_type_post_footer(tp)(into, self.normalised_name())?;
 
         Ok(())
     }

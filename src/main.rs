@@ -123,14 +123,15 @@ fn result_main() -> Result<(), bloguen::Error> {
     let mut feed_files: BTreeMap<_, _> =
         Result::from_iter(descriptor.feeds.iter().map(|(tp, fname)| descriptor.create_feed_output(&opts.output_dir, fname, tp).map(|f| (*tp, f))))?;
     for (tp, ff) in &mut feed_files {
-        descriptor.generate_feed_head(ff, tp, &global_language, &global_author);
+        descriptor.generate_feed_head(ff, tp, &global_language, &global_author)?;
     }
 
 
     let (idx_sender, idx_receiver) = mpsc_channel();
+    let (feed_sender, feed_receiver) = mpsc_channel();
 
     posts.par_iter()
-        .try_for_each_with(idx_sender, |idx_sender, p| {
+        .try_for_each_with((idx_sender, feed_sender), |(idx_sender, feed_sender), p| {
             let mut metadata = bloguen::ops::PostMetadata::read_or_default(&p.source_dir)?;
             let language = metadata.language.as_ref().unwrap_or(&global_language);
             let author = metadata.author.as_ref().unwrap_or(&global_author);
@@ -196,6 +197,11 @@ fn result_main() -> Result<(), bloguen::Error> {
                                       &descriptor.scripts)?;
             }
 
+            let mut feed_items: BTreeMap<_, _> = feed_files.keys().map(|tp| (*tp, vec![])).collect();
+            for (tp, fbuf) in &mut feed_items {
+                p.generate_feed_head(fbuf, tp, &author)?;
+            }
+
             let mut center_buffer = vec![];
             for link in p.generate(&opts.output_dir,
                           None,
@@ -225,11 +231,23 @@ fn result_main() -> Result<(), bloguen::Error> {
                 }
             }
 
+            for (tp, fbuf) in &mut feed_items {
+                p.generate_feed_foot(fbuf, tp)?;
+            }
+            feed_sender.send((p.number.clone(), feed_items))
+                .map_err(|e| {
+                    bloguen::Error::Io {
+                        desc: format!("post {} feed data", p.number.1).into(),
+                        op: "save",
+                        more: e.to_string().into(),
+                    }
+                })?;;
+
             if descriptor.index.is_some() {
                 idx_sender.send((p.number.clone(), index_machine_json, center_buffer))
                     .map_err(|e| {
                         bloguen::Error::Io {
-                            desc: format!("post {} JSON metadata ", p.number.1).into(),
+                            desc: format!("post {} JSON metadata", p.number.1).into(),
                             op: "save",
                             more: e.to_string().into(),
                         }
@@ -239,8 +257,23 @@ fn result_main() -> Result<(), bloguen::Error> {
             Ok(())
         })?;
 
+    for (post_num, feeds) in feed_receiver {
+        for (tp, fbuf) in feeds {
+            feed_files.get_mut(&tp)
+                .unwrap()
+                .write_all(&fbuf)
+                .map_err(|e| {
+                    bloguen::Error::Io {
+                        desc: format!("post {} feed data", post_num.1).into(),
+                        op: "write",
+                        more: e.to_string().into(),
+                    }
+                })?;
+        }
+    }
+
     for (tp, ff) in &mut feed_files {
-        descriptor.generate_feed_foot(ff, tp);
+        descriptor.generate_feed_foot(ff, tp)?;
     }
 
     if let Some(idx) = descriptor.index.as_ref() {
