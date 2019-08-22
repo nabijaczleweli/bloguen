@@ -45,11 +45,12 @@
 <span id="45">45</span>
 <span id="46">46</span>
 <span id="47">47</span>
+<span id="48">48</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">io</span>::{<span class="prelude-ty">Result</span>, <span class="ident">Write</span>};
 
 
-<span class="doccomment">/// An output sink, escaping `&lt;` and `&gt;` characters passed thereto.</span>
+<span class="doccomment">/// An output sink, escaping `&lt;`, `&gt;`, and `&amp;` characters passed thereto.</span>
 <span class="doccomment">///</span>
 <span class="doccomment">/// # Examples</span>
 <span class="doccomment">///</span>
@@ -70,8 +71,9 @@
 
         <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">buf</span>.<span class="ident">len</span>() {
             <span class="kw">let</span> <span class="ident">repl</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">buf</span>[<span class="ident">i</span>] {
-                <span class="string">b&#39;&lt;&#39;</span> <span class="op">=&gt;</span> <span class="string">b&quot;&amp;lt;&quot;</span>,
-                <span class="string">b&#39;&gt;&#39;</span> <span class="op">=&gt;</span> <span class="string">b&quot;&amp;gt;&quot;</span>,
+                <span class="string">b&#39;&lt;&#39;</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="string">b&quot;&amp;lt;&quot;</span>[..],
+                <span class="string">b&#39;&gt;&#39;</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="string">b&quot;&amp;gt;&quot;</span>[..],
+                <span class="string">b&#39;&amp;&#39;</span> <span class="op">=&gt;</span> <span class="kw-2">&amp;</span><span class="string">b&quot;&amp;amp;&quot;</span>[..],
                 <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">continue</span>,
             };
 
