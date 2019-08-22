@@ -1,6 +1,6 @@
 use self::super::{MachineDataKind, ScriptElement, StyleElement, CenterOrder, LanguageTag, FeedType, feed_type_footer, feed_type_header};
+use self::super::super::util::{concat_path, path_depth, mul_str};
 use std::collections::{BTreeMap, BTreeSet};
-use self::super::super::util::concat_path;
 use toml::de::from_str as from_toml_str;
 use self::super::super::Error;
 use std::io::{Write, Read};
@@ -403,8 +403,20 @@ impl BlogueDescriptor {
         })
     }
 
-    pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, language: &LanguageTag, author: &str) -> Result<(), Error> {
-        feed_type_header(tp)(&self.name, language, author, into, format!("{} feed output", tp.name()))?;
+    pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, fname: &str, language: &LanguageTag, author: &str) -> Result<(), Error> {
+        feed_type_header(tp)(&self.name,
+                             language,
+                             author,
+                             self.index.as_ref().map(|_| {
+            let depth = path_depth(fname);
+            if depth - 1 > 0 {
+                    (mul_str("../", depth as usize - 1) + "index.html").into()
+                } else {
+                    "index.html".into()
+                }
+        }),
+                             into,
+                             format!("{} feed output", tp.name()))?;
 
         Ok(())
     }

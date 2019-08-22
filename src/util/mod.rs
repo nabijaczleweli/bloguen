@@ -21,9 +21,9 @@ use rand_xorshift::XorShiftRng;
 use rand::{SeedableRng, Rng};
 use rand::seq::SliceRandom;
 use comrak::ComrakOptions;
+use std::{iter, cmp, str};
 use self::super::Error;
 use std::borrow::Cow;
-use std::{cmp, str};
 use std::fs::File;
 use regex::Regex;
 use url::Url;
@@ -82,6 +82,18 @@ pub fn uppercase_first(s: &str) -> String {
         None => String::new(),
         Some(f) => f.to_uppercase().collect::<String>() + c.as_str(),
     }
+}
+
+/// Create a string consisting of `n` repetitions of `what`.
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::util::mul_str;
+/// assert_eq!(mul_str("Го! ", 3), "Го! Го! Го! ".to_string());
+/// ```
+pub fn mul_str(what: &str, n: usize) -> String {
+    iter::repeat(what).take(n).collect()
 }
 
 /// Generate a reproducible post time from its name.
@@ -507,6 +519,28 @@ fn concat_path_impl(mut whom: PathBuf, with: &str) -> PathBuf {
     }
 
     whom
+}
+
+/// Get how many times this path descends minus how may times it goes up a level
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::util::path_depth;
+/// assert_eq!(path_depth("./uwu/../hewwo/"), 1);
+/// ```
+pub fn path_depth(path: &str) -> isize {
+    let mut depth = 0;
+
+    for seg in path.split(path::is_separator) {
+        match seg {
+            "" | "." => {}
+            ".." => depth -= 1,
+            _ => depth += 1,
+        }
+    }
+
+    depth
 }
 
 /// Try to get the default language for the system/user/environment.

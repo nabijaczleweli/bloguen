@@ -1,6 +1,7 @@
 use self::super::{MachineDataKind, ScriptElement, StyleElement, LanguageTag, FeedType, TagName, feed_type_post_footer, feed_type_post_header,
                   machine_output_kind, format_output};
-use self::super::super::util::{PolyWrite, MARKDOWN_OPTIONS, extract_actual_assets, name_based_post_time, extract_links, concat_path, read_file};
+use self::super::super::util::{PolyWrite, MARKDOWN_OPTIONS, extract_actual_assets, name_based_post_time, extract_links, concat_path, path_depth, read_file,
+                               mul_str};
 use walkdir::{Error as WalkDirError, DirEntry, WalkDir};
 use chrono::{NaiveTime, DateTime, TimeZone};
 use chrono::offset::Local as LocalOffset;
@@ -529,8 +530,23 @@ impl BloguePost {
         Ok(())
     }
 
-    pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, author: &str) -> Result<(), Error> {
-        feed_type_post_header(tp)(&self.name, &self.normalised_name(), author, &self.datetime, into, self.normalised_name())?;
+    pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, fname: &str, author: &str) -> Result<(), Error> {
+        let norm_name = self.normalised_name();
+
+        let depth = path_depth(fname);
+        let link_pref = if depth - 1 > 0 {
+            mul_str("../", depth as usize - 1)
+        } else {
+            String::new()
+        };
+
+        feed_type_post_header(tp)(&self.name,
+                                  &norm_name,
+                                  author,
+                                  &format!("{}posts/{}.html", link_pref, norm_name),
+                                  &self.datetime,
+                                  into,
+                                  self.normalised_name())?;
 
         Ok(())
     }

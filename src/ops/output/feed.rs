@@ -16,9 +16,14 @@ static FEED_RSS_FOOT: &'static str = include_str!("../../../assets/element_wrapp
 /// Get the correct feed output funxion for the specified feed kind.
 ///
 /// Returns [`feed_rss_header()`](fn.feed_rss_header.html) for `FeedType::Rss`.
-pub fn feed_type_header<W, E>(
-    kind: &FeedType)
-    -> (fn(blog_name: &str, language: &LanguageTag, author: &str, into: &mut W, out_name_err: E) -> Result<Cow<'static, str>, Error>)
+pub fn feed_type_header<W, E>(kind: &FeedType)
+                              -> (fn(blog_name: &str,
+                                     language: &LanguageTag,
+                                     author: &str,
+                                     link: Option<Cow<'static, str>>,
+                                     into: &mut W,
+                                     out_name_err: E)
+                                     -> Result<Cow<'static, str>, Error>)
     where W: Write,
           E: Into<Cow<'static, str>>
 {
@@ -48,6 +53,7 @@ pub fn feed_type_post_header<W, E, Tz>(kind: &FeedType)
                                        -> (fn(post_name: &str,
                                               post_id_name: &str,
                                               author: &str,
+                                              link: &str,
                                               post_date: &DateTime<Tz>,
                                               into: &mut W,
                                               out_name_err: E)
@@ -88,11 +94,12 @@ pub fn feed_type_post_footer<W, E>(kind: &FeedType) -> (fn(into: &mut W, out_nam
 }
 
 
-pub fn feed_rss_header<W, E>(blog_name: &str, language: &LanguageTag, author: &str, into: &mut W, out_name_err: E) -> Result<Cow<'static, str>, Error>
+pub fn feed_rss_header<W, E>(blog_name: &str, language: &LanguageTag, author: &str, link: Option<Cow<'static, str>>, into: &mut W, out_name_err: E)
+                             -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>
 {
-    feed_rss_header_impl(blog_name, language, author, into, out_name_err.into())
+    feed_rss_header_impl(blog_name, language, author, link, into, out_name_err.into())
 }
 
 pub fn feed_rss_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'static, str>, Error>
@@ -102,13 +109,13 @@ pub fn feed_rss_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'stati
     feed_rss_footer_impl(into, out_name_err.into())
 }
 
-pub fn feed_rss_post_header<W, E, Tz>(post_name: &str, post_id_name: &str, author: &str, post_date: &DateTime<Tz>, into: &mut W, out_name_err: E)
+pub fn feed_rss_post_header<W, E, Tz>(post_name: &str, post_id_name: &str, author: &str, link: &str, post_date: &DateTime<Tz>, into: &mut W, out_name_err: E)
                                       -> Result<Cow<'static, str>, Error>
     where Tz: TimeZone,
           W: Write,
           E: Into<Cow<'static, str>>
 {
-    feed_rss_post_header_impl(post_name, post_id_name, author, normalise_datetime(post_date), into, out_name_err.into())
+    feed_rss_post_header_impl(post_name, post_id_name, author, link, normalise_datetime(post_date), into, out_name_err.into())
 }
 
 pub fn feed_rss_post_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'static, str>, Error>
@@ -118,7 +125,8 @@ pub fn feed_rss_post_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'
     feed_rss_post_footer_impl(into, out_name_err.into())
 }
 
-fn feed_rss_header_impl<W>(blog_name: &str, language: &LanguageTag, author: &str, into: &mut W, out_name_err: Cow<'static, str>)
+fn feed_rss_header_impl<W>(blog_name: &str, language: &LanguageTag, author: &str, link: Option<Cow<'static, str>>, into: &mut W,
+                           out_name_err: Cow<'static, str>)
                            -> Result<Cow<'static, str>, Error>
     where W: Write
 {
@@ -128,8 +136,10 @@ fn feed_rss_header_impl<W>(blog_name: &str, language: &LanguageTag, author: &str
             into.write_all(FEED_RSS_HEAD.as_bytes()).map_err(|e| (e, "header".into()))?;
 
             write_tag("title", blog_name, into)?;
-            write_tag("link", "TODO", into)?;
             write_tag("author", author, into)?;
+            if let Some(link) = link {
+                write_tag("link", link, into)?;
+            }
             write_tag("description", blog_name, into)?;
             write_tag("language", language, into)?;
             write_tag("generator", format!("bloguen {}", BLOGUEN_VERSION), into)?;
@@ -158,7 +168,7 @@ fn feed_rss_footer_impl<W>(into: &mut W, out_name_err: Cow<'static, str>) -> Res
     Ok(out_name_err.unwrap())
 }
 
-fn feed_rss_post_header_impl<W>(post_name: &str, post_id_name: &str, author: &str, post_date: DateTime<FixedOffset>, into: &mut W,
+fn feed_rss_post_header_impl<W>(post_name: &str, post_id_name: &str, author: &str, link: &str, post_date: DateTime<FixedOffset>, into: &mut W,
                                 out_name_err: Cow<'static, str>)
                                 -> Result<Cow<'static, str>, Error>
     where W: Write
@@ -171,6 +181,7 @@ fn feed_rss_post_header_impl<W>(post_name: &str, post_id_name: &str, author: &st
 
             write_tag_post("title", post_name, into)?;
             write_tag_post("author", author, into)?;
+            write_tag_post("link", link, into)?;
             write_date_post("pubDate", &post_date, FixedTimeFormatItem::RFC2822, into)?;
             write_tag_post("guid", post_id_name, into)?;
 

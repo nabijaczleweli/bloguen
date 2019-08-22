@@ -121,9 +121,9 @@ fn result_main() -> Result<(), bloguen::Error> {
 
 
     let mut feed_files: BTreeMap<_, _> =
-        Result::from_iter(descriptor.feeds.iter().map(|(tp, fname)| descriptor.create_feed_output(&opts.output_dir, fname, tp).map(|f| (*tp, f))))?;
-    for (tp, ff) in &mut feed_files {
-        descriptor.generate_feed_head(ff, tp, &global_language, &global_author)?;
+        Result::from_iter(descriptor.feeds.iter().map(|(tp, fname)| descriptor.create_feed_output(&opts.output_dir, fname, tp).map(|f| (*tp, (f, fname)))))?;
+    for (tp, (ff, fname)) in &mut feed_files {
+        descriptor.generate_feed_head(ff, tp, fname, &global_language, &global_author)?;
     }
 
 
@@ -197,15 +197,15 @@ fn result_main() -> Result<(), bloguen::Error> {
                                       &descriptor.scripts)?;
             }
 
-            let mut feed_items: BTreeMap<_, _> = feed_files.keys().map(|tp| (*tp, vec![])).collect();
-            for (tp, fbuf) in &mut feed_items {
-                p.generate_feed_head(fbuf, tp, &author)?;
+            let mut feed_items: BTreeMap<_, _> = feed_files.iter().map(|(tp, (_, fname))| (*tp, (vec![], fname.to_string()))).collect();
+            for (tp, (fbuf, fname)) in &mut feed_items {
+                p.generate_feed_head(fbuf, tp, fname, &author)?;
             }
 
             let mut center_buffer = vec![];
             for link in p.generate(&opts.output_dir,
                           if !feed_items.is_empty() {
-                                  let mut itr = feed_items.iter_mut().map(|(tp, fbuf)| bloguen::ops::feed_type_post_body(tp)(fbuf));
+                                  let mut itr = feed_items.iter_mut().map(|(tp, (fbuf, _))| bloguen::ops::feed_type_post_body(tp)(fbuf));
                                   let first_out = itr.next().unwrap();
                                   Some(itr.fold(first_out, |cur, out| Box::new(bloguen::util::PolyWrite(cur, out))))
                               } else {
@@ -239,9 +239,10 @@ fn result_main() -> Result<(), bloguen::Error> {
                 }
             }
 
-            for (tp, fbuf) in &mut feed_items {
+            for (tp, (fbuf, _)) in &mut feed_items {
                 p.generate_feed_foot(fbuf, tp)?;
             }
+
             feed_sender.send((p.number.clone(), feed_items))
                 .map_err(|e| {
                     bloguen::Error::Io {
@@ -266,9 +267,10 @@ fn result_main() -> Result<(), bloguen::Error> {
         })?;
 
     for (post_num, feeds) in feed_receiver {
-        for (tp, fbuf) in feeds {
+        for (tp, (fbuf, _)) in feeds {
             feed_files.get_mut(&tp)
                 .unwrap()
+                .0
                 .write_all(&fbuf)
                 .map_err(|e| {
                     bloguen::Error::Io {
@@ -280,7 +282,7 @@ fn result_main() -> Result<(), bloguen::Error> {
         }
     }
 
-    for (tp, ff) in &mut feed_files {
+    for (tp, (ff, _)) in &mut feed_files {
         descriptor.generate_feed_foot(ff, tp)?;
     }
 
