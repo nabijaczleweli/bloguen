@@ -1,7 +1,7 @@
 use std::io::{Result, Write};
 
 
-/// An output sink, escaping `<` and `>` characters passed thereto.
+/// An output sink, escaping `<`, `>`, and `&` characters passed thereto.
 ///
 /// # Examples
 ///
@@ -22,8 +22,9 @@ impl<Wr1: Write> Write for XmlEscapeWrite<Wr1> {
 
         for i in 0..buf.len() {
             let repl = match buf[i] {
-                b'<' => b"&lt;",
-                b'>' => b"&gt;",
+                b'<' => &b"&lt;"[..],
+                b'>' => &b"&gt;"[..],
+                b'&' => &b"&amp;"[..],
                 _ => continue,
             };
 

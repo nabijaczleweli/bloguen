@@ -204,7 +204,15 @@ fn result_main() -> Result<(), bloguen::Error> {
 
             let mut center_buffer = vec![];
             for link in p.generate(&opts.output_dir,
-                          None,
+                          if !feed_items.is_empty() {
+                                  let mut itr = feed_items.iter_mut().map(|(tp, fbuf)| bloguen::ops::feed_type_post_body(tp)(fbuf));
+                                  let first_out = itr.next().unwrap();
+                                  Some(itr.fold(first_out, |cur, out| Box::new(bloguen::util::PolyWrite(cur, out))))
+                              } else {
+                                  None
+                              }
+                              .as_mut()
+                              .map(|out| out as &mut dyn Write),
                           index_center.as_ref().map(|ic| (&ic[..], &mut center_buffer as &mut dyn Write)),
                           descriptor.asset_dir_override.as_ref().map(|s| &s[..]),
                           &post_header,

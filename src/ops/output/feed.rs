@@ -62,6 +62,18 @@ pub fn feed_type_post_header<W, E, Tz>(kind: &FeedType)
     }
 }
 
+/// Get the correct feed output writer for the specified feed kind.
+///
+/// Returns [`feed_rss_post_body()`](fn.feed_rss_post_body.html) for `FeedType::Rss`.
+pub fn feed_type_post_body<'w, W>(kind: &FeedType) -> (fn(into: &'w mut W) -> Box<dyn Write + 'w>)
+    where W: Write
+{
+    match kind {
+        FeedType::Rss => feed_rss_post_body,
+        FeedType::Atom => unimplemented!(),
+    }
+}
+
 /// Get the correct feed output funxion for the specified feed kind.
 ///
 /// Returns [`feed_rss_post_footer()`](fn.feed_rss_post_footer.html) for `FeedType::Rss`.
@@ -168,6 +180,12 @@ fn feed_rss_post_header_impl<W>(post_name: &str, post_id_name: &str, author: &st
         })().map_err(|(e, d): (_, Cow<'static, str>)| err_io("write", format!("{} when writing RSS feed post output {}", e, d), out_name_err.take().unwrap()))?;
 
     Ok(out_name_err.unwrap())
+}
+
+pub fn feed_rss_post_body<'w, W>(into: &'w mut W) -> Box<dyn Write + 'w>
+    where W: Write
+{
+    Box::new(XmlEscapeWrite(into))
 }
 
 fn feed_rss_post_footer_impl<W>(into: &mut W, out_name_err: Cow<'static, str>) -> Result<Cow<'static, str>, Error>
