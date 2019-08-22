@@ -52,6 +52,7 @@ sourcesIndex["same_file"] = {"name":"","files":["lib.rs","unix.rs"]};
 sourcesIndex["scopeguard"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["serde"] = {"name":"","dirs":[{"name":"de","files":["from_primitive.rs","ignored_any.rs","impls.rs","mod.rs","utf8.rs","value.rs"]},{"name":"private","files":["de.rs","macros.rs","mod.rs","ser.rs"]},{"name":"ser","files":["impls.rs","impossible.rs","mod.rs"]}],"files":["export.rs","integer128.rs","lib.rs","macros.rs"]};
 sourcesIndex["serde_derive"] = {"name":"","dirs":[{"name":"internals","files":["ast.rs","attr.rs","case.rs","check.rs","ctxt.rs","mod.rs","symbol.rs"]}],"files":["bound.rs","de.rs","dummy.rs","fragment.rs","lib.rs","pretend.rs","ser.rs","try.rs"]};
+sourcesIndex["sha1"] = {"name":"","files":["lib.rs","simd.rs"]};
 sourcesIndex["smallvec"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["strsim"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["syn"] = {"name":"","dirs":[{"name":"gen","files":["gen_helper.rs","visit.rs"]}],"files":["attr.rs","bigint.rs","buffer.rs","custom_keyword.rs","custom_punctuation.rs","data.rs","derive.rs","discouraged.rs","error.rs","export.rs","expr.rs","ext.rs","generics.rs","group.rs","ident.rs","lib.rs","lifetime.rs","lit.rs","lookahead.rs","mac.rs","macros.rs","op.rs","parse.rs","parse_macro_input.rs","parse_quote.rs","path.rs","print.rs","punctuated.rs","sealed.rs","span.rs","spanned.rs","thread.rs","token.rs","ty.rs"]};
@@ -71,6 +72,7 @@ sourcesIndex["unicode_normalization"] = {"name":"","files":["decompose.rs","lib.
 sourcesIndex["unicode_width"] = {"name":"","files":["lib.rs","tables.rs"]};
 sourcesIndex["unicode_xid"] = {"name":"","files":["lib.rs","tables.rs"]};
 sourcesIndex["url"] = {"name":"","files":["form_urlencoded.rs","host.rs","lib.rs","origin.rs","parser.rs","path_segments.rs","query_encoding.rs","quirks.rs","slicing.rs"]};
+sourcesIndex["uuid"] = {"name":"","dirs":[{"name":"adapter","dirs":[{"name":"core_support","files":["mod.rs"]}],"files":["mod.rs"]},{"name":"parser","files":["core_support.rs","mod.rs","std_support.rs"]}],"files":["builder.rs","core_support.rs","lib.rs","prelude.rs","std_support.rs","v5.rs"]};
 sourcesIndex["vec_map"] = {"name":"","files":["lib.rs"]};
 sourcesIndex["walkdir"] = {"name":"","files":["dent.rs","error.rs","lib.rs","util.rs"]};
 createSourceSidebar();

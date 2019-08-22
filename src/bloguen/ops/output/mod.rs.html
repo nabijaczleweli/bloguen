@@ -26,6 +26,7 @@
 <span id="26">26</span>
 <span id="27">27</span>
 <span id="28">28</span>
+<span id="29">29</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">mod</span> <span class="ident">machine_readable</span>;
 <span class="kw">mod</span> <span class="ident">paragraph_passer</span>;
@@ -36,8 +37,9 @@
 <span class="kw">use</span> <span class="ident">std</span>::<span class="ident">borrow</span>::<span class="ident">Cow</span>;
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">Error</span>;
 
-<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">feed</span>::{<span class="ident">feed_type_post_footer</span>, <span class="ident">feed_rss_post_footer</span>, <span class="ident">feed_type_post_header</span>, <span class="ident">feed_rss_post_header</span>, <span class="ident">feed_type_post_body</span>, <span class="ident">feed_rss_post_body</span>,
-                     <span class="ident">feed_type_footer</span>, <span class="ident">feed_type_header</span>, <span class="ident">feed_rss_footer</span>, <span class="ident">feed_rss_header</span>};
+<span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">feed</span>::{<span class="ident">feed_type_post_footer</span>, <span class="ident">feed_atom_post_footer</span>, <span class="ident">feed_rss_post_footer</span>, <span class="ident">feed_type_post_header</span>, <span class="ident">feed_atom_post_header</span>, <span class="ident">feed_rss_post_header</span>,
+                     <span class="ident">feed_type_post_body</span>, <span class="ident">feed_atom_post_body</span>, <span class="ident">feed_rss_post_body</span>, <span class="ident">feed_type_footer</span>, <span class="ident">feed_type_header</span>, <span class="ident">feed_atom_footer</span>, <span class="ident">feed_rss_footer</span>,
+                     <span class="ident">feed_atom_header</span>, <span class="ident">feed_rss_header</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">wrapped_element</span>::{<span class="ident">WrappedElement</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">machine_readable</span>::{<span class="ident">machine_output_json</span>, <span class="ident">machine_output_kind</span>};
 <span class="kw">pub</span> <span class="kw">use</span> <span class="self">self</span>::<span class="ident">paragraph_passer</span>::<span class="ident">ParagraphPasser</span>;
