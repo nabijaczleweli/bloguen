@@ -39,6 +39,7 @@ extern crate clap;
 #[cfg(not(target_os = "windows"))]
 extern crate libc;
 extern crate toml;
+extern crate uuid;
 extern crate crc;
 extern crate url;
 

@@ -199,7 +199,7 @@ fn result_main() -> Result<(), bloguen::Error> {
 
             let mut feed_items: BTreeMap<_, _> = feed_files.iter().map(|(tp, (_, fname))| (*tp, (vec![], fname.to_string()))).collect();
             for (tp, (fbuf, fname)) in &mut feed_items {
-                p.generate_feed_head(fbuf, tp, fname, &author)?;
+                p.generate_feed_head(fbuf, tp, fname, &language, &author)?;
             }
 
             let mut center_buffer = vec![];

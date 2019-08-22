@@ -5,9 +5,10 @@ mod tag_name;
 mod output;
 mod post;
 
-pub use self::output::{ParagraphPasser, WrappedElement, ScriptElement, StyleElement, feed_type_post_footer, feed_rss_post_footer, feed_type_post_header,
-                       feed_rss_post_header, feed_type_post_body, feed_rss_post_body, machine_output_json, machine_output_kind, feed_type_header,
-                       feed_type_footer, feed_rss_header, feed_rss_footer, format_output};
+pub use self::output::{ParagraphPasser, WrappedElement, ScriptElement, StyleElement, feed_type_post_footer, feed_atom_post_footer, feed_rss_post_footer,
+                       feed_type_post_header, feed_atom_post_header, feed_rss_post_header, feed_type_post_body, feed_atom_post_body, feed_rss_post_body,
+                       machine_output_json, machine_output_kind, feed_type_header, feed_type_footer, feed_atom_header, feed_rss_header, feed_atom_footer,
+                       feed_rss_footer, format_output};
 pub use self::descriptor::{BlogueDescriptorIndex, BlogueDescriptor};
 pub use self::machine_data::MachineDataKind;
 pub use self::center_order::CenterOrder;

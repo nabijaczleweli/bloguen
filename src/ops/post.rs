@@ -530,7 +530,7 @@ impl BloguePost {
         Ok(())
     }
 
-    pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, fname: &str, author: &str) -> Result<(), Error> {
+    pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, fname: &str, language: &LanguageTag, author: &str) -> Result<(), Error> {
         let norm_name = self.normalised_name();
 
         let depth = path_depth(fname);
@@ -539,11 +539,14 @@ impl BloguePost {
         } else {
             String::new()
         };
+        let link = format!("{}posts/{}.html", link_pref, norm_name);
 
         feed_type_post_header(tp)(&self.name,
                                   &norm_name,
+                                  language,
                                   author,
-                                  &format!("{}posts/{}.html", link_pref, norm_name),
+                                  &link[..link_pref.len() + 5 + 1],
+                                  &link,
                                   &self.datetime,
                                   into,
                                   self.normalised_name())?;
