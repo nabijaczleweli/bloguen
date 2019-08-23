@@ -74,6 +74,7 @@ lazy_static! {
 /// let res = format_output(
 ///     head, "Блогг", &LANGUAGE_EN_GB, &[&global_data, &local_data],
 ///     "003. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
+///     "003. 2018-02-05 12-33-05 release-front - a generic release front-end, like Patchwork's",
 ///     3, "release-front - a generic release front-end, like Patchwork's", "nabijaczleweli",
 ///     &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
 ///     &[&["vodka".parse().unwrap(), "depression".parse().unwrap()][..],
@@ -135,8 +136,8 @@ lazy_static! {
 /// "###);
 /// ```
 pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
-                                       raw_post_name: &str, number: usize, title: &str, author: &str, post_date: &DateTime<Tz>, tags: &[&[TagName]],
-                                       styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: E)
+                                       raw_post_name: &str, normalised_post_name: &str, number: usize, title: &str, author: &str, post_date: &DateTime<Tz>,
+                                       tags: &[&[TagName]], styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: E)
                                        -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>,
@@ -149,6 +150,7 @@ pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, languag
                        language,
                        additional_data_sets,
                        raw_post_name,
+                       normalised_post_name,
                        number,
                        title,
                        author,
@@ -161,8 +163,8 @@ pub fn format_output<W, E, Tz, St, Sc>(to_format: &str, blog_name: &str, languag
 }
 
 fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
-                                 raw_post_name: &str, number: usize, title: &str, author: &str, post_date: DateTime<FixedOffset>, tags: &[&[TagName]],
-                                 styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: Cow<'static, str>)
+                                 raw_post_name: &str, normalised_post_name: &str, number: usize, title: &str, author: &str, post_date: DateTime<FixedOffset>,
+                                 tags: &[&[TagName]], styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: Cow<'static, str>)
                                  -> Result<Cow<'static, str>, Error>
     where W: Write,
           St: WrappedElement,
@@ -203,6 +205,7 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
                           language,
                           additional_data_sets,
                           raw_post_name,
+                          normalised_post_name,
                           number,
                           title,
                           author,
@@ -226,8 +229,8 @@ fn format_output_impl<W, St, Sc>(mut to_format: &str, blog_name: &str, language:
 }
 
 fn var_parse<W, St, Sc>(format_str: &str, byte_pos: usize, blog_name: &str, language: &LanguageTag, additional_data_sets: &[&BTreeMap<String, String>],
-                        raw_post_name: &str, number: usize, title: &str, author: &str, post_date: DateTime<FixedOffset>, tags: &[&[TagName]],
-                        styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: &mut Option<Cow<'static, str>>)
+                        raw_post_name: &str, normalised_post_name: &str, number: usize, title: &str, author: &str, post_date: DateTime<FixedOffset>,
+                        tags: &[&[TagName]], styles: &[&[St]], scripts: &[&[Sc]], into: &mut W, out_name_err: &mut Option<Cow<'static, str>>)
                         -> Result<(), Error>
     where W: Write,
           St: WrappedElement,
@@ -239,6 +242,7 @@ fn var_parse<W, St, Sc>(format_str: &str, byte_pos: usize, blog_name: &str, lang
             "title" => into.write_all(title.as_bytes()).map_err(|e| (e, "title tag".into())),
             "author" => into.write_all(author.as_bytes()).map_err(|e| (e, "author tag".into())),
             "raw_post_name" => into.write_all(raw_post_name.as_bytes()).map_err(|e| (e, "raw_post_name tag".into())),
+            "normalised_post_name" => into.write_all(normalised_post_name.as_bytes()).map_err(|e| (e, "normalised_post_name tag".into())),
             "blog_name" => into.write_all(blog_name.as_bytes()).map_err(|e| (e, "blog_name tag".into())),
 
             "bloguen-version" => into.write_all(BLOGUEN_VERSION.as_bytes()).map_err(|e| (e, "bloguen-version tag".into())),
@@ -382,6 +386,7 @@ fn var_parse<W, St, Sc>(format_str: &str, byte_pos: usize, blog_name: &str, lang
                                           language,
                                           additional_data_sets,
                                           raw_post_name,
+                                          normalised_post_name,
                                           number,
                                           title,
                                           author,

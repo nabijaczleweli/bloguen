@@ -293,11 +293,12 @@ impl BloguePost {
             })?;
 
         let original_name = self.source_dir.1.file_name().unwrap().to_str().unwrap();
-        let normalised_name = format_output(post_header,
+        let normalised_name_err = format_output(post_header,
                                             blog_name,
                                             language,
                                             &[global_data, post_data],
                                             &original_name,
+                                            &normalised_name,
                                             self.number.0,
                                             &self.name,
                                             author,
@@ -306,7 +307,7 @@ impl BloguePost {
                                             &[global_styles, post_styles],
                                             &[global_scripts, post_scripts],
                                             &mut post_html_f,
-                                            normalised_name)?;
+                                            normalised_name.clone())?;
 
         let mut center_output = center_output.map(|(f, o)| (f, o, vec![]));
         if let Some(asset_override) = asset_override {
@@ -338,11 +339,12 @@ impl BloguePost {
             }
         }
 
-        let normalised_name = format_output(post_footer,
+        let normalised_name_err = format_output(post_footer,
                                             blog_name,
                                             language,
                                             &[global_data, post_data],
                                             &original_name,
+                                            &normalised_name,
                                             self.number.0,
                                             &self.name,
                                             author,
@@ -351,7 +353,7 @@ impl BloguePost {
                                             &[global_styles, post_styles],
                                             &[global_scripts, post_scripts],
                                             &mut post_html_f,
-                                            normalised_name)?;
+                                            normalised_name_err)?;
 
         if let Some((center, mut center_out, center_temp)) = center_output {
             let mut temp_data = BTreeMap::new();
@@ -369,6 +371,7 @@ impl BloguePost {
                           language,
                           &[global_data, post_data, &temp_data],
                           &original_name,
+                          &normalised_name,
                           self.number.0,
                           &self.name,
                           author,
@@ -377,7 +380,7 @@ impl BloguePost {
                           &[global_styles, post_styles],
                           &[global_scripts, post_scripts],
                           &mut center_out,
-                          normalised_name)?;
+                          normalised_name_err)?;
         }
 
         Ok(out_links)
