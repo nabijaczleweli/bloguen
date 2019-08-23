@@ -1,6 +1,3 @@
-mod style_element;
-mod script_element;
-
 pub use self::style_element::StyleElement;
 pub use self::script_element::ScriptElement;
 
@@ -34,4 +31,16 @@ pub trait WrappedElement {
     fn foot_b(&self) -> &[u8] {
         self.foot().as_bytes()
     }
+}
+
+
+include!(concat!(env!("OUT_DIR"), "/wrapped_element/script.rs"));
+include!(concat!(env!("OUT_DIR"), "/wrapped_element/style.rs"));
+
+
+#[derive(Debug, Copy, Clone, Hash, PartialEq, Eq, PartialOrd, Ord)]
+enum ElementClass {
+    Link,
+    Literal,
+    File,
 }
