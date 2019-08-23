@@ -104,6 +104,43 @@ pub fn feed_type_post_footer<W, E>(kind: &FeedType) -> (fn(into: &mut W, out_nam
 }
 
 
+/// Output the header for an RSS feed,
+///
+/// The `link` argument corresponds to the link tag, linking to the index page,
+/// and, if not present, will not be output.
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::ops::feed_rss_header;
+/// # use bloguen::util::LANGUAGE_EN_GB;
+/// # use std::str;
+/// let mut out = vec![];
+/// let res = feed_rss_header(
+///     "Блогг", &LANGUAGE_EN_GB, "nabijaczleweli", Some("../index.html".into()),
+///     &mut out, "test blog");
+/// assert_eq!(res, Ok("test blog".into()));
+///
+/// let out = str::from_utf8(&out).unwrap();
+/// # let mut gendate_local_rfc2822 = out.lines().find(|l| l.contains("lastBuildDate")).unwrap();
+/// # gendate_local_rfc2822 = &gendate_local_rfc2822[4 + 1 + 13 + 1..gendate_local_rfc2822.len() - (1 + 13 + 1 + 1)];
+/// # /*
+/// let gendate_local_rfc2822 = /* extracted from output's lastBuildDate tag */;
+/// # */
+/// assert_eq!(out, format!(r###"<?xml version="1.0" encoding="UTF-8"?>
+/// <rss version="2.0">
+///   <channel>
+///     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+///     <title>Блогг</title>
+///     <author>nabijaczleweli</author>
+///     <link>../index.html</link>
+///     <description>Блогг</description>
+///     <language>en-GB</language>
+///     <generator>bloguen 0.1.0</generator>
+///     <pubDate>{0}</pubDate>
+///     <lastBuildDate>{0}</lastBuildDate>
+/// "###, gendate_local_rfc2822));
+/// ```
 pub fn feed_rss_header<W, E>(blog_name: &str, language: &LanguageTag, author: &str, link: Option<Cow<'static, str>>, into: &mut W, out_name_err: E)
                              -> Result<Cow<'static, str>, Error>
     where W: Write,
@@ -112,6 +149,23 @@ pub fn feed_rss_header<W, E>(blog_name: &str, language: &LanguageTag, author: &s
     feed_rss_header_impl(blog_name, language, author, link, into, out_name_err.into())
 }
 
+/// Output the footer for an RSS feed,
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::ops::feed_rss_footer;
+/// # use bloguen::util::LANGUAGE_EN_GB;
+/// # use std::str;
+/// let mut out = vec![];
+/// let res = feed_rss_footer(&mut out, "test blog");
+/// assert_eq!(res, Ok("test blog".into()));
+///
+/// let out = str::from_utf8(&out).unwrap();
+/// assert_eq!(out, r###"  </channel>
+/// </rss>
+/// "###);
+/// ```
 pub fn feed_rss_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>
@@ -119,8 +173,44 @@ pub fn feed_rss_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'stati
     feed_rss_footer_impl(into, out_name_err.into())
 }
 
-pub fn feed_rss_post_header<W, E, Tz>(post_name: &str, post_id_name: &str, language: &LanguageTag, author: &str, base: &str, link: &str, post_date: &DateTime<Tz>,
-                                      into: &mut W, out_name_err: E)
+/// Output the post header for an RSS feed,
+///
+/// The `post_id_name` argment is used as the entry GUID,
+/// the `base` argument is unused,
+/// the `link` argument points to the corresponding post HTML.
+///
+/// # Examples
+///
+/// ```
+/// # extern crate bloguen;
+/// # extern crate chrono;
+/// # use bloguen::util::{LANGUAGE_EN_GB, normalise_datetime};
+/// # use bloguen::ops::feed_rss_post_header;
+/// # use chrono::DateTime;
+/// # use std::str;
+/// let mut out = vec![];
+/// let res = feed_rss_post_header(
+///     "release-front - a generic release front-end, like Patchwork's",
+///     "003. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
+///     &LANGUAGE_EN_GB, "nabijaczleweli", "../posts/",
+///     "../posts/003. 2018-02-05 release-front - a generic release front-end, like Patchwork's.html",
+///     &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
+///     &mut out, "test post");
+/// assert_eq!(res, Ok("test post".into()));
+///
+/// let out = str::from_utf8(&out).unwrap();
+/// assert_eq!(out, r###"
+///     <item>
+///       <title>release-front - a generic release front-end, like Patchwork's</title>
+///       <author>nabijaczleweli</author>
+///       <link>../posts/003. 2018-02-05 release-front - a generic release front-end, like Patchwork's.html</link>
+///       <pubDate>Thu,  6 Sep 2018 18:32:22 +0200</pubDate>
+///       <guid>003. 2018-02-05 release-front - a generic release front-end, like Patchwork's</guid>
+///       <description>
+/// "###);
+/// ```
+pub fn feed_rss_post_header<W, E, Tz>(post_name: &str, post_id_name: &str, language: &LanguageTag, author: &str, base: &str, link: &str,
+                                      post_date: &DateTime<Tz>, into: &mut W, out_name_err: E)
                                       -> Result<Cow<'static, str>, Error>
     where Tz: TimeZone,
           W: Write,
@@ -137,6 +227,22 @@ pub fn feed_rss_post_header<W, E, Tz>(post_name: &str, post_id_name: &str, langu
                               out_name_err.into())
 }
 
+/// Output the post footer for an RSS feed,
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::ops::feed_rss_post_footer;
+/// # use std::str;
+/// let mut out = vec![];
+/// let res = feed_rss_post_footer(&mut out, "test post");
+/// assert_eq!(res, Ok("test post".into()));
+///
+/// let out = str::from_utf8(&out).unwrap();
+/// assert_eq!(out, r###"      </description>
+///     </item>
+/// "###);
+/// ```
 pub fn feed_rss_post_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>
@@ -212,6 +318,9 @@ fn feed_rss_post_header_impl<W>(post_name: &str, post_id_name: &str, _: &Languag
     Ok(out_name_err.unwrap())
 }
 
+/// Get the post body writer for an RSS feed.
+///
+/// Write into it between post header and footer invocations to insert the post contents into the feed.
 pub fn feed_rss_post_body<'w, W>(into: &'w mut W) -> Box<dyn Write + 'w>
     where W: Write
 {
@@ -234,6 +343,41 @@ fn feed_rss_post_footer_impl<W>(into: &mut W, out_name_err: Cow<'static, str>) -
 }
 
 
+/// Output the header for an Atom feed,
+///
+/// The `link` argument corresponds to the link tag, linking to the index page,
+/// and, if not present, will not be output.
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::ops::feed_atom_header;
+/// # use bloguen::util::LANGUAGE_EN_GB;
+/// # use std::str;
+/// let mut out = vec![];
+/// let res = feed_atom_header(
+///     "Блогг", &LANGUAGE_EN_GB, "nabijaczleweli", Some("../index.html".into()),
+///     &mut out, "test blog");
+/// assert_eq!(res, Ok("test blog".into()));
+///
+/// let out = str::from_utf8(&out).unwrap();
+/// # let mut gendate_local_rfc3339 = out.lines().find(|l| l.contains("updated")).unwrap();
+/// # gendate_local_rfc3339 = &gendate_local_rfc3339[2 + 1 + 7 + 1..gendate_local_rfc3339.len() - (1 + 7 + 1 + 1)];
+/// # /*
+/// let gendate_local_rfc3339 = /* extracted from output's updated tag */;
+/// # */
+/// assert_eq!(out, format!(r###"<?xml version="1.0" encoding="utf-8"?>
+/// <feed xmlns="http://www.w3.org/2005/Atom">
+///   <title>Блогг</title>
+///   <author>
+///     <name>nabijaczleweli</name>
+///   </author>
+///   <link href="../index.html" />
+///   <id>urn:uuid:4f568fb2-4417-5b80-85a8-651978a2da56</id>
+///   <generator href="//github.com/nabijaczleweli/bloguen" version="0.1.0">bloguen</generator>
+///   <updated>{}</updated>
+/// "###, gendate_local_rfc3339));
+/// ```
 pub fn feed_atom_header<W, E>(blog_name: &str, language: &LanguageTag, author: &str, link: Option<Cow<'static, str>>, into: &mut W, out_name_err: E)
                               -> Result<Cow<'static, str>, Error>
     where W: Write,
@@ -242,6 +386,22 @@ pub fn feed_atom_header<W, E>(blog_name: &str, language: &LanguageTag, author: &
     feed_atom_header_impl(blog_name, language, author, link, into, out_name_err.into())
 }
 
+/// Output the footer for an Atom feed,
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::ops::feed_atom_footer;
+/// # use bloguen::util::LANGUAGE_EN_GB;
+/// # use std::str;
+/// let mut out = vec![];
+/// let res = feed_atom_footer(&mut out, "test blog");
+/// assert_eq!(res, Ok("test blog".into()));
+///
+/// let out = str::from_utf8(&out).unwrap();
+/// assert_eq!(out, r###"</feed>
+/// "###);
+/// ```
 pub fn feed_atom_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>
@@ -249,8 +409,48 @@ pub fn feed_atom_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'stat
     feed_atom_footer_impl(into, out_name_err.into())
 }
 
-pub fn feed_atom_post_header<W, E, Tz>(post_name: &str, post_id_name: &str, language: &LanguageTag, author: &str, base: &str, link: &str, post_date: &DateTime<Tz>,
-                                       into: &mut W, out_name_err: E)
+/// Output the post header for an Atom feed,
+///
+/// The `post_id_name` argment is used as the entry GUID,
+/// the `base` argument is the `xml:base` attribute, and should point to thr posts output directory to properly handle image
+/// links,
+/// the `link` argument points to the corresponding post HTML.
+///
+/// # Examples
+///
+/// ```
+/// # extern crate bloguen;
+/// # extern crate chrono;
+/// # use bloguen::util::{LANGUAGE_EN_GB, normalise_datetime};
+/// # use bloguen::ops::feed_atom_post_header;
+/// # use chrono::DateTime;
+/// # use std::str;
+/// let mut out = vec![];
+/// let res = feed_atom_post_header(
+///     "release-front - a generic release front-end, like Patchwork's",
+///     "003. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
+///     &LANGUAGE_EN_GB, "nabijaczleweli", "../posts/",
+///     "../posts/003. 2018-02-05 release-front - a generic release front-end, like Patchwork's.html",
+///     &DateTime::parse_from_rfc3339("2018-09-06T18:32:22+02:00").unwrap(),
+///     &mut out, "test post");
+/// assert_eq!(res, Ok("test post".into()));
+///
+/// let out = str::from_utf8(&out).unwrap();
+/// assert_eq!(out, r###"
+///   <entry>
+///     <title>release-front - a generic release front-end, like Patchwork's</title>
+///     <contributor>
+///       <name>nabijaczleweli</name>
+///     </contributor>
+///     <link rel="alternate" href="../posts/003. 2018-02-05 release-front - a generic release front-end, like Patchwork's.html" />
+///     <updated>2018-09-06T18:32:22+02:00</updated>
+///     <published>2018-09-06T18:32:22+02:00</published>
+///     <guid>urn:uuid:4e2f9fbd-6b4e-52cc-bcc7-635e384f1cd9</guid>
+///     <content type="html" xml:lang="en-GB" xml:base="../posts/">
+/// "###);
+/// ```
+pub fn feed_atom_post_header<W, E, Tz>(post_name: &str, post_id_name: &str, language: &LanguageTag, author: &str, base: &str, link: &str,
+                                       post_date: &DateTime<Tz>, into: &mut W, out_name_err: E)
                                        -> Result<Cow<'static, str>, Error>
     where Tz: TimeZone,
           W: Write,
@@ -267,6 +467,22 @@ pub fn feed_atom_post_header<W, E, Tz>(post_name: &str, post_id_name: &str, lang
                                out_name_err.into())
 }
 
+/// Output the post footer for an Atom feed,
+///
+/// # Examples
+///
+/// ```
+/// # use bloguen::ops::feed_atom_post_footer;
+/// # use std::str;
+/// let mut out = vec![];
+/// let res = feed_atom_post_footer(&mut out, "test post");
+/// assert_eq!(res, Ok("test post".into()));
+///
+/// let out = str::from_utf8(&out).unwrap();
+/// assert_eq!(out, r###"    </content>
+///   </entry>
+/// "###);
+/// ```
 pub fn feed_atom_post_footer<W, E>(into: &mut W, out_name_err: E) -> Result<Cow<'static, str>, Error>
     where W: Write,
           E: Into<Cow<'static, str>>
@@ -325,8 +541,8 @@ fn feed_atom_footer_impl<W>(into: &mut W, out_name_err: Cow<'static, str>) -> Re
     Ok(out_name_err.unwrap())
 }
 
-fn feed_atom_post_header_impl<W>(post_name: &str, post_id_name: &str, language: &LanguageTag, author: &str, base: &str, link: &str, post_date: DateTime<FixedOffset>,
-                                 into: &mut W, out_name_err: Cow<'static, str>)
+fn feed_atom_post_header_impl<W>(post_name: &str, post_id_name: &str, language: &LanguageTag, author: &str, base: &str, link: &str,
+                                 post_date: DateTime<FixedOffset>, into: &mut W, out_name_err: Cow<'static, str>)
                                  -> Result<Cow<'static, str>, Error>
     where W: Write
 {
@@ -363,6 +579,9 @@ fn feed_atom_post_header_impl<W>(post_name: &str, post_id_name: &str, language: 
     Ok(out_name_err.unwrap())
 }
 
+/// Get the post body writer for an Atom feed.
+///
+/// Write into it between post header and footer invocations to insert the post contents into the feed.
 pub fn feed_atom_post_body<'w, W>(into: &'w mut W) -> Box<dyn Write + 'w>
     where W: Write
 {
