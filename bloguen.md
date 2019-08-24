@@ -268,6 +268,12 @@ Anything else: `strftime()` format
 
 Written by nabijaczleweli &lt;<nabijaczleweli@gmail.com>&gt;
 
+## SPECIAL THANKS
+
+To all who support further development, in particular:
+
+  * ThePhD
+
 ## REPORTING BUGS
 
 &lt;<https://github.com/nabijaczleweli/bloguen/issues>&gt;
