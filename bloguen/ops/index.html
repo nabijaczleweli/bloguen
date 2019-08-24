@@ -1,4 +1,65 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `ops` mod in crate `bloguen`."><meta name="keywords" content="rust, rustlang, rust-lang, ops"><title>bloguen::ops - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../bloguen/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a><p class='location'>Module ops</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>bloguen</a></p><script>window.sidebarCurrent = {name: 'ops', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/bloguen/ops/mod.rs.html#1-50' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../index.html'>bloguen</a>::<wbr><a class="mod" href=''>ops</a></span></h1><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `ops` mod in crate `bloguen`."><meta name="keywords" content="rust, rustlang, rust-lang, ops"><title>bloguen::ops - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc mod"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../bloguen/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a><p class='location'>Module ops</p><div class="sidebar-elems"><div class="block items"><ul><li><a href="#structs">Structs</a></li><li><a href="#enums">Enums</a></li><li><a href="#traits">Traits</a></li><li><a href="#functions">Functions</a></li></ul></div><p class='location'><a href='../index.html'>bloguen</a></p><script>window.sidebarCurrent = {name: 'ops', ty: 'mod', relpath: '../'};</script><script defer src="../sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/bloguen/ops/mod.rs.html#1-113' title='goto source code'>[src]</a></span><span class='in-band'>Module <a href='../index.html'>bloguen</a>::<wbr><a class="mod" href=''>ops</a></span></h1><div class='docblock'><p>Functions composable to generate blogues</p>
+<p>The following steps will yield something akin to
+the <a href="https://rawcdn.githack.com/nabijaczleweli/bloguen/man/bloguen.1.html"><code>bloguen</code> executable</a>:</p>
+<ol>
+<li><a href="struct.BlogueDescriptor.html#method.read"><code>BlogueDescriptor::read()</code></a> to read a blogue descriptor from the filesystem</li>
+<li><a href="struct.BloguePost.html#method.list"><code>BloguePost::list()</code></a> and pipe the results into
+<a href="struct.BloguePost.html#method.new"><code>BloguePost::new()</code></a> to discover and load posts from the filesystem</li>
+<li>Read in the post header and footer, and, if applicable, index header, footer, and center</li>
+<li><a href="struct.StyleElement.html#method.load"><code>{Script,Style}Element::load()</code></a> the blogue and index descriptors</li>
+<li><a href="struct.BlogueDescriptor.html#method.create_feed_output"><code>BlogueDescriptor::create_feed_output()</code></a>, yielding feed files</li>
+<li><a href="struct.BlogueDescriptor.html#method.generate_feed_head"><code>BlogueDescriptor::generate_feed_head()</code></a>s</li>
+<li>For each discovered post:
+1. <a href="struct.PostMetadata.html#method.read_or_default"><code>PostMetadata::read_or_default()</code></a> to discover and load any
+metadata that might be present from the filesystem
+2. <a href="struct.ScriptElement.html#method.load"><code>{Script,Style}Element::load()</code></a>s
+3. <a href="struct.TagName.html#method.load_additional_post_tags"><code>TagName::load_additional_post_tags()</code></a>s to discover and load
+any additional tags that might be present from the filesystem
+4. For each pair in <a href="struct.BlogueDescriptor.html#structfield.machine_data"><code>BlogueDescriptor::machine_data</code></a>:
+<ol>
+<li><a href="struct.BloguePost.html#method.create_machine_output"><code>BloguePost::create_machine_output()</code></a>,
+yielding the machine data file</li>
+<li><a href="struct.BloguePost.html#method.generate_machine"><code>BloguePost::generate_machine()</code></a> into the file from above
+5. If index file requested, <a href="struct.BloguePost.html#method.generate_machine"><code>BloguePost::generate_machine(MachineDataKind::Json)</code></a> into the script file
+6. <a href="struct.BloguePost.html#method.generate_feed_head"><code>BloguePost::generate_feed_head()</code></a> into the feed files
+7. <a href="struct.BloguePost.html#method.generate"><code>BloguePost::generate()</code></a> to create the post HTML, with
+<a href="fn.feed_type_post_body.html"><code>feed_type_post_body()</code></a>s connected to the alt stream and, if requested, the index center buffer,
+and get the asset list
+8. <a href="struct.BloguePost.html#method.copy_asset"><code>BloguePost::copy_asset()</code></a> the returned percent-decoded links
+if they're assets
+9. <a href="struct.BloguePost.html#method.generate_feed_foot"><code>BloguePost::generate_feed_foot()</code></a> into the feed files</li>
+</ol>
+</li>
+<li><a href="struct.BlogueDescriptor.html#method.generate_feed_foot"><code>BlogueDescriptor::generate_feed_foot()</code></a>s</li>
+<li>If index requested:
+1. Concatenate the JSON machine data into an additional script
+2. Create an <code>index.html</code> file
+3. <a href="fn.format_output.html"><code>format_output()</code></a> the index header with the above script
+4. Write out the previously saved centers
+5. <a href="fn.format_output.html"><code>format_output()</code></a> the index header with the above script</li>
+</ol>
+<p>Variables available in <a href="fn.format_output.html"><code>format_output()</code></a>:</p>
+<table><thead><tr><th>Name</th><th>Description</th><th>Example</th></tr></thead><tbody>
+<tr><td><code>language</code></td><td>passed-in language in BCP47 format</td><td>en-GB</td></tr>
+<tr><td><code>number</code></td><td>default-formatted passed-in number</td><td>14</td></tr>
+<tr><td><code>title</code></td><td>passed-in title, unformatted</td><td>release-front - a generic release front-end, like Patchwork's</td></tr>
+<tr><td><code>author</code></td><td>passed-in author, unformatted</td><td>nabijaczleweli</td></tr>
+<tr><td><code>raw_post_name</code></td><td>passed-in post name as it appeared on the filesystem, unformatted</td><td>004. 2018-03-30 Stir plate</td></tr>
+<tr><td><code>normalised_post_name</code></td><td>passed-in normalised post name, unformatted</td><td>004. 2018-03-30 06-00-51 Stir plate</td></tr>
+<tr><td><code>blog_name</code></td><td>passed-in blog name, unformatted</td><td>Блогг</td></tr>
+<tr><td><code>bloguen-version</code></td><td>current version of <code>bloguen</code></td><td>v0.1.0</td></tr>
+<tr><td><code>tags</code></td><td></td><td><code>&lt;span class=&quot;post-tag&quot;&gt;maths&lt;/span&gt;</code>…</td></tr>
+<tr><td><code>tags()</code></td><td>all passed-in tags with the default class (<code>post-tag</code>)</td><td><code>&lt;span class=&quot;post-tag&quot;&gt;maths&lt;/span&gt;</code>…</td></tr>
+<tr><td><code>tags(class)</code></td><td>all passed-in tags with the specified class. headers and footers</td><td><code>&lt;span class=&quot;пост-таг&quot;&gt;maths&lt;/span&gt;</code>…</td></tr>
+<tr><td><code>styles</code></td><td>all the passed-in styles with their headers and footers</td><td><code>&lt;style type=&quot;text/css&quot;&gt;* {color: magenta;}&lt;/style&gt;</code>…</td></tr>
+<tr><td><code>scripts</code></td><td>all the passed-in scripts with their headers and footers</td><td><code>&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;hewwo&quot;)&lt;/script&gt;</code>…</td></tr>
+<tr><td><code>data-name</code></td><td>passed-in data under the <code>name</code> key, unformatted</td><td>hewwo</td></tr>
+<tr><td><code>date(post, format)</code></td><td>post date formatted with <a href="fn.parse_date_format_specifier.html"><code>parse_date_format_specifier(format)</code></a></td><td>Thu,  6 Sep 2018 18:32:22 +0200</td></tr>
+<tr><td><code>date(now_utc, format)</code></td><td>current date in UTC formatted with <a href="fn.parse_date_format_specifier.html"><code>parse_date_format_specifier(format)</code></a></td><td>Thu,  6 Sep 2018 18:32:22 +0200</td></tr>
+<tr><td><code>machine_data(kind)</code></td><td>machine data of the specified kind</td><td><code>{&quot;number&quot;: 3, &quot;language&quot;: &quot;en-GB&quot;, …}</code>…</td></tr>
+<tr><td><code>pass_paragraphs(count, var)</code></td><td>parse <code>var</code> and write its contents formatted through <a href="struct.ParagraphPasser.html"><code>ParagraphPasser</code></a></td><td><code>{&quot;number&quot;: 3, &quot;language&quot;: &quot;en-GB&quot;, …}</code>…</td></tr>
+</tbody></table>
+</div><h2 id='structs' class='section-header'><a href="#structs">Structs</a></h2>
 <table><tr class='module-item'><td><a class="struct" href="struct.BlogueDescriptor.html" title='bloguen::ops::BlogueDescriptor struct'>BlogueDescriptor</a></td><td class='docblock-short'><p>Generic blogue metadata.</p>
 </td></tr><tr class='module-item'><td><a class="struct" href="struct.BlogueDescriptorIndex.html" title='bloguen::ops::BlogueDescriptorIndex struct'>BlogueDescriptorIndex</a></td><td class='docblock-short'><p>Metadata pertaining specifically to generating an index file.</p>
 </td></tr><tr class='module-item'><td><a class="struct" href="struct.BloguePost.html" title='bloguen::ops::BloguePost struct'>BloguePost</a></td><td class='docblock-short'><p>Information about a blogue post.</p>
