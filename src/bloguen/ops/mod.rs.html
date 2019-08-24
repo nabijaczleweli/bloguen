@@ -111,6 +111,7 @@
 <span id="111">111</span>
 <span id="112">112</span>
 <span id="113">113</span>
+<span id="114">114</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="doccomment">//! Functions composable to generate blogues</span>
 <span class="doccomment">//!</span>
@@ -151,26 +152,27 @@
 <span class="doccomment">//!</span>
 <span class="doccomment">//! Variables available in [`format_output()`](fn.format_output.html):</span>
 <span class="doccomment">//!</span>
-<span class="doccomment">//! | Name                          | Description                                                                | Example                                                       |</span>
-<span class="doccomment">//! | ----                          | -----------                                                                | -------                                                       |</span>
-<span class="doccomment">//! | `language`                    | passed-in language in BCP47 format                                         | en-GB                                                         |</span>
-<span class="doccomment">//! | `number`                      | default-formatted passed-in number                                         | 14                                                            |</span>
-<span class="doccomment">//! | `title`                       | passed-in title, unformatted                                               | release-front - a generic release front-end, like Patchwork&#39;s |</span>
-<span class="doccomment">//! | `author`                      | passed-in author, unformatted                                              | nabijaczleweli                                                |</span>
-<span class="doccomment">//! | `raw_post_name`               | passed-in post name as it appeared on the filesystem, unformatted          | 004. 2018-03-30 Stir plate                                    |</span>
-<span class="doccomment">//! | `normalised_post_name`        | passed-in normalised post name, unformatted                                | 004. 2018-03-30 06-00-51 Stir plate                           |</span>
-<span class="doccomment">//! | `blog_name`                   | passed-in blog name, unformatted                                           | Блогг                                                         |</span>
-<span class="doccomment">//! | `bloguen-version`             | current version of `bloguen`                                               | v0.1.0                                                        |</span>
-<span class="doccomment">//! | `tags`                        |                                                                            | `&lt;span class=&quot;post-tag&quot;&gt;maths&lt;/span&gt;`…                        |</span>
-<span class="doccomment">//! | `tags()`                      | all passed-in tags with the default class (`post-tag`)                     | `&lt;span class=&quot;post-tag&quot;&gt;maths&lt;/span&gt;`…                        |</span>
-<span class="doccomment">//! | `tags(class)`                 | all passed-in tags with the specified class. headers and footers           | `&lt;span class=&quot;пост-таг&quot;&gt;maths&lt;/span&gt;`…                        |</span>
-<span class="doccomment">//! | `styles`                      | all the passed-in styles with their headers and footers                    | `&lt;style type=&quot;text/css&quot;&gt;* {color: magenta;}&lt;/style&gt;`…         |</span>
-<span class="doccomment">//! | `scripts`                     | all the passed-in scripts with their headers and footers                   | `&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;hewwo&quot;)&lt;/script&gt;`…     |</span>
-<span class="doccomment">//! | `data-name`                   | passed-in data under the `name` key, unformatted                           | hewwo                                                         |</span>
-<span class="doccomment">//! | `date(post, format)`          | post date formatted with [`parse_date_format_specifier(format)`]           | Thu,  6 Sep 2018 18:32:22 +0200                               |</span>
-<span class="doccomment">//! | `date(now_utc, format)`       | current date in UTC formatted with [`parse_date_format_specifier(format)`] | Thu,  6 Sep 2018 18:32:22 +0200                               |</span>
-<span class="doccomment">//! | `machine_data(kind)`          | machine data of the specified kind                                         | `{&quot;number&quot;: 3, &quot;language&quot;: &quot;en-GB&quot;, …}`…                      |</span>
-<span class="doccomment">//! | `pass_paragraphs(count, var)` | parse `var` and write its contents formatted through [`ParagraphPasser`]   | `{&quot;number&quot;: 3, &quot;language&quot;: &quot;en-GB&quot;, …}`…                      |</span>
+<span class="doccomment">//! | Name                      | Description                                                                           | Example                                                       |</span>
+<span class="doccomment">//! | ----                      | -----------                                                                           | -------                                                       |</span>
+<span class="doccomment">//! | `language`                | passed-in language in BCP47 format                                                    | en-GB                                                         |</span>
+<span class="doccomment">//! | `number`                  | default-formatted passed-in number                                                    | 14                                                            |</span>
+<span class="doccomment">//! | `title`                   | passed-in title, unformatted                                                          | release-front - a generic release front-end, like Patchwork&#39;s |</span>
+<span class="doccomment">//! | `author`                  | passed-in author, unformatted                                                         | nabijaczleweli                                                |</span>
+<span class="doccomment">//! | `raw_post_name`           | passed-in post name as it appeared on the filesystem, unformatted                     | 004. 2018-03-30 Stir plate                                    |</span>
+<span class="doccomment">//! | `normalised_post_name`    | passed-in normalised post name, unformatted                                           | 004. 2018-03-30 06-00-51 Stir plate                           |</span>
+<span class="doccomment">//! | `blog_name`               | passed-in blog name, unformatted                                                      | Блогг                                                         |</span>
+<span class="doccomment">//! | `bloguen-version`         | current version of `bloguen`                                                          | v0.1.0                                                        |</span>
+<span class="doccomment">//! | `tags`                    | ↓                                                                                     | `&lt;span class=&quot;post-tag&quot;&gt;maths&lt;/span&gt;`…                        |</span>
+<span class="doccomment">//! | `tags()`                  | all passed-in tags with the default class (`post-tag`)                                | `&lt;span class=&quot;post-tag&quot;&gt;maths&lt;/span&gt;`…                        |</span>
+<span class="doccomment">//! | `tags(class)`             | all passed-in tags with the specified class, headers and footers                      | `&lt;span class=&quot;пост-таг&quot;&gt;maths&lt;/span&gt;`…                        |</span>
+<span class="doccomment">//! | `styles`                  | all the passed-in styles with their headers and footers                               | `&lt;style type=&quot;text/css&quot;&gt;* {color: magenta;}&lt;/style&gt;`…         |</span>
+<span class="doccomment">//! | `scripts`                 | all the passed-in scripts with their headers and footers                              | `&lt;script type=&quot;text/javascript&quot;&gt;alert(&quot;hewwo&quot;)&lt;/script&gt;`…     |</span>
+<span class="doccomment">//! | `data-name`               | passed-in data under the `name` key, unformatted                                      | hewwo                                                         |</span>
+<span class="doccomment">//! | `date(post, format)`      | post date formatted with [`parse_date_format_specifier(format)`]                      | Thu,  6 Sep 2018 18:32:22 +0200                               |</span>
+<span class="doccomment">//! | `date(now_utc, format)`   | current date in UTC formatted with [`parse_date_format_specifier(format)`]            | Thu,  6 Sep 2018 18:32:22 +0200                               |</span>
+<span class="doccomment">//! | `date(now_local, format)` | current date in local timezone formatted with [`parse_date_format_specifier(format)`] | Thu,  6 Sep 2018 18:32:22 +0200                               |</span>
+<span class="doccomment">//! | `machine_data(kind)`      | machine data of the specified kind                                                    | `{&quot;number&quot;: 3, &quot;language&quot;: &quot;en-GB&quot;, …}`…                      |</span>
+<span class="doccomment">//! | `pass_paragraphs(n, var)` | parse `var` and write its contents formatted through [`ParagraphPasser`]              | `&lt;p&gt;Paragraph 1&lt;/p&gt; &lt;p&gt;Paragraph 2&lt;/p&gt;`…                      |</span>
 <span class="doccomment">//!</span>
 <span class="doccomment">//! [`parse_date_format_specifier(format)`]: fn.parse_date_format_specifier.html</span>
 <span class="doccomment">//! [`ParagraphPasser`]: struct.ParagraphPasser.html</span>
