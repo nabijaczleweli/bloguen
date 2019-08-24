@@ -466,6 +466,140 @@
 <span id="466">466</span>
 <span id="467">467</span>
 <span id="468">468</span>
+<span id="469">469</span>
+<span id="470">470</span>
+<span id="471">471</span>
+<span id="472">472</span>
+<span id="473">473</span>
+<span id="474">474</span>
+<span id="475">475</span>
+<span id="476">476</span>
+<span id="477">477</span>
+<span id="478">478</span>
+<span id="479">479</span>
+<span id="480">480</span>
+<span id="481">481</span>
+<span id="482">482</span>
+<span id="483">483</span>
+<span id="484">484</span>
+<span id="485">485</span>
+<span id="486">486</span>
+<span id="487">487</span>
+<span id="488">488</span>
+<span id="489">489</span>
+<span id="490">490</span>
+<span id="491">491</span>
+<span id="492">492</span>
+<span id="493">493</span>
+<span id="494">494</span>
+<span id="495">495</span>
+<span id="496">496</span>
+<span id="497">497</span>
+<span id="498">498</span>
+<span id="499">499</span>
+<span id="500">500</span>
+<span id="501">501</span>
+<span id="502">502</span>
+<span id="503">503</span>
+<span id="504">504</span>
+<span id="505">505</span>
+<span id="506">506</span>
+<span id="507">507</span>
+<span id="508">508</span>
+<span id="509">509</span>
+<span id="510">510</span>
+<span id="511">511</span>
+<span id="512">512</span>
+<span id="513">513</span>
+<span id="514">514</span>
+<span id="515">515</span>
+<span id="516">516</span>
+<span id="517">517</span>
+<span id="518">518</span>
+<span id="519">519</span>
+<span id="520">520</span>
+<span id="521">521</span>
+<span id="522">522</span>
+<span id="523">523</span>
+<span id="524">524</span>
+<span id="525">525</span>
+<span id="526">526</span>
+<span id="527">527</span>
+<span id="528">528</span>
+<span id="529">529</span>
+<span id="530">530</span>
+<span id="531">531</span>
+<span id="532">532</span>
+<span id="533">533</span>
+<span id="534">534</span>
+<span id="535">535</span>
+<span id="536">536</span>
+<span id="537">537</span>
+<span id="538">538</span>
+<span id="539">539</span>
+<span id="540">540</span>
+<span id="541">541</span>
+<span id="542">542</span>
+<span id="543">543</span>
+<span id="544">544</span>
+<span id="545">545</span>
+<span id="546">546</span>
+<span id="547">547</span>
+<span id="548">548</span>
+<span id="549">549</span>
+<span id="550">550</span>
+<span id="551">551</span>
+<span id="552">552</span>
+<span id="553">553</span>
+<span id="554">554</span>
+<span id="555">555</span>
+<span id="556">556</span>
+<span id="557">557</span>
+<span id="558">558</span>
+<span id="559">559</span>
+<span id="560">560</span>
+<span id="561">561</span>
+<span id="562">562</span>
+<span id="563">563</span>
+<span id="564">564</span>
+<span id="565">565</span>
+<span id="566">566</span>
+<span id="567">567</span>
+<span id="568">568</span>
+<span id="569">569</span>
+<span id="570">570</span>
+<span id="571">571</span>
+<span id="572">572</span>
+<span id="573">573</span>
+<span id="574">574</span>
+<span id="575">575</span>
+<span id="576">576</span>
+<span id="577">577</span>
+<span id="578">578</span>
+<span id="579">579</span>
+<span id="580">580</span>
+<span id="581">581</span>
+<span id="582">582</span>
+<span id="583">583</span>
+<span id="584">584</span>
+<span id="585">585</span>
+<span id="586">586</span>
+<span id="587">587</span>
+<span id="588">588</span>
+<span id="589">589</span>
+<span id="590">590</span>
+<span id="591">591</span>
+<span id="592">592</span>
+<span id="593">593</span>
+<span id="594">594</span>
+<span id="595">595</span>
+<span id="596">596</span>
+<span id="597">597</span>
+<span id="598">598</span>
+<span id="599">599</span>
+<span id="600">600</span>
+<span id="601">601</span>
+<span id="602">602</span>
 </pre><div class="example-wrap"><pre class="rust ">
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::{<span class="ident">MachineDataKind</span>, <span class="ident">ScriptElement</span>, <span class="ident">StyleElement</span>, <span class="ident">CenterOrder</span>, <span class="ident">LanguageTag</span>, <span class="ident">FeedType</span>, <span class="ident">feed_type_footer</span>, <span class="ident">feed_type_header</span>};
 <span class="kw">use</span> <span class="self">self</span>::<span class="kw">super</span>::<span class="kw">super</span>::<span class="ident">util</span>::{<span class="ident">concat_path</span>, <span class="ident">path_depth</span>, <span class="ident">mul_str</span>};
@@ -702,32 +836,33 @@
     <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
     <span class="doccomment">/// # */</span>
     <span class="doccomment">/// let read_tokens = BlogueDescriptor::read(&amp;(&quot;$ROOT/&quot;.to_string(), root.clone())).unwrap();</span>
-    <span class="doccomment">/// assert_eq!(read_tokens,</span>
-    <span class="doccomment">///            BlogueDescriptor {</span>
-    <span class="doccomment">///                name: &quot;Блогг&quot;.to_string(),</span>
-    <span class="doccomment">///                author: None,</span>
-    <span class="doccomment">///                header_file: (&quot;$ROOT/head.html&quot;.to_string(), root.join(&quot;head.html&quot;)),</span>
-    <span class="doccomment">///                footer_file: (&quot;$ROOT/footer.htm&quot;.to_string(), root.join(&quot;footer.htm&quot;)),</span>
-    <span class="doccomment">///                asset_dir_override: Some(&quot;assets/&quot;.to_string()),</span>
-    <span class="doccomment">///                machine_data: vec![(MachineDataKind::Json, &quot;metadata/json/&quot;.to_string())].into_iter().collect(),</span>
-    <span class="doccomment">///                feeds: vec![(FeedType::Rss, &quot;feed.rss&quot;.to_string()),</span>
-    <span class="doccomment">///                            (FeedType::Atom, &quot;feed.atom&quot;.to_string())].into_iter().collect(),</span>
-    <span class="doccomment">///                language: Some(&quot;pl&quot;.parse().unwrap()),</span>
-    <span class="doccomment">///                styles: vec![],</span>
-    <span class="doccomment">///                scripts: vec![ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;),</span>
-    <span class="doccomment">///                              ScriptElement::from_path(&quot;MathJax-config.js&quot;)],</span>
-    <span class="doccomment">///                index: Some(BlogueDescriptorIndex {</span>
-    <span class="doccomment">///                    header_file: (&quot;$ROOT/idx_head.html&quot;.to_string(), root.join(&quot;idx_head.html&quot;)),</span>
-    <span class="doccomment">///                    center_file: (&quot;$ROOT/центр.html&quot;.to_string(), root.join(&quot;центр.html&quot;)),</span>
-    <span class="doccomment">///                    footer_file: (&quot;$ROOT/index_footer.htm&quot;.to_string(), root.join(&quot;index_footer.htm&quot;)),</span>
-    <span class="doccomment">///                    center_order: CenterOrder::Backward,</span>
-    <span class="doccomment">///                    styles: vec![StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;)],</span>
-    <span class="doccomment">///                    scripts: vec![],</span>
-    <span class="doccomment">///                    data: vec![].into_iter().collect(),</span>
-    <span class="doccomment">///                }),</span>
-    <span class="doccomment">///                data: vec![(&quot;preferred_system&quot;.to_string(),</span>
-    <span class="doccomment">///                            &quot;capitalism&quot;.to_string())].into_iter().collect(),</span>
-    <span class="doccomment">///            });</span>
+    <span class="doccomment">/// assert_eq!(</span>
+    <span class="doccomment">///     read_tokens,</span>
+    <span class="doccomment">///     BlogueDescriptor {</span>
+    <span class="doccomment">///         name: &quot;Блогг&quot;.to_string(),</span>
+    <span class="doccomment">///         author: None,</span>
+    <span class="doccomment">///         header_file: (&quot;$ROOT/head.html&quot;.to_string(), root.join(&quot;head.html&quot;)),</span>
+    <span class="doccomment">///         footer_file: (&quot;$ROOT/footer.htm&quot;.to_string(), root.join(&quot;footer.htm&quot;)),</span>
+    <span class="doccomment">///         asset_dir_override: Some(&quot;assets/&quot;.to_string()),</span>
+    <span class="doccomment">///         machine_data: vec![(MachineDataKind::Json, &quot;metadata/json/&quot;.to_string())].into_iter().collect(),</span>
+    <span class="doccomment">///         feeds: vec![(FeedType::Rss, &quot;feed.rss&quot;.to_string()),</span>
+    <span class="doccomment">///                     (FeedType::Atom, &quot;feed.atom&quot;.to_string())].into_iter().collect(),</span>
+    <span class="doccomment">///         language: Some(&quot;pl&quot;.parse().unwrap()),</span>
+    <span class="doccomment">///         styles: vec![],</span>
+    <span class="doccomment">///         scripts: vec![ScriptElement::from_link(&quot;/content/assets/syllable.js&quot;),</span>
+    <span class="doccomment">///                       ScriptElement::from_path(&quot;MathJax-config.js&quot;)],</span>
+    <span class="doccomment">///         index: Some(BlogueDescriptorIndex {</span>
+    <span class="doccomment">///             header_file: (&quot;$ROOT/idx_head.html&quot;.to_string(), root.join(&quot;idx_head.html&quot;)),</span>
+    <span class="doccomment">///             center_file: (&quot;$ROOT/центр.html&quot;.to_string(), root.join(&quot;центр.html&quot;)),</span>
+    <span class="doccomment">///             footer_file: (&quot;$ROOT/index_footer.htm&quot;.to_string(), root.join(&quot;index_footer.htm&quot;)),</span>
+    <span class="doccomment">///             center_order: CenterOrder::Backward,</span>
+    <span class="doccomment">///             styles: vec![StyleElement::from_literal(&quot;.indented { text-indent: 1em; }&quot;)],</span>
+    <span class="doccomment">///             scripts: vec![],</span>
+    <span class="doccomment">///             data: vec![].into_iter().collect(),</span>
+    <span class="doccomment">///         }),</span>
+    <span class="doccomment">///         data: vec![(&quot;preferred_system&quot;.to_string(),</span>
+    <span class="doccomment">///                     &quot;capitalism&quot;.to_string())].into_iter().collect(),</span>
+    <span class="doccomment">///     });</span>
     <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">read</span>(<span class="ident">root</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>)) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">BlogueDescriptor</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="ident">String</span>::<span class="ident">new</span>();
@@ -850,6 +985,30 @@
         })
     }
 
+    <span class="doccomment">/// Create a feed output file of the specified type into the specified subpath in the specified output directory.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use bloguen::ops::{BlogueDescriptor, FeedType};</span>
+    <span class="doccomment">/// # use std::fs::{self, File};</span>
+    <span class="doccomment">/// # use std::env::temp_dir;</span>
+    <span class="doccomment">/// # use std::io::Write;</span>
+    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-descriptor-create_feed_output&quot;);</span>
+    <span class="doccomment">/// # fs::create_dir_all(&amp;root).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;blogue.toml&quot;)).unwrap().write_all(&quot;name = \&quot;Блогг\&quot;\n&quot;.as_bytes()).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;header.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;footer.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # let descriptor = BlogueDescriptor::read(&amp;(&quot;$ROOT/&quot;.to_string(), root.clone())).unwrap();</span>
+    <span class="doccomment">/// # /*</span>
+    <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
+    <span class="doccomment">/// let descriptor: BlogueDescriptor = /* irrelevant */;</span>
+    <span class="doccomment">/// # */</span>
+    <span class="doccomment">/// descriptor.create_feed_output(&amp;(&quot;$ROOT/&quot;.to_string(), root.clone()), &quot;feeds/rss.xml&quot;,</span>
+    <span class="doccomment">///                               &amp;FeedType::Rss).unwrap();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert!(root.join(&quot;feeds&quot;).join(&quot;rss.xml&quot;).is_file());</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">create_feed_output</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span>(<span class="ident">String</span>, <span class="ident">PathBuf</span>), <span class="ident">fname</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">tp</span>: <span class="kw-2">&amp;</span><span class="ident">FeedType</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">File</span>, <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="kw">let</span> <span class="ident">feed_path</span> <span class="op">=</span> <span class="ident">concat_path</span>(<span class="kw-2">&amp;</span><span class="ident">into</span>.<span class="number">1</span>, <span class="ident">fname</span>);
 
@@ -872,6 +1031,88 @@
         })
     }
 
+    <span class="doccomment">/// Generate header for the specified type of feed for this descriptor.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// Given `$ROOT/blogue.toml` containing:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```plaintext</span>
+    <span class="doccomment">/// name = &quot;Блогг&quot;</span>
+    <span class="doccomment">/// index = {}</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// The following holds:</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use bloguen::ops::{BlogueDescriptor, FeedType};</span>
+    <span class="doccomment">/// # use bloguen::util::LANGUAGE_EN_GB;</span>
+    <span class="doccomment">/// # use std::fs::{self, File};</span>
+    <span class="doccomment">/// # use std::env::temp_dir;</span>
+    <span class="doccomment">/// # use std::io::Write;</span>
+    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-descriptor-generate_feed_head&quot;);</span>
+    <span class="doccomment">/// # fs::create_dir_all(&amp;root).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;blogue.toml&quot;)).unwrap().write_all(&quot;name = \&quot;Блогг\&quot;\nindex = {}\n&quot;.as_bytes()).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;header.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;footer.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;idx_header.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;idx_center.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;idx_footer.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # /*</span>
+    <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
+    <span class="doccomment">/// # */</span>
+    <span class="doccomment">/// let mut descriptor = BlogueDescriptor::read(&amp;(&quot;$ROOT/&quot;.to_string(), root.clone())).unwrap();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut out = vec![];</span>
+    <span class="doccomment">/// descriptor.generate_feed_head(&amp;mut out, &amp;FeedType::Rss, &quot;feeds/rss.xml&quot;,</span>
+    <span class="doccomment">///                                         &amp;LANGUAGE_EN_GB, &quot;nabijaczleweli&quot;).unwrap();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let out = String::from_utf8(out).unwrap();</span>
+    <span class="doccomment">/// # let mut gendate_local_rfc2822 = out.lines().find(|l| l.contains(&quot;lastBuildDate&quot;)).unwrap();</span>
+    <span class="doccomment">/// # gendate_local_rfc2822 = &amp;gendate_local_rfc2822[4 + 1 + 13 + 1..gendate_local_rfc2822.len() - (1 + 13 + 1 + 1)];</span>
+    <span class="doccomment">/// # /*</span>
+    <span class="doccomment">/// let gendate_local_rfc2822 = /* extracted from output&#39;s lastBuildDate tag */;</span>
+    <span class="doccomment">/// # */</span>
+    <span class="doccomment">/// assert_eq!(out, format!(r###&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+    <span class="doccomment">/// &lt;rss version=&quot;2.0&quot;&gt;</span>
+    <span class="doccomment">///   &lt;channel&gt;</span>
+    <span class="doccomment">///     &lt;docs&gt;https://validator.w3.org/feed/docs/rss2.html&lt;/docs&gt;</span>
+    <span class="doccomment">///     &lt;title&gt;Блогг&lt;/title&gt;</span>
+    <span class="doccomment">///     &lt;author&gt;nabijaczleweli&lt;/author&gt;</span>
+    <span class="doccomment">///     &lt;link&gt;../index.html&lt;/link&gt;</span>
+    <span class="doccomment">///     &lt;description&gt;Блогг&lt;/description&gt;</span>
+    <span class="doccomment">///     &lt;language&gt;en-GB&lt;/language&gt;</span>
+    <span class="doccomment">///     &lt;generator&gt;bloguen 0.1.0&lt;/generator&gt;</span>
+    <span class="doccomment">///     &lt;pubDate&gt;{0}&lt;/pubDate&gt;</span>
+    <span class="doccomment">///     &lt;lastBuildDate&gt;{0}&lt;/lastBuildDate&gt;</span>
+    <span class="doccomment">/// &quot;###, gendate_local_rfc2822));</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// // And</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut out = vec![];</span>
+    <span class="doccomment">/// descriptor.index = None;</span>
+    <span class="doccomment">/// descriptor.generate_feed_head(&amp;mut out, &amp;FeedType::Rss, &quot;feeds/rss.xml&quot;,</span>
+    <span class="doccomment">///                                         &amp;LANGUAGE_EN_GB, &quot;nabijaczleweli&quot;).unwrap();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let out = String::from_utf8(out).unwrap();</span>
+    <span class="doccomment">/// # let mut gendate_local_rfc2822 = out.lines().find(|l| l.contains(&quot;lastBuildDate&quot;)).unwrap();</span>
+    <span class="doccomment">/// # gendate_local_rfc2822 = &amp;gendate_local_rfc2822[4 + 1 + 13 + 1..gendate_local_rfc2822.len() - (1 + 13 + 1 + 1)];</span>
+    <span class="doccomment">/// # /*</span>
+    <span class="doccomment">/// let gendate_local_rfc2822 = /* extracted from output&#39;s lastBuildDate tag */;</span>
+    <span class="doccomment">/// # */</span>
+    <span class="doccomment">/// assert_eq!(out, format!(r###&quot;&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+    <span class="doccomment">/// &lt;rss version=&quot;2.0&quot;&gt;</span>
+    <span class="doccomment">///   &lt;channel&gt;</span>
+    <span class="doccomment">///     &lt;docs&gt;https://validator.w3.org/feed/docs/rss2.html&lt;/docs&gt;</span>
+    <span class="doccomment">///     &lt;title&gt;Блогг&lt;/title&gt;</span>
+    <span class="doccomment">///     &lt;author&gt;nabijaczleweli&lt;/author&gt;</span>
+    <span class="doccomment">///     &lt;description&gt;Блогг&lt;/description&gt;</span>
+    <span class="doccomment">///     &lt;language&gt;en-GB&lt;/language&gt;</span>
+    <span class="doccomment">///     &lt;generator&gt;bloguen 0.1.0&lt;/generator&gt;</span>
+    <span class="doccomment">///     &lt;pubDate&gt;{0}&lt;/pubDate&gt;</span>
+    <span class="doccomment">///     &lt;lastBuildDate&gt;{0}&lt;/lastBuildDate&gt;</span>
+    <span class="doccomment">/// &quot;###, gendate_local_rfc2822));</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_feed_head</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">tp</span>: <span class="kw-2">&amp;</span><span class="ident">FeedType</span>, <span class="ident">fname</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>, <span class="ident">language</span>: <span class="kw-2">&amp;</span><span class="ident">LanguageTag</span>, <span class="ident">author</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">feed_type_header</span>(<span class="ident">tp</span>)(<span class="kw-2">&amp;</span><span class="self">self</span>.<span class="ident">name</span>,
                              <span class="ident">language</span>,
@@ -879,10 +1120,10 @@
                              <span class="self">self</span>.<span class="ident">index</span>.<span class="ident">as_ref</span>().<span class="ident">map</span>(<span class="op">|</span><span class="kw">_</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">depth</span> <span class="op">=</span> <span class="ident">path_depth</span>(<span class="ident">fname</span>);
             <span class="kw">if</span> <span class="ident">depth</span> <span class="op">-</span> <span class="number">1</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                    (<span class="ident">mul_str</span>(<span class="string">&quot;../&quot;</span>, <span class="ident">depth</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">+</span> <span class="string">&quot;index.html&quot;</span>).<span class="ident">into</span>()
-                } <span class="kw">else</span> {
-                    <span class="string">&quot;index.html&quot;</span>.<span class="ident">into</span>()
-                }
+                (<span class="ident">mul_str</span>(<span class="string">&quot;../&quot;</span>, <span class="ident">depth</span> <span class="kw">as</span> <span class="ident">usize</span> <span class="op">-</span> <span class="number">1</span>) <span class="op">+</span> <span class="string">&quot;index.html&quot;</span>).<span class="ident">into</span>()
+            } <span class="kw">else</span> {
+                <span class="string">&quot;index.html&quot;</span>.<span class="ident">into</span>()
+            }
         }),
                              <span class="ident">into</span>,
                              <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} feed output&quot;</span>, <span class="ident">tp</span>.<span class="ident">name</span>()))<span class="question-mark">?</span>;
@@ -890,6 +1131,33 @@
         <span class="prelude-val">Ok</span>(())
     }
 
+    <span class="doccomment">/// Generate footer for the specified type of feed for this descriptor.</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// # Examples</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// ```</span>
+    <span class="doccomment">/// # use bloguen::ops::{BlogueDescriptor, FeedType};</span>
+    <span class="doccomment">/// # use std::fs::{self, File};</span>
+    <span class="doccomment">/// # use std::env::temp_dir;</span>
+    <span class="doccomment">/// # use std::io::Write;</span>
+    <span class="doccomment">/// # let root = temp_dir().join(&quot;bloguen-doctest&quot;).join(&quot;ops-descriptor-generate_feed_foot&quot;);</span>
+    <span class="doccomment">/// # fs::create_dir_all(&amp;root).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;blogue.toml&quot;)).unwrap().write_all(&quot;name = \&quot;Блогг\&quot;\n&quot;.as_bytes()).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;header.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # File::create(root.join(&quot;footer.html&quot;)).unwrap();</span>
+    <span class="doccomment">/// # let descriptor = BlogueDescriptor::read(&amp;(&quot;$ROOT/&quot;.to_string(), root.clone())).unwrap();</span>
+    <span class="doccomment">/// # /*</span>
+    <span class="doccomment">/// let root: PathBuf = /* obtained elsewhere */;</span>
+    <span class="doccomment">/// let descriptor: BlogueDescriptor = /* irrelevant */;</span>
+    <span class="doccomment">/// # */</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// let mut out = vec![];</span>
+    <span class="doccomment">/// descriptor.generate_feed_foot(&amp;mut out, &amp;FeedType::Rss).unwrap();</span>
+    <span class="doccomment">///</span>
+    <span class="doccomment">/// assert_eq!(String::from_utf8(out).unwrap(), r###&quot;  &lt;/channel&gt;</span>
+    <span class="doccomment">/// &lt;/rss&gt;</span>
+    <span class="doccomment">/// &quot;###);</span>
+    <span class="doccomment">/// ```</span>
     <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">generate_feed_foot</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Write</span><span class="op">&gt;</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">into</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">tp</span>: <span class="kw-2">&amp;</span><span class="ident">FeedType</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span>(), <span class="ident">Error</span><span class="op">&gt;</span> {
         <span class="ident">feed_type_footer</span>(<span class="ident">tp</span>)(<span class="ident">into</span>, <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{} feed output&quot;</span>, <span class="ident">tp</span>.<span class="ident">name</span>()))<span class="question-mark">?</span>;
 
