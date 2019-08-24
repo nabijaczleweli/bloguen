@@ -1,18 +1,13 @@
 //! Generate an ePub book from a simple plaintext descriptor
 //!
-//! # Library doc
+//! See the [`bloguen` executable manpage](https://rawcdn.githack.com/nabijaczleweli/bloguen/man/bloguen.1.html),
+//! or the [`ops`](ops/) module for library doc.
 //!
-//! This library is used by `bloguen` itself for all its function and is therefore contains all necessary functions.
+//! # Special thanks
 //!
-//! ## Data flow
+//! To all who support further development on [Patreon](https://patreon.com/nabijaczleweli), in particular:
 //!
-//! ```text
-//! Options
-//! |> parse_descriptor()
-//! |> EPubBook::from_elements()
-//! |> EPubBook::normalise_paths()
-//! |> EPubBook::write_zip()
-//! ```
+//!   * ThePhD
 
 
 extern crate percent_encoding;

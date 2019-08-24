@@ -332,20 +332,20 @@ fn var_parse<W, St, Sc>(format_str: &str, byte_pos: usize, blog_name: &str, lang
                         match args.len() {
                             1 => {
                                 match MachineDataKind::from(args[0]) {
-                                    Some(MachineDataKind::Json) => {
-                                        *out_name_err = Some(machine_output_json(blog_name,
-                                                                                 language,
-                                                                                 additional_data_sets,
-                                                                                 raw_post_name,
-                                                                                 number,
-                                                                                 title,
-                                                                                 author,
-                                                                                 &post_date,
-                                                                                 tags,
-                                                                                 styles,
-                                                                                 scripts,
-                                                                                 into,
-                                                                                 out_name_err.take().unwrap())?);
+                                    Some(kind) => {
+                                        *out_name_err = Some(machine_output_kind(kind)(blog_name,
+                                                                                       language,
+                                                                                       additional_data_sets,
+                                                                                       raw_post_name,
+                                                                                       number,
+                                                                                       title,
+                                                                                       author,
+                                                                                       &post_date,
+                                                                                       tags,
+                                                                                       styles,
+                                                                                       scripts,
+                                                                                       into,
+                                                                                       out_name_err.take().unwrap())?);
                                         Ok(())
                                     }
                                     None => {
