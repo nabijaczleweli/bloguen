@@ -233,32 +233,33 @@ impl BlogueDescriptor {
     /// let root: PathBuf = /* obtained elsewhere */;
     /// # */
     /// let read_tokens = BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())).unwrap();
-    /// assert_eq!(read_tokens,
-    ///            BlogueDescriptor {
-    ///                name: "Блогг".to_string(),
-    ///                author: None,
-    ///                header_file: ("$ROOT/head.html".to_string(), root.join("head.html")),
-    ///                footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
-    ///                asset_dir_override: Some("assets/".to_string()),
-    ///                machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
-    ///                feeds: vec![(FeedType::Rss, "feed.rss".to_string()),
-    ///                            (FeedType::Atom, "feed.atom".to_string())].into_iter().collect(),
-    ///                language: Some("pl".parse().unwrap()),
-    ///                styles: vec![],
-    ///                scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
-    ///                              ScriptElement::from_path("MathJax-config.js")],
-    ///                index: Some(BlogueDescriptorIndex {
-    ///                    header_file: ("$ROOT/idx_head.html".to_string(), root.join("idx_head.html")),
-    ///                    center_file: ("$ROOT/центр.html".to_string(), root.join("центр.html")),
-    ///                    footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
-    ///                    center_order: CenterOrder::Backward,
-    ///                    styles: vec![StyleElement::from_literal(".indented { text-indent: 1em; }")],
-    ///                    scripts: vec![],
-    ///                    data: vec![].into_iter().collect(),
-    ///                }),
-    ///                data: vec![("preferred_system".to_string(),
-    ///                            "capitalism".to_string())].into_iter().collect(),
-    ///            });
+    /// assert_eq!(
+    ///     read_tokens,
+    ///     BlogueDescriptor {
+    ///         name: "Блогг".to_string(),
+    ///         author: None,
+    ///         header_file: ("$ROOT/head.html".to_string(), root.join("head.html")),
+    ///         footer_file: ("$ROOT/footer.htm".to_string(), root.join("footer.htm")),
+    ///         asset_dir_override: Some("assets/".to_string()),
+    ///         machine_data: vec![(MachineDataKind::Json, "metadata/json/".to_string())].into_iter().collect(),
+    ///         feeds: vec![(FeedType::Rss, "feed.rss".to_string()),
+    ///                     (FeedType::Atom, "feed.atom".to_string())].into_iter().collect(),
+    ///         language: Some("pl".parse().unwrap()),
+    ///         styles: vec![],
+    ///         scripts: vec![ScriptElement::from_link("/content/assets/syllable.js"),
+    ///                       ScriptElement::from_path("MathJax-config.js")],
+    ///         index: Some(BlogueDescriptorIndex {
+    ///             header_file: ("$ROOT/idx_head.html".to_string(), root.join("idx_head.html")),
+    ///             center_file: ("$ROOT/центр.html".to_string(), root.join("центр.html")),
+    ///             footer_file: ("$ROOT/index_footer.htm".to_string(), root.join("index_footer.htm")),
+    ///             center_order: CenterOrder::Backward,
+    ///             styles: vec![StyleElement::from_literal(".indented { text-indent: 1em; }")],
+    ///             scripts: vec![],
+    ///             data: vec![].into_iter().collect(),
+    ///         }),
+    ///         data: vec![("preferred_system".to_string(),
+    ///                     "capitalism".to_string())].into_iter().collect(),
+    ///     });
     /// ```
     pub fn read(root: &(String, PathBuf)) -> Result<BlogueDescriptor, Error> {
         let mut buf = String::new();
@@ -381,6 +382,30 @@ impl BlogueDescriptor {
         })
     }
 
+    /// Create a feed output file of the specified type into the specified subpath in the specified output directory.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use bloguen::ops::{BlogueDescriptor, FeedType};
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # use std::io::Write;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-descriptor-create_feed_output");
+    /// # fs::create_dir_all(&root).unwrap();
+    /// # File::create(root.join("blogue.toml")).unwrap().write_all("name = \"Блогг\"\n".as_bytes()).unwrap();
+    /// # File::create(root.join("header.html")).unwrap();
+    /// # File::create(root.join("footer.html")).unwrap();
+    /// # let descriptor = BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// let descriptor: BlogueDescriptor = /* irrelevant */;
+    /// # */
+    /// descriptor.create_feed_output(&("$ROOT/".to_string(), root.clone()), "feeds/rss.xml",
+    ///                               &FeedType::Rss).unwrap();
+    ///
+    /// assert!(root.join("feeds").join("rss.xml").is_file());
+    /// ```
     pub fn create_feed_output(&self, into: &(String, PathBuf), fname: &str, tp: &FeedType) -> Result<File, Error> {
         let feed_path = concat_path(&into.1, fname);
 
@@ -403,6 +428,88 @@ impl BlogueDescriptor {
         })
     }
 
+    /// Generate header for the specified type of feed for this descriptor.
+    ///
+    /// # Examples
+    ///
+    /// Given `$ROOT/blogue.toml` containing:
+    ///
+    /// ```plaintext
+    /// name = "Блогг"
+    /// index = {}
+    /// ```
+    ///
+    /// The following holds:
+    ///
+    /// ```
+    /// # use bloguen::ops::{BlogueDescriptor, FeedType};
+    /// # use bloguen::util::LANGUAGE_EN_GB;
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # use std::io::Write;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-descriptor-generate_feed_head");
+    /// # fs::create_dir_all(&root).unwrap();
+    /// # File::create(root.join("blogue.toml")).unwrap().write_all("name = \"Блогг\"\nindex = {}\n".as_bytes()).unwrap();
+    /// # File::create(root.join("header.html")).unwrap();
+    /// # File::create(root.join("footer.html")).unwrap();
+    /// # File::create(root.join("idx_header.html")).unwrap();
+    /// # File::create(root.join("idx_center.html")).unwrap();
+    /// # File::create(root.join("idx_footer.html")).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// # */
+    /// let mut descriptor = BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())).unwrap();
+    ///
+    /// let mut out = vec![];
+    /// descriptor.generate_feed_head(&mut out, &FeedType::Rss, "feeds/rss.xml",
+    ///                                         &LANGUAGE_EN_GB, "nabijaczleweli").unwrap();
+    ///
+    /// let out = String::from_utf8(out).unwrap();
+    /// # let mut gendate_local_rfc2822 = out.lines().find(|l| l.contains("lastBuildDate")).unwrap();
+    /// # gendate_local_rfc2822 = &gendate_local_rfc2822[4 + 1 + 13 + 1..gendate_local_rfc2822.len() - (1 + 13 + 1 + 1)];
+    /// # /*
+    /// let gendate_local_rfc2822 = /* extracted from output's lastBuildDate tag */;
+    /// # */
+    /// assert_eq!(out, format!(r###"<?xml version="1.0" encoding="UTF-8"?>
+    /// <rss version="2.0">
+    ///   <channel>
+    ///     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+    ///     <title>Блогг</title>
+    ///     <author>nabijaczleweli</author>
+    ///     <link>../index.html</link>
+    ///     <description>Блогг</description>
+    ///     <language>en-GB</language>
+    ///     <generator>bloguen 0.1.0</generator>
+    ///     <pubDate>{0}</pubDate>
+    ///     <lastBuildDate>{0}</lastBuildDate>
+    /// "###, gendate_local_rfc2822));
+    ///
+    /// // And
+    ///
+    /// let mut out = vec![];
+    /// descriptor.index = None;
+    /// descriptor.generate_feed_head(&mut out, &FeedType::Rss, "feeds/rss.xml",
+    ///                                         &LANGUAGE_EN_GB, "nabijaczleweli").unwrap();
+    ///
+    /// let out = String::from_utf8(out).unwrap();
+    /// # let mut gendate_local_rfc2822 = out.lines().find(|l| l.contains("lastBuildDate")).unwrap();
+    /// # gendate_local_rfc2822 = &gendate_local_rfc2822[4 + 1 + 13 + 1..gendate_local_rfc2822.len() - (1 + 13 + 1 + 1)];
+    /// # /*
+    /// let gendate_local_rfc2822 = /* extracted from output's lastBuildDate tag */;
+    /// # */
+    /// assert_eq!(out, format!(r###"<?xml version="1.0" encoding="UTF-8"?>
+    /// <rss version="2.0">
+    ///   <channel>
+    ///     <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+    ///     <title>Блогг</title>
+    ///     <author>nabijaczleweli</author>
+    ///     <description>Блогг</description>
+    ///     <language>en-GB</language>
+    ///     <generator>bloguen 0.1.0</generator>
+    ///     <pubDate>{0}</pubDate>
+    ///     <lastBuildDate>{0}</lastBuildDate>
+    /// "###, gendate_local_rfc2822));
+    /// ```
     pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, fname: &str, language: &LanguageTag, author: &str) -> Result<(), Error> {
         feed_type_header(tp)(&self.name,
                              language,
@@ -410,10 +517,10 @@ impl BlogueDescriptor {
                              self.index.as_ref().map(|_| {
             let depth = path_depth(fname);
             if depth - 1 > 0 {
-                    (mul_str("../", depth as usize - 1) + "index.html").into()
-                } else {
-                    "index.html".into()
-                }
+                (mul_str("../", depth as usize - 1) + "index.html").into()
+            } else {
+                "index.html".into()
+            }
         }),
                              into,
                              format!("{} feed output", tp.name()))?;
@@ -421,6 +528,33 @@ impl BlogueDescriptor {
         Ok(())
     }
 
+    /// Generate footer for the specified type of feed for this descriptor.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// # use bloguen::ops::{BlogueDescriptor, FeedType};
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # use std::io::Write;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-descriptor-generate_feed_foot");
+    /// # fs::create_dir_all(&root).unwrap();
+    /// # File::create(root.join("blogue.toml")).unwrap().write_all("name = \"Блогг\"\n".as_bytes()).unwrap();
+    /// # File::create(root.join("header.html")).unwrap();
+    /// # File::create(root.join("footer.html")).unwrap();
+    /// # let descriptor = BlogueDescriptor::read(&("$ROOT/".to_string(), root.clone())).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// let descriptor: BlogueDescriptor = /* irrelevant */;
+    /// # */
+    ///
+    /// let mut out = vec![];
+    /// descriptor.generate_feed_foot(&mut out, &FeedType::Rss).unwrap();
+    ///
+    /// assert_eq!(String::from_utf8(out).unwrap(), r###"  </channel>
+    /// </rss>
+    /// "###);
+    /// ```
     pub fn generate_feed_foot<T: Write>(&self, into: &mut T, tp: &FeedType) -> Result<(), Error> {
         feed_type_footer(tp)(into, format!("{} feed output", tp.name()))?;
 

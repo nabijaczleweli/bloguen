@@ -294,20 +294,20 @@ impl BloguePost {
 
         let original_name = self.source_dir.1.file_name().unwrap().to_str().unwrap();
         let normalised_name_err = format_output(post_header,
-                                            blog_name,
-                                            language,
-                                            &[global_data, post_data],
-                                            &original_name,
-                                            &normalised_name,
-                                            self.number.0,
-                                            &self.name,
-                                            author,
-                                            &self.datetime,
-                                            &[spec_tags, free_tags],
-                                            &[global_styles, post_styles],
-                                            &[global_scripts, post_scripts],
-                                            &mut post_html_f,
-                                            normalised_name.clone())?;
+                                                blog_name,
+                                                language,
+                                                &[global_data, post_data],
+                                                &original_name,
+                                                &normalised_name,
+                                                self.number.0,
+                                                &self.name,
+                                                author,
+                                                &self.datetime,
+                                                &[spec_tags, free_tags],
+                                                &[global_styles, post_styles],
+                                                &[global_scripts, post_scripts],
+                                                &mut post_html_f,
+                                                normalised_name.clone())?;
 
         let mut center_output = center_output.map(|(f, o)| (f, o, vec![]));
         if let Some(asset_override) = asset_override {
@@ -340,20 +340,20 @@ impl BloguePost {
         }
 
         let normalised_name_err = format_output(post_footer,
-                                            blog_name,
-                                            language,
-                                            &[global_data, post_data],
-                                            &original_name,
-                                            &normalised_name,
-                                            self.number.0,
-                                            &self.name,
-                                            author,
-                                            &self.datetime,
-                                            &[spec_tags, free_tags],
-                                            &[global_styles, post_styles],
-                                            &[global_scripts, post_scripts],
-                                            &mut post_html_f,
-                                            normalised_name_err)?;
+                                                blog_name,
+                                                language,
+                                                &[global_data, post_data],
+                                                &original_name,
+                                                &normalised_name,
+                                                self.number.0,
+                                                &self.name,
+                                                author,
+                                                &self.datetime,
+                                                &[spec_tags, free_tags],
+                                                &[global_styles, post_styles],
+                                                &[global_scripts, post_scripts],
+                                                &mut post_html_f,
+                                                normalised_name_err)?;
 
         if let Some((center, mut center_out, center_temp)) = center_output {
             let mut temp_data = BTreeMap::new();
@@ -533,6 +533,53 @@ impl BloguePost {
         Ok(())
     }
 
+    /// Generate header for this post of the specified feed type.
+    ///
+    /// # Examples
+    ///
+    /// Given the following:
+    ///
+    /// ```plaintext
+    /// src/
+    ///   01. 2018-01-08 16-52 The venture into crocheting/
+    ///     post.md
+    /// ```
+    ///
+    /// The following holds:
+    ///
+    /// ```
+    /// # use bloguen::ops::{FeedType, BloguePost};
+    /// # use bloguen::util::LANGUAGE_EN_GB;
+    /// # use std::io::{Write, Read};
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # use std::str;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-generate_feed_head");
+    /// # let _ = fs::remove_dir_all(&root);
+    /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
+    /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
+    /// #                  .join("post.md")).unwrap().write_all("[Блогг](url.html)".as_bytes()).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// # */
+    /// let post =
+    ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
+    ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
+    ///
+    /// let mut out = vec![];
+    /// assert!(post.generate_feed_head(&mut out, &FeedType::Rss, "feeds/rss.xml",
+    ///                                           &LANGUAGE_EN_GB, "nabijaczleweli").is_ok());
+    ///
+    /// assert_eq!(String::from_utf8(out).unwrap(), r###"
+    ///     <item>
+    ///       <title>The venture into crocheting</title>
+    ///       <author>nabijaczleweli</author>
+    ///       <link>../posts/01. 2018-01-08 16-52-00 The venture into crocheting.html</link>
+    ///       <pubDate>Mon,  8 Jan 2018 16:52:00 +0100</pubDate>
+    ///       <guid>01. 2018-01-08 16-52-00 The venture into crocheting</guid>
+    ///       <description>
+    /// "###);
+    /// ```
     pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, fname: &str, language: &LanguageTag, author: &str) -> Result<(), Error> {
         let norm_name = self.normalised_name();
 
@@ -557,6 +604,46 @@ impl BloguePost {
         Ok(())
     }
 
+    /// Generate footer for this post of the specified feed type.
+    ///
+    /// # Examples
+    ///
+    /// Given the following:
+    ///
+    /// ```plaintext
+    /// src/
+    ///   01. 2018-01-08 16-52 The venture into crocheting/
+    ///     post.md
+    /// ```
+    ///
+    /// The following holds:
+    ///
+    /// ```
+    /// # use bloguen::ops::{FeedType, BloguePost};
+    /// # use bloguen::util::LANGUAGE_EN_GB;
+    /// # use std::io::{Write, Read};
+    /// # use std::fs::{self, File};
+    /// # use std::env::temp_dir;
+    /// # use std::str;
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-generate_feed_head");
+    /// # let _ = fs::remove_dir_all(&root);
+    /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
+    /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
+    /// #                  .join("post.md")).unwrap().write_all("[Блогг](url.html)".as_bytes()).unwrap();
+    /// # /*
+    /// let root: PathBuf = /* obtained elsewhere */;
+    /// # */
+    /// let post =
+    ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
+    ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
+    ///
+    /// let mut out = vec![];
+    /// assert!(post.generate_feed_foot(&mut out, &FeedType::Rss).is_ok());
+    ///
+    /// assert_eq!(String::from_utf8(out).unwrap(), r###"      </description>
+    ///     </item>
+    /// "###);
+    /// ```
     pub fn generate_feed_foot<T: Write>(&self, into: &mut T, tp: &FeedType) -> Result<(), Error> {
         feed_type_post_footer(tp)(into, self.normalised_name())?;
 
@@ -619,8 +706,9 @@ impl BloguePost {
     /// let post =
     ///     BloguePost::new(("$ROOT/src/01. 2018-01-08 16-52 The venture into crocheting".to_string(),
     ///         root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting"))).unwrap();
-    /// for link in post.generate(&out_pair, None, None, None, "header", "footer", "Блогг", &LANGUAGE_EN_GB, "autheur",
-    ///                           &[], &[], &Default::default(), &Default::default(), &[], &[], &[], &[])
+    /// for link in post.generate(&out_pair, None, None, None, "header", "footer", "Блогг",
+    ///                           &LANGUAGE_EN_GB, "autheur", &[], &[],
+    ///                           &Default::default(), &Default::default(), &[], &[], &[], &[])
     ///             .unwrap().into_iter().filter(|l| util::is_asset_link(l)) {
     ///     let link = percent_decode(link.as_bytes()).decode_utf8().unwrap();
     ///     println!("Copying {}: {:?}", link, post.copy_asset(&out_pair, None, &link));
