@@ -1,7 +1,7 @@
 use self::super::super::super::util::{BLOGUEN_VERSION, parse_date_format_specifier, parse_function_notation, normalise_datetime};
 use self::super::super::{MachineDataKind, ParagraphPasser, WrappedElement, LanguageTag, TagName};
 use chrono::{FixedOffset, DateTime, TimeZone, Local, Utc};
-use self::super::{machine_output_json, err_io};
+use self::super::{machine_output_kind, err_io};
 use std::io::{Error as IoError, Write};
 use self::super::super::super::Error;
 use std::collections::BTreeMap;
@@ -333,19 +333,19 @@ fn var_parse<W, St, Sc>(format_str: &str, byte_pos: usize, blog_name: &str, lang
                             1 => {
                                 match MachineDataKind::from(args[0]) {
                                     Some(kind) => {
-                                        *out_name_err = Some(machine_output_kind(kind)(blog_name,
-                                                                                       language,
-                                                                                       additional_data_sets,
-                                                                                       raw_post_name,
-                                                                                       number,
-                                                                                       title,
-                                                                                       author,
-                                                                                       &post_date,
-                                                                                       tags,
-                                                                                       styles,
-                                                                                       scripts,
-                                                                                       into,
-                                                                                       out_name_err.take().unwrap())?);
+                                        *out_name_err = Some(machine_output_kind(&kind)(blog_name,
+                                                                                        language,
+                                                                                        additional_data_sets,
+                                                                                        raw_post_name,
+                                                                                        number,
+                                                                                        title,
+                                                                                        author,
+                                                                                        &post_date,
+                                                                                        tags,
+                                                                                        styles,
+                                                                                        scripts,
+                                                                                        into,
+                                                                                        out_name_err.take().unwrap())?);
                                         Ok(())
                                     }
                                     None => {
