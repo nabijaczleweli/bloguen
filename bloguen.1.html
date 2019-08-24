@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8" />
   <meta http-equiv='content-type' value='text/html;charset=utf8'>
   <meta name='generator' value='Ronn/v0.7.3 (http://github.com/rtomayko/ronn/tree/0.7.3)'>
-  <title>bloguen(1) - Generate a blogue from Markdown (again)</title>
+  <title>bloguen(1) - Generate an ePub book from a simple plaintext descriptor</title>
   <style type='text/css' media='all'>
   /* style: man */
   body#manpage {margin:0}
@@ -57,6 +58,11 @@
     <a href="#SYNOPSIS">SYNOPSIS</a>
     <a href="#DESCRIPTION">DESCRIPTION</a>
     <a href="#OPTIONS">OPTIONS</a>
+    <a href="#DESCRIPTOR-FORMAT">DESCRIPTOR FORMAT</a>
+    <a href="#POST-DISCOVERY">POST DISCOVERY</a>
+    <a href="#METADATA-FORMAT">METADATA FORMAT</a>
+    <a href="#FORMAT-FORMAT">FORMAT FORMAT</a>
+    <a href="#DATE-FORMAT">DATE FORMAT</a>
     <a href="#AUTHOR">AUTHOR</a>
     <a href="#REPORTING-BUGS">REPORTING BUGS</a>
     <a href="#SEE-ALSO">SEE ALSO</a>
@@ -70,41 +76,281 @@
 
   <h2 id="NAME">NAME</h2>
 <p class="man-name">
-  <code>bloguen</code> - <span class="man-whatis">Generate a blogue from Markdown (again)</span>
+  <code>bloguen</code> - <span class="man-whatis">Generate an ePub book from a simple plaintext descriptor</span>
 </p>
 
 <h2 id="SYNOPSIS">SYNOPSIS</h2>
 
-<p><code>bloguen</code> IN_DIR OUT_DIR <a href="#OPTIONS" title="OPTIONS" data-bare-link="true">OPTIONS</a></p>
+<p><code>bloguen</code> IN_DIR OUT_DIR</p>
 
 <h2 id="DESCRIPTION">DESCRIPTION</h2>
 
-<p>Generate a blogue from Markdown (again).</p>
+<p>Generate an ePub book from a simple plaintext descriptor.</p>
 
-<!-- Exit values and possible errors:
+<p>Exit values and possible errors:</p>
 
-    1 - I/O error
-    2 - parsing error
-    3 - file not found
-    4 - file in wrong state
-    5 - incorrect amount of elements
-    6 - required element missing -->
-
+<pre><code>1 - I/O error
+2 - parsing error
+3 - file not found
+4 - file in wrong state
+5 - file parsing failed
+6 - required element missing
+</code></pre>
 
 <h2 id="OPTIONS">OPTIONS</h2>
 
-<!--   IN_DIR
+<p>  IN_DIR</p>
 
-    File to parse, must exist, must comply with the DESCRIPTOR FORMAT.
+<pre><code>File to parse, must exist, must comply with the DESCRIPTOR FORMAT.
+</code></pre>
 
-  OUT_DIR
+<p>  OUT_DIR</p>
 
-    File to write the book to, parent directory needn't exist. -->
+<pre><code>File to write the book to, parent directory needn't exist.
+</code></pre>
 
+<h2 id="DESCRIPTOR-FORMAT">DESCRIPTOR FORMAT</h2>
+
+<p>Blogue descriptors are TOML files named <code>blogue.toml</code>,
+where all keys except for <code>name</code> are optional:</p>
+
+<pre><code># The blogue's display name.
+name = 'Блогг'
+
+# The blogue's main author(s).
+#
+# Overriden by post metadata, if present.
+#
+# If not present, defaults to the current system user's name,
+# which, if not detected, errors out.
+author = 'nabijaczleweli'
+
+# Data to put before post HTML, templated.
+#
+# Default: `"$ROOT/header.html"`, then `"$ROOT/header.htm"`.
+header_file = 'header.html'
+
+# Data to put after post HTML, templated.
+#
+# Default: `"$ROOT/footer.html"`, then `"$ROOT/footer.htm"`.
+footer_file = 'footer.html'
+
+# Subfolder to move assets to, relative to the output root, if present.
+#
+# The value is stripped of leading slashes.
+# All backslashes are normalised to forward ones.
+# The value is ended off with a slash, if not already specified.
+#
+# No override is applied if not present – assets are copied alongside the posts' HTML.
+asset_dir_override = 'assets/'
+
+# Default post language.
+#
+# Overriden by post metadata, if present.
+#
+# If not present, defaults to the current system language,
+# which, if not detected, defaults to en-GB.
+language = 'en-GB'
+
+# A set of style descriptors.
+#
+# If not present, defaults to empty.
+styles = ['link://nabijaczleweli.xyz/kaschism/assets/column.css'
+          'literal:.indented { text-indent: 1em; }',
+          'file:common.css']
+
+# A set of style descriptors.
+#
+# If not present, defaults to empty.
+scripts = ['link:/content/assets/syllable.js',
+           'literal:document.getElementById(\"title\").innerText = \"Наган\";',
+           'file:MathJax-config.js']
+
+# Where and which machine datasets to put.
+#
+# Each value here is a prefix appended to the output directory
+# under which to put the machine data.
+#
+# Values can't be empty (to put machine data at post root use "./").
+[machine_data]
+JSON = 'machine/'
+
+# Where and which feeds to put.
+#
+# Each value here is a file path appended to the output directory
+# into which to put the machine data.
+[feeds]
+RSS = 'feeds/rss.xml'
+Atom = 'atom.xml'
+
+# Additional static data to substitute in header and footer for all posts.
+#
+# If not present, defaults to empty.
+[data]
+key_1 = 'data_1'
+key_2 = 'data_2'
+
+# Metadata specifying how to generate the blogue index file.
+#
+# If not present, index not generated.
+#
+# All keys are optional
+[index]
+# Data to put start index HTML with, templated.
+#
+# Default: `"$ROOT/index_header.html"`, then `"$ROOT/index_header.htm"`,
+#     then `"$ROOT/idx_header.html"`, then `"$ROOT/idx_header.htm"`.
+header_file = 'index_header.html'
+
+# Data to put in index HTML for each post, templated.
+#
+# Default: `"$ROOT/index_center.html"`, then `"$ROOT/index_center.htm"`,
+#     then `"$ROOT/idx_center.html"`, then `"$ROOT/idx_center.htm"`.
+center_file = 'index_center.html'
+
+# Data to put to end index HTML with, templated.
+#
+# Default: `"$ROOT/index_footer.html"`, then `"$ROOT/index_footer.htm"`,
+#     then `"$ROOT/idx_footer.html"`, then `"$ROOT/idx_footer.htm"`.
+footer_file = 'index_footer.html'
+
+# The order to put center templates in.
+#
+# If not present, defaults to forward.
+center_order = "forward|backward"
+
+# A set of style descriptors.
+#
+# If not present, defaults to empty.
+styles = ['link://nabijaczleweli.xyz/kaschism/assets/column.css'
+          'literal:.indented { text-indent: 1em; }',
+          'file:common.css']
+
+# A set of style descriptors.
+#
+# If not present, defaults to empty.
+scripts = ['link:/content/assets/syllable.js',
+           'literal:document.getElementById(\"title\").innerText = \"Наган\";',
+           'file:MathJax-config.js']
+
+# Additional static data to substitute in header and footer.
+#
+# If not present, defaults to empty.
+[data]
+index_key_1 = 'index_data_1'
+index_key_2 = 'index_data_2'
+</code></pre>
+
+<h2 id="POST-DISCOVERY">POST DISCOVERY</h2>
+
+<p>Posts reside in directories parallel to <code>blogue.toml</code>,
+whose names match <code>#+. YYYY-MM-DD [HH-MM[-SS]] name</code>,
+in files named <code>post.md</code>.</p>
+
+<p>In addition to <code>post.md</code>, the folder may contain
+automatically-copied assets,
+a <code>tags</code> file containing one tag per line,
+and a <code>metadata.toml</code>, which obeys the <a href="#METADATA-FORMAT" data-bare-link="true">METADATA FORMAT</a></p>
+
+<h2 id="METADATA-FORMAT">METADATA FORMAT</h2>
+
+<p>Additional post metadata is contained in files named <code>metadata.toml</code>, where all keys are optional:</p>
+
+<pre><code># Post language override.
+#
+# If not present, default post language is used.
+language = "pl"
+
+# Post author override.
+#
+# If not present, default post author is used.
+author = "Enet4"
+
+# A set of tags.
+#
+# If not present, defaults to empty.
+#
+# Added to tags in the tags file
+tags = ["maths", "abstract"]
+
+# A set of style descriptors.
+#
+# If not present, defaults to empty.
+styles = ['link://nabijaczleweli.xyz/kaschism/assets/column.css'
+          'literal:.indented { text-indent: 1em; }',
+          'file:common.css']
+
+# A set of style descriptors.
+#
+# If not present, defaults to empty.
+scripts = ['link:/content/assets/syllable.js',
+           'literal:document.getElementById(\"title\").innerText = \"Наган\";',
+           'file:MathJax-config.js']
+
+# Additional static data to substitute in header and footer.
+#
+# If not present, defaults to empty.
+[data]
+post_key_1 = 'post_data_1'
+post_key_2 = 'post_data_2'
+</code></pre>
+
+<h2 id="FORMAT-FORMAT">FORMAT FORMAT</h2>
+
+<p>The post header and footer, as well as index header, center, and footer are formatted in a Rust-format-like fashion,
+where <code>{var}</code> denotes the insertion of variable <code>var</code>, and <code>{{</code>/<code>}}</code> literal <code>{</code>/<code>}</code>.</p>
+
+<pre><code>language                – post language in BCP47 format
+                        – en-GB
+number                  – default-formatted post number
+                        – 14
+title                   – post title
+                        – release-front - a generic release front-end
+author                  – post author
+                        – nabijaczleweli
+raw_post_name           – post name as it appeared on the filesystem
+                        – 004. 2018-03-30 Stir plate
+normalised_post_name    – normalised post name
+                        – 004. 2018-03-30 06-00-51 Stir plate
+blog_name               – blog name
+                        – Блогг
+bloguen-version         – current version of bloguen
+                        – v0.1.0
+tags                    – ↓
+                        – &lt;span class="post-tag"&gt;maths&lt;/span&gt;…
+tags()                  – all post tags with the default class (post-tag)
+                        – &lt;span class="post-tag"&gt;maths&lt;/span&gt;…
+tags(class)             – all post tags with the specified class, headers and footers
+                        – &lt;span class="пост-таг"&gt;maths&lt;/span&gt;…
+styles                  – all post styles with their headers and footers
+                        – &lt;style type="text/css"&gt;* {color: magenta;}&lt;/style&gt;…
+scripts                 – all post scripts with their headers and footers
+                        – &lt;script type="text/javascript"&gt;alert("hewwo")&lt;/script&gt;…
+data-name               – passed-in data under the name key
+                        – hewwo
+date(post, format)      – post date formatted with DATE FORMAT
+                        – Thu,  6 Sep 2018 18:32:22 +0200
+date(now_utc, format)   – current date in UTC formatted with DATE FORMAT
+                        – Thu,  6 Sep 2018 18:32:22 +0200
+date(now_local, format) – current date in local timezone formatted with DATE FORMAT
+                        – Thu,  6 Sep 2018 18:32:22 +0200
+machine_data(kind)      – machine data of the specified kind
+                        – {"number": 3, "language": "en-GB", …}…
+pass_paragraphs(n, var) – parse var and write up to n HTML paragraphs of its contents
+                        – &lt;p&gt;Paragraph 1&lt;/p&gt; &lt;p&gt;Paragraph 2&lt;/p&gt;…
+</code></pre>
+
+<h2 id="DATE-FORMAT">DATE FORMAT</h2>
+
+<p>Any of: rfc2822, rfc_2822, RFC2822, RFC_2822 – RFC2822</p>
+
+<p>Any of: rfc3339, rfc_3339, RFC3339, RFC_3339 – RFC3339</p>
+
+<p>Anything else: <code>strftime()</code> format</p>
 
 <h2 id="AUTHOR">AUTHOR</h2>
 
-<p>Written by nabijaczleweli &lt;<a href="&#109;&#x61;&#105;&#x6c;&#x74;&#x6f;&#58;&#x6e;&#97;&#98;&#105;&#x6a;&#97;&#99;&#x7a;&#108;&#x65;&#119;&#x65;&#108;&#x69;&#x40;&#x67;&#x6d;&#x61;&#105;&#108;&#46;&#x63;&#x6f;&#x6d;" data-bare-link="true">&#x6e;&#97;&#x62;&#x69;&#x6a;&#x61;&#x63;&#122;&#x6c;&#x65;&#119;&#101;&#108;&#x69;&#x40;&#103;&#109;&#x61;&#x69;&#108;&#46;&#99;&#x6f;&#x6d;</a>&gt;</p>
+<p>Written by nabijaczleweli &lt;<a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#x6e;&#x61;&#x62;&#x69;&#106;&#97;&#99;&#x7a;&#x6c;&#101;&#119;&#101;&#x6c;&#x69;&#x40;&#103;&#109;&#x61;&#105;&#108;&#46;&#x63;&#111;&#x6d;" data-bare-link="true">&#x6e;&#x61;&#98;&#x69;&#x6a;&#97;&#x63;&#x7a;&#x6c;&#x65;&#119;&#101;&#x6c;&#105;&#x40;&#103;&#109;&#x61;&#105;&#x6c;&#46;&#x63;&#x6f;&#109;</a>&gt;</p>
 
 <h2 id="REPORTING-BUGS">REPORTING BUGS</h2>
 
