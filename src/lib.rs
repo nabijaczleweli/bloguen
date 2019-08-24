@@ -1,4 +1,4 @@
-//! Generate an ePub book from a simple plaintext descriptor
+//! Generate a blogue from a flat TOML-based descriptor
 //!
 //! See the [`bloguen` executable manpage](https://rawcdn.githack.com/nabijaczleweli/bloguen/man/bloguen.1.html),
 //! or the [`ops`](ops/) module for library doc.
