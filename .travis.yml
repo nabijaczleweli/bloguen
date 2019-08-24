@@ -45,6 +45,7 @@ script:
       mkdir man; pushd man;
       cp ../bloguen.md bloguen.md;
       ronn --organization="bloguen developers" bloguen.md;
+      sed -i 's;<head>;&\n  <meta charset="utf-8" />;' *.html;
       popd;
     fi
 

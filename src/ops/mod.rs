@@ -37,26 +37,27 @@
 //!
 //! Variables available in [`format_output()`](fn.format_output.html):
 //!
-//! | Name                          | Description                                                                | Example                                                       |
-//! | ----                          | -----------                                                                | -------                                                       |
-//! | `language`                    | passed-in language in BCP47 format                                         | en-GB                                                         |
-//! | `number`                      | default-formatted passed-in number                                         | 14                                                            |
-//! | `title`                       | passed-in title, unformatted                                               | release-front - a generic release front-end, like Patchwork's |
-//! | `author`                      | passed-in author, unformatted                                              | nabijaczleweli                                                |
-//! | `raw_post_name`               | passed-in post name as it appeared on the filesystem, unformatted          | 004. 2018-03-30 Stir plate                                    |
-//! | `normalised_post_name`        | passed-in normalised post name, unformatted                                | 004. 2018-03-30 06-00-51 Stir plate                           |
-//! | `blog_name`                   | passed-in blog name, unformatted                                           | Блогг                                                         |
-//! | `bloguen-version`             | current version of `bloguen`                                               | v0.1.0                                                        |
-//! | `tags`                        |                                                                            | `<span class="post-tag">maths</span>`…                        |
-//! | `tags()`                      | all passed-in tags with the default class (`post-tag`)                     | `<span class="post-tag">maths</span>`…                        |
-//! | `tags(class)`                 | all passed-in tags with the specified class. headers and footers           | `<span class="пост-таг">maths</span>`…                        |
-//! | `styles`                      | all the passed-in styles with their headers and footers                    | `<style type="text/css">* {color: magenta;}</style>`…         |
-//! | `scripts`                     | all the passed-in scripts with their headers and footers                   | `<script type="text/javascript">alert("hewwo")</script>`…     |
-//! | `data-name`                   | passed-in data under the `name` key, unformatted                           | hewwo                                                         |
-//! | `date(post, format)`          | post date formatted with [`parse_date_format_specifier(format)`]           | Thu,  6 Sep 2018 18:32:22 +0200                               |
-//! | `date(now_utc, format)`       | current date in UTC formatted with [`parse_date_format_specifier(format)`] | Thu,  6 Sep 2018 18:32:22 +0200                               |
-//! | `machine_data(kind)`          | machine data of the specified kind                                         | `{"number": 3, "language": "en-GB", …}`…                      |
-//! | `pass_paragraphs(count, var)` | parse `var` and write its contents formatted through [`ParagraphPasser`]   | `{"number": 3, "language": "en-GB", …}`…                      |
+//! | Name                      | Description                                                                           | Example                                                       |
+//! | ----                      | -----------                                                                           | -------                                                       |
+//! | `language`                | passed-in language in BCP47 format                                                    | en-GB                                                         |
+//! | `number`                  | default-formatted passed-in number                                                    | 14                                                            |
+//! | `title`                   | passed-in title, unformatted                                                          | release-front - a generic release front-end, like Patchwork's |
+//! | `author`                  | passed-in author, unformatted                                                         | nabijaczleweli                                                |
+//! | `raw_post_name`           | passed-in post name as it appeared on the filesystem, unformatted                     | 004. 2018-03-30 Stir plate                                    |
+//! | `normalised_post_name`    | passed-in normalised post name, unformatted                                           | 004. 2018-03-30 06-00-51 Stir plate                           |
+//! | `blog_name`               | passed-in blog name, unformatted                                                      | Блогг                                                         |
+//! | `bloguen-version`         | current version of `bloguen`                                                          | v0.1.0                                                        |
+//! | `tags`                    | ↓                                                                                     | `<span class="post-tag">maths</span>`…                        |
+//! | `tags()`                  | all passed-in tags with the default class (`post-tag`)                                | `<span class="post-tag">maths</span>`…                        |
+//! | `tags(class)`             | all passed-in tags with the specified class, headers and footers                      | `<span class="пост-таг">maths</span>`…                        |
+//! | `styles`                  | all the passed-in styles with their headers and footers                               | `<style type="text/css">* {color: magenta;}</style>`…         |
+//! | `scripts`                 | all the passed-in scripts with their headers and footers                              | `<script type="text/javascript">alert("hewwo")</script>`…     |
+//! | `data-name`               | passed-in data under the `name` key, unformatted                                      | hewwo                                                         |
+//! | `date(post, format)`      | post date formatted with [`parse_date_format_specifier(format)`]                      | Thu,  6 Sep 2018 18:32:22 +0200                               |
+//! | `date(now_utc, format)`   | current date in UTC formatted with [`parse_date_format_specifier(format)`]            | Thu,  6 Sep 2018 18:32:22 +0200                               |
+//! | `date(now_local, format)` | current date in local timezone formatted with [`parse_date_format_specifier(format)`] | Thu,  6 Sep 2018 18:32:22 +0200                               |
+//! | `machine_data(kind)`      | machine data of the specified kind                                                    | `{"number": 3, "language": "en-GB", …}`…                      |
+//! | `pass_paragraphs(n, var)` | parse `var` and write its contents formatted through [`ParagraphPasser`]              | `<p>Paragraph 1</p> <p>Paragraph 2</p>`…                      |
 //!
 //! [`parse_date_format_specifier(format)`]: fn.parse_date_format_specifier.html
 //! [`ParagraphPasser`]: struct.ParagraphPasser.html
