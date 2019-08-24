@@ -1,5 +1,5 @@
-bloguen(1) -- Generate an ePub book from a simple plaintext descriptor
-======================================================================
+bloguen(1) -- Generate a blogue from a flat TOML-based descriptor
+=================================================================
 
 ## SYNOPSIS
 
