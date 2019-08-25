@@ -575,7 +575,7 @@ impl BloguePost {
     ///
     /// let out = String::from_utf8(out).unwrap();
     /// # let mut pubdate_local_rfc2822 = out.lines().find(|l| l.contains("pubDate")).unwrap();
-    /// # pubdate_local_rfc2822 = &pubdate_local_rfc2822[6 + 1 + 7 + 1..pubdate_local_rfc2822.len() - (1 + 7 + 1 + 1)];
+    /// # pubdate_local_rfc2822 = &pubdate_local_rfc2822[6   + 1 + 7 + 1..pubdate_local_rfc2822.len() - (1 + 7 + 1 + 1)];
     /// # /*
     /// let pubdate_local_rfc2822 = /* extracted from output's pubDate tag */;
     /// # */

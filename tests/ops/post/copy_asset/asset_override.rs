@@ -11,25 +11,25 @@ use bloguen::Error;
 fn ok_copied() {
     let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-asset_override-ok_copied");
     let _ = fs::remove_dir_all(&root);
-    for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned",
-               "03. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
+    for d in &["1. 2018-01-08 16-52 Big speakers",
+               "03. 2018-02-05 release-front - a generic release front-end like Patchworks",
                "005. 2018-04-19 23-19-21 cursed device chain"] {
         let fp = root.join("posts").join(d);
         fs::create_dir_all(fp.join("assets")).unwrap();
         File::create(fp.join("post.md"))
             .unwrap()
-            .write_all(format!("[self]({}.bin)\n\
+            .write_all(format!("[self]({}.txt)\n\
                                 ![img](assets/image.png)",
                                d.replace(" ", "%20"))
                 .as_bytes())
             .unwrap();
-        File::create(fp.join(format!("{}.bin", d))).unwrap().write_all(d.as_bytes()).unwrap();
+        File::create(fp.join(format!("{}.txt", d))).unwrap().write_all(d.as_bytes()).unwrap();
         File::create(fp.join("assets").join("image.png")).unwrap().write_all(d.as_bytes()).unwrap();
     }
     let out_dir = ("$ROOT/out/".to_string(), root.join("out"));
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
-               root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 Big speakers".to_string(),
+               root.join("posts").join("1. 2018-01-08 16-52 Big speakers"));
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
                   None,
@@ -53,17 +53,17 @@ fn ok_copied() {
                    Ok(true));
     }
     let mut read = String::new();
-    File::open(out_dir.1.join("overriden-assets").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin"))
+    File::open(out_dir.1.join("overriden-assets").join("1. 2018-01-08 16-52 Big speakers.txt"))
         .unwrap()
         .read_to_string(&mut read)
         .unwrap();
-    assert_eq!(read, "1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned");
+    assert_eq!(read, "1. 2018-01-08 16-52 Big speakers");
     read.clear();
     File::open(out_dir.1.join("overriden-assets").join("assets").join("image.png")).unwrap().read_to_string(&mut read).unwrap();
-    assert_eq!(read, "1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned");
+    assert_eq!(read, "1. 2018-01-08 16-52 Big speakers");
 
-    let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's".to_string(),
-               root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
+    let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end like Patchworks".to_string(),
+               root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end like Patchworks"));
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
                   None,
@@ -87,14 +87,14 @@ fn ok_copied() {
                    Ok(true));
     }
     read.clear();
-    File::open(out_dir.1.join("overriden-assets").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's.bin"))
+    File::open(out_dir.1.join("overriden-assets").join("03. 2018-02-05 release-front - a generic release front-end like Patchworks.txt"))
         .unwrap()
         .read_to_string(&mut read)
         .unwrap();
-    assert_eq!(read, "03. 2018-02-05 release-front - a generic release front-end, like Patchwork's");
+    assert_eq!(read, "03. 2018-02-05 release-front - a generic release front-end like Patchworks");
     read.clear();
     File::open(out_dir.1.join("overriden-assets").join("assets").join("image.png")).unwrap().read_to_string(&mut read).unwrap();
-    assert_eq!(read, "03. 2018-02-05 release-front - a generic release front-end, like Patchwork's");
+    assert_eq!(read, "03. 2018-02-05 release-front - a generic release front-end like Patchworks");
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
     let post = BloguePost::new(dir.clone()).unwrap();
@@ -120,7 +120,7 @@ fn ok_copied() {
                    Ok(true));
     }
     read.clear();
-    File::open(out_dir.1.join("overriden-assets").join("005. 2018-04-19 23-19-21 cursed device chain.bin")).unwrap().read_to_string(&mut read).unwrap();
+    File::open(out_dir.1.join("overriden-assets").join("005. 2018-04-19 23-19-21 cursed device chain.txt")).unwrap().read_to_string(&mut read).unwrap();
     assert_eq!(read, "005. 2018-04-19 23-19-21 cursed device chain");
     read.clear();
     File::open(out_dir.1.join("overriden-assets").join("assets").join("image.png")).unwrap().read_to_string(&mut read).unwrap();
@@ -131,14 +131,14 @@ fn ok_copied() {
 fn ok_not_copied() {
     let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-asset_override-ok_not_copied");
     let _ = fs::remove_dir_all(&root);
-    for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned",
-               "03. 2018-02-05 release-front - a generic release front-end, like Patchwork's",
+    for d in &["1. 2018-01-08 16-52 Big speakers",
+               "03. 2018-02-05 release-front - a generic release front-end like Patchworks",
                "005. 2018-04-19 23-19-21 cursed device chain"] {
         let fp = root.join("posts").join(d);
         fs::create_dir_all(fp.join("assets")).unwrap();
         File::create(fp.join("post.md"))
             .unwrap()
-            .write_all(format!("[self]({}.bin)\n\
+            .write_all(format!("[self]({}.txt)\n\
                                 ![img](assets/image.png)",
                                d.replace(" ", "%20"))
                 .as_bytes())
@@ -146,8 +146,8 @@ fn ok_not_copied() {
     }
     let out_dir = ("$ROOT/out/".to_string(), root.join("out"));
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
-               root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 Big speakers".to_string(),
+               root.join("posts").join("1. 2018-01-08 16-52 Big speakers"));
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
                   None,
@@ -170,11 +170,11 @@ fn ok_not_copied() {
         assert_eq!(post.copy_asset(&out_dir, Some("overriden-assets"), &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
                    Ok(false));
     }
-    assert!(File::open(out_dir.1.join("overriden-assets").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin")).is_err());
+    assert!(File::open(out_dir.1.join("overriden-assets").join("1. 2018-01-08 16-52 Big speakers.txt")).is_err());
     assert!(File::open(out_dir.1.join("overriden-assets").join("assets").join("image.png")).is_err());
 
-    let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end, like Patchwork's".to_string(),
-               root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's"));
+    let dir = ("$ROOT/posts/03. 2018-02-05 release-front - a generic release front-end like Patchworks".to_string(),
+               root.join("posts").join("03. 2018-02-05 release-front - a generic release front-end like Patchworks"));
     let post = BloguePost::new(dir.clone()).unwrap();
     for link in post.generate(&out_dir,
                   None,
@@ -197,7 +197,7 @@ fn ok_not_copied() {
         assert_eq!(post.copy_asset(&out_dir, Some("overriden-assets"), &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
                    Ok(false));
     }
-    assert!(File::open(out_dir.1.join("overriden-assets").join("03. 2018-02-05 release-front - a generic release front-end, like Patchwork's.bin")).is_err());
+    assert!(File::open(out_dir.1.join("overriden-assets").join("03. 2018-02-05 release-front - a generic release front-end like Patchworks.txt")).is_err());
     assert!(File::open(out_dir.1.join("overriden-assets").join("assets").join("image.png")).is_err());
 
     let dir = ("$ROOT/posts/005. 2018-04-19 23-19-21 cursed device chain".to_string(), root.join("posts").join("005. 2018-04-19 23-19-21 cursed device chain"));
@@ -223,7 +223,7 @@ fn ok_not_copied() {
         assert_eq!(post.copy_asset(&out_dir, Some("overriden-assets"), &percent_decode(link.as_bytes()).decode_utf8().unwrap()),
                    Ok(false));
     }
-    assert!(File::open(out_dir.1.join("overriden-assets").join("005. 2018-04-19 23-19-21 cursed device chain.bin")).is_err());
+    assert!(File::open(out_dir.1.join("overriden-assets").join("005. 2018-04-19 23-19-21 cursed device chain.txt")).is_err());
     assert!(File::open(out_dir.1.join("overriden-assets").join("assets").join("image.png")).is_err());
 }
 
@@ -231,23 +231,23 @@ fn ok_not_copied() {
 fn posts_directory() {
     let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-asset_override-posts_directory");
     let _ = fs::remove_dir_all(&root);
-    for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
+    for d in &["1. 2018-01-08 16-52 Big speakers"] {
         let fp = root.join("posts").join(d);
         fs::create_dir_all(fp.join("assets")).unwrap();
         File::create(fp.join("post.md"))
             .unwrap()
-            .write_all(format!("[self]({}.bin)\n\
+            .write_all(format!("[self]({}.txt)\n\
                                 ![img](assets/image.png)",
                                d.replace(" ", "%20"))
                 .as_bytes())
             .unwrap();
-        File::create(fp.join(format!("{}.bin", d))).unwrap().write_all(d.as_bytes()).unwrap();
+        File::create(fp.join(format!("{}.txt", d))).unwrap().write_all(d.as_bytes()).unwrap();
         File::create(fp.join("assets").join("image.png")).unwrap().write_all(d.as_bytes()).unwrap();
     }
     let out_dir = ("$ROOT/out/".to_string(), root.join("out"));
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
-               root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 Big speakers".to_string(),
+               root.join("posts").join("1. 2018-01-08 16-52 Big speakers"));
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(&out_dir.1).unwrap();
     File::create(out_dir.1.join("overriden-assets")).unwrap();
@@ -264,7 +264,7 @@ fn posts_directory() {
                }));
     assert_eq!(post.copy_asset(&out_dir,
                                Some("overriden-assets"),
-                               "1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin"),
+                               "1. 2018-01-08 16-52 Big speakers.txt"),
                Err(Error::Io {
                    desc: "asset parent dir".into(),
                    op: "create",
@@ -281,26 +281,26 @@ fn posts_directory() {
 fn copy_failed() {
     let root = temp_dir().join("bloguen-test").join("ops-post-copy_asset-asset_override-copy_failed");
     let _ = fs::remove_dir_all(&root);
-    for d in &["1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"] {
+    for d in &["1. 2018-01-08 16-52 Big speakers"] {
         let fp = root.join("posts").join(d);
         fs::create_dir_all(fp.join("assets")).unwrap();
         File::create(fp.join("post.md"))
             .unwrap()
-            .write_all(format!("[self]({}.bin)\n\
+            .write_all(format!("[self]({}.txt)\n\
                                 ![img](assets/image.png)",
                                d.replace(" ", "%20"))
                 .as_bytes())
             .unwrap();
-        File::create(fp.join(format!("{}.bin", d))).unwrap().write_all(d.as_bytes()).unwrap();
+        File::create(fp.join(format!("{}.txt", d))).unwrap().write_all(d.as_bytes()).unwrap();
         File::create(fp.join("assets").join("image.png")).unwrap().write_all(d.as_bytes()).unwrap();
     }
     let out_dir = ("$ROOT/out/".to_string(), root.join("out"));
 
-    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned".to_string(),
-               root.join("posts").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned"));
+    let dir = ("$ROOT/posts/1. 2018-01-08 16-52 Big speakers".to_string(),
+               root.join("posts").join("1. 2018-01-08 16-52 Big speakers"));
     let post = BloguePost::new(dir.clone()).unwrap();
     fs::create_dir_all(out_dir.1.join("overriden-assets").join("assets").join("image.png")).unwrap();
-    fs::create_dir_all(out_dir.1.join("overriden-assets").join("1. 2018-01-08 16-52 My first venture into crocheting, and what I've learned.bin")).unwrap();
+    fs::create_dir_all(out_dir.1.join("overriden-assets").join("1. 2018-01-08 16-52 Big speakers.txt")).unwrap();
     for link in post.generate(&out_dir,
                   None,
                   None,

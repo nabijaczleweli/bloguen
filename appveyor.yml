@@ -18,14 +18,14 @@ install:
 build: off
 build_script:
   - git submodule update --init --recursive
-  - cargo build --verbose
-  - cp target\debug\bloguen.exe bloguen-v0.1.0.exe
+  - cargo build --verbose --release
+  - cp target\release\bloguen.exe bloguen-v0.1.0.exe
   - strip --strip-all --remove-section=.comment --remove-section=.note bloguen-v0.1.0.exe
 
 test: off
 test_script:
   - set RUST_BACKTRACE=full
-  - cargo test --verbose
+  - cargo test --verbose --release
 
 artifacts:
   - path: bloguen-v0.1.0.exe
