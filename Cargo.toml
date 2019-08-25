@@ -8,7 +8,9 @@ keywords = ["generate", "blog", "markdown"]
 categories = ["command-line-utilities", "template-engine"]
 license = "MIT"
 # Remember to also update in appveyor.yml
-version = "0.1.0"
+# Remember to also update in bloguen.md
+# Remember to also update in src/
+version = "0.1.1"
 # Remember to also update in bloguen.md
 authors = ["nabijaczleweli <nabijaczleweli@gmail.com>"]
 

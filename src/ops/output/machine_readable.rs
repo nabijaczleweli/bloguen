@@ -126,7 +126,7 @@ pub fn machine_output_kind<W, E, Tz, St, Sc>(kind: &MachineDataKind)
 ///         "alert(\"You\'re the 1`000`000th visitor!\");"
 ///     ],
 ///
-///     "bloguen-version": "0.1.0"
+///     "bloguen-version": "0.1.1"
 /// }}"###,
 ///     gendate_utc_rfc3339, gendate_utc_rfc2822, gendate_local_rfc3339, gendate_local_rfc2822));
 /// ```

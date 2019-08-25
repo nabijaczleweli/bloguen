@@ -136,7 +136,7 @@ pub fn feed_type_post_footer<W, E>(kind: &FeedType) -> (fn(into: &mut W, out_nam
 ///     <link>../index.html</link>
 ///     <description>Блогг</description>
 ///     <language>en-GB</language>
-///     <generator>bloguen 0.1.0</generator>
+///     <generator>bloguen 0.1.1</generator>
 ///     <pubDate>{0}</pubDate>
 ///     <lastBuildDate>{0}</lastBuildDate>
 /// "###, gendate_local_rfc2822));
@@ -374,7 +374,7 @@ fn feed_rss_post_footer_impl<W>(into: &mut W, out_name_err: Cow<'static, str>) -
 ///   </author>
 ///   <link href="../index.html" />
 ///   <id>urn:uuid:4f568fb2-4417-5b80-85a8-651978a2da56</id>
-///   <generator href="//github.com/nabijaczleweli/bloguen" version="0.1.0">bloguen</generator>
+///   <generator href="//github.com/nabijaczleweli/bloguen" version="0.1.1">bloguen</generator>
 ///   <updated>{}</updated>
 /// "###, gendate_local_rfc3339));
 /// ```

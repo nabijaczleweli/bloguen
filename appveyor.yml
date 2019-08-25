@@ -1,4 +1,4 @@
-version: 0.1.0-{build}
+version: 0.1.1-{build}
 skip_tags: false
 
 platform: x64
@@ -19,8 +19,8 @@ build: off
 build_script:
   - git submodule update --init --recursive
   - cargo build --verbose --release
-  - cp target\release\bloguen.exe bloguen-v0.1.0.exe
-  - strip --strip-all --remove-section=.comment --remove-section=.note bloguen-v0.1.0.exe
+  - cp target\release\bloguen.exe bloguen-v0.1.1.exe
+  - strip --strip-all --remove-section=.comment --remove-section=.note bloguen-v0.1.1.exe
 
 test: off
 test_script:
@@ -28,11 +28,11 @@ test_script:
   - cargo test --verbose --release
 
 artifacts:
-  - path: bloguen-v0.1.0.exe
+  - path: bloguen-v0.1.1.exe
 
 deploy:
   provider: GitHub
-  artifact: bloguen-v0.1.0.exe
+  artifact: bloguen-v0.1.1.exe
   auth_token:
     secure: UiKXcnERMS81BOCO/6SNHWsc+29krkYFl5bYEHB475rHxGMm62fovkK2cfoylenS
   on:

@@ -479,7 +479,7 @@ impl BlogueDescriptor {
     ///     <link>../index.html</link>
     ///     <description>Блогг</description>
     ///     <language>en-GB</language>
-    ///     <generator>bloguen 0.1.0</generator>
+    ///     <generator>bloguen 0.1.1</generator>
     ///     <pubDate>{0}</pubDate>
     ///     <lastBuildDate>{0}</lastBuildDate>
     /// "###, gendate_local_rfc2822));
@@ -505,7 +505,7 @@ impl BlogueDescriptor {
     ///     <author>nabijaczleweli</author>
     ///     <description>Блогг</description>
     ///     <language>en-GB</language>
-    ///     <generator>bloguen 0.1.0</generator>
+    ///     <generator>bloguen 0.1.1</generator>
     ///     <pubDate>{0}</pubDate>
     ///     <lastBuildDate>{0}</lastBuildDate>
     /// "###, gendate_local_rfc2822));

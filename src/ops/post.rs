@@ -507,7 +507,7 @@ impl BloguePost {
     /// #     "scripts": [
     /// #     ],
     /// #
-    /// #     "bloguen-version": "0.1.0"
+    /// #     "bloguen-version": "0.1.1"
     /// # }"##.as_bytes()));
     /// ```
     pub fn generate_machine<T: Write>(&self, into: &mut T, kind: &MachineDataKind, blog_name: &str, language: &LanguageTag, author: &str,

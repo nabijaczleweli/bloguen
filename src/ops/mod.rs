@@ -46,7 +46,7 @@
 //! | `raw_post_name`           | passed-in post name as it appeared on the filesystem, unformatted                     | 004. 2018-03-30 Stir plate                                    |
 //! | `normalised_post_name`    | passed-in normalised post name, unformatted                                           | 004. 2018-03-30 06-00-51 Stir plate                           |
 //! | `blog_name`               | passed-in blog name, unformatted                                                      | Блогг                                                         |
-//! | `bloguen-version`         | current version of `bloguen`                                                          | v0.1.0                                                        |
+//! | `bloguen-version`         | current version of `bloguen`                                                          | v0.1.1                                                        |
 //! | `tags`                    | ↓                                                                                     | `<span class="post-tag">maths</span>`…                        |
 //! | `tags()`                  | all passed-in tags with the default class (`post-tag`)                                | `<span class="post-tag">maths</span>`…                        |
 //! | `tags(class)`             | all passed-in tags with the specified class, headers and footers                      | `<span class="пост-таг">maths</span>`…                        |
