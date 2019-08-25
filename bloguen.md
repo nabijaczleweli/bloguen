@@ -232,7 +232,7 @@ where `{var}` denotes the insertion of variable `var`, and `{{`/`}}` literal `{`
     blog_name               – blog name
                             – Блогг
     bloguen-version         – current version of bloguen
-                            – v0.1.0
+                            – v0.1.1
     tags                    – ↓
                             – <span class="post-tag">maths</span>…
     tags()                  – all post tags with the default class (post-tag)
