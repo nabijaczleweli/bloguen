@@ -548,8 +548,11 @@ impl BloguePost {
     /// The following holds:
     ///
     /// ```
+    /// # extern crate bloguen;
+    /// # extern crate chrono;
     /// # use bloguen::ops::{FeedType, BloguePost};
     /// # use bloguen::util::LANGUAGE_EN_GB;
+    /// # use chrono::offset::Local;
     /// # use std::io::{Write, Read};
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
@@ -570,15 +573,21 @@ impl BloguePost {
     /// assert!(post.generate_feed_head(&mut out, &FeedType::Rss, "feeds/rss.xml",
     ///                                           &LANGUAGE_EN_GB, "nabijaczleweli").is_ok());
     ///
-    /// assert_eq!(String::from_utf8(out).unwrap(), r###"
+    /// let out = String::from_utf8(out).unwrap();
+    /// # let mut pubdate_local_rfc2822 = out.lines().find(|l| l.contains("pubDate")).unwrap();
+    /// # pubdate_local_rfc2822 = &pubdate_local_rfc2822[6 + 1 + 7 + 1..pubdate_local_rfc2822.len() - (1 + 7 + 1 + 1)];
+    /// # /*
+    /// let pubdate_local_rfc2822 = /* extracted from output's pubDate tag */;
+    /// # */
+    /// assert_eq!(out, format!(r###"
     ///     <item>
     ///       <title>The venture into crocheting</title>
     ///       <author>nabijaczleweli</author>
     ///       <link>../posts/01. 2018-01-08 16-52-00 The venture into crocheting.html</link>
-    ///       <pubDate>Mon,  8 Jan 2018 16:52:00 +0100</pubDate>
+    ///       <pubDate>{}</pubDate>
     ///       <guid>01. 2018-01-08 16-52-00 The venture into crocheting</guid>
     ///       <description>
-    /// "###);
+    /// "###, pubdate_local_rfc2822));
     /// ```
     pub fn generate_feed_head<T: Write>(&self, into: &mut T, tp: &FeedType, fname: &str, language: &LanguageTag, author: &str) -> Result<(), Error> {
         let norm_name = self.normalised_name();
@@ -625,7 +634,7 @@ impl BloguePost {
     /// # use std::fs::{self, File};
     /// # use std::env::temp_dir;
     /// # use std::str;
-    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-generate_feed_head");
+    /// # let root = temp_dir().join("bloguen-doctest").join("ops-post-generate_feed_foot");
     /// # let _ = fs::remove_dir_all(&root);
     /// # fs::create_dir_all(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")).unwrap();
     /// # File::create(root.join("src").join("01. 2018-01-08 16-52 The venture into crocheting")
