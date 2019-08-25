@@ -24,6 +24,7 @@ build_script:
 
 test: off
 test_script:
+  - set RUST_BACKTRACE=full
   - cargo test --verbose --release
 
 artifacts:
@@ -33,7 +34,7 @@ deploy:
   provider: GitHub
   artifact: bloguen-v0.1.0.exe
   auth_token:
-    secure: dYfgmJHOWtuI8OgmVQdC7vpr+gOmegzpjhrNNUjSp7CM3opVMo3c0IsblYSsByOm
+    secure: UiKXcnERMS81BOCO/6SNHWsc+29krkYFl5bYEHB475rHxGMm62fovkK2cfoylenS
   on:
     appveyor_repo_tag: true
 
