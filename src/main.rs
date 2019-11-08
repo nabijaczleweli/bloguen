@@ -250,7 +250,7 @@ fn result_main() -> Result<(), bloguen::Error> {
                         op: "save",
                         more: e.to_string().into(),
                     }
-                })?;;
+                })?;
 
             if descriptor.index.is_some() {
                 idx_sender.send((p.number.clone(), index_machine_json, center_buffer))
