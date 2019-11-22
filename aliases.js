@@ -1,7 +1,6 @@
 var ALIASES = {};
 ALIASES["aho_corasick"] = {};
 ALIASES["ansi_term"] = {};
-ALIASES["arrayvec"] = {};
 ALIASES["atty"] = {};
 ALIASES["bidir_map"] = {};
 ALIASES["bitflags"] = {};
@@ -27,7 +26,6 @@ ALIASES["maplit"] = {};
 ALIASES["matches"] = {};
 ALIASES["memchr"] = {};
 ALIASES["memoffset"] = {};
-ALIASES["nodrop"] = {};
 ALIASES["num_cpus"] = {};
 ALIASES["num_integer"] = {};
 ALIASES["num_traits"] = {};

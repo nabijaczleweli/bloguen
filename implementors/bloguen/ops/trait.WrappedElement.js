@@ -6,5 +6,4 @@ implementors["bloguen"] = [];
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

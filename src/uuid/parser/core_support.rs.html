@@ -78,17 +78,17 @@
 <span class="kw">use</span> <span class="ident">parser</span>;
 
 <span class="kw">impl</span> <span class="ident">From</span><span class="op">&lt;</span><span class="ident">parser</span>::<span class="ident">ParseError</span><span class="op">&gt;</span> <span class="kw">for</span> ::<span class="ident">Error</span> {
-    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">parser</span>::<span class="ident">ParseError</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">from</span>(<span class="ident">err</span>: <span class="ident">parser</span>::<span class="ident">ParseError</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         ::<span class="ident">Error</span>::<span class="ident">Parse</span>(<span class="ident">err</span>)
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">parser</span>::<span class="ident">Expected</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
-            <span class="ident">parser</span>::<span class="ident">Expected</span>::<span class="ident">Any</span>(<span class="kw-2">ref</span> <span class="ident">crits</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;one of {:?}&quot;</span>, <span class="ident">crits</span>),
-            <span class="ident">parser</span>::<span class="ident">Expected</span>::<span class="ident">Exact</span>(<span class="ident">crit</span>) <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">crit</span>),
-            <span class="ident">parser</span>::<span class="ident">Expected</span>::<span class="ident">Range</span> { <span class="ident">min</span>, <span class="ident">max</span> } <span class="op">=&gt;</span> {
+            <span class="ident">parser</span>::<span class="ident">Expected</span>::<span class="ident">Any</span>(<span class="kw-2">ref</span> <span class="ident">crits</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;one of {:?}&quot;</span>, <span class="ident">crits</span>),
+            <span class="ident">parser</span>::<span class="ident">Expected</span>::<span class="ident">Exact</span>(<span class="ident">crit</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}&quot;</span>, <span class="ident">crit</span>),
+            <span class="ident">parser</span>::<span class="ident">Expected</span>::<span class="ident">Range</span> { <span class="ident">min</span>, <span class="ident">max</span> } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}..{} inclusive&quot;</span>, <span class="ident">min</span>, <span class="ident">max</span>)
             }
         }
@@ -96,7 +96,7 @@
 }
 
 <span class="kw">impl</span> <span class="ident">fmt</span>::<span class="ident">Display</span> <span class="kw">for</span> <span class="ident">parser</span>::<span class="ident">ParseError</span> {
-    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
+    <span class="kw">fn</span> <span class="ident">fmt</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">f</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">fmt</span>::<span class="ident">Formatter</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">fmt</span>::<span class="prelude-ty">Result</span> {
         <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;{}: &quot;</span>, <span class="self">self</span>.<span class="ident">_description</span>())<span class="question-mark">?</span>;
 
         <span class="kw">match</span> <span class="kw-2">*</span><span class="self">self</span> {
@@ -104,18 +104,18 @@
                 <span class="ident">expected</span>,
                 <span class="ident">found</span>,
                 <span class="ident">index</span>,
-            } <span class="op">=&gt;</span> {
+            } <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;expected {}, found {} at {}&quot;</span>, <span class="ident">expected</span>, <span class="ident">found</span>, <span class="ident">index</span>)
             }
             <span class="ident">parser</span>::<span class="ident">ParseError</span>::<span class="ident">InvalidGroupCount</span> {
                 <span class="kw-2">ref</span> <span class="ident">expected</span>,
                 <span class="ident">found</span>,
-            } <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;expected {}, found {}&quot;</span>, <span class="ident">expected</span>, <span class="ident">found</span>),
+            } <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;expected {}, found {}&quot;</span>, <span class="ident">expected</span>, <span class="ident">found</span>),
             <span class="ident">parser</span>::<span class="ident">ParseError</span>::<span class="ident">InvalidGroupLength</span> {
                 <span class="kw-2">ref</span> <span class="ident">expected</span>,
                 <span class="ident">found</span>,
                 <span class="ident">group</span>,
-            } <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(
+            } <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(
                 <span class="ident">f</span>,
                 <span class="string">&quot;expected {}, found {} in group {}&quot;</span>,
                 <span class="ident">expected</span>, <span class="ident">found</span>, <span class="ident">group</span>,
@@ -123,7 +123,7 @@
             <span class="ident">parser</span>::<span class="ident">ParseError</span>::<span class="ident">InvalidLength</span> {
                 <span class="kw-2">ref</span> <span class="ident">expected</span>,
                 <span class="ident">found</span>,
-            } <span class="op">=&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;expected {}, found {}&quot;</span>, <span class="ident">expected</span>, <span class="ident">found</span>),
+            } <span class="op">=</span><span class="op">&gt;</span> <span class="macro">write</span><span class="macro">!</span>(<span class="ident">f</span>, <span class="string">&quot;expected {}, found {}&quot;</span>, <span class="ident">expected</span>, <span class="ident">found</span>),
         }
     }
 }

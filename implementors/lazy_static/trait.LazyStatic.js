@@ -6,5 +6,4 @@ implementors["bloguen"] = [{text:"impl <a class=\"trait\" href=\"lazy_static/tra
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

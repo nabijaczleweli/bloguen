@@ -6,5 +6,4 @@ implementors["unicode_categories"] = [];
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

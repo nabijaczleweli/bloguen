@@ -123,39 +123,39 @@
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ENTITY_MIN_LENGTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">2</span>;
 <span class="kw">pub</span> <span class="kw">const</span> <span class="ident">ENTITY_MAX_LENGTH</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">32</span>;
 
-<span class="kw">fn</span> <span class="ident">isxdigit</span>(<span class="ident">ch</span>: <span class="kw-2">&amp;</span><span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-    (<span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&gt;=</span> <span class="string">b&#39;0&#39;</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&lt;=</span> <span class="string">b&#39;9&#39;</span>) <span class="op">||</span> (<span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&gt;=</span> <span class="string">b&#39;a&#39;</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&lt;=</span> <span class="string">b&#39;f&#39;</span>) <span class="op">||</span> (<span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&gt;=</span> <span class="string">b&#39;A&#39;</span> <span class="op">&amp;&amp;</span> <span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&lt;=</span> <span class="string">b&#39;F&#39;</span>)
+<span class="kw">fn</span> <span class="ident">isxdigit</span>(<span class="ident">ch</span>: <span class="kw-2">&amp;</span><span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    (<span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&gt;</span><span class="op">=</span> <span class="string">b&#39;0&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&lt;</span><span class="op">=</span> <span class="string">b&#39;9&#39;</span>) <span class="op">|</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&gt;</span><span class="op">=</span> <span class="string">b&#39;a&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&lt;</span><span class="op">=</span> <span class="string">b&#39;f&#39;</span>) <span class="op">|</span><span class="op">|</span> (<span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&gt;</span><span class="op">=</span> <span class="string">b&#39;A&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">*</span><span class="ident">ch</span> <span class="op">&lt;</span><span class="op">=</span> <span class="string">b&#39;F&#39;</span>)
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unescape</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">usize</span>)<span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> <span class="number">3</span> <span class="op">&amp;&amp;</span> <span class="ident">text</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">b&#39;#&#39;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unescape</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">usize</span>)<span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">3</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">text</span>[<span class="number">0</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;#&#39;</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">codepoint</span>: <span class="ident">u32</span> <span class="op">=</span> <span class="number">0</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
 
         <span class="kw">let</span> <span class="ident">num_digits</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">isdigit</span>(<span class="ident">text</span>[<span class="number">1</span>]) {
             <span class="ident">i</span> <span class="op">=</span> <span class="number">1</span>;
-            <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">isdigit</span>(<span class="ident">text</span>[<span class="ident">i</span>]) {
+            <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isdigit</span>(<span class="ident">text</span>[<span class="ident">i</span>]) {
                 <span class="ident">codepoint</span> <span class="op">=</span> (<span class="ident">codepoint</span> <span class="op">*</span> <span class="number">10</span>) <span class="op">+</span> (<span class="ident">text</span>[<span class="ident">i</span>] <span class="kw">as</span> <span class="ident">u32</span> <span class="op">-</span> <span class="string">&#39;0&#39;</span> <span class="kw">as</span> <span class="ident">u32</span>);
                 <span class="ident">codepoint</span> <span class="op">=</span> <span class="ident">min</span>(<span class="ident">codepoint</span>, <span class="number">0x11_0000</span>);
-                <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
             }
             <span class="ident">i</span> <span class="op">-</span> <span class="number">1</span>
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">text</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">b&#39;x&#39;</span> <span class="op">||</span> <span class="ident">text</span>[<span class="number">1</span>] <span class="op">==</span> <span class="string">b&#39;X&#39;</span> {
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">text</span>[<span class="number">1</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;x&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">text</span>[<span class="number">1</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;X&#39;</span> {
             <span class="ident">i</span> <span class="op">=</span> <span class="number">2</span>;
-            <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">isxdigit</span>(<span class="kw-2">&amp;</span><span class="ident">text</span>[<span class="ident">i</span>]) {
+            <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isxdigit</span>(<span class="kw-2">&amp;</span><span class="ident">text</span>[<span class="ident">i</span>]) {
                 <span class="ident">codepoint</span> <span class="op">=</span> (<span class="ident">codepoint</span> <span class="op">*</span> <span class="number">16</span>) <span class="op">+</span> ((<span class="ident">text</span>[<span class="ident">i</span>] <span class="kw">as</span> <span class="ident">u32</span> <span class="op">|</span> <span class="number">32</span>) <span class="op">%</span> <span class="number">39</span> <span class="op">-</span> <span class="number">9</span>);
                 <span class="ident">codepoint</span> <span class="op">=</span> <span class="ident">min</span>(<span class="ident">codepoint</span>, <span class="number">0x11_0000</span>);
-                <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
             }
             <span class="ident">i</span> <span class="op">-</span> <span class="number">2</span>
         } <span class="kw">else</span> {
             <span class="number">0</span>
         };
 
-        <span class="kw">if</span> <span class="ident">num_digits</span> <span class="op">&gt;=</span> <span class="number">1</span> <span class="op">&amp;&amp;</span> <span class="ident">num_digits</span> <span class="op">&lt;=</span> <span class="number">8</span> <span class="op">&amp;&amp;</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="op">&amp;&amp;</span> <span class="ident">text</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">b&#39;;&#39;</span> {
-            <span class="kw">if</span> <span class="ident">codepoint</span> <span class="op">==</span> <span class="number">0</span>
-                <span class="op">||</span> (<span class="ident">codepoint</span> <span class="op">&gt;=</span> <span class="number">0xD800</span> <span class="op">&amp;&amp;</span> <span class="ident">codepoint</span> <span class="op">&lt;=</span> <span class="number">0xE000</span>)
-                <span class="op">||</span> <span class="ident">codepoint</span> <span class="op">&gt;=</span> <span class="number">0x110000</span>
+        <span class="kw">if</span> <span class="ident">num_digits</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">1</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">num_digits</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">8</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">text</span>.<span class="ident">len</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">text</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;;&#39;</span> {
+            <span class="kw">if</span> <span class="ident">codepoint</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span>
+                <span class="op">|</span><span class="op">|</span> (<span class="ident">codepoint</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0xD800</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">codepoint</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">0xE000</span>)
+                <span class="op">|</span><span class="op">|</span> <span class="ident">codepoint</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">0x110000</span>
             {
                 <span class="ident">codepoint</span> <span class="op">=</span> <span class="number">0xFFFD</span>;
             }
@@ -171,11 +171,11 @@
 
     <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">min</span>(<span class="ident">text</span>.<span class="ident">len</span>(), <span class="ident">ENTITY_MAX_LENGTH</span>);
     <span class="kw">for</span> <span class="ident">i</span> <span class="kw">in</span> <span class="ident">ENTITY_MIN_LENGTH</span>..<span class="ident">size</span> {
-        <span class="kw">if</span> <span class="ident">text</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">b&#39; &#39;</span> {
+        <span class="kw">if</span> <span class="ident">text</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39; &#39;</span> {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
-        <span class="kw">if</span> <span class="ident">text</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">b&#39;;&#39;</span> {
+        <span class="kw">if</span> <span class="ident">text</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;;&#39;</span> {
             <span class="kw">return</span> <span class="ident">lookup</span>(<span class="kw-2">&amp;</span><span class="ident">text</span>[..<span class="ident">i</span>]).<span class="ident">map</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> (<span class="ident">e</span>.<span class="ident">to_vec</span>(), <span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>));
         }
     }
@@ -183,47 +183,47 @@
     <span class="prelude-val">None</span>
 }
 
-<span class="kw">fn</span> <span class="ident">lookup</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">lookup</span>(<span class="ident">text</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span>[<span class="ident">u8</span>]<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">entity_str</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;&amp;{};&quot;</span>, <span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">text</span>) });
 
-    <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="ident">ENTITIES</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">entity</span> <span class="op">==</span> <span class="ident">entity_str</span>);
+    <span class="kw">let</span> <span class="ident">entity</span> <span class="op">=</span> <span class="ident">ENTITIES</span>.<span class="ident">iter</span>().<span class="ident">find</span>(<span class="op">|</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span>.<span class="ident">entity</span> <span class="op">=</span><span class="op">=</span> <span class="ident">entity_str</span>);
 
     <span class="kw">match</span> <span class="ident">entity</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>.<span class="ident">characters</span>.<span class="ident">as_bytes</span>()),
-        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="prelude-val">None</span>,
+        <span class="prelude-val">Some</span>(<span class="ident">e</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">Some</span>(<span class="ident">e</span>.<span class="ident">characters</span>.<span class="ident">as_bytes</span>()),
+        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="prelude-val">None</span>,
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unescape_html</span>(<span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unescape_html</span>(<span class="ident">src</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">size</span> <span class="op">=</span> <span class="ident">src</span>.<span class="ident">len</span>();
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">Vec</span>::<span class="ident">with_capacity</span>(<span class="ident">size</span>);
 
     <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">size</span> {
         <span class="kw">let</span> <span class="ident">org</span> <span class="op">=</span> <span class="ident">i</span>;
-        <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">size</span> <span class="op">&amp;&amp;</span> <span class="ident">src</span>[<span class="ident">i</span>] <span class="op">!=</span> <span class="string">b&#39;&amp;&#39;</span> {
-            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="kw">while</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">size</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">src</span>[<span class="ident">i</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;&amp;&#39;</span> {
+            <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         }
 
         <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;</span> <span class="ident">org</span> {
-            <span class="kw">if</span> <span class="ident">org</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">i</span> <span class="op">&gt;=</span> <span class="ident">size</span> {
+            <span class="kw">if</span> <span class="ident">org</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">i</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">size</span> {
                 <span class="kw">return</span> <span class="ident">src</span>.<span class="ident">to_vec</span>();
             }
 
             <span class="ident">v</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>[<span class="ident">org</span>..<span class="ident">i</span>]);
         }
 
-        <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;=</span> <span class="ident">size</span> {
+        <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">size</span> {
             <span class="kw">return</span> <span class="ident">v</span>;
         }
 
-        <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         <span class="kw">match</span> <span class="ident">unescape</span>(<span class="kw-2">&amp;</span><span class="ident">src</span>[<span class="ident">i</span>..]) {
-            <span class="prelude-val">Some</span>((<span class="ident">chs</span>, <span class="ident">size</span>)) <span class="op">=&gt;</span> {
+            <span class="prelude-val">Some</span>((<span class="ident">chs</span>, <span class="ident">size</span>)) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">v</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">chs</span>);
-                <span class="ident">i</span> <span class="op">+=</span> <span class="ident">size</span>;
+                <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="ident">size</span>;
             }
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="ident">v</span>.<span class="ident">push</span>(<span class="string">b&#39;&amp;&#39;</span>),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">v</span>.<span class="ident">push</span>(<span class="string">b&#39;&amp;&#39;</span>),
         }
     }
 

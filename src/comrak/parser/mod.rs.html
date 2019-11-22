@@ -1768,10 +1768,10 @@
 <span class="kw">const</span> <span class="ident">CODE_INDENT</span>: <span class="ident">usize</span> <span class="op">=</span> <span class="number">4</span>;
 
 <span class="macro">macro_rules</span><span class="macro">!</span> <span class="ident">node_matches</span> {
-    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">node</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pat</span>:<span class="ident">pat</span>) <span class="op">=&gt;</span> {{
+    (<span class="macro-nonterminal">$</span><span class="macro-nonterminal">node</span>:<span class="ident">expr</span>, <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pat</span>:<span class="ident">pat</span>) <span class="op">=</span><span class="op">&gt;</span> {{
         <span class="kw">match</span> <span class="macro-nonterminal">$</span><span class="macro-nonterminal">node</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pat</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="macro-nonterminal">$</span><span class="macro-nonterminal">pat</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
         }
     }};
 }
@@ -1780,10 +1780,10 @@
 <span class="doccomment">///</span>
 <span class="doccomment">/// See the documentation of the crate root for an example.</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_document</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(
-    <span class="ident">arena</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">arena</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ComrakOptions</span>,
-) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="ident">parse_document_with_broken_link_callback</span>(<span class="ident">arena</span>, <span class="ident">buffer</span>, <span class="ident">options</span>, <span class="prelude-val">None</span>)
 }
 
@@ -1829,11 +1829,11 @@
 <span class="doccomment">/// # }</span>
 <span class="doccomment">/// ```</span>
 <span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">parse_document_with_broken_link_callback</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;c</span><span class="op">&gt;</span>(
-    <span class="ident">arena</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">arena</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">buffer</span>: <span class="kw-2">&amp;</span><span class="ident">str</span>,
     <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ComrakOptions</span>,
-    <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;c</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;&gt;</span>,
-) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;c</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> <span class="op">=</span> <span class="ident">arena</span>.<span class="ident">alloc</span>(<span class="ident">Node</span>::<span class="ident">new</span>(<span class="ident">RefCell</span>::<span class="ident">new</span>(<span class="ident">Ast</span> {
         <span class="ident">value</span>: <span class="ident">NodeValue</span>::<span class="ident">Document</span>,
         <span class="ident">content</span>: <span class="macro">vec</span><span class="macro">!</span>[],
@@ -1847,7 +1847,7 @@
 }
 
 <span class="kw">pub</span> <span class="kw">struct</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;o</span>, <span class="lifetime">&#39;c</span><span class="op">&gt;</span> {
-    <span class="ident">arena</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span>,
+    <span class="ident">arena</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     <span class="ident">refmap</span>: <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Reference</span><span class="op">&gt;</span>,
     <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
     <span class="ident">current</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
@@ -1861,7 +1861,7 @@
     <span class="ident">partially_consumed_tab</span>: <span class="ident">bool</span>,
     <span class="ident">last_line_length</span>: <span class="ident">usize</span>,
     <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;o</span> <span class="ident">ComrakOptions</span>,
-    <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;c</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;&gt;</span>,
+    <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;c</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
 }
 
 <span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Default</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>)]</span>
@@ -2137,11 +2137,11 @@
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;o</span>, <span class="lifetime">&#39;c</span><span class="op">&gt;</span> <span class="ident">Parser</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;o</span>, <span class="lifetime">&#39;c</span><span class="op">&gt;</span> {
     <span class="kw">fn</span> <span class="ident">new</span>(
-        <span class="ident">arena</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span>,
+        <span class="ident">arena</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">Arena</span><span class="op">&lt;</span><span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
         <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
         <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;o</span> <span class="ident">ComrakOptions</span>,
-        <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;c</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;&gt;</span>,
-    ) <span class="op">-&gt;</span> <span class="self">Self</span> {
+        <span class="ident">callback</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;c</span> <span class="kw-2">mut</span> <span class="ident">dyn</span> <span class="ident">FnMut</span>(<span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>)<span class="op">&gt;</span><span class="op">&gt;</span>,
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">Parser</span> {
             <span class="ident">arena</span>: <span class="ident">arena</span>,
             <span class="ident">refmap</span>: <span class="ident">HashMap</span>::<span class="ident">new</span>(),
@@ -2174,11 +2174,11 @@
                 <span class="kw">if</span> <span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="ident">s</span>[<span class="ident">eol</span>]) {
                     <span class="kw">break</span>;
                 }
-                <span class="kw">if</span> <span class="ident">s</span>[<span class="ident">eol</span>] <span class="op">==</span> <span class="number">0</span> {
+                <span class="kw">if</span> <span class="ident">s</span>[<span class="ident">eol</span>] <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
                     <span class="ident">process</span> <span class="op">=</span> <span class="bool-val">false</span>;
                     <span class="kw">break</span>;
                 }
-                <span class="ident">eol</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="ident">eol</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
             }
 
             <span class="kw">if</span> <span class="ident">process</span> {
@@ -2186,21 +2186,21 @@
                     <span class="ident">linebuf</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>[<span class="ident">i</span>..<span class="ident">eol</span>]);
                     <span class="self">self</span>.<span class="ident">process_line</span>(<span class="kw-2">&amp;</span><span class="ident">linebuf</span>);
                     <span class="ident">linebuf</span>.<span class="ident">truncate</span>(<span class="number">0</span>);
-                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">sz</span> <span class="op">&gt;</span> <span class="ident">eol</span> <span class="op">&amp;&amp;</span> <span class="ident">s</span>[<span class="ident">eol</span>] <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> {
+                } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">sz</span> <span class="op">&gt;</span> <span class="ident">eol</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">s</span>[<span class="ident">eol</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\n&#39;</span> {
                     <span class="self">self</span>.<span class="ident">process_line</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>[<span class="ident">i</span>..<span class="ident">eol</span> <span class="op">+</span> <span class="number">1</span>]);
                 } <span class="kw">else</span> {
                     <span class="self">self</span>.<span class="ident">process_line</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>[<span class="ident">i</span>..<span class="ident">eol</span>]);
                 }
 
                 <span class="ident">i</span> <span class="op">=</span> <span class="ident">eol</span>;
-                <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">sz</span> <span class="op">&amp;&amp;</span> <span class="ident">s</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">b&#39;\r&#39;</span> {
-                    <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">sz</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">s</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\r&#39;</span> {
+                    <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                 }
-                <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">sz</span> <span class="op">&amp;&amp;</span> <span class="ident">s</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> {
-                    <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="kw">if</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="ident">sz</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">s</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\n&#39;</span> {
+                    <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                 }
             } <span class="kw">else</span> {
-                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">eol</span> <span class="op">&lt;</span> <span class="ident">sz</span> <span class="op">&amp;&amp;</span> <span class="ident">s</span>[<span class="ident">eol</span>] <span class="op">==</span> <span class="string">b&#39;\0&#39;</span>);
+                <span class="macro">debug_assert</span><span class="macro">!</span>(<span class="ident">eol</span> <span class="op">&lt;</span> <span class="ident">sz</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">s</span>[<span class="ident">eol</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\0&#39;</span>);
                 <span class="ident">linebuf</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="ident">s</span>[<span class="ident">i</span>..<span class="ident">eol</span>]);
                 <span class="ident">linebuf</span>.<span class="ident">extend_from_slice</span>(<span class="kw-2">&amp;</span><span class="string">&quot;\u{fffd}&quot;</span>.<span class="ident">to_string</span>().<span class="ident">into_bytes</span>());
                 <span class="ident">i</span> <span class="op">=</span> <span class="ident">eol</span> <span class="op">+</span> <span class="number">1</span>;
@@ -2214,35 +2214,35 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">chars_to_tab</span> <span class="op">=</span> <span class="ident">TAB_STOP</span> <span class="op">-</span> (<span class="self">self</span>.<span class="ident">column</span> <span class="op">%</span> <span class="ident">TAB_STOP</span>);
 
         <span class="kw">loop</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">&gt;=</span> <span class="ident">line</span>.<span class="ident">len</span>() {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">line</span>.<span class="ident">len</span>() {
                 <span class="kw">break</span>;
             }
             <span class="kw">match</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] {
-                <span class="number">32</span> <span class="op">=&gt;</span> {
-                    <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+=</span> <span class="number">1</span>;
-                    <span class="self">self</span>.<span class="ident">first_nonspace_column</span> <span class="op">+=</span> <span class="number">1</span>;
-                    <span class="ident">chars_to_tab</span> <span class="op">-=</span> <span class="number">1</span>;
-                    <span class="kw">if</span> <span class="ident">chars_to_tab</span> <span class="op">==</span> <span class="number">0</span> {
+                <span class="number">32</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="self">self</span>.<span class="ident">first_nonspace_column</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="ident">chars_to_tab</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="kw">if</span> <span class="ident">chars_to_tab</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> {
                         <span class="ident">chars_to_tab</span> <span class="op">=</span> <span class="ident">TAB_STOP</span>;
                     }
                 }
-                <span class="number">9</span> <span class="op">=&gt;</span> {
-                    <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+=</span> <span class="number">1</span>;
-                    <span class="self">self</span>.<span class="ident">first_nonspace_column</span> <span class="op">+=</span> <span class="ident">chars_to_tab</span>;
+                <span class="number">9</span> <span class="op">=</span><span class="op">&gt;</span> {
+                    <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="self">self</span>.<span class="ident">first_nonspace_column</span> <span class="op">+</span><span class="op">=</span> <span class="ident">chars_to_tab</span>;
                     <span class="ident">chars_to_tab</span> <span class="op">=</span> <span class="ident">TAB_STOP</span>;
                 }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
             }
         }
 
         <span class="self">self</span>.<span class="ident">indent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace_column</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">column</span>;
         <span class="self">self</span>.<span class="ident">blank</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">&lt;</span> <span class="ident">line</span>.<span class="ident">len</span>()
-            <span class="op">&amp;&amp;</span> <span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>]);
+            <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>]);
     }
 
     <span class="kw">fn</span> <span class="ident">process_line</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">new_line</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>;
-        <span class="kw">let</span> <span class="ident">line</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">line</span>.<span class="ident">is_empty</span>() <span class="op">||</span> <span class="op">!</span><span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="kw-2">*</span><span class="ident">line</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>()) {
+        <span class="kw">let</span> <span class="ident">line</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">line</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="op">!</span><span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="kw-2">*</span><span class="ident">line</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>()) {
             <span class="ident">new_line</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">into</span>();
             <span class="ident">new_line</span>.<span class="ident">push</span>(<span class="string">b&#39;\n&#39;</span>);
             <span class="kw-2">&amp;</span><span class="ident">new_line</span>
@@ -2255,16 +2255,16 @@
         <span class="self">self</span>.<span class="ident">blank</span> <span class="op">=</span> <span class="bool-val">false</span>;
         <span class="self">self</span>.<span class="ident">partially_consumed_tab</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">line_number</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> <span class="number">3</span>
-            <span class="op">&amp;&amp;</span> <span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">line</span>) }
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">line_number</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">3</span>
+            <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">line</span>) }
                 .<span class="ident">chars</span>()
                 .<span class="ident">next</span>()
-                .<span class="ident">unwrap</span>() <span class="op">==</span> <span class="string">&#39;\u{feff}&#39;</span>
+                .<span class="ident">unwrap</span>() <span class="op">=</span><span class="op">=</span> <span class="string">&#39;\u{feff}&#39;</span>
         {
-            <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+=</span> <span class="number">3</span>;
+            <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="number">3</span>;
         }
 
-        <span class="self">self</span>.<span class="ident">line_number</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="self">self</span>.<span class="ident">line_number</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">all_matched</span> <span class="op">=</span> <span class="bool-val">true</span>;
         <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">last_matched_container</span>) <span class="op">=</span> <span class="self">self</span>.<span class="ident">check_open_blocks</span>(<span class="ident">line</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">all_matched</span>) {
@@ -2278,11 +2278,11 @@
         }
 
         <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">len</span>();
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">-</span> <span class="number">1</span>] <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> {
-            <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">-=</span> <span class="number">1</span>;
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">-</span> <span class="number">1</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\n&#39;</span> {
+            <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
         }
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">-</span> <span class="number">1</span>] <span class="op">==</span> <span class="string">b&#39;\r&#39;</span> {
-            <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">-=</span> <span class="number">1</span>;
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">-</span> <span class="number">1</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\r&#39;</span> {
+            <span class="self">self</span>.<span class="ident">last_line_length</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
         }
     }
 
@@ -2290,7 +2290,7 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
         <span class="ident">all_matched</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bool</span>,
-    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="kw">let</span> (<span class="ident">new_all_matched</span>, <span class="kw-2">mut</span> <span class="ident">container</span>, <span class="ident">should_continue</span>) <span class="op">=</span>
             <span class="self">self</span>.<span class="ident">check_open_blocks_inner</span>(<span class="self">self</span>.<span class="ident">root</span>, <span class="ident">line</span>);
 
@@ -2310,7 +2310,7 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="kw-2">mut</span> <span class="ident">container</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
         <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
-    ) <span class="op">-&gt;</span> (<span class="ident">bool</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">bool</span>) {
+    ) <span class="op">-</span><span class="op">&gt;</span> (<span class="ident">bool</span>, <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">bool</span>) {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">should_continue</span> <span class="op">=</span> <span class="bool-val">true</span>;
 
         <span class="kw">while</span> <span class="ident">nodes</span>::<span class="ident">last_child_is_open</span>(<span class="ident">container</span>) {
@@ -2320,43 +2320,43 @@
             <span class="self">self</span>.<span class="ident">find_first_nonspace</span>(<span class="ident">line</span>);
 
             <span class="kw">match</span> <span class="ident">ast</span>.<span class="ident">value</span> {
-                <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_block_quote_prefix</span>(<span class="ident">line</span>) {
+                <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_block_quote_prefix</span>(<span class="ident">line</span>) {
                     <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                 },
-                <span class="ident">NodeValue</span>::<span class="ident">Item</span>(<span class="kw-2">ref</span> <span class="ident">nl</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_node_item_prefix</span>(<span class="ident">line</span>, <span class="ident">container</span>, <span class="ident">nl</span>) {
+                <span class="ident">NodeValue</span>::<span class="ident">Item</span>(<span class="kw-2">ref</span> <span class="ident">nl</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_node_item_prefix</span>(<span class="ident">line</span>, <span class="ident">container</span>, <span class="ident">nl</span>) {
                     <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                 },
-                <span class="ident">NodeValue</span>::<span class="ident">DescriptionItem</span>(<span class="kw-2">ref</span> <span class="ident">di</span>) <span class="op">=&gt;</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">DescriptionItem</span>(<span class="kw-2">ref</span> <span class="ident">di</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_description_item_prefix</span>(<span class="ident">line</span>, <span class="ident">container</span>, <span class="ident">di</span>) {
                         <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                     }
                 }
-                <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..) <span class="op">=&gt;</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_code_block_prefix</span>(<span class="ident">line</span>, <span class="ident">container</span>, <span class="ident">ast</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">should_continue</span>) {
                         <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                     }
                 }
-                <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="kw-2">ref</span> <span class="ident">nhb</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_html_block_prefix</span>(<span class="ident">nhb</span>.<span class="ident">block_type</span>) {
+                <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="kw-2">ref</span> <span class="ident">nhb</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_html_block_prefix</span>(<span class="ident">nhb</span>.<span class="ident">block_type</span>) {
                     <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                 },
-                <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blank</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blank</span> {
                     <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                 },
-                <span class="ident">NodeValue</span>::<span class="ident">Table</span>(..) <span class="op">=&gt;</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">Table</span>(..) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">table</span>::<span class="ident">matches</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]) {
                         <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                     }
                     <span class="kw">continue</span>;
                 }
-                <span class="ident">NodeValue</span>::<span class="ident">Heading</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">TableRow</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">TableCell</span> <span class="op">=&gt;</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">Heading</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">TableRow</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">TableCell</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                 }
-                <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(..) <span class="op">=&gt;</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(..) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">parse_footnote_definition_block_prefix</span>(<span class="ident">line</span>) {
                         <span class="kw">return</span> (<span class="bool-val">false</span>, <span class="ident">container</span>, <span class="ident">should_continue</span>);
                     }
                 }
-                <span class="kw">_</span> <span class="op">=&gt;</span> {}
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {}
             }
         }
 
@@ -2368,18 +2368,18 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">nl</span>: <span class="ident">NodeList</span> <span class="op">=</span> <span class="ident">NodeList</span>::<span class="ident">default</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">sc</span>: <span class="ident">scanners</span>::<span class="ident">SetextChar</span> <span class="op">=</span> <span class="ident">scanners</span>::<span class="ident">SetextChar</span>::<span class="ident">Equals</span>;
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">maybe_lazy</span> <span class="op">=</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">current</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
         };
 
         <span class="kw">while</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(..) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+            <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(..) <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
         } {
             <span class="self">self</span>.<span class="ident">find_first_nonspace</span>(<span class="ident">line</span>);
-            <span class="kw">let</span> <span class="ident">indented</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;=</span> <span class="ident">CODE_INDENT</span>;
+            <span class="kw">let</span> <span class="ident">indented</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">CODE_INDENT</span>;
 
-            <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] <span class="op">==</span> <span class="string">b&#39;&gt;&#39;</span> {
+            <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&gt;&#39;</span> {
                 <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+</span> <span class="number">1</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>;
                 <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">offset</span>, <span class="bool-val">false</span>);
                 <span class="kw">if</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>]) {
@@ -2387,7 +2387,7 @@
                 }
                 <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span>);
             } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">unwrap_into</span>(
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">unwrap_into</span>(
                     <span class="ident">scanners</span>::<span class="ident">atx_heading_start</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">matched</span>,
                 ) {
@@ -2398,12 +2398,12 @@
 
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">hashpos</span> <span class="op">=</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]
                     .<span class="ident">iter</span>()
-                    .<span class="ident">position</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;#&#39;</span>)
+                    .<span class="ident">position</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;#&#39;</span>)
                     .<span class="ident">unwrap</span>() <span class="op">+</span> <span class="self">self</span>.<span class="ident">first_nonspace</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">level</span> <span class="op">=</span> <span class="number">0</span>;
-                <span class="kw">while</span> <span class="ident">line</span>[<span class="ident">hashpos</span>] <span class="op">==</span> <span class="string">b&#39;#&#39;</span> {
-                    <span class="ident">level</span> <span class="op">+=</span> <span class="number">1</span>;
-                    <span class="ident">hashpos</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="kw">while</span> <span class="ident">line</span>[<span class="ident">hashpos</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;#&#39;</span> {
+                    <span class="ident">level</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="ident">hashpos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                 }
 
                 <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>().<span class="ident">value</span> <span class="op">=</span> <span class="ident">NodeValue</span>::<span class="ident">Heading</span>(<span class="ident">NodeHeading</span> {
@@ -2411,7 +2411,7 @@
                     <span class="ident">setext</span>: <span class="bool-val">false</span>,
                 });
             } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">unwrap_into</span>(
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">unwrap_into</span>(
                     <span class="ident">scanners</span>::<span class="ident">open_code_fence</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">matched</span>,
                 ) {
@@ -2428,12 +2428,12 @@
                 <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="ident">ncb</span>));
                 <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">first_nonspace</span> <span class="op">+</span> <span class="ident">matched</span> <span class="op">-</span> <span class="ident">offset</span>, <span class="bool-val">false</span>);
             } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span>
-                <span class="op">&amp;&amp;</span> (<span class="ident">unwrap_into</span>(
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">unwrap_into</span>(
                     <span class="ident">scanners</span>::<span class="ident">html_block_start</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">matched</span>,
-                ) <span class="op">||</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                    <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">unwrap_into</span>(
+                ) <span class="op">|</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+                    <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">unwrap_into</span>(
                         <span class="ident">scanners</span>::<span class="ident">html_block_start_7</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
                         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">matched</span>,
                     ),
@@ -2444,12 +2444,12 @@
                 };
 
                 <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="ident">nhb</span>));
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="op">&amp;&amp;</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> <span class="ident">unwrap_into</span>(
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">unwrap_into</span>(
                     <span class="ident">scanners</span>::<span class="ident">setext_heading_line</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">sc</span>,
                 ),
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
             } {
                 <span class="kw">let</span> <span class="ident">has_content</span> <span class="op">=</span> {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>();
@@ -2458,17 +2458,17 @@
                 <span class="kw">if</span> <span class="ident">has_content</span> {
                     <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>().<span class="ident">value</span> <span class="op">=</span> <span class="ident">NodeValue</span>::<span class="ident">Heading</span>(<span class="ident">NodeHeading</span> {
                         <span class="ident">level</span>: <span class="kw">match</span> <span class="ident">sc</span> {
-                            <span class="ident">scanners</span>::<span class="ident">SetextChar</span>::<span class="ident">Equals</span> <span class="op">=&gt;</span> <span class="number">1</span>,
-                            <span class="ident">scanners</span>::<span class="ident">SetextChar</span>::<span class="ident">Hyphen</span> <span class="op">=&gt;</span> <span class="number">2</span>,
+                            <span class="ident">scanners</span>::<span class="ident">SetextChar</span>::<span class="ident">Equals</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">1</span>,
+                            <span class="ident">scanners</span>::<span class="ident">SetextChar</span>::<span class="ident">Hyphen</span> <span class="op">=</span><span class="op">&gt;</span> <span class="number">2</span>,
                         },
                         <span class="ident">setext</span>: <span class="bool-val">true</span>,
                     });
                     <span class="kw">let</span> <span class="ident">adv</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>;
                     <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">adv</span>, <span class="bool-val">false</span>);
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="op">&amp;&amp;</span> <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span>, <span class="ident">all_matched</span>) {
-                (<span class="kw-2">&amp;</span><span class="ident">NodeValue</span>::<span class="ident">Paragraph</span>, <span class="bool-val">false</span>) <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">unwrap_into</span>(
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw">match</span> (<span class="kw-2">&amp;</span><span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span>, <span class="ident">all_matched</span>) {
+                (<span class="kw-2">&amp;</span><span class="ident">NodeValue</span>::<span class="ident">Paragraph</span>, <span class="bool-val">false</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">unwrap_into</span>(
                     <span class="ident">scanners</span>::<span class="ident">thematic_break</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">matched</span>,
                 ),
@@ -2476,37 +2476,37 @@
                 <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">ThematicBreak</span>);
                 <span class="kw">let</span> <span class="ident">adv</span> <span class="op">=</span> <span class="ident">line</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>;
                 <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">adv</span>, <span class="bool-val">false</span>);
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">ext_footnotes</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">unwrap_into</span>(
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">ext_footnotes</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">unwrap_into</span>(
                     <span class="ident">scanners</span>::<span class="ident">footnote_definition</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">matched</span>,
                 ) {
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+</span> <span class="number">2</span>..<span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+</span> <span class="ident">matched</span>];
-                <span class="ident">c</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">split</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span> <span class="op">==</span> <span class="string">b&#39;]&#39;</span>).<span class="ident">next</span>().<span class="ident">unwrap</span>();
+                <span class="ident">c</span> <span class="op">=</span> <span class="ident">c</span>.<span class="ident">split</span>(<span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">e</span><span class="op">|</span> <span class="ident">e</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;]&#39;</span>).<span class="ident">next</span>().<span class="ident">unwrap</span>();
                 <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+</span> <span class="ident">matched</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>;
                 <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">offset</span>, <span class="bool-val">false</span>);
                 <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="ident">c</span>.<span class="ident">to_vec</span>()));
             } <span class="kw">else</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span>
-                <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">ext_description_lists</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] <span class="op">==</span> <span class="string">b&#39;:&#39;</span>
-                <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">parse_desc_list_details</span>(<span class="ident">container</span>)
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">ext_description_lists</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;:&#39;</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">parse_desc_list_details</span>(<span class="ident">container</span>)
             {
                 <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">+</span> <span class="number">1</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>;
                 <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">offset</span>, <span class="bool-val">false</span>);
                 <span class="kw">if</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>]) {
                     <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="number">1</span>, <span class="bool-val">true</span>);
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> (<span class="op">!</span><span class="ident">indented</span> <span class="op">||</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                <span class="ident">NodeValue</span>::<span class="ident">List</span>(..) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-            }) <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&lt;</span> <span class="number">4</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">unwrap_into_2</span>(
+            } <span class="kw">else</span> <span class="kw">if</span> (<span class="op">!</span><span class="ident">indented</span> <span class="op">|</span><span class="op">|</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">List</span>(..) <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+            }) <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&lt;</span> <span class="number">4</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">unwrap_into_2</span>(
                     <span class="ident">parse_list_marker</span>(
                         <span class="ident">line</span>,
                         <span class="self">self</span>.<span class="ident">first_nonspace</span>,
                         <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-                            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+                            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
                         },
                     ),
                     <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">matched</span>,
@@ -2517,13 +2517,13 @@
                 <span class="kw">let</span> (<span class="ident">save_partially_consumed_tab</span>, <span class="ident">save_offset</span>, <span class="ident">save_column</span>) <span class="op">=</span>
                     (<span class="self">self</span>.<span class="ident">partially_consumed_tab</span>, <span class="self">self</span>.<span class="ident">offset</span>, <span class="self">self</span>.<span class="ident">column</span>);
 
-                <span class="kw">while</span> <span class="self">self</span>.<span class="ident">column</span> <span class="op">-</span> <span class="ident">save_column</span> <span class="op">&lt;=</span> <span class="number">5</span> <span class="op">&amp;&amp;</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>])
+                <span class="kw">while</span> <span class="self">self</span>.<span class="ident">column</span> <span class="op">-</span> <span class="ident">save_column</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">5</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>])
                 {
                     <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="number">1</span>, <span class="bool-val">true</span>);
                 }
 
                 <span class="kw">let</span> <span class="ident">i</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">column</span> <span class="op">-</span> <span class="ident">save_column</span>;
-                <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;=</span> <span class="number">5</span> <span class="op">||</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="number">1</span> <span class="op">||</span> <span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>]) {
+                <span class="kw">if</span> <span class="ident">i</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">5</span> <span class="op">|</span><span class="op">|</span> <span class="ident">i</span> <span class="op">&lt;</span> <span class="number">1</span> <span class="op">|</span><span class="op">|</span> <span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>]) {
                     <span class="ident">nl</span>.<span class="ident">padding</span> <span class="op">=</span> <span class="ident">matched</span> <span class="op">+</span> <span class="number">1</span>;
                     <span class="self">self</span>.<span class="ident">offset</span> <span class="op">=</span> <span class="ident">save_offset</span>;
                     <span class="self">self</span>.<span class="ident">column</span> <span class="op">=</span> <span class="ident">save_column</span>;
@@ -2538,14 +2538,14 @@
                 <span class="ident">nl</span>.<span class="ident">marker_offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">indent</span>;
 
                 <span class="kw">if</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                    <span class="ident">NodeValue</span>::<span class="ident">List</span>(<span class="kw-2">ref</span> <span class="ident">mnl</span>) <span class="op">=&gt;</span> <span class="op">!</span><span class="ident">lists_match</span>(<span class="kw-2">&amp;</span><span class="ident">nl</span>, <span class="ident">mnl</span>),
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+                    <span class="ident">NodeValue</span>::<span class="ident">List</span>(<span class="kw-2">ref</span> <span class="ident">mnl</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="op">!</span><span class="ident">lists_match</span>(<span class="kw-2">&amp;</span><span class="ident">nl</span>, <span class="ident">mnl</span>),
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
                 } {
                     <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">List</span>(<span class="ident">nl</span>));
                 }
 
                 <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">Item</span>(<span class="ident">nl</span>));
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">indented</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">maybe_lazy</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">blank</span> {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">indented</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="ident">maybe_lazy</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">blank</span> {
                 <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">CODE_INDENT</span>, <span class="bool-val">true</span>);
                 <span class="kw">let</span> <span class="ident">ncb</span> <span class="op">=</span> <span class="ident">NodeCodeBlock</span> {
                     <span class="ident">fenced</span>: <span class="bool-val">false</span>,
@@ -2557,21 +2557,21 @@
                 };
                 <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="ident">ncb</span>));
             } <span class="kw">else</span> {
-                <span class="kw">let</span> <span class="ident">new_container</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">ext_table</span> {
+                <span class="kw">let</span> <span class="ident">new_container</span> <span class="op">=</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">indented</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">ext_table</span> {
                     <span class="ident">table</span>::<span class="ident">try_opening_block</span>(<span class="self">self</span>, <span class="kw-2">*</span><span class="ident">container</span>, <span class="ident">line</span>)
                 } <span class="kw">else</span> {
                     <span class="prelude-val">None</span>
                 };
 
                 <span class="kw">match</span> <span class="ident">new_container</span> {
-                    <span class="prelude-val">Some</span>((<span class="ident">new_container</span>, <span class="ident">replace</span>)) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">replace</span> {
+                    <span class="prelude-val">Some</span>((<span class="ident">new_container</span>, <span class="ident">replace</span>)) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">replace</span> {
                         <span class="ident">container</span>.<span class="ident">insert_after</span>(<span class="ident">new_container</span>);
                         <span class="ident">container</span>.<span class="ident">detach</span>();
                         <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="ident">new_container</span>;
                     } <span class="kw">else</span> {
                         <span class="kw-2">*</span><span class="ident">container</span> <span class="op">=</span> <span class="ident">new_container</span>;
                     },
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
                 }
             }
 
@@ -2586,34 +2586,34 @@
     <span class="kw">fn</span> <span class="ident">advance_offset</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="kw-2">mut</span> <span class="ident">count</span>: <span class="ident">usize</span>, <span class="ident">columns</span>: <span class="ident">bool</span>) {
         <span class="kw">while</span> <span class="ident">count</span> <span class="op">&gt;</span> <span class="number">0</span> {
             <span class="kw">match</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>] {
-                <span class="number">9</span> <span class="op">=&gt;</span> {
+                <span class="number">9</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">let</span> <span class="ident">chars_to_tab</span> <span class="op">=</span> <span class="ident">TAB_STOP</span> <span class="op">-</span> (<span class="self">self</span>.<span class="ident">column</span> <span class="op">%</span> <span class="ident">TAB_STOP</span>);
                     <span class="kw">if</span> <span class="ident">columns</span> {
                         <span class="self">self</span>.<span class="ident">partially_consumed_tab</span> <span class="op">=</span> <span class="ident">chars_to_tab</span> <span class="op">&gt;</span> <span class="ident">count</span>;
                         <span class="kw">let</span> <span class="ident">chars_to_advance</span> <span class="op">=</span> <span class="ident">min</span>(<span class="ident">count</span>, <span class="ident">chars_to_tab</span>);
-                        <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="ident">chars_to_advance</span>;
-                        <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">partially_consumed_tab</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="number">1</span> };
-                        <span class="ident">count</span> <span class="op">-=</span> <span class="ident">chars_to_advance</span>;
+                        <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="ident">chars_to_advance</span>;
+                        <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">partially_consumed_tab</span> { <span class="number">0</span> } <span class="kw">else</span> { <span class="number">1</span> };
+                        <span class="ident">count</span> <span class="op">-</span><span class="op">=</span> <span class="ident">chars_to_advance</span>;
                     } <span class="kw">else</span> {
                         <span class="self">self</span>.<span class="ident">partially_consumed_tab</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                        <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="ident">chars_to_tab</span>;
-                        <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+=</span> <span class="number">1</span>;
-                        <span class="ident">count</span> <span class="op">-=</span> <span class="number">1</span>;
+                        <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="ident">chars_to_tab</span>;
+                        <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                        <span class="ident">count</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
                     }
                 }
-                <span class="kw">_</span> <span class="op">=&gt;</span> {
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="self">self</span>.<span class="ident">partially_consumed_tab</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                    <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+=</span> <span class="number">1</span>;
-                    <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="number">1</span>;
-                    <span class="ident">count</span> <span class="op">-=</span> <span class="number">1</span>;
+                    <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+                    <span class="ident">count</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
                 }
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_block_quote_prefix</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">parse_block_quote_prefix</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">indent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">indent</span>;
-        <span class="kw">if</span> <span class="ident">indent</span> <span class="op">&lt;=</span> <span class="number">3</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] <span class="op">==</span> <span class="string">b&#39;&gt;&#39;</span> {
+        <span class="kw">if</span> <span class="ident">indent</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">3</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&gt;&#39;</span> {
             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">indent</span> <span class="op">+</span> <span class="number">1</span>, <span class="bool-val">true</span>);
 
             <span class="kw">if</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>]) {
@@ -2626,12 +2626,12 @@
         <span class="bool-val">false</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_footnote_definition_block_prefix</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;=</span> <span class="number">4</span> {
+    <span class="kw">fn</span> <span class="ident">parse_footnote_definition_block_prefix</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;</span><span class="op">=</span> <span class="number">4</span> {
             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="number">4</span>, <span class="bool-val">true</span>);
             <span class="bool-val">true</span>
         } <span class="kw">else</span> {
-            <span class="ident">line</span> <span class="op">==</span> <span class="string">b&quot;\n&quot;</span> <span class="op">||</span> <span class="ident">line</span> <span class="op">==</span> <span class="string">b&quot;\r\n&quot;</span>
+            <span class="ident">line</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&quot;\n&quot;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">line</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&quot;\r\n&quot;</span>
         }
     }
 
@@ -2640,11 +2640,11 @@
         <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
         <span class="ident">container</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
         <span class="ident">nl</span>: <span class="kw-2">&amp;</span><span class="ident">NodeList</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;=</span> <span class="ident">nl</span>.<span class="ident">marker_offset</span> <span class="op">+</span> <span class="ident">nl</span>.<span class="ident">padding</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">nl</span>.<span class="ident">marker_offset</span> <span class="op">+</span> <span class="ident">nl</span>.<span class="ident">padding</span> {
             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">nl</span>.<span class="ident">marker_offset</span> <span class="op">+</span> <span class="ident">nl</span>.<span class="ident">padding</span>, <span class="bool-val">true</span>);
             <span class="bool-val">true</span>
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blank</span> <span class="op">&amp;&amp;</span> <span class="ident">container</span>.<span class="ident">first_child</span>().<span class="ident">is_some</span>() {
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blank</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">container</span>.<span class="ident">first_child</span>().<span class="ident">is_some</span>() {
             <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>;
             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">offset</span>, <span class="bool-val">false</span>);
             <span class="bool-val">true</span>
@@ -2658,11 +2658,11 @@
         <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
         <span class="ident">container</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
         <span class="ident">di</span>: <span class="kw-2">&amp;</span><span class="ident">NodeDescriptionItem</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;=</span> <span class="ident">di</span>.<span class="ident">marker_offset</span> <span class="op">+</span> <span class="ident">di</span>.<span class="ident">padding</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">di</span>.<span class="ident">marker_offset</span> <span class="op">+</span> <span class="ident">di</span>.<span class="ident">padding</span> {
             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">di</span>.<span class="ident">marker_offset</span> <span class="op">+</span> <span class="ident">di</span>.<span class="ident">padding</span>, <span class="bool-val">true</span>);
             <span class="bool-val">true</span>
-        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blank</span> <span class="op">&amp;&amp;</span> <span class="ident">container</span>.<span class="ident">first_child</span>().<span class="ident">is_some</span>() {
+        } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blank</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">container</span>.<span class="ident">first_child</span>().<span class="ident">is_some</span>() {
             <span class="kw">let</span> <span class="ident">offset</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">-</span> <span class="self">self</span>.<span class="ident">offset</span>;
             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">offset</span>, <span class="bool-val">false</span>);
             <span class="bool-val">true</span>
@@ -2677,19 +2677,19 @@
         <span class="ident">container</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
         <span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Ast</span>,
         <span class="ident">should_continue</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">bool</span>,
-    ) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> (<span class="ident">fenced</span>, <span class="ident">fence_char</span>, <span class="ident">fence_length</span>, <span class="ident">fence_offset</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">ast</span>.<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="kw-2">ref</span> <span class="ident">ncb</span>) <span class="op">=&gt;</span> (
+            <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="kw-2">ref</span> <span class="ident">ncb</span>) <span class="op">=</span><span class="op">&gt;</span> (
                 <span class="ident">ncb</span>.<span class="ident">fenced</span>,
                 <span class="ident">ncb</span>.<span class="ident">fence_char</span>,
                 <span class="ident">ncb</span>.<span class="ident">fence_length</span>,
                 <span class="ident">ncb</span>.<span class="ident">fence_offset</span>,
             ),
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
         };
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">fenced</span> {
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;=</span> <span class="ident">CODE_INDENT</span> {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">CODE_INDENT</span> {
                 <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">CODE_INDENT</span>, <span class="bool-val">true</span>);
                 <span class="kw">return</span> <span class="bool-val">true</span>;
             } <span class="kw">else</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blank</span> {
@@ -2700,13 +2700,13 @@
             <span class="kw">return</span> <span class="bool-val">false</span>;
         }
 
-        <span class="kw">let</span> <span class="ident">matched</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&lt;=</span> <span class="number">3</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] <span class="op">==</span> <span class="ident">fence_char</span> {
+        <span class="kw">let</span> <span class="ident">matched</span> <span class="op">=</span> <span class="kw">if</span> <span class="self">self</span>.<span class="ident">indent</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">3</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>] <span class="op">=</span><span class="op">=</span> <span class="ident">fence_char</span> {
             <span class="ident">scanners</span>::<span class="ident">close_code_fence</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]).<span class="ident">unwrap_or</span>(<span class="number">0</span>)
         } <span class="kw">else</span> {
             <span class="number">0</span>
         };
 
-        <span class="kw">if</span> <span class="ident">matched</span> <span class="op">&gt;=</span> <span class="ident">fence_length</span> {
+        <span class="kw">if</span> <span class="ident">matched</span> <span class="op">&gt;</span><span class="op">=</span> <span class="ident">fence_length</span> {
             <span class="kw-2">*</span><span class="ident">should_continue</span> <span class="op">=</span> <span class="bool-val">false</span>;
             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="ident">matched</span>, <span class="bool-val">false</span>);
             <span class="self">self</span>.<span class="ident">current</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">finalize_borrowed</span>(<span class="ident">container</span>, <span class="ident">ast</span>).<span class="ident">unwrap</span>();
@@ -2714,28 +2714,28 @@
         }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">fence_offset</span>;
-        <span class="kw">while</span> <span class="ident">i</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>]) {
+        <span class="kw">while</span> <span class="ident">i</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="self">self</span>.<span class="ident">offset</span>]) {
             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="ident">line</span>, <span class="number">1</span>, <span class="bool-val">true</span>);
-            <span class="ident">i</span> <span class="op">-=</span> <span class="number">1</span>;
+            <span class="ident">i</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
         }
         <span class="bool-val">true</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_html_block_prefix</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">t</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">parse_html_block_prefix</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">t</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">match</span> <span class="ident">t</span> {
-            <span class="number">1</span> <span class="op">|</span> <span class="number">2</span> <span class="op">|</span> <span class="number">3</span> <span class="op">|</span> <span class="number">4</span> <span class="op">|</span> <span class="number">5</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-            <span class="number">6</span> <span class="op">|</span> <span class="number">7</span> <span class="op">=&gt;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">blank</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> {
+            <span class="number">1</span> <span class="op">|</span> <span class="number">2</span> <span class="op">|</span> <span class="number">3</span> <span class="op">|</span> <span class="number">4</span> <span class="op">|</span> <span class="number">5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+            <span class="number">6</span> <span class="op">|</span> <span class="number">7</span> <span class="op">=</span><span class="op">&gt;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">blank</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="macro">assert</span><span class="macro">!</span>(<span class="bool-val">false</span>);
                 <span class="bool-val">false</span>
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_desc_list_details</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">container</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">parse_desc_list_details</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">container</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">last_child</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">last_child</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">lc</span>) <span class="op">=&gt;</span> <span class="ident">lc</span>,
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">lc</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">lc</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
         };
 
         <span class="kw">if</span> <span class="macro">node_matches</span><span class="macro">!</span>(<span class="ident">last_child</span>, <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span>) {
@@ -2749,11 +2749,11 @@
             <span class="ident">last_child</span>.<span class="ident">detach</span>();
 
             <span class="kw">let</span> <span class="ident">list</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">last_child</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">lc</span>) <span class="kw">if</span> <span class="macro">node_matches</span><span class="macro">!</span>(<span class="ident">lc</span>, <span class="ident">NodeValue</span>::<span class="ident">DescriptionList</span>) <span class="op">=&gt;</span> {
+                <span class="prelude-val">Some</span>(<span class="ident">lc</span>) <span class="kw">if</span> <span class="macro">node_matches</span><span class="macro">!</span>(<span class="ident">lc</span>, <span class="ident">NodeValue</span>::<span class="ident">DescriptionList</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="ident">reopen_ast_nodes</span>(<span class="ident">lc</span>);
                     <span class="ident">lc</span>
                 }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">DescriptionList</span>),
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">add_child</span>(<span class="ident">container</span>, <span class="ident">NodeValue</span>::<span class="ident">DescriptionList</span>),
             };
 
             <span class="kw">let</span> <span class="ident">metadata</span> <span class="op">=</span> <span class="ident">NodeDescriptionItem</span> {
@@ -2775,7 +2775,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">add_child</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">value</span>: <span class="ident">NodeValue</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">add_child</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="kw-2">mut</span> <span class="ident">parent</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">value</span>: <span class="ident">NodeValue</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="kw">while</span> <span class="op">!</span><span class="ident">nodes</span>::<span class="ident">can_contain_type</span>(<span class="ident">parent</span>, <span class="kw-2">&amp;</span><span class="ident">value</span>) {
             <span class="ident">parent</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">finalize</span>(<span class="ident">parent</span>).<span class="ident">unwrap</span>();
         }
@@ -2802,14 +2802,14 @@
         }
 
         <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>().<span class="ident">last_line_blank</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">blank</span>
-            <span class="op">&amp;&amp;</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span> <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">Heading</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">ThematicBreak</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-                <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="kw-2">ref</span> <span class="ident">ncb</span>) <span class="op">=&gt;</span> <span class="op">!</span><span class="ident">ncb</span>.<span class="ident">fenced</span>,
-                <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=&gt;</span> {
+            <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+                <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span> <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">Heading</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">ThematicBreak</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+                <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="kw-2">ref</span> <span class="ident">ncb</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="op">!</span><span class="ident">ncb</span>.<span class="ident">fenced</span>,
+                <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="ident">container</span>.<span class="ident">first_child</span>().<span class="ident">is_some</span>()
-                        <span class="op">||</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">start_line</span> <span class="op">!=</span> <span class="self">self</span>.<span class="ident">line_number</span>
+                        <span class="op">|</span><span class="op">|</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">start_line</span> <span class="op">!</span><span class="op">=</span> <span class="self">self</span>.<span class="ident">line_number</span>
                 }
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
             };
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmp</span> <span class="op">=</span> <span class="ident">container</span>;
@@ -2819,10 +2819,10 @@
         }
 
         <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">current</span>.<span class="ident">same_node</span>(<span class="ident">last_matched_container</span>)
-            <span class="op">&amp;&amp;</span> <span class="ident">container</span>.<span class="ident">same_node</span>(<span class="ident">last_matched_container</span>)
-            <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">blank</span> <span class="op">&amp;&amp;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">current</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">container</span>.<span class="ident">same_node</span>(<span class="ident">last_matched_container</span>)
+            <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">blank</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw">match</span> <span class="self">self</span>.<span class="ident">current</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
         } {
             <span class="self">self</span>.<span class="ident">add_line</span>(<span class="self">self</span>.<span class="ident">current</span>, <span class="ident">line</span>);
         } <span class="kw">else</span> {
@@ -2831,32 +2831,32 @@
             }
 
             <span class="kw">let</span> <span class="ident">add_text_result</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..) <span class="op">=&gt;</span> <span class="ident">AddTextResult</span>::<span class="ident">CodeBlock</span>,
-                <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="kw-2">ref</span> <span class="ident">nhb</span>) <span class="op">=&gt;</span> <span class="ident">AddTextResult</span>::<span class="ident">HtmlBlock</span>(<span class="ident">nhb</span>.<span class="ident">block_type</span>),
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">AddTextResult</span>::<span class="ident">Otherwise</span>,
+                <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AddTextResult</span>::<span class="ident">CodeBlock</span>,
+                <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="kw-2">ref</span> <span class="ident">nhb</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AddTextResult</span>::<span class="ident">HtmlBlock</span>(<span class="ident">nhb</span>.<span class="ident">block_type</span>),
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">AddTextResult</span>::<span class="ident">Otherwise</span>,
             };
 
             <span class="kw">match</span> <span class="ident">add_text_result</span> {
-                <span class="ident">AddTextResult</span>::<span class="ident">CodeBlock</span> <span class="op">=&gt;</span> {
+                <span class="ident">AddTextResult</span>::<span class="ident">CodeBlock</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="self">self</span>.<span class="ident">add_line</span>(<span class="ident">container</span>, <span class="ident">line</span>);
                 }
-                <span class="ident">AddTextResult</span>::<span class="ident">HtmlBlock</span>(<span class="ident">block_type</span>) <span class="op">=&gt;</span> {
+                <span class="ident">AddTextResult</span>::<span class="ident">HtmlBlock</span>(<span class="ident">block_type</span>) <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="self">self</span>.<span class="ident">add_line</span>(<span class="ident">container</span>, <span class="ident">line</span>);
 
                     <span class="kw">let</span> <span class="ident">matches_end_condition</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">block_type</span> {
-                        <span class="number">1</span> <span class="op">=&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_1</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
-                        <span class="number">2</span> <span class="op">=&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_2</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
-                        <span class="number">3</span> <span class="op">=&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_3</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
-                        <span class="number">4</span> <span class="op">=&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_4</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
-                        <span class="number">5</span> <span class="op">=&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_5</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
-                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                        <span class="number">1</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_1</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
+                        <span class="number">2</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_2</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
+                        <span class="number">3</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_3</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
+                        <span class="number">4</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_4</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
+                        <span class="number">5</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">scanners</span>::<span class="ident">html_block_end_5</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>[<span class="self">self</span>.<span class="ident">first_nonspace</span>..]),
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
                     };
 
                     <span class="kw">if</span> <span class="ident">matches_end_condition</span> {
                         <span class="ident">container</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">finalize</span>(<span class="ident">container</span>).<span class="ident">unwrap</span>();
                     }
                 }
-                <span class="kw">_</span> <span class="op">=&gt;</span> {
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">blank</span> {
                         <span class="comment">// do nothing</span>
                     } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">container</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span>.<span class="ident">accepts_lines</span>() {
@@ -2880,7 +2880,7 @@
                         <span class="comment">// `line` to just `###` (the first three hashes).</span>
                         <span class="comment">// In this case there&#39;s no text to add, and no further</span>
                         <span class="comment">// processing to be done.</span>
-                        <span class="kw">let</span> <span class="ident">have_line_text</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">&lt;=</span> <span class="ident">line</span>.<span class="ident">len</span>();
+                        <span class="kw">let</span> <span class="ident">have_line_text</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">first_nonspace</span> <span class="op">&lt;</span><span class="op">=</span> <span class="ident">line</span>.<span class="ident">len</span>();
 
                         <span class="kw">if</span> <span class="ident">have_line_text</span> {
                             <span class="self">self</span>.<span class="ident">advance_offset</span>(<span class="kw-2">&amp;</span><span class="ident">line</span>, <span class="ident">count</span>, <span class="bool-val">false</span>);
@@ -2903,7 +2903,7 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>();
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ast</span>.<span class="ident">open</span>);
         <span class="kw">if</span> <span class="self">self</span>.<span class="ident">partially_consumed_tab</span> {
-            <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="self">self</span>.<span class="ident">offset</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
             <span class="kw">let</span> <span class="ident">chars_to_tab</span> <span class="op">=</span> <span class="ident">TAB_STOP</span> <span class="op">-</span> (<span class="self">self</span>.<span class="ident">column</span> <span class="op">%</span> <span class="ident">TAB_STOP</span>);
             <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">chars_to_tab</span> {
                 <span class="ident">ast</span>.<span class="ident">content</span>.<span class="ident">push</span>(<span class="string">b&#39; &#39;</span>);
@@ -2914,7 +2914,7 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">finish</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">finish</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">finalize_document</span>();
         <span class="self">self</span>.<span class="ident">postprocess_text_nodes</span>(<span class="self">self</span>.<span class="ident">root</span>);
         <span class="self">self</span>.<span class="ident">root</span>
@@ -2932,25 +2932,25 @@
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">finalize</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">finalize</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">finalize_borrowed</span>(<span class="ident">node</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="kw-2">*</span><span class="ident">node</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">resolve_reference_link_definitions</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">resolve_reference_link_definitions</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">seeked</span> <span class="op">=</span> <span class="number">0</span>;
         {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">pos</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">seek</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">content</span>;
             <span class="kw">while</span> <span class="op">!</span><span class="ident">seek</span>.<span class="ident">is_empty</span>()
-                <span class="op">&amp;&amp;</span> <span class="ident">seek</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">b&#39;[&#39;</span>
-                <span class="op">&amp;&amp;</span> <span class="ident">unwrap_into</span>(<span class="self">self</span>.<span class="ident">parse_reference_inline</span>(<span class="ident">seek</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pos</span>)
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">seek</span>[<span class="number">0</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;[&#39;</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">unwrap_into</span>(<span class="self">self</span>.<span class="ident">parse_reference_inline</span>(<span class="ident">seek</span>), <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">pos</span>)
             {
                 <span class="ident">seek</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">seek</span>[<span class="ident">pos</span>..];
-                <span class="ident">seeked</span> <span class="op">+=</span> <span class="ident">pos</span>;
+                <span class="ident">seeked</span> <span class="op">+</span><span class="op">=</span> <span class="ident">pos</span>;
             }
         }
 
-        <span class="kw">if</span> <span class="ident">seeked</span> <span class="op">!=</span> <span class="number">0</span> {
+        <span class="kw">if</span> <span class="ident">seeked</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
             <span class="kw-2">*</span><span class="ident">content</span> <span class="op">=</span> <span class="ident">content</span>[<span class="ident">seeked</span>..].<span class="ident">to_vec</span>();
         }
 
@@ -2961,7 +2961,7 @@
         <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>,
         <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
         <span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Ast</span>,
-    ) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span> {
+    ) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span> {
         <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">ast</span>.<span class="ident">open</span>);
         <span class="ident">ast</span>.<span class="ident">open</span> <span class="op">=</span> <span class="bool-val">false</span>;
 
@@ -2969,13 +2969,13 @@
         <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">parent</span>();
 
         <span class="kw">match</span> <span class="ident">ast</span>.<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">has_content</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">resolve_reference_link_definitions</span>(<span class="ident">content</span>);
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">has_content</span> {
                     <span class="ident">node</span>.<span class="ident">detach</span>();
                 }
             }
-            <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">ncb</span>) <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">ncb</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">ncb</span>.<span class="ident">fenced</span> {
                     <span class="ident">strings</span>::<span class="ident">remove_trailing_blank_lines</span>(<span class="ident">content</span>);
                     <span class="ident">content</span>.<span class="ident">push</span>(<span class="string">b&#39;\n&#39;</span>);
@@ -2985,7 +2985,7 @@
                         <span class="kw">if</span> <span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="ident">content</span>[<span class="ident">pos</span>]) {
                             <span class="kw">break</span>;
                         }
-                        <span class="ident">pos</span> <span class="op">+=</span> <span class="number">1</span>;
+                        <span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     }
                     <span class="macro">assert</span><span class="macro">!</span>(<span class="ident">pos</span> <span class="op">&lt;</span> <span class="ident">content</span>.<span class="ident">len</span>());
 
@@ -3002,26 +3002,26 @@
                         <span class="ident">ncb</span>.<span class="ident">info</span> <span class="op">=</span> <span class="ident">tmp</span>;
                     }
 
-                    <span class="kw">if</span> <span class="ident">content</span>[<span class="ident">pos</span>] <span class="op">==</span> <span class="string">b&#39;\r&#39;</span> {
-                        <span class="ident">pos</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="kw">if</span> <span class="ident">content</span>[<span class="ident">pos</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\r&#39;</span> {
+                        <span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     }
-                    <span class="kw">if</span> <span class="ident">content</span>[<span class="ident">pos</span>] <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> {
-                        <span class="ident">pos</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="kw">if</span> <span class="ident">content</span>[<span class="ident">pos</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\n&#39;</span> {
+                        <span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     }
 
                     <span class="kw-2">*</span><span class="ident">content</span> <span class="op">=</span> <span class="ident">content</span>[<span class="ident">pos</span>..].<span class="ident">to_vec</span>();
                 }
                 <span class="ident">mem</span>::<span class="ident">swap</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ncb</span>.<span class="ident">literal</span>, <span class="ident">content</span>);
             }
-            <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">nhb</span>) <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">nhb</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">mem</span>::<span class="ident">swap</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">nhb</span>.<span class="ident">literal</span>, <span class="ident">content</span>);
             }
-            <span class="ident">NodeValue</span>::<span class="ident">List</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">nl</span>) <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">List</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">nl</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">nl</span>.<span class="ident">tight</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ch</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">first_child</span>();
 
                 <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">item</span>) <span class="op">=</span> <span class="ident">ch</span> {
-                    <span class="kw">if</span> <span class="ident">item</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">last_line_blank</span> <span class="op">&amp;&amp;</span> <span class="ident">item</span>.<span class="ident">next_sibling</span>().<span class="ident">is_some</span>() {
+                    <span class="kw">if</span> <span class="ident">item</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">last_line_blank</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">item</span>.<span class="ident">next_sibling</span>().<span class="ident">is_some</span>() {
                         <span class="ident">nl</span>.<span class="ident">tight</span> <span class="op">=</span> <span class="bool-val">false</span>;
                         <span class="kw">break</span>;
                     }
@@ -3029,7 +3029,7 @@
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">subch</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">first_child</span>();
                     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">subitem</span>) <span class="op">=</span> <span class="ident">subch</span> {
                         <span class="kw">if</span> <span class="ident">nodes</span>::<span class="ident">ends_with_blank_line</span>(<span class="ident">subitem</span>)
-                            <span class="op">&amp;&amp;</span> (<span class="ident">item</span>.<span class="ident">next_sibling</span>().<span class="ident">is_some</span>() <span class="op">||</span> <span class="ident">subitem</span>.<span class="ident">next_sibling</span>().<span class="ident">is_some</span>())
+                            <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">item</span>.<span class="ident">next_sibling</span>().<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">subitem</span>.<span class="ident">next_sibling</span>().<span class="ident">is_some</span>())
                         {
                             <span class="ident">nl</span>.<span class="ident">tight</span> <span class="op">=</span> <span class="bool-val">false</span>;
                             <span class="kw">break</span>;
@@ -3044,7 +3044,7 @@
                     <span class="ident">ch</span> <span class="op">=</span> <span class="ident">item</span>.<span class="ident">next_sibling</span>();
                 }
             }
-            <span class="kw">_</span> <span class="op">=&gt;</span> (),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> (),
         }
 
         <span class="ident">parent</span>
@@ -3090,15 +3090,15 @@
         <span class="self">Self</span>::<span class="ident">find_footnote_references</span>(<span class="self">self</span>.<span class="ident">root</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">map</span>, <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">ix</span>);
 
         <span class="kw">if</span> <span class="ident">ix</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;&gt;</span>();
+            <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">v</span> <span class="op">=</span> <span class="ident">map</span>.<span class="ident">into_iter</span>().<span class="ident">map</span>(<span class="op">|</span>(<span class="kw">_</span>, <span class="ident">v</span>)<span class="op">|</span> <span class="ident">v</span>).<span class="ident">collect</span>::<span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="kw">_</span><span class="op">&gt;</span><span class="op">&gt;</span>();
             <span class="ident">v</span>.<span class="ident">sort_unstable_by</span>(<span class="op">|</span><span class="ident">a</span>, <span class="ident">b</span><span class="op">|</span> <span class="ident">a</span>.<span class="ident">ix</span>.<span class="ident">cmp</span>(<span class="kw-2">&amp;</span><span class="ident">b</span>.<span class="ident">ix</span>));
             <span class="kw">for</span> <span class="ident">f</span> <span class="kw">in</span> <span class="ident">v</span> {
                 <span class="kw">if</span> <span class="ident">f</span>.<span class="ident">ix</span>.<span class="ident">is_some</span>() {
                     <span class="kw">match</span> <span class="ident">f</span>.<span class="ident">node</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>().<span class="ident">value</span> {
-                        <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">name</span>) <span class="op">=&gt;</span> {
+                        <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">name</span>) <span class="op">=</span><span class="op">&gt;</span> {
                             <span class="kw-2">*</span><span class="ident">name</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">f</span>.<span class="ident">ix</span>.<span class="ident">unwrap</span>()).<span class="ident">into_bytes</span>();
                         }
-                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
                     }
                     <span class="self">self</span>.<span class="ident">root</span>.<span class="ident">append</span>(<span class="ident">f</span>.<span class="ident">node</span>);
                 }
@@ -3108,10 +3108,10 @@
 
     <span class="kw">fn</span> <span class="ident">find_footnote_definitions</span>(
         <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
-        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">FootnoteDefinition</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;&gt;</span>,
+        <span class="ident">map</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">HashMap</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">FootnoteDefinition</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span><span class="op">&gt;</span>,
     ) {
         <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="kw-2">ref</span> <span class="ident">name</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">node</span>.<span class="ident">detach</span>();
                 <span class="ident">map</span>.<span class="ident">insert</span>(
                     <span class="ident">strings</span>::<span class="ident">normalize_label</span>(<span class="ident">name</span>),
@@ -3121,7 +3121,7 @@
                     },
                 );
             }
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">node</span>.<span class="ident">children</span>() {
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">node</span>.<span class="ident">children</span>() {
                 <span class="self">Self</span>::<span class="ident">find_footnote_definitions</span>(<span class="ident">n</span>, <span class="ident">map</span>);
             },
         }
@@ -3135,10 +3135,10 @@
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">ast</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>();
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">replace</span> <span class="op">=</span> <span class="prelude-val">None</span>;
         <span class="kw">match</span> <span class="ident">ast</span>.<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">FootnoteReference</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">name</span>) <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">FootnoteReference</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">name</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">footnote</span>) <span class="op">=</span> <span class="ident">map</span>.<span class="ident">get_mut</span>(<span class="ident">name</span>) {
                     <span class="kw">if</span> <span class="ident">footnote</span>.<span class="ident">ix</span>.<span class="ident">is_none</span>() {
-                        <span class="kw-2">*</span><span class="ident">ix</span> <span class="op">+=</span> <span class="number">1</span>;
+                        <span class="kw-2">*</span><span class="ident">ix</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                         <span class="ident">footnote</span>.<span class="ident">ix</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="kw-2">*</span><span class="ident">ix</span>);
                     }
                     <span class="kw-2">*</span><span class="ident">name</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;{}&quot;</span>, <span class="ident">footnote</span>.<span class="ident">ix</span>.<span class="ident">unwrap</span>()).<span class="ident">into_bytes</span>();
@@ -3146,7 +3146,7 @@
                     <span class="ident">replace</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">name</span>.<span class="ident">clone</span>());
                 }
             }
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">node</span>.<span class="ident">children</span>() {
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">for</span> <span class="ident">n</span> <span class="kw">in</span> <span class="ident">node</span>.<span class="ident">children</span>() {
                 <span class="self">Self</span>::<span class="ident">find_footnote_references</span>(<span class="ident">n</span>, <span class="ident">map</span>, <span class="ident">ix</span>);
             },
         }
@@ -3172,10 +3172,10 @@
                 <span class="kw">loop</span> {
                     <span class="kw">match</span> <span class="ident">n</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>().<span class="ident">value</span> {
                         <span class="comment">// Join adjacent text nodes together</span>
-                        <span class="ident">NodeValue</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">root</span>) <span class="op">=&gt;</span> {
+                        <span class="ident">NodeValue</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="kw-2">mut</span> <span class="ident">root</span>) <span class="op">=</span><span class="op">&gt;</span> {
                             <span class="kw">let</span> <span class="ident">ns</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">n</span>.<span class="ident">next_sibling</span>() {
-                                <span class="prelude-val">Some</span>(<span class="ident">ns</span>) <span class="op">=&gt;</span> <span class="ident">ns</span>,
-                                <span class="kw">_</span> <span class="op">=&gt;</span> {
+                                <span class="prelude-val">Some</span>(<span class="ident">ns</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">ns</span>,
+                                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
                                     <span class="comment">// Post-process once we are finished joining text nodes</span>
                                     <span class="self">self</span>.<span class="ident">postprocess_text_node</span>(<span class="ident">n</span>, <span class="ident">root</span>);
                                     <span class="kw">break</span>;
@@ -3183,22 +3183,22 @@
                             };
 
                             <span class="kw">match</span> <span class="ident">ns</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                                <span class="ident">NodeValue</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="ident">adj</span>) <span class="op">=&gt;</span> {
+                                <span class="ident">NodeValue</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="ident">adj</span>) <span class="op">=</span><span class="op">&gt;</span> {
                                     <span class="ident">root</span>.<span class="ident">extend_from_slice</span>(<span class="ident">adj</span>);
                                     <span class="ident">ns</span>.<span class="ident">detach</span>();
                                 }
-                                <span class="kw">_</span> <span class="op">=&gt;</span> {
+                                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
                                     <span class="comment">// Post-process once we are finished joining text nodes</span>
                                     <span class="self">self</span>.<span class="ident">postprocess_text_node</span>(<span class="ident">n</span>, <span class="ident">root</span>);
                                     <span class="kw">break</span>;
                                 }
                             }
                         }
-                        <span class="ident">NodeValue</span>::<span class="ident">Link</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">Image</span>(..) <span class="op">=&gt;</span> {
+                        <span class="ident">NodeValue</span>::<span class="ident">Link</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">Image</span>(..) <span class="op">=</span><span class="op">&gt;</span> {
                             <span class="ident">this_bracket</span> <span class="op">=</span> <span class="bool-val">true</span>;
                             <span class="kw">break</span>;
                         }
-                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
                     }
                 }
 
@@ -3231,26 +3231,26 @@
         }
 
         <span class="kw">let</span> (<span class="ident">active</span>, <span class="ident">end</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">TASKLIST</span>.<span class="ident">captures</span>(<span class="ident">text</span>) {
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span>,
-            <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=&gt;</span> (
-                <span class="ident">c</span>.<span class="ident">get</span>(<span class="number">2</span>).<span class="ident">unwrap</span>().<span class="ident">as_bytes</span>() <span class="op">!=</span> <span class="string">b&quot; &quot;</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">c</span>) <span class="op">=</span><span class="op">&gt;</span> (
+                <span class="ident">c</span>.<span class="ident">get</span>(<span class="number">2</span>).<span class="ident">unwrap</span>().<span class="ident">as_bytes</span>() <span class="op">!</span><span class="op">=</span> <span class="string">b&quot; &quot;</span>,
                 <span class="ident">c</span>.<span class="ident">get</span>(<span class="number">0</span>).<span class="ident">unwrap</span>().<span class="ident">end</span>(),
             ),
         };
 
         <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>();
-        <span class="kw">if</span> <span class="ident">node</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_some</span>() <span class="op">||</span> <span class="ident">parent</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_some</span>() {
+        <span class="kw">if</span> <span class="ident">node</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_some</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">parent</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_some</span>() {
             <span class="kw">return</span>;
         }
 
         <span class="kw">match</span> <span class="ident">parent</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> (),
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span>,
+            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> (),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
         }
 
         <span class="kw">match</span> <span class="ident">parent</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>().<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=&gt;</span> (),
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span>,
+            <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=</span><span class="op">&gt;</span> (),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
         }
 
         <span class="kw-2">*</span><span class="ident">text</span> <span class="op">=</span> <span class="ident">text</span>[<span class="ident">end</span>..].<span class="ident">to_vec</span>();
@@ -3258,7 +3258,7 @@
         <span class="ident">node</span>.<span class="ident">insert_before</span>(<span class="ident">checkbox</span>);
     }
 
-    <span class="kw">fn</span> <span class="ident">parse_reference_inline</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">parse_reference_inline</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">content</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="comment">// In this case reference inlines rarely have delimiters</span>
         <span class="comment">// so we often just need the minimal case</span>
         <span class="kw">let</span> <span class="ident">delimiter_arena</span> <span class="op">=</span> <span class="ident">Arena</span>::<span class="ident">with_capacity</span>(<span class="number">0</span>);
@@ -3272,36 +3272,36 @@
         );
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">lab</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">subj</span>.<span class="ident">link_label</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">lab</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">lab</span>.<span class="ident">is_empty</span>() {
+            <span class="prelude-val">Some</span>(<span class="ident">lab</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">lab</span>.<span class="ident">is_empty</span>() {
                 <span class="kw">return</span> <span class="prelude-val">None</span>;
             } <span class="kw">else</span> {
                 <span class="ident">lab</span>
             },
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
         }.<span class="ident">to_vec</span>();
 
-        <span class="kw">if</span> <span class="ident">subj</span>.<span class="ident">peek_char</span>() <span class="op">!=</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="string">b&#39;:&#39;</span>)) {
+        <span class="kw">if</span> <span class="ident">subj</span>.<span class="ident">peek_char</span>() <span class="op">!</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="string">b&#39;:&#39;</span>)) {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
-        <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         <span class="ident">subj</span>.<span class="ident">spnl</span>();
         <span class="kw">let</span> (<span class="ident">url</span>, <span class="ident">matchlen</span>) <span class="op">=</span> <span class="kw">match</span> <span class="ident">inlines</span>::<span class="ident">manual_scan_link_url</span>(<span class="kw-2">&amp;</span><span class="ident">subj</span>.<span class="ident">input</span>[<span class="ident">subj</span>.<span class="ident">pos</span>..]) {
-            <span class="prelude-val">Some</span>((<span class="ident">url</span>, <span class="ident">matchlen</span>)) <span class="op">=&gt;</span> (<span class="ident">url</span>, <span class="ident">matchlen</span>),
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
+            <span class="prelude-val">Some</span>((<span class="ident">url</span>, <span class="ident">matchlen</span>)) <span class="op">=</span><span class="op">&gt;</span> (<span class="ident">url</span>, <span class="ident">matchlen</span>),
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">None</span>,
         };
-        <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">+=</span> <span class="ident">matchlen</span>;
+        <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="ident">matchlen</span>;
 
         <span class="kw">let</span> <span class="ident">beforetitle</span> <span class="op">=</span> <span class="ident">subj</span>.<span class="ident">pos</span>;
         <span class="ident">subj</span>.<span class="ident">spnl</span>();
-        <span class="kw">let</span> <span class="ident">title_search</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">==</span> <span class="ident">beforetitle</span> { <span class="prelude-val">None</span> } <span class="kw">else</span> { <span class="ident">scanners</span>::<span class="ident">link_title</span>(<span class="kw-2">&amp;</span><span class="ident">subj</span>.<span class="ident">input</span>[<span class="ident">subj</span>.<span class="ident">pos</span>..]) };
+        <span class="kw">let</span> <span class="ident">title_search</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">=</span><span class="op">=</span> <span class="ident">beforetitle</span> { <span class="prelude-val">None</span> } <span class="kw">else</span> { <span class="ident">scanners</span>::<span class="ident">link_title</span>(<span class="kw-2">&amp;</span><span class="ident">subj</span>.<span class="ident">input</span>[<span class="ident">subj</span>.<span class="ident">pos</span>..]) };
         <span class="kw">let</span> <span class="ident">title</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">title_search</span> {
-            <span class="prelude-val">Some</span>(<span class="ident">matchlen</span>) <span class="op">=&gt;</span> {
+            <span class="prelude-val">Some</span>(<span class="ident">matchlen</span>) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">t</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">subj</span>.<span class="ident">input</span>[<span class="ident">subj</span>.<span class="ident">pos</span>..<span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">+</span> <span class="ident">matchlen</span>];
-                <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">+=</span> <span class="ident">matchlen</span>;
+                <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="ident">matchlen</span>;
                 <span class="ident">t</span>.<span class="ident">to_vec</span>()
             }
-            <span class="kw">_</span> <span class="op">=&gt;</span> {
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="ident">subj</span>.<span class="ident">pos</span> <span class="op">=</span> <span class="ident">beforetitle</span>;
                 <span class="macro">vec</span><span class="macro">!</span>[]
             }
@@ -3341,12 +3341,12 @@
     <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>],
     <span class="kw-2">mut</span> <span class="ident">pos</span>: <span class="ident">usize</span>,
     <span class="ident">interrupts_paragraph</span>: <span class="ident">bool</span>,
-) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">NodeList</span>)<span class="op">&gt;</span> {
+) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">usize</span>, <span class="ident">NodeList</span>)<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">c</span> <span class="op">=</span> <span class="ident">line</span>[<span class="ident">pos</span>];
     <span class="kw">let</span> <span class="ident">startpos</span> <span class="op">=</span> <span class="ident">pos</span>;
 
-    <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;*&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;-&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;+&#39;</span> {
-        <span class="ident">pos</span> <span class="op">+=</span> <span class="number">1</span>;
+    <span class="kw">if</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;*&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;-&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;+&#39;</span> {
+        <span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         <span class="kw">if</span> <span class="op">!</span><span class="ident">isspace</span>(<span class="ident">line</span>[<span class="ident">pos</span>]) {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
@@ -3354,9 +3354,9 @@
         <span class="kw">if</span> <span class="ident">interrupts_paragraph</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">pos</span>;
             <span class="kw">while</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="ident">i</span>]) {
-                <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
             }
-            <span class="kw">if</span> <span class="ident">line</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> {
+            <span class="kw">if</span> <span class="ident">line</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\n&#39;</span> {
                 <span class="kw">return</span> <span class="prelude-val">None</span>;
             }
         }
@@ -3379,24 +3379,24 @@
 
         <span class="kw">loop</span> {
             <span class="ident">start</span> <span class="op">=</span> (<span class="number">10</span> <span class="op">*</span> <span class="ident">start</span>) <span class="op">+</span> (<span class="ident">line</span>[<span class="ident">pos</span>] <span class="op">-</span> <span class="string">b&#39;0&#39;</span>) <span class="kw">as</span> <span class="ident">usize</span>;
-            <span class="ident">pos</span> <span class="op">+=</span> <span class="number">1</span>;
-            <span class="ident">digits</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
+            <span class="ident">digits</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
 
-            <span class="kw">if</span> <span class="op">!</span>(<span class="ident">digits</span> <span class="op">&lt;</span> <span class="number">9</span> <span class="op">&amp;&amp;</span> <span class="ident">isdigit</span>(<span class="ident">line</span>[<span class="ident">pos</span>])) {
+            <span class="kw">if</span> <span class="op">!</span>(<span class="ident">digits</span> <span class="op">&lt;</span> <span class="number">9</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isdigit</span>(<span class="ident">line</span>[<span class="ident">pos</span>])) {
                 <span class="kw">break</span>;
             }
         }
 
-        <span class="kw">if</span> <span class="ident">interrupts_paragraph</span> <span class="op">&amp;&amp;</span> <span class="ident">start</span> <span class="op">!=</span> <span class="number">1</span> {
+        <span class="kw">if</span> <span class="ident">interrupts_paragraph</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">start</span> <span class="op">!</span><span class="op">=</span> <span class="number">1</span> {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
         <span class="ident">c</span> <span class="op">=</span> <span class="ident">line</span>[<span class="ident">pos</span>];
-        <span class="kw">if</span> <span class="ident">c</span> <span class="op">!=</span> <span class="string">b&#39;.&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">c</span> <span class="op">!=</span> <span class="string">b&#39;)&#39;</span> {
+        <span class="kw">if</span> <span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;.&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">c</span> <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;)&#39;</span> {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
         }
 
-        <span class="ident">pos</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="ident">pos</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
 
         <span class="kw">if</span> <span class="op">!</span><span class="ident">isspace</span>(<span class="ident">line</span>[<span class="ident">pos</span>]) {
             <span class="kw">return</span> <span class="prelude-val">None</span>;
@@ -3405,7 +3405,7 @@
         <span class="kw">if</span> <span class="ident">interrupts_paragraph</span> {
             <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="ident">pos</span>;
             <span class="kw">while</span> <span class="ident">strings</span>::<span class="ident">is_space_or_tab</span>(<span class="ident">line</span>[<span class="ident">i</span>]) {
-                <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+                <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
             }
             <span class="kw">if</span> <span class="ident">strings</span>::<span class="ident">is_line_end_char</span>(<span class="ident">line</span>[<span class="ident">i</span>]) {
                 <span class="kw">return</span> <span class="prelude-val">None</span>;
@@ -3419,7 +3419,7 @@
                 <span class="ident">marker_offset</span>: <span class="number">0</span>,
                 <span class="ident">padding</span>: <span class="number">0</span>,
                 <span class="ident">start</span>: <span class="ident">start</span>,
-                <span class="ident">delimiter</span>: <span class="kw">if</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;.&#39;</span> {
+                <span class="ident">delimiter</span>: <span class="kw">if</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;.&#39;</span> {
                     <span class="ident">ListDelimType</span>::<span class="ident">Period</span>
                 } <span class="kw">else</span> {
                     <span class="ident">ListDelimType</span>::<span class="ident">Paren</span>
@@ -3433,49 +3433,49 @@
     <span class="prelude-val">None</span>
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_into</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">t</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_into</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>(<span class="ident">t</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="kw">match</span> <span class="ident">t</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw-2">*</span><span class="ident">out</span> <span class="op">=</span> <span class="ident">v</span>;
             <span class="bool-val">true</span>
         }
-        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
     }
 }
 
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_into_copy</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Copy</span><span class="op">&gt;</span>(<span class="ident">t</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">unwrap_into_copy</span><span class="op">&lt;</span><span class="ident">T</span>: <span class="ident">Copy</span><span class="op">&gt;</span>(<span class="ident">t</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">T</span><span class="op">&gt;</span>, <span class="ident">out</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="kw">match</span> <span class="ident">t</span> {
-        <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Some</span>(<span class="ident">v</span>) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw-2">*</span><span class="ident">out</span> <span class="op">=</span> <span class="kw-2">*</span><span class="ident">v</span>;
             <span class="bool-val">true</span>
         }
-        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
     }
 }
 
-<span class="kw">fn</span> <span class="ident">unwrap_into_2</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>(<span class="ident">tu</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">U</span>)<span class="op">&gt;</span>, <span class="ident">out_t</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">out_u</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">U</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">fn</span> <span class="ident">unwrap_into_2</span><span class="op">&lt;</span><span class="ident">T</span>, <span class="ident">U</span><span class="op">&gt;</span>(<span class="ident">tu</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span>(<span class="ident">T</span>, <span class="ident">U</span>)<span class="op">&gt;</span>, <span class="ident">out_t</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">T</span>, <span class="ident">out_u</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">U</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="kw">match</span> <span class="ident">tu</span> {
-        <span class="prelude-val">Some</span>((<span class="ident">t</span>, <span class="ident">u</span>)) <span class="op">=&gt;</span> {
+        <span class="prelude-val">Some</span>((<span class="ident">t</span>, <span class="ident">u</span>)) <span class="op">=</span><span class="op">&gt;</span> {
             <span class="kw-2">*</span><span class="ident">out_t</span> <span class="op">=</span> <span class="ident">t</span>;
             <span class="kw-2">*</span><span class="ident">out_u</span> <span class="op">=</span> <span class="ident">u</span>;
             <span class="bool-val">true</span>
         }
-        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
     }
 }
 
-<span class="kw">fn</span> <span class="ident">lists_match</span>(<span class="ident">list_data</span>: <span class="kw-2">&amp;</span><span class="ident">NodeList</span>, <span class="ident">item_data</span>: <span class="kw-2">&amp;</span><span class="ident">NodeList</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-    <span class="ident">list_data</span>.<span class="ident">list_type</span> <span class="op">==</span> <span class="ident">item_data</span>.<span class="ident">list_type</span>
-        <span class="op">&amp;&amp;</span> <span class="ident">list_data</span>.<span class="ident">delimiter</span> <span class="op">==</span> <span class="ident">item_data</span>.<span class="ident">delimiter</span>
-        <span class="op">&amp;&amp;</span> <span class="ident">list_data</span>.<span class="ident">bullet_char</span> <span class="op">==</span> <span class="ident">item_data</span>.<span class="ident">bullet_char</span>
+<span class="kw">fn</span> <span class="ident">lists_match</span>(<span class="ident">list_data</span>: <span class="kw-2">&amp;</span><span class="ident">NodeList</span>, <span class="ident">item_data</span>: <span class="kw-2">&amp;</span><span class="ident">NodeList</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="ident">list_data</span>.<span class="ident">list_type</span> <span class="op">=</span><span class="op">=</span> <span class="ident">item_data</span>.<span class="ident">list_type</span>
+        <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">list_data</span>.<span class="ident">delimiter</span> <span class="op">=</span><span class="op">=</span> <span class="ident">item_data</span>.<span class="ident">delimiter</span>
+        <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">list_data</span>.<span class="ident">bullet_char</span> <span class="op">=</span><span class="op">=</span> <span class="ident">item_data</span>.<span class="ident">bullet_char</span>
 }
 
 <span class="kw">fn</span> <span class="ident">reopen_ast_nodes</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="kw-2">mut</span> <span class="ident">ast</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) {
     <span class="kw">loop</span> {
         <span class="ident">ast</span>.<span class="ident">data</span>.<span class="ident">borrow_mut</span>().<span class="ident">open</span> <span class="op">=</span> <span class="bool-val">true</span>;
         <span class="ident">ast</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">ast</span>.<span class="ident">parent</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=&gt;</span> <span class="ident">p</span>,
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">p</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">p</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span>,
         }
     }
 }

@@ -62,12 +62,12 @@
 <span class="macro">include</span><span class="macro">!</span>(<span class="macro">concat</span><span class="macro">!</span>(<span class="macro">env</span><span class="macro">!</span>(<span class="string">&quot;OUT_DIR&quot;</span>), <span class="string">&quot;/errno-data/errno.rs&quot;</span>));
 
 <span class="kw">extern</span> <span class="string">&quot;C&quot;</span> {
-    <span class="kw">fn</span> <span class="ident">getlogin_r</span>(<span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">bufsize</span>: <span class="ident">size_t</span>) <span class="op">-&gt;</span> <span class="ident">c_int</span>;
+    <span class="kw">fn</span> <span class="ident">getlogin_r</span>(<span class="ident">buf</span>: <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">c_char</span>, <span class="ident">bufsize</span>: <span class="ident">size_t</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">c_int</span>;
 }
 
 
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default_language_impl</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">default_language_impl</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
     <span class="kw">for</span> <span class="ident">v</span> <span class="kw">in</span> <span class="kw-2">&amp;</span>[<span class="string">&quot;LANG&quot;</span>, <span class="string">&quot;LANGUAGE&quot;</span>, <span class="string">&quot;LC_NAME&quot;</span>] {
         <span class="kw">let</span> <span class="ident">out</span> <span class="op">=</span> <span class="ident">env</span>::<span class="ident">var</span>(<span class="ident">v</span>).<span class="ident">ok</span>().<span class="ident">and_then</span>(<span class="op">|</span><span class="ident">l</span><span class="op">|</span> {
             <span class="kw">let</span> <span class="ident">main</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">i</span>) <span class="op">=</span> <span class="ident">l</span>.<span class="ident">find</span>(<span class="string">&#39;.&#39;</span>) {
@@ -91,19 +91,19 @@
 }
 
 <span class="attribute">#[<span class="ident">inline</span>]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_username_impl</span>() <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">current_username_impl</span>() <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">String</span><span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">len</span> <span class="op">=</span> <span class="number">16</span>;
-    <span class="kw">while</span> <span class="ident">len</span> <span class="op">&lt;=</span> <span class="number">256</span> {
+    <span class="kw">while</span> <span class="ident">len</span> <span class="op">&lt;</span><span class="op">=</span> <span class="number">256</span> {
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">buf</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[<span class="number">0</span> <span class="kw">as</span> <span class="ident">c_char</span>; <span class="ident">len</span> <span class="op">+</span> <span class="number">1</span>];
         <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">getlogin_r</span>(<span class="ident">buf</span>[..].<span class="ident">as_mut_ptr</span>(), <span class="ident">buf</span>.<span class="ident">len</span>()) } {
-            <span class="number">0</span> <span class="op">=&gt;</span> {
+            <span class="number">0</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">match</span> <span class="kw">unsafe</span> { <span class="ident">CStr</span>::<span class="ident">from_ptr</span>(<span class="ident">buf</span>.<span class="ident">as_ptr</span>()) }.<span class="ident">to_str</span>() {
-                    <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=&gt;</span> <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>.<span class="ident">to_string</span>()),
-                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="kw">break</span>,
+                    <span class="prelude-val">Ok</span>(<span class="ident">s</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="prelude-val">Some</span>(<span class="ident">s</span>.<span class="ident">to_string</span>()),
+                    <span class="prelude-val">Err</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
                 }
             }
-            <span class="ident">ERANGE</span> <span class="op">=&gt;</span> <span class="ident">len</span> <span class="op">*=</span> <span class="number">2</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">break</span>,
+            <span class="ident">ERANGE</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">len</span> <span class="kw-2">*</span><span class="op">=</span> <span class="number">2</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">break</span>,
         }
     }
 

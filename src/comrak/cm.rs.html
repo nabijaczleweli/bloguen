@@ -710,10 +710,10 @@
     <span class="ident">root</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>,
     <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="ident">ComrakOptions</span>,
     <span class="ident">output</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">Write</span>,
-) <span class="op">-&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">f</span> <span class="op">=</span> <span class="ident">CommonMarkFormatter</span>::<span class="ident">new</span>(<span class="ident">root</span>, <span class="ident">options</span>);
     <span class="ident">f</span>.<span class="ident">format</span>(<span class="ident">root</span>);
-    <span class="kw">if</span> <span class="op">!</span><span class="ident">f</span>.<span class="ident">v</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">f</span>.<span class="ident">v</span>[<span class="ident">f</span>.<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>] <span class="op">!=</span> <span class="string">b&#39;\n&#39;</span> {
+    <span class="kw">if</span> <span class="op">!</span><span class="ident">f</span>.<span class="ident">v</span>.<span class="ident">is_empty</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">f</span>.<span class="ident">v</span>[<span class="ident">f</span>.<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;\n&#39;</span> {
         <span class="ident">f</span>.<span class="ident">v</span>.<span class="ident">push</span>(<span class="string">b&#39;\n&#39;</span>);
     }
     <span class="ident">output</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">f</span>.<span class="ident">v</span>)<span class="question-mark">?</span>;
@@ -732,7 +732,7 @@
     <span class="ident">begin_content</span>: <span class="ident">bool</span>,
     <span class="ident">no_linebreaks</span>: <span class="ident">bool</span>,
     <span class="ident">in_tight_list_item</span>: <span class="ident">bool</span>,
-    <span class="ident">custom_escape</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">bool</span><span class="op">&gt;</span>,
+    <span class="ident">custom_escape</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw">fn</span>(<span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span><span class="op">&gt;</span>,
     <span class="ident">footnote_ix</span>: <span class="ident">u32</span>,
 }
 
@@ -745,18 +745,18 @@
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;o</span><span class="op">&gt;</span> <span class="ident">Write</span> <span class="kw">for</span> <span class="ident">CommonMarkFormatter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;o</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">write</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
         <span class="self">self</span>.<span class="ident">output</span>(<span class="ident">buf</span>, <span class="bool-val">false</span>, <span class="ident">Escaping</span>::<span class="ident">Literal</span>);
         <span class="prelude-val">Ok</span>(<span class="ident">buf</span>.<span class="ident">len</span>())
     }
 
-    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
+    <span class="kw">fn</span> <span class="ident">flush</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">std</span>::<span class="ident">io</span>::<span class="prelude-ty">Result</span><span class="op">&lt;</span>()<span class="op">&gt;</span> {
         <span class="prelude-val">Ok</span>(())
     }
 }
 
 <span class="kw">impl</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;o</span><span class="op">&gt;</span> <span class="ident">CommonMarkFormatter</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span>, <span class="lifetime">&#39;o</span><span class="op">&gt;</span> {
-    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;o</span> <span class="ident">ComrakOptions</span>) <span class="op">-&gt;</span> <span class="self">Self</span> {
+    <span class="kw">fn</span> <span class="ident">new</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">options</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;o</span> <span class="ident">ComrakOptions</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="self">Self</span> {
         <span class="ident">CommonMarkFormatter</span> {
             <span class="ident">node</span>: <span class="ident">node</span>,
             <span class="ident">options</span>: <span class="ident">options</span>,
@@ -775,16 +775,16 @@
     }
 
     <span class="kw">fn</span> <span class="ident">output</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">buf</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">wrap</span>: <span class="ident">bool</span>, <span class="ident">escaping</span>: <span class="ident">Escaping</span>) {
-        <span class="kw">let</span> <span class="ident">wrap</span> <span class="op">=</span> <span class="ident">wrap</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_linebreaks</span>;
+        <span class="kw">let</span> <span class="ident">wrap</span> <span class="op">=</span> <span class="ident">wrap</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_linebreaks</span>;
 
-        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">in_tight_list_item</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">need_cr</span> <span class="op">&gt;</span> <span class="number">1</span> {
+        <span class="kw">if</span> <span class="self">self</span>.<span class="ident">in_tight_list_item</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">need_cr</span> <span class="op">&gt;</span> <span class="number">1</span> {
             <span class="self">self</span>.<span class="ident">need_cr</span> <span class="op">=</span> <span class="number">1</span>;
         }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">k</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">len</span>() <span class="kw">as</span> <span class="ident">i32</span> <span class="op">-</span> <span class="number">1</span>;
         <span class="kw">while</span> <span class="self">self</span>.<span class="ident">need_cr</span> <span class="op">&gt;</span> <span class="number">0</span> {
-            <span class="kw">if</span> <span class="ident">k</span> <span class="op">&lt;</span> <span class="number">0</span> <span class="op">||</span> <span class="self">self</span>.<span class="ident">v</span>[<span class="ident">k</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> {
-                <span class="ident">k</span> <span class="op">-=</span> <span class="number">1</span>;
+            <span class="kw">if</span> <span class="ident">k</span> <span class="op">&lt;</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="self">self</span>.<span class="ident">v</span>[<span class="ident">k</span> <span class="kw">as</span> <span class="ident">usize</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\n&#39;</span> {
+                <span class="ident">k</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
             } <span class="kw">else</span> {
                 <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">push</span>(<span class="string">b&#39;\n&#39;</span>);
                 <span class="kw">if</span> <span class="self">self</span>.<span class="ident">need_cr</span> <span class="op">&gt;</span> <span class="number">1</span> {
@@ -794,7 +794,7 @@
             <span class="self">self</span>.<span class="ident">column</span> <span class="op">=</span> <span class="number">0</span>;
             <span class="self">self</span>.<span class="ident">begin_line</span> <span class="op">=</span> <span class="bool-val">true</span>;
             <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">=</span> <span class="bool-val">true</span>;
-            <span class="self">self</span>.<span class="ident">need_cr</span> <span class="op">-=</span> <span class="number">1</span>;
+            <span class="self">self</span>.<span class="ident">need_cr</span> <span class="op">-</span><span class="op">=</span> <span class="number">1</span>;
         }
 
         <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
@@ -804,27 +804,27 @@
                 <span class="self">self</span>.<span class="ident">column</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">prefix</span>.<span class="ident">len</span>();
             }
 
-            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">custom_escape</span>.<span class="ident">is_some</span>() <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">custom_escape</span>.<span class="ident">unwrap</span>()(<span class="self">self</span>.<span class="ident">node</span>, <span class="ident">buf</span>[<span class="ident">i</span>]) {
+            <span class="kw">if</span> <span class="self">self</span>.<span class="ident">custom_escape</span>.<span class="ident">is_some</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">custom_escape</span>.<span class="ident">unwrap</span>()(<span class="self">self</span>.<span class="ident">node</span>, <span class="ident">buf</span>[<span class="ident">i</span>]) {
                 <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">push</span>(<span class="string">b&#39;\\&#39;</span>);
             }
 
             <span class="kw">let</span> <span class="ident">nextc</span> <span class="op">=</span> <span class="ident">buf</span>.<span class="ident">get</span>(<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>);
-            <span class="kw">if</span> <span class="ident">buf</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">wrap</span> {
+            <span class="kw">if</span> <span class="ident">buf</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39; &#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">wrap</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">begin_line</span> {
                     <span class="kw">let</span> <span class="ident">last_nonspace</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">len</span>();
                     <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">push</span>(<span class="string">b&#39; &#39;</span>);
-                    <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     <span class="self">self</span>.<span class="ident">begin_line</span> <span class="op">=</span> <span class="bool-val">false</span>;
                     <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                    <span class="kw">while</span> <span class="ident">buf</span>.<span class="ident">get</span>(<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">==</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="string">b&#39; &#39;</span>)) {
-                        <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="kw">while</span> <span class="ident">buf</span>.<span class="ident">get</span>(<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>) <span class="op">=</span><span class="op">=</span> <span class="prelude-val">Some</span>(<span class="kw-2">&amp;</span>(<span class="string">b&#39; &#39;</span>)) {
+                        <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     }
                     <span class="kw">if</span> <span class="op">!</span><span class="ident">buf</span>.<span class="ident">get</span>(<span class="ident">i</span> <span class="op">+</span> <span class="number">1</span>).<span class="ident">map_or</span>(<span class="bool-val">false</span>, <span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">c</span><span class="op">|</span> <span class="ident">isdigit</span>(<span class="ident">c</span>)) {
                         <span class="self">self</span>.<span class="ident">last_breakable</span> <span class="op">=</span> <span class="ident">last_nonspace</span>;
                     }
                 }
-            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">escaping</span> <span class="op">==</span> <span class="ident">Escaping</span>::<span class="ident">Literal</span> {
-                <span class="kw">if</span> <span class="ident">buf</span>[<span class="ident">i</span>] <span class="op">==</span> <span class="string">b&#39;\n&#39;</span> {
+            } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">escaping</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Escaping</span>::<span class="ident">Literal</span> {
+                <span class="kw">if</span> <span class="ident">buf</span>[<span class="ident">i</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\n&#39;</span> {
                     <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">push</span>(<span class="string">b&#39;\n&#39;</span>);
                     <span class="self">self</span>.<span class="ident">column</span> <span class="op">=</span> <span class="number">0</span>;
                     <span class="self">self</span>.<span class="ident">begin_line</span> <span class="op">=</span> <span class="bool-val">true</span>;
@@ -832,20 +832,20 @@
                     <span class="self">self</span>.<span class="ident">last_breakable</span> <span class="op">=</span> <span class="number">0</span>;
                 } <span class="kw">else</span> {
                     <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">buf</span>[<span class="ident">i</span>]);
-                    <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="number">1</span>;
+                    <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     <span class="self">self</span>.<span class="ident">begin_line</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                    <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">&amp;&amp;</span> <span class="ident">isdigit</span>(<span class="ident">buf</span>[<span class="ident">i</span>]);
+                    <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">begin_content</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isdigit</span>(<span class="ident">buf</span>[<span class="ident">i</span>]);
                 }
             } <span class="kw">else</span> {
                 <span class="self">self</span>.<span class="ident">outc</span>(<span class="ident">buf</span>[<span class="ident">i</span>], <span class="ident">escaping</span>, <span class="ident">nextc</span>);
                 <span class="self">self</span>.<span class="ident">begin_line</span> <span class="op">=</span> <span class="bool-val">false</span>;
-                <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">&amp;&amp;</span> <span class="ident">isdigit</span>(<span class="ident">buf</span>[<span class="ident">i</span>]);
+                <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">begin_content</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isdigit</span>(<span class="ident">buf</span>[<span class="ident">i</span>]);
             }
 
             <span class="kw">if</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">width</span> <span class="op">&gt;</span> <span class="number">0</span>
-                <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">column</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">width</span>
-                <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">begin_line</span>
-                <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">last_breakable</span> <span class="op">&gt;</span> <span class="number">0</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">column</span> <span class="op">&gt;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">width</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">begin_line</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">last_breakable</span> <span class="op">&gt;</span> <span class="number">0</span>
             {
                 <span class="kw">let</span> <span class="ident">remainder</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">v</span>[<span class="self">self</span>.<span class="ident">last_breakable</span> <span class="op">+</span> <span class="number">1</span>..].<span class="ident">to_vec</span>();
                 <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">truncate</span>(<span class="self">self</span>.<span class="ident">last_breakable</span>);
@@ -858,63 +858,63 @@
                 <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">=</span> <span class="bool-val">false</span>;
             }
 
-            <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         }
     }
 
     <span class="kw">fn</span> <span class="ident">outc</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">c</span>: <span class="ident">u8</span>, <span class="ident">escaping</span>: <span class="ident">Escaping</span>, <span class="ident">nextc</span>: <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="kw-2">&amp;</span><span class="ident">u8</span><span class="op">&gt;</span>) {
-        <span class="kw">let</span> <span class="ident">follows_digit</span> <span class="op">=</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">v</span>.<span class="ident">is_empty</span>() <span class="op">&amp;&amp;</span> <span class="ident">isdigit</span>(<span class="self">self</span>.<span class="ident">v</span>[<span class="self">self</span>.<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>]);
+        <span class="kw">let</span> <span class="ident">follows_digit</span> <span class="op">=</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">v</span>.<span class="ident">is_empty</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isdigit</span>(<span class="self">self</span>.<span class="ident">v</span>[<span class="self">self</span>.<span class="ident">v</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>]);
 
         <span class="kw">let</span> <span class="ident">nextc</span> <span class="op">=</span> <span class="ident">nextc</span>.<span class="ident">map_or</span>(<span class="number">0</span>, <span class="op">|</span><span class="kw-2">&amp;</span><span class="ident">c</span><span class="op">|</span> <span class="ident">c</span>);
 
-        <span class="kw">let</span> <span class="ident">needs_escaping</span> <span class="op">=</span> <span class="ident">c</span> <span class="op">&lt;</span> <span class="number">0x80</span> <span class="op">&amp;&amp;</span> <span class="ident">escaping</span> <span class="op">!=</span> <span class="ident">Escaping</span>::<span class="ident">Literal</span>
-            <span class="op">&amp;&amp;</span> ((<span class="ident">escaping</span> <span class="op">==</span> <span class="ident">Escaping</span>::<span class="ident">Normal</span>
-                <span class="op">&amp;&amp;</span> (<span class="ident">c</span> <span class="op">&lt;</span> <span class="number">0x20</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;*&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;_&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;[&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;]&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;#&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;&lt;&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;&gt;&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;\\&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;`&#39;</span>
-                    <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;!&#39;</span>
-                    <span class="op">||</span> (<span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;&amp;&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">isalpha</span>(<span class="ident">nextc</span>))
-                    <span class="op">||</span> (<span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;!&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">nextc</span> <span class="op">==</span> <span class="number">0x5b</span>)
-                    <span class="op">||</span> (<span class="self">self</span>.<span class="ident">begin_content</span>
-                        <span class="op">&amp;&amp;</span> (<span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;-&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;+&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;=&#39;</span>)
-                        <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">follows_digit</span>)
-                    <span class="op">||</span> (<span class="self">self</span>.<span class="ident">begin_content</span>
-                        <span class="op">&amp;&amp;</span> (<span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;.&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;)&#39;</span>)
-                        <span class="op">&amp;&amp;</span> <span class="ident">follows_digit</span>
-                        <span class="op">&amp;&amp;</span> (<span class="ident">nextc</span> <span class="op">==</span> <span class="number">0</span> <span class="op">||</span> <span class="ident">isspace</span>(<span class="ident">nextc</span>)))))
-                <span class="op">||</span> (<span class="ident">escaping</span> <span class="op">==</span> <span class="ident">Escaping</span>::<span class="ident">URL</span>
-                    <span class="op">&amp;&amp;</span> (<span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;`&#39;</span>
-                        <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;&lt;&#39;</span>
-                        <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;&gt;&#39;</span>
-                        <span class="op">||</span> <span class="ident">isspace</span>(<span class="ident">c</span>)
-                        <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;\\&#39;</span>
-                        <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;)&#39;</span>
-                        <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;(&#39;</span>))
-                <span class="op">||</span> (<span class="ident">escaping</span> <span class="op">==</span> <span class="ident">Escaping</span>::<span class="ident">Title</span>
-                    <span class="op">&amp;&amp;</span> (<span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;`&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;&lt;&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;&gt;&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;&quot;&#39;</span> <span class="op">||</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;\\&#39;</span>)));
+        <span class="kw">let</span> <span class="ident">needs_escaping</span> <span class="op">=</span> <span class="ident">c</span> <span class="op">&lt;</span> <span class="number">0x80</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">escaping</span> <span class="op">!</span><span class="op">=</span> <span class="ident">Escaping</span>::<span class="ident">Literal</span>
+            <span class="kw-2">&amp;</span><span class="op">&amp;</span> ((<span class="ident">escaping</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Escaping</span>::<span class="ident">Normal</span>
+                <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">c</span> <span class="op">&lt;</span> <span class="number">0x20</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;*&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;_&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;[&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;]&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;#&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&lt;&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&gt;&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\\&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;`&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;!&#39;</span>
+                    <span class="op">|</span><span class="op">|</span> (<span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&amp;&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isalpha</span>(<span class="ident">nextc</span>))
+                    <span class="op">|</span><span class="op">|</span> (<span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;!&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">nextc</span> <span class="op">=</span><span class="op">=</span> <span class="number">0x5b</span>)
+                    <span class="op">|</span><span class="op">|</span> (<span class="self">self</span>.<span class="ident">begin_content</span>
+                        <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;-&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;+&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;=&#39;</span>)
+                        <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="ident">follows_digit</span>)
+                    <span class="op">|</span><span class="op">|</span> (<span class="self">self</span>.<span class="ident">begin_content</span>
+                        <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;.&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;)&#39;</span>)
+                        <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">follows_digit</span>
+                        <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">nextc</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="op">|</span><span class="op">|</span> <span class="ident">isspace</span>(<span class="ident">nextc</span>)))))
+                <span class="op">|</span><span class="op">|</span> (<span class="ident">escaping</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Escaping</span>::<span class="ident">URL</span>
+                    <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;`&#39;</span>
+                        <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&lt;&#39;</span>
+                        <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&gt;&#39;</span>
+                        <span class="op">|</span><span class="op">|</span> <span class="ident">isspace</span>(<span class="ident">c</span>)
+                        <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\\&#39;</span>
+                        <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;)&#39;</span>
+                        <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;(&#39;</span>))
+                <span class="op">|</span><span class="op">|</span> (<span class="ident">escaping</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Escaping</span>::<span class="ident">Title</span>
+                    <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;`&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&lt;&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&gt;&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;&quot;&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;\\&#39;</span>)));
 
         <span class="kw">if</span> <span class="ident">needs_escaping</span> {
-            <span class="kw">if</span> <span class="ident">escaping</span> <span class="op">==</span> <span class="ident">Escaping</span>::<span class="ident">URL</span> <span class="op">&amp;&amp;</span> <span class="ident">isspace</span>(<span class="ident">c</span>) {
+            <span class="kw">if</span> <span class="ident">escaping</span> <span class="op">=</span><span class="op">=</span> <span class="ident">Escaping</span>::<span class="ident">URL</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isspace</span>(<span class="ident">c</span>) {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">v</span>, <span class="string">&quot;%{:2X}&quot;</span>, <span class="ident">c</span>).<span class="ident">unwrap</span>();
-                <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="number">3</span>;
+                <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="number">3</span>;
             } <span class="kw">else</span> <span class="kw">if</span> <span class="ident">ispunct</span>(<span class="ident">c</span>) {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">v</span>, <span class="string">&quot;\\{}&quot;</span>, <span class="ident">c</span> <span class="kw">as</span> <span class="ident">char</span>).<span class="ident">unwrap</span>();
-                <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="number">2</span>;
+                <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="number">2</span>;
             } <span class="kw">else</span> {
                 <span class="kw">let</span> <span class="ident">s</span> <span class="op">=</span> <span class="macro">format</span><span class="macro">!</span>(<span class="string">&quot;&amp;#{};&quot;</span>, <span class="ident">c</span>);
                 <span class="self">self</span>.<span class="ident">write_all</span>(<span class="ident">s</span>.<span class="ident">as_bytes</span>()).<span class="ident">unwrap</span>();
-                <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="ident">s</span>.<span class="ident">len</span>();
+                <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="ident">s</span>.<span class="ident">len</span>();
             }
         } <span class="kw">else</span> {
             <span class="self">self</span>.<span class="ident">v</span>.<span class="ident">push</span>(<span class="ident">c</span>);
-            <span class="self">self</span>.<span class="ident">column</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="self">self</span>.<span class="ident">column</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         }
     }
 
@@ -935,7 +935,7 @@
 
         <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>((<span class="ident">node</span>, <span class="ident">phase</span>)) <span class="op">=</span> <span class="ident">stack</span>.<span class="ident">pop</span>() {
             <span class="kw">match</span> <span class="ident">phase</span> {
-                <span class="ident">Phase</span>::<span class="ident">Pre</span> <span class="op">=&gt;</span> {
+                <span class="ident">Phase</span>::<span class="ident">Pre</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="kw">if</span> <span class="self">self</span>.<span class="ident">format_node</span>(<span class="ident">node</span>, <span class="bool-val">true</span>) {
                         <span class="ident">stack</span>.<span class="ident">push</span>((<span class="ident">node</span>, <span class="ident">Phase</span>::<span class="ident">Post</span>));
                         <span class="kw">for</span> <span class="ident">ch</span> <span class="kw">in</span> <span class="ident">node</span>.<span class="ident">reverse_children</span>() {
@@ -943,17 +943,17 @@
                         }
                     }
                 }
-                <span class="ident">Phase</span>::<span class="ident">Post</span> <span class="op">=&gt;</span> {
+                <span class="ident">Phase</span>::<span class="ident">Post</span> <span class="op">=</span><span class="op">&gt;</span> {
                     <span class="self">self</span>.<span class="ident">format_node</span>(<span class="ident">node</span>, <span class="bool-val">false</span>);
                 }
             }
         }
     }
 
-    <span class="kw">fn</span> <span class="ident">get_in_tight_list_item</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">get_in_tight_list_item</span>(<span class="kw-2">&amp;</span><span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="kw">let</span> <span class="ident">tmp</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">nodes</span>::<span class="ident">containing_block</span>(<span class="ident">node</span>) {
-            <span class="prelude-val">Some</span>(<span class="ident">tmp</span>) <span class="op">=&gt;</span> <span class="ident">tmp</span>,
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">tmp</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">tmp</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
         };
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=</span> <span class="ident">tmp</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
@@ -964,8 +964,8 @@
         }
 
         <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">tmp</span>.<span class="ident">parent</span>() {
-            <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=&gt;</span> <span class="ident">parent</span>,
-            <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
+            <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">parent</span>,
+            <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
         };
 
         <span class="kw">if</span> <span class="kw">let</span> <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
@@ -977,21 +977,21 @@
         <span class="bool-val">false</span>
     }
 
-    <span class="kw">fn</span> <span class="ident">format_node</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">entering</span>: <span class="ident">bool</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">fn</span> <span class="ident">format_node</span>(<span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="self">self</span>, <span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">entering</span>: <span class="ident">bool</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
         <span class="self">self</span>.<span class="ident">node</span> <span class="op">=</span> <span class="ident">node</span>;
-        <span class="kw">let</span> <span class="ident">allow_wrap</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">width</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">options</span>.<span class="ident">hardbreaks</span>;
+        <span class="kw">let</span> <span class="ident">allow_wrap</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">width</span> <span class="op">&gt;</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">options</span>.<span class="ident">hardbreaks</span>;
 
         <span class="kw">if</span> <span class="op">!</span>(<span class="kw">match</span> <span class="ident">node</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-        } <span class="op">&amp;&amp;</span> <span class="ident">node</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="ident">entering</span>)
+            <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+        } <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">node</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_none</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">entering</span>)
         {
             <span class="self">self</span>.<span class="ident">in_tight_list_item</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">get_in_tight_list_item</span>(<span class="ident">node</span>);
         }
 
         <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">Document</span> <span class="op">=&gt;</span> (),
-            <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Document</span> <span class="op">=</span><span class="op">&gt;</span> (),
+            <span class="ident">NodeValue</span>::<span class="ident">BlockQuote</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;&gt; &quot;</span>).<span class="ident">unwrap</span>();
                 <span class="self">self</span>.<span class="ident">begin_content</span> <span class="op">=</span> <span class="bool-val">true</span>;
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">prefix</span>, <span class="string">&quot;&gt; &quot;</span>).<span class="ident">unwrap</span>();
@@ -1000,26 +1000,26 @@
                 <span class="self">self</span>.<span class="ident">prefix</span>.<span class="ident">truncate</span>(<span class="ident">new_len</span>);
                 <span class="self">self</span>.<span class="ident">blankline</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">List</span>(..) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">entering</span> <span class="op">&amp;&amp;</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">next_sibling</span>() {
-                <span class="prelude-val">Some</span>(<span class="ident">next_sibling</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">next_sibling</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                    <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">List</span>(..) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">NodeValue</span>::<span class="ident">List</span>(..) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">entering</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">next_sibling</span>() {
+                <span class="prelude-val">Some</span>(<span class="ident">next_sibling</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">next_sibling</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+                    <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">List</span>(..) <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
                 },
-                <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
             } {
                 <span class="self">self</span>.<span class="ident">cr</span>();
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;&lt;!-- end list --&gt;&quot;</span>).<span class="ident">unwrap</span>();
                 <span class="self">self</span>.<span class="ident">blankline</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">parent</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>().<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                    <span class="ident">NodeValue</span>::<span class="ident">List</span>(<span class="kw-2">ref</span> <span class="ident">nl</span>) <span class="op">=&gt;</span> <span class="kw-2">*</span><span class="ident">nl</span>,
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
+                    <span class="ident">NodeValue</span>::<span class="ident">List</span>(<span class="kw-2">ref</span> <span class="ident">nl</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw-2">*</span><span class="ident">nl</span>,
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">unreachable</span><span class="macro">!</span>(),
                 };
 
                 <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">listmarker</span> <span class="op">=</span> <span class="macro">vec</span><span class="macro">!</span>[];
 
-                <span class="kw">let</span> <span class="ident">marker_width</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">parent</span>.<span class="ident">list_type</span> <span class="op">==</span> <span class="ident">ListType</span>::<span class="ident">Bullet</span> {
+                <span class="kw">let</span> <span class="ident">marker_width</span> <span class="op">=</span> <span class="kw">if</span> <span class="ident">parent</span>.<span class="ident">list_type</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ListType</span>::<span class="ident">Bullet</span> {
                     <span class="number">4</span>
                 } <span class="kw">else</span> {
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">list_number</span> <span class="op">=</span> <span class="ident">parent</span>.<span class="ident">start</span>;
@@ -1027,13 +1027,13 @@
                     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">tmpch</span> <span class="op">=</span> <span class="ident">node</span>;
                     <span class="kw">while</span> <span class="kw">let</span> <span class="prelude-val">Some</span>(<span class="ident">tmp</span>) <span class="op">=</span> <span class="ident">tmpch</span>.<span class="ident">previous_sibling</span>() {
                         <span class="ident">tmpch</span> <span class="op">=</span> <span class="ident">tmp</span>;
-                        <span class="ident">list_number</span> <span class="op">+=</span> <span class="number">1</span>;
+                        <span class="ident">list_number</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                     }
                     <span class="macro">write</span><span class="macro">!</span>(
                         <span class="ident">listmarker</span>,
                         <span class="string">&quot;{}{}{}&quot;</span>,
                         <span class="ident">list_number</span>,
-                        <span class="kw">if</span> <span class="ident">list_delim</span> <span class="op">==</span> <span class="ident">ListDelimType</span>::<span class="ident">Paren</span> {
+                        <span class="kw">if</span> <span class="ident">list_delim</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ListDelimType</span>::<span class="ident">Paren</span> {
                             <span class="string">&quot;)&quot;</span>
                         } <span class="kw">else</span> {
                             <span class="string">&quot;.&quot;</span>
@@ -1044,7 +1044,7 @@
                 };
 
                 <span class="kw">if</span> <span class="ident">entering</span> {
-                    <span class="kw">if</span> <span class="ident">parent</span>.<span class="ident">list_type</span> <span class="op">==</span> <span class="ident">ListType</span>::<span class="ident">Bullet</span> {
+                    <span class="kw">if</span> <span class="ident">parent</span>.<span class="ident">list_type</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ListType</span>::<span class="ident">Bullet</span> {
                         <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;  - &quot;</span>).<span class="ident">unwrap</span>();
                     } <span class="kw">else</span> {
                         <span class="self">self</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">listmarker</span>).<span class="ident">unwrap</span>();
@@ -1059,13 +1059,13 @@
                     <span class="self">self</span>.<span class="ident">cr</span>();
                 }
             }
-            <span class="ident">NodeValue</span>::<span class="ident">DescriptionList</span> <span class="op">=&gt;</span> (),
-            <span class="ident">NodeValue</span>::<span class="ident">DescriptionItem</span>(..) <span class="op">=&gt;</span> (),
-            <span class="ident">NodeValue</span>::<span class="ident">DescriptionTerm</span> <span class="op">=&gt;</span> (),
-            <span class="ident">NodeValue</span>::<span class="ident">DescriptionDetails</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">DescriptionList</span> <span class="op">=</span><span class="op">&gt;</span> (),
+            <span class="ident">NodeValue</span>::<span class="ident">DescriptionItem</span>(..) <span class="op">=</span><span class="op">&gt;</span> (),
+            <span class="ident">NodeValue</span>::<span class="ident">DescriptionTerm</span> <span class="op">=</span><span class="op">&gt;</span> (),
+            <span class="ident">NodeValue</span>::<span class="ident">DescriptionDetails</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;: &quot;</span>).<span class="ident">unwrap</span>()
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Heading</span>(<span class="kw-2">ref</span> <span class="ident">nch</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Heading</span>(<span class="kw-2">ref</span> <span class="ident">nch</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">nch</span>.<span class="ident">level</span> {
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;#&quot;</span>).<span class="ident">unwrap</span>();
                 }
@@ -1076,13 +1076,13 @@
                 <span class="self">self</span>.<span class="ident">no_linebreaks</span> <span class="op">=</span> <span class="bool-val">false</span>;
                 <span class="self">self</span>.<span class="ident">blankline</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="kw-2">ref</span> <span class="ident">ncb</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
-                <span class="kw">let</span> <span class="ident">first_in_list_item</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_none</span>() <span class="op">&amp;&amp;</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">parent</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">parent</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                        <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+            <span class="ident">NodeValue</span>::<span class="ident">CodeBlock</span>(<span class="kw-2">ref</span> <span class="ident">ncb</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+                <span class="kw">let</span> <span class="ident">first_in_list_item</span> <span class="op">=</span> <span class="ident">node</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_none</span>() <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">parent</span>() {
+                    <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">parent</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+                        <span class="ident">NodeValue</span>::<span class="ident">Item</span>(..) <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
                     },
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
                 };
 
                 <span class="kw">if</span> <span class="op">!</span><span class="ident">first_in_list_item</span> {
@@ -1090,10 +1090,10 @@
                 }
 
                 <span class="kw">if</span> <span class="ident">ncb</span>.<span class="ident">info</span>.<span class="ident">is_empty</span>()
-                    <span class="op">&amp;&amp;</span> (<span class="ident">ncb</span>.<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">2</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">isspace</span>(<span class="ident">ncb</span>.<span class="ident">literal</span>[<span class="number">0</span>])
-                        <span class="op">&amp;&amp;</span> <span class="op">!</span>(<span class="ident">isspace</span>(<span class="ident">ncb</span>.<span class="ident">literal</span>[<span class="ident">ncb</span>.<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>])
-                            <span class="op">&amp;&amp;</span> <span class="ident">isspace</span>(<span class="ident">ncb</span>.<span class="ident">literal</span>[<span class="ident">ncb</span>.<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">2</span>])))
-                    <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="ident">first_in_list_item</span>
+                    <span class="kw-2">&amp;</span><span class="op">&amp;</span> (<span class="ident">ncb</span>.<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">&gt;</span> <span class="number">2</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="ident">isspace</span>(<span class="ident">ncb</span>.<span class="ident">literal</span>[<span class="number">0</span>])
+                        <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span>(<span class="ident">isspace</span>(<span class="ident">ncb</span>.<span class="ident">literal</span>[<span class="ident">ncb</span>.<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>])
+                            <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">isspace</span>(<span class="ident">ncb</span>.<span class="ident">literal</span>[<span class="ident">ncb</span>.<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">2</span>])))
+                    <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="ident">first_in_list_item</span>
                 {
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;    &quot;</span>).<span class="ident">unwrap</span>();
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">prefix</span>, <span class="string">&quot;    &quot;</span>).<span class="ident">unwrap</span>();
@@ -1124,43 +1124,43 @@
                 }
                 <span class="self">self</span>.<span class="ident">blankline</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="kw-2">ref</span> <span class="ident">nhb</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">HtmlBlock</span>(<span class="kw-2">ref</span> <span class="ident">nhb</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="self">self</span>.<span class="ident">blankline</span>();
                 <span class="self">self</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">nhb</span>.<span class="ident">literal</span>).<span class="ident">unwrap</span>();
                 <span class="self">self</span>.<span class="ident">blankline</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">ThematicBreak</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">ThematicBreak</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="self">self</span>.<span class="ident">blankline</span>();
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;-----&quot;</span>).<span class="ident">unwrap</span>();
                 <span class="self">self</span>.<span class="ident">blankline</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Paragraph</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="op">!</span><span class="ident">entering</span> {
                 <span class="self">self</span>.<span class="ident">blankline</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="ident">literal</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="ident">literal</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="self">self</span>.<span class="ident">output</span>(<span class="ident">literal</span>, <span class="ident">allow_wrap</span>, <span class="ident">Escaping</span>::<span class="ident">Normal</span>);
             },
-            <span class="ident">NodeValue</span>::<span class="ident">LineBreak</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">LineBreak</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">options</span>.<span class="ident">hardbreaks</span> {
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;  &quot;</span>).<span class="ident">unwrap</span>();
                 }
                 <span class="self">self</span>.<span class="ident">cr</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">SoftBreak</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
-                <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_linebreaks</span> <span class="op">&amp;&amp;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">width</span> <span class="op">==</span> <span class="number">0</span> <span class="op">&amp;&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">options</span>.<span class="ident">hardbreaks</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">SoftBreak</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+                <span class="kw">if</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">no_linebreaks</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="self">self</span>.<span class="ident">options</span>.<span class="ident">width</span> <span class="op">=</span><span class="op">=</span> <span class="number">0</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="op">!</span><span class="self">self</span>.<span class="ident">options</span>.<span class="ident">hardbreaks</span> {
                     <span class="self">self</span>.<span class="ident">cr</span>();
                 } <span class="kw">else</span> {
                     <span class="self">self</span>.<span class="ident">output</span>(<span class="kw-2">&amp;</span>[<span class="string">b&#39; &#39;</span>], <span class="ident">allow_wrap</span>, <span class="ident">Escaping</span>::<span class="ident">Literal</span>);
                 }
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Code</span>(<span class="kw-2">ref</span> <span class="ident">literal</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Code</span>(<span class="kw-2">ref</span> <span class="ident">literal</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="kw">let</span> <span class="ident">numticks</span> <span class="op">=</span> <span class="ident">shortest_unused_sequence</span>(<span class="ident">literal</span>, <span class="string">b&#39;`&#39;</span>);
                 <span class="kw">for</span> <span class="kw">_</span> <span class="kw">in</span> <span class="number">0</span>..<span class="ident">numticks</span> {
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;`&quot;</span>).<span class="ident">unwrap</span>();
                 }
-                <span class="kw">let</span> <span class="ident">pad</span> <span class="op">=</span> <span class="ident">literal</span>.<span class="ident">is_empty</span>() <span class="op">||</span>
-                    <span class="ident">literal</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">b&#39;`&#39;</span> <span class="op">||</span> <span class="ident">literal</span>[<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>] <span class="op">==</span> <span class="string">b&#39;`&#39;</span> <span class="op">||</span>
-                    <span class="ident">literal</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">b&#39; &#39;</span> <span class="op">||</span> <span class="ident">literal</span>[<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>] <span class="op">==</span> <span class="string">b&#39; &#39;</span>;
+                <span class="kw">let</span> <span class="ident">pad</span> <span class="op">=</span> <span class="ident">literal</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span>
+                    <span class="ident">literal</span>[<span class="number">0</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;`&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">literal</span>[<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;`&#39;</span> <span class="op">|</span><span class="op">|</span>
+                    <span class="ident">literal</span>[<span class="number">0</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39; &#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">literal</span>[<span class="ident">literal</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">1</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39; &#39;</span>;
                 <span class="kw">if</span> <span class="ident">pad</span> {
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot; &quot;</span>).<span class="ident">unwrap</span>();
                 }
@@ -1172,23 +1172,23 @@
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;`&quot;</span>).<span class="ident">unwrap</span>();
                 }
             },
-            <span class="ident">NodeValue</span>::<span class="ident">HtmlInline</span>(<span class="kw-2">ref</span> <span class="ident">literal</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">HtmlInline</span>(<span class="kw-2">ref</span> <span class="ident">literal</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="self">self</span>.<span class="ident">write_all</span>(<span class="ident">literal</span>).<span class="ident">unwrap</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Strong</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Strong</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;**&quot;</span>).<span class="ident">unwrap</span>();
             } <span class="kw">else</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;**&quot;</span>).<span class="ident">unwrap</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Emph</span> <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Emph</span> <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">let</span> <span class="ident">emph_delim</span> <span class="op">=</span> <span class="kw">if</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">parent</span>() {
-                    <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">parent</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-                        <span class="ident">NodeValue</span>::<span class="ident">Emph</span> <span class="op">=&gt;</span> <span class="bool-val">true</span>,
-                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
+                    <span class="prelude-val">Some</span>(<span class="ident">parent</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">parent</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+                        <span class="ident">NodeValue</span>::<span class="ident">Emph</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">true</span>,
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
                     },
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-                } <span class="op">&amp;&amp;</span> <span class="ident">node</span>.<span class="ident">next_sibling</span>().<span class="ident">is_none</span>()
-                    <span class="op">&amp;&amp;</span> <span class="ident">node</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_none</span>()
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+                } <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">node</span>.<span class="ident">next_sibling</span>().<span class="ident">is_none</span>()
+                    <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">node</span>.<span class="ident">previous_sibling</span>().<span class="ident">is_none</span>()
                 {
                     <span class="string">b&#39;_&#39;</span>
                 } <span class="kw">else</span> {
@@ -1197,27 +1197,27 @@
 
                 <span class="self">self</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span>[<span class="ident">emph_delim</span>]).<span class="ident">unwrap</span>();
             }
-            <span class="ident">NodeValue</span>::<span class="ident">TaskItem</span>(<span class="ident">checked</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">TaskItem</span>(<span class="ident">checked</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="kw">if</span> <span class="ident">checked</span> {
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot; [x] &quot;</span>).<span class="ident">unwrap</span>();
                 } <span class="kw">else</span> {
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot; [ ] &quot;</span>).<span class="ident">unwrap</span>();
                 }
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Strikethrough</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Strikethrough</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;~&quot;</span>).<span class="ident">unwrap</span>();
             } <span class="kw">else</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;~&quot;</span>).<span class="ident">unwrap</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Superscript</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Superscript</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;^&quot;</span>).<span class="ident">unwrap</span>();
             } <span class="kw">else</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;^&quot;</span>).<span class="ident">unwrap</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Link</span>(<span class="kw-2">ref</span> <span class="ident">nl</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">is_autolink</span>(<span class="ident">node</span>, <span class="ident">nl</span>) {
+            <span class="ident">NodeValue</span>::<span class="ident">Link</span>(<span class="kw-2">ref</span> <span class="ident">nl</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">is_autolink</span>(<span class="ident">node</span>, <span class="ident">nl</span>) {
                 <span class="kw">if</span> <span class="ident">entering</span> {
                     <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;&lt;&quot;</span>).<span class="ident">unwrap</span>();
-                    <span class="kw">if</span> <span class="ident">nl</span>.<span class="ident">url</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> <span class="number">7</span> <span class="op">&amp;&amp;</span> <span class="kw-2">&amp;</span><span class="ident">nl</span>.<span class="ident">url</span>[..<span class="number">7</span>] <span class="op">==</span> <span class="string">b&quot;mailto:&quot;</span> {
+                    <span class="kw">if</span> <span class="ident">nl</span>.<span class="ident">url</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">7</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">&amp;</span><span class="ident">nl</span>.<span class="ident">url</span>[..<span class="number">7</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&quot;mailto:&quot;</span> {
                         <span class="self">self</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">nl</span>.<span class="ident">url</span>[<span class="number">7</span>..]).<span class="ident">unwrap</span>();
                     } <span class="kw">else</span> {
                         <span class="self">self</span>.<span class="ident">write_all</span>(<span class="kw-2">&amp;</span><span class="ident">nl</span>.<span class="ident">url</span>).<span class="ident">unwrap</span>();
@@ -1237,7 +1237,7 @@
                 }
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;)&quot;</span>).<span class="ident">unwrap</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Image</span>(<span class="kw-2">ref</span> <span class="ident">nl</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Image</span>(<span class="kw-2">ref</span> <span class="ident">nl</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;![&quot;</span>).<span class="ident">unwrap</span>();
             } <span class="kw">else</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;](&quot;</span>).<span class="ident">unwrap</span>();
@@ -1249,7 +1249,7 @@
                 }
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;)&quot;</span>).<span class="ident">unwrap</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">Table</span>(..) <span class="op">=&gt;</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Table</span>(..) <span class="op">=</span><span class="op">&gt;</span> {
                 <span class="kw">if</span> <span class="ident">entering</span> {
                     <span class="self">self</span>.<span class="ident">custom_escape</span> <span class="op">=</span> <span class="prelude-val">Some</span>(<span class="ident">table_escape</span>);
                 } <span class="kw">else</span> {
@@ -1257,26 +1257,26 @@
                 }
                 <span class="self">self</span>.<span class="ident">blankline</span>();
             }
-            <span class="ident">NodeValue</span>::<span class="ident">TableRow</span>(..) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">TableRow</span>(..) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="self">self</span>.<span class="ident">cr</span>();
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;|&quot;</span>).<span class="ident">unwrap</span>();
             },
-            <span class="ident">NodeValue</span>::<span class="ident">TableCell</span> <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">TableCell</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot; &quot;</span>).<span class="ident">unwrap</span>();
             } <span class="kw">else</span> {
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot; |&quot;</span>).<span class="ident">unwrap</span>();
 
                 <span class="kw">let</span> <span class="ident">row</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>().<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span>;
                 <span class="kw">let</span> <span class="ident">in_header</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">row</span> {
-                    <span class="ident">NodeValue</span>::<span class="ident">TableRow</span>(<span class="ident">header</span>) <span class="op">=&gt;</span> <span class="ident">header</span>,
-                    <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(),
+                    <span class="ident">NodeValue</span>::<span class="ident">TableRow</span>(<span class="ident">header</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">header</span>,
+                    <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(),
                 };
 
-                <span class="kw">if</span> <span class="ident">in_header</span> <span class="op">&amp;&amp;</span> <span class="ident">node</span>.<span class="ident">next_sibling</span>().<span class="ident">is_none</span>() {
+                <span class="kw">if</span> <span class="ident">in_header</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">node</span>.<span class="ident">next_sibling</span>().<span class="ident">is_none</span>() {
                     <span class="kw">let</span> <span class="ident">table</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">node</span>.<span class="ident">parent</span>().<span class="ident">unwrap</span>().<span class="ident">parent</span>().<span class="ident">unwrap</span>().<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span>;
                     <span class="kw">let</span> <span class="ident">alignments</span> <span class="op">=</span> <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">table</span> {
-                        <span class="ident">NodeValue</span>::<span class="ident">Table</span>(<span class="kw-2">ref</span> <span class="ident">alignments</span>) <span class="op">=&gt;</span> <span class="ident">alignments</span>,
-                        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(),
+                        <span class="ident">NodeValue</span>::<span class="ident">Table</span>(<span class="kw-2">ref</span> <span class="ident">alignments</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">alignments</span>,
+                        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="macro">panic</span><span class="macro">!</span>(),
                     };
 
                     <span class="self">self</span>.<span class="ident">cr</span>();
@@ -1286,18 +1286,18 @@
                             <span class="self">self</span>,
                             <span class="string">&quot; {} |&quot;</span>,
                             <span class="kw">match</span> <span class="kw-2">*</span><span class="ident">a</span> {
-                                <span class="ident">TableAlignment</span>::<span class="ident">Left</span> <span class="op">=&gt;</span> <span class="string">&quot;:--&quot;</span>,
-                                <span class="ident">TableAlignment</span>::<span class="ident">Center</span> <span class="op">=&gt;</span> <span class="string">&quot;:-:&quot;</span>,
-                                <span class="ident">TableAlignment</span>::<span class="ident">Right</span> <span class="op">=&gt;</span> <span class="string">&quot;--:&quot;</span>,
-                                <span class="ident">TableAlignment</span>::<span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="string">&quot;---&quot;</span>,
+                                <span class="ident">TableAlignment</span>::<span class="ident">Left</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;:--&quot;</span>,
+                                <span class="ident">TableAlignment</span>::<span class="ident">Center</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;:-:&quot;</span>,
+                                <span class="ident">TableAlignment</span>::<span class="ident">Right</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;--:&quot;</span>,
+                                <span class="ident">TableAlignment</span>::<span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="string">&quot;---&quot;</span>,
                             }
                         ).<span class="ident">unwrap</span>();
                     }
                     <span class="self">self</span>.<span class="ident">cr</span>();
                 }
             },
-            <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="kw">_</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
-                <span class="self">self</span>.<span class="ident">footnote_ix</span> <span class="op">+=</span> <span class="number">1</span>;
+            <span class="ident">NodeValue</span>::<span class="ident">FootnoteDefinition</span>(<span class="kw">_</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+                <span class="self">self</span>.<span class="ident">footnote_ix</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
                 <span class="kw">let</span> <span class="ident">footnote_ix</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">footnote_ix</span>;
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>, <span class="string">&quot;[^{}]:\n&quot;</span>, <span class="ident">footnote_ix</span>).<span class="ident">unwrap</span>();
                 <span class="macro">write</span><span class="macro">!</span>(<span class="self">self</span>.<span class="ident">prefix</span>, <span class="string">&quot;    &quot;</span>).<span class="ident">unwrap</span>();
@@ -1305,7 +1305,7 @@
                 <span class="kw">let</span> <span class="ident">new_len</span> <span class="op">=</span> <span class="self">self</span>.<span class="ident">prefix</span>.<span class="ident">len</span>() <span class="op">-</span> <span class="number">4</span>;
                 <span class="self">self</span>.<span class="ident">prefix</span>.<span class="ident">truncate</span>(<span class="ident">new_len</span>);
             },
-            <span class="ident">NodeValue</span>::<span class="ident">FootnoteReference</span>(<span class="kw-2">ref</span> <span class="ident">r</span>) <span class="op">=&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">FootnoteReference</span>(<span class="kw-2">ref</span> <span class="ident">r</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">if</span> <span class="ident">entering</span> {
                 <span class="self">self</span>.<span class="ident">write_all</span>(<span class="string">b&quot;[^&quot;</span>).<span class="ident">unwrap</span>();
                 <span class="self">self</span>.<span class="ident">write_all</span>(<span class="ident">r</span>).<span class="ident">unwrap</span>();
                 <span class="self">self</span>.<span class="ident">write_all</span>(<span class="string">b&quot;]&quot;</span>).<span class="ident">unwrap</span>();
@@ -1315,12 +1315,12 @@
     }
 }
 
-<span class="kw">fn</span> <span class="ident">longest_char_sequence</span>(<span class="ident">literal</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ch</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+<span class="kw">fn</span> <span class="ident">longest_char_sequence</span>(<span class="ident">literal</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">ch</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">longest</span> <span class="op">=</span> <span class="number">0</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current</span> <span class="op">=</span> <span class="number">0</span>;
     <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">literal</span> {
-        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">==</span> <span class="ident">ch</span> {
-            <span class="ident">current</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="ident">ch</span> {
+            <span class="ident">current</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         } <span class="kw">else</span> {
             <span class="kw">if</span> <span class="ident">current</span> <span class="op">&gt;</span> <span class="ident">longest</span> {
                 <span class="ident">longest</span> <span class="op">=</span> <span class="ident">current</span>;
@@ -1334,34 +1334,34 @@
     <span class="ident">longest</span>
 }
 
-<span class="kw">fn</span> <span class="ident">shortest_unused_sequence</span>(<span class="ident">literal</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">f</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">usize</span> {
+<span class="kw">fn</span> <span class="ident">shortest_unused_sequence</span>(<span class="ident">literal</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>], <span class="ident">f</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">usize</span> {
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">used</span> <span class="op">=</span> <span class="number">1</span>;
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">current</span> <span class="op">=</span> <span class="number">0</span>;
     <span class="kw">for</span> <span class="ident">c</span> <span class="kw">in</span> <span class="ident">literal</span> {
-        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">==</span> <span class="ident">f</span> {
-            <span class="ident">current</span> <span class="op">+=</span> <span class="number">1</span>;
+        <span class="kw">if</span> <span class="kw-2">*</span><span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="ident">f</span> {
+            <span class="ident">current</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
         } <span class="kw">else</span> {
             <span class="kw">if</span> <span class="ident">current</span> <span class="op">&gt;</span> <span class="number">0</span> {
-                <span class="ident">used</span> <span class="op">|=</span> <span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">current</span>;
+                <span class="ident">used</span> <span class="op">|</span><span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">current</span>;
             }
             <span class="ident">current</span> <span class="op">=</span> <span class="number">0</span>;
         }
     }
 
     <span class="kw">if</span> <span class="ident">current</span> <span class="op">&gt;</span> <span class="number">0</span> {
-        <span class="ident">used</span> <span class="op">|=</span> <span class="number">1</span> <span class="op">&lt;&lt;</span> <span class="ident">current</span>;
+        <span class="ident">used</span> <span class="op">|</span><span class="op">=</span> <span class="number">1</span> <span class="op">&lt;</span><span class="op">&lt;</span> <span class="ident">current</span>;
     }
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">i</span> <span class="op">=</span> <span class="number">0</span>;
-    <span class="kw">while</span> <span class="ident">used</span> <span class="op">&amp;</span> <span class="number">1</span> <span class="op">!=</span> <span class="number">0</span> {
-        <span class="ident">used</span> <span class="op">&gt;&gt;=</span> <span class="number">1</span>;
-        <span class="ident">i</span> <span class="op">+=</span> <span class="number">1</span>;
+    <span class="kw">while</span> <span class="ident">used</span> <span class="op">&amp;</span> <span class="number">1</span> <span class="op">!</span><span class="op">=</span> <span class="number">0</span> {
+        <span class="ident">used</span> <span class="op">&gt;</span><span class="op">&gt;</span><span class="op">=</span> <span class="number">1</span>;
+        <span class="ident">i</span> <span class="op">+</span><span class="op">=</span> <span class="number">1</span>;
     }
     <span class="ident">i</span>
 }
 
-<span class="kw">fn</span> <span class="ident">is_autolink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">nl</span>: <span class="kw-2">&amp;</span><span class="ident">NodeLink</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
-    <span class="kw">if</span> <span class="ident">nl</span>.<span class="ident">url</span>.<span class="ident">is_empty</span>() <span class="op">||</span> <span class="ident">scanners</span>::<span class="ident">scheme</span>(<span class="kw-2">&amp;</span><span class="ident">nl</span>.<span class="ident">url</span>).<span class="ident">is_none</span>() {
+<span class="kw">fn</span> <span class="ident">is_autolink</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">nl</span>: <span class="kw-2">&amp;</span><span class="ident">NodeLink</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
+    <span class="kw">if</span> <span class="ident">nl</span>.<span class="ident">url</span>.<span class="ident">is_empty</span>() <span class="op">|</span><span class="op">|</span> <span class="ident">scanners</span>::<span class="ident">scheme</span>(<span class="kw-2">&amp;</span><span class="ident">nl</span>.<span class="ident">url</span>).<span class="ident">is_none</span>() {
         <span class="kw">return</span> <span class="bool-val">false</span>;
     }
 
@@ -1370,25 +1370,25 @@
     }
 
     <span class="kw">let</span> <span class="ident">link_text</span> <span class="op">=</span> <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">first_child</span>() {
-        <span class="prelude-val">None</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
-        <span class="prelude-val">Some</span>(<span class="ident">child</span>) <span class="op">=&gt;</span> <span class="kw">match</span> <span class="ident">child</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-            <span class="ident">NodeValue</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="ident">t</span>) <span class="op">=&gt;</span> <span class="ident">t</span>.<span class="ident">clone</span>(),
-            <span class="kw">_</span> <span class="op">=&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
+        <span class="prelude-val">None</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
+        <span class="prelude-val">Some</span>(<span class="ident">child</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="kw">match</span> <span class="ident">child</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
+            <span class="ident">NodeValue</span>::<span class="ident">Text</span>(<span class="kw-2">ref</span> <span class="ident">t</span>) <span class="op">=</span><span class="op">&gt;</span> <span class="ident">t</span>.<span class="ident">clone</span>(),
+            <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="kw">return</span> <span class="bool-val">false</span>,
         },
     };
 
     <span class="kw">let</span> <span class="kw-2">mut</span> <span class="ident">real_url</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">nl</span>.<span class="ident">url</span>;
-    <span class="kw">if</span> <span class="ident">real_url</span>.<span class="ident">len</span>() <span class="op">&gt;=</span> <span class="number">7</span> <span class="op">&amp;&amp;</span> <span class="kw-2">&amp;</span><span class="ident">real_url</span>[..<span class="number">7</span>] <span class="op">==</span> <span class="string">b&quot;mailto:&quot;</span> {
+    <span class="kw">if</span> <span class="ident">real_url</span>.<span class="ident">len</span>() <span class="op">&gt;</span><span class="op">=</span> <span class="number">7</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="kw-2">&amp;</span><span class="ident">real_url</span>[..<span class="number">7</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&quot;mailto:&quot;</span> {
         <span class="ident">real_url</span> <span class="op">=</span> <span class="kw-2">&amp;</span><span class="ident">real_url</span>[<span class="number">7</span>..];
     }
 
-    <span class="ident">real_url</span> <span class="op">==</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">link_text</span>
+    <span class="ident">real_url</span> <span class="op">=</span><span class="op">=</span> <span class="kw-2">&amp;</span><span class="kw-2">*</span><span class="ident">link_text</span>
 }
 
-<span class="kw">fn</span> <span class="ident">table_escape</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">c</span>: <span class="ident">u8</span>) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">fn</span> <span class="ident">table_escape</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>(<span class="ident">node</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;a</span> <span class="ident">AstNode</span><span class="op">&lt;</span><span class="lifetime">&#39;a</span><span class="op">&gt;</span>, <span class="ident">c</span>: <span class="ident">u8</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="kw">match</span> <span class="ident">node</span>.<span class="ident">data</span>.<span class="ident">borrow</span>().<span class="ident">value</span> {
-        <span class="ident">NodeValue</span>::<span class="ident">Table</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">TableRow</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">TableCell</span> <span class="op">=&gt;</span> <span class="bool-val">false</span>,
-        <span class="kw">_</span> <span class="op">=&gt;</span> <span class="ident">c</span> <span class="op">==</span> <span class="string">b&#39;|&#39;</span>,
+        <span class="ident">NodeValue</span>::<span class="ident">Table</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">TableRow</span>(..) <span class="op">|</span> <span class="ident">NodeValue</span>::<span class="ident">TableCell</span> <span class="op">=</span><span class="op">&gt;</span> <span class="bool-val">false</span>,
+        <span class="kw">_</span> <span class="op">=</span><span class="op">&gt;</span> <span class="ident">c</span> <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;|&#39;</span>,
     }
 }
 </pre></div>

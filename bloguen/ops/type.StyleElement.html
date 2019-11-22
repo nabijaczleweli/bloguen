@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="generator" content="rustdoc"><meta name="description" content="API documentation for the Rust `StyleElement` type in crate `bloguen`."><meta name="keywords" content="rust, rustlang, rust-lang, StyleElement"><title>bloguen::ops::StyleElement - Rust</title><link rel="stylesheet" type="text/css" href="../../normalize.css"><link rel="stylesheet" type="text/css" href="../../rustdoc.css" id="mainThemeStyle"><link rel="stylesheet" type="text/css" href="../../dark.css"><link rel="stylesheet" type="text/css" href="../../light.css" id="themeStyle"><script src="../../storage.js"></script><noscript><link rel="stylesheet" href="../../noscript.css"></noscript><link rel="shortcut icon" href="../../favicon.ico"><style type="text/css">#crate-search{background-image:url("../../down-arrow.svg");}</style></head><body class="rustdoc type"><!--[if lte IE 8]><div class="warning">This old browser is unsupported and will most likely display funky things.</div><![endif]--><nav class="sidebar"><div class="sidebar-menu">&#9776;</div><a href='../../bloguen/index.html'><div class='logo-container'><img src='../../rust-logo.png' alt='logo'></div></a><p class='location'>Type Definition StyleElement</p><div class="sidebar-elems"><p class='location'><a href='../index.html'>bloguen</a>::<wbr><a href='index.html'>ops</a></p><script>window.sidebarCurrent = {name: 'StyleElement', ty: 'type', relpath: ''};</script><script defer src="sidebar-items.js"></script></div></nav><div class="theme-picker"><button id="theme-picker" aria-label="Pick another theme!"><img src="../../brush.svg" width="18" alt="Pick another theme!"></button><div id="theme-choices"></div></div><script src="../../theme.js"></script><nav class="sub"><form class="search-form js-only"><div class="search-container"><div><select id="crate-search"><option value="All crates">All crates</option></select><input class="search-input" name="search" autocomplete="off" spellcheck="false" placeholder="Click or press ‘S’ to search, ‘?’ for more options…" type="search"></div><a id="settings-menu" href="../../settings.html"><img src="../../wheel.svg" width="18" alt="Change settings"></a></div></form></nav><section id="main" class="content"><h1 class='fqn'><span class='out-of-band'><span id='render-detail'><a id="toggle-all-docs" href="javascript:void(0)" title="collapse all docs">[<span class='inner'>&#x2212;</span>]</a></span><a class='srclink' href='../../src/bloguen/ops/output/wrapped_element.rs.html#193' title='goto source code'>[src]</a></span><span class='in-band'>Type Definition <a href='../index.html'>bloguen</a>::<wbr><a href='index.html'>ops</a>::<wbr><a class="type" href=''>StyleElement</a></span></h1><pre class='rust typedef'>type StyleElement = <a class="struct" href="../../bloguen/ops/struct.WrappedElementImpl.html" title="struct bloguen::ops::WrappedElementImpl">WrappedElementImpl</a>&lt;WrappedElementImplDataStyle&gt;;</pre><div class='docblock'><p>A style specifier.</p>
+<p>Can be a link or a literal, and a literal can be indirectly loaded from a file.</p>
+<p>Consult the documentation for <a href="struct.WrappedElementImpl.html#fn.load"><code>load()</code></a> on handling filesystem interaxion.</p>
+<h1 id="deserialisation" class="section-header"><a href="#deserialisation">Deserialisation</a></h1>
+<p>There are two serialised forms, a verbose one:</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
+<span class="kw">struct</span> <span class="ident">StyleContainer</span> {
+    <span class="kw">pub</span> <span class="ident">style</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StyleElement</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">let</span> <span class="ident">style_toml</span> <span class="op">=</span>
+    <span class="string">&quot;[[style]]
+     class = &#39;link&#39;
+     data = &#39;//nabijaczleweli.xyz/kaschism/assets/column.css&#39;
+
+     [[style]]
+     class = &#39;literal&#39;
+     data = &#39;.indented { text-indent: 1em; }&#39;
+
+     [[style]]
+     class = &#39;file&#39;
+     data = &#39;common.css&#39;&quot;</span>;
+
+<span class="kw">let</span> <span class="ident">StyleContainer</span> { <span class="ident">style</span> } <span class="op">=</span> <span class="ident">toml</span>::<span class="ident">from_str</span>(<span class="ident">style_toml</span>).<span class="ident">unwrap</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">style</span>,
+           <span class="kw-2">&amp;</span>[<span class="ident">StyleElement</span>::<span class="ident">from_link</span>(<span class="string">&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;</span>),
+             <span class="ident">StyleElement</span>::<span class="ident">from_literal</span>(<span class="string">&quot;.indented { text-indent: 1em; }&quot;</span>),
+             <span class="ident">StyleElement</span>::<span class="ident">from_path</span>(<span class="string">&quot;common.css&quot;</span>)]);</pre></div>
+<p>And a compact one (the &quot;literal&quot; tag may be omitted if the content doesn't contain any colons):</p>
+
+<div class="example-wrap"><pre class="rust rust-example-rendered">
+<span class="attribute">#[<span class="ident">derive</span>(<span class="ident">Deserialize</span>, <span class="ident">Debug</span>, <span class="ident">Clone</span>, <span class="ident">Hash</span>, <span class="ident">PartialEq</span>, <span class="ident">Eq</span>, <span class="ident">PartialOrd</span>, <span class="ident">Ord</span>)]</span>
+<span class="kw">struct</span> <span class="ident">StyleContainer</span> {
+    <span class="kw">pub</span> <span class="ident">styles</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">StyleElement</span><span class="op">&gt;</span>,
+}
+
+<span class="kw">let</span> <span class="ident">styles_toml</span> <span class="op">=</span>
+    <span class="string">&quot;styles = [
+         &#39;link://nabijaczleweli.xyz/kaschism/assets/column.css&#39;,
+         &#39;literal:.indented { text-indent: 1em; }&#39;,
+         &#39;file:common.css&#39;,
+     ]&quot;</span>;
+
+<span class="kw">let</span> <span class="ident">StyleContainer</span> { <span class="ident">styles</span> } <span class="op">=</span> <span class="ident">toml</span>::<span class="ident">from_str</span>(<span class="ident">styles_toml</span>).<span class="ident">unwrap</span>();
+<span class="macro">assert_eq</span><span class="macro">!</span>(<span class="kw-2">&amp;</span><span class="ident">styles</span>,
+           <span class="kw-2">&amp;</span>[<span class="ident">StyleElement</span>::<span class="ident">from_link</span>(<span class="string">&quot;//nabijaczleweli.xyz/kaschism/assets/column.css&quot;</span>),
+             <span class="ident">StyleElement</span>::<span class="ident">from_literal</span>(<span class="string">&quot;.indented { text-indent: 1em; }&quot;</span>),
+             <span class="ident">StyleElement</span>::<span class="ident">from_path</span>(<span class="string">&quot;common.css&quot;</span>)]);</pre></div>
+</div></section><section id="search" class="content hidden"></section><section class="footer"></section><aside id="help" class="hidden"><div><h1 class="hidden">Help</h1><div class="shortcuts"><h2>Keyboard Shortcuts</h2><dl><dt><kbd>?</kbd></dt><dd>Show this help dialog</dd><dt><kbd>S</kbd></dt><dd>Focus the search field</dd><dt><kbd>↑</kbd></dt><dd>Move up in search results</dd><dt><kbd>↓</kbd></dt><dd>Move down in search results</dd><dt><kbd>↹</kbd></dt><dd>Switch tab</dd><dt><kbd>&#9166;</kbd></dt><dd>Go to active search result</dd><dt><kbd>+</kbd></dt><dd>Expand all sections</dd><dt><kbd>-</kbd></dt><dd>Collapse all sections</dd></dl></div><div class="infos"><h2>Search Tricks</h2><p>Prefix searches with a type followed by a colon (e.g., <code>fn:</code>) to restrict the search to a given type.</p><p>Accepted types are: <code>fn</code>, <code>mod</code>, <code>struct</code>, <code>enum</code>, <code>trait</code>, <code>type</code>, <code>macro</code>, and <code>const</code>.</p><p>Search functions by type signature (e.g., <code>vec -> usize</code> or <code>* -> vec</code>)</p><p>Search multiple things at once by splitting your query with comma (e.g., <code>str,u8</code> or <code>String,struct:Vec,test</code>)</p></div></div></aside><script>window.rootPath = "../../";window.currentCrate = "bloguen";</script><script src="../../aliases.js"></script><script src="../../main.js"></script><script defer src="../../search-index.js"></script></body></html>

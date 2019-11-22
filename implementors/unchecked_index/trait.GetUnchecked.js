@@ -6,5 +6,4 @@ implementors["unchecked_index"] = [];
             } else {
                 window.pending_implementors = implementors;
             }
-        
-})()
+        })()

@@ -231,7 +231,7 @@
 <span class="kw">struct</span> <span class="ident">Lexer</span>;
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">fn</span> <span class="ident">search</span>(<span class="ident">rule</span>: <span class="ident">Rule</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">fn</span> <span class="ident">search</span>(<span class="ident">rule</span>: <span class="ident">Rule</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="kw">let</span> <span class="prelude-val">Ok</span>(<span class="ident">pairs</span>) <span class="op">=</span> <span class="ident">Lexer</span>::<span class="ident">parse</span>(<span class="ident">rule</span>, <span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">line</span>) }) {
         <span class="prelude-val">Some</span>(<span class="ident">pairs</span>.<span class="ident">last</span>().<span class="ident">unwrap</span>().<span class="ident">into_span</span>().<span class="ident">end</span>())
     } <span class="kw">else</span> {
@@ -239,63 +239,63 @@
     }
 }
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">fn</span> <span class="ident">is_match</span>(<span class="ident">rule</span>: <span class="ident">Rule</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">fn</span> <span class="ident">is_match</span>(<span class="ident">rule</span>: <span class="ident">Rule</span>, <span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="ident">Lexer</span>::<span class="ident">parse</span>(<span class="ident">rule</span>, <span class="kw">unsafe</span> { <span class="ident">str</span>::<span class="ident">from_utf8_unchecked</span>(<span class="ident">line</span>) }).<span class="ident">is_ok</span>()
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">atx_heading_start</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;#&#39;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">atx_heading_start</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;#&#39;</span> {
         <span class="kw">return</span> <span class="prelude-val">None</span>;
     }
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">atx_heading_start</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_1</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_1</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="ident">find_bytes</span>(<span class="ident">line</span>, <span class="string">b&quot;&lt;/script&gt;&quot;</span>).<span class="ident">is_some</span>()
-        <span class="op">||</span> <span class="ident">find_bytes</span>(<span class="ident">line</span>, <span class="string">b&quot;&lt;/pre&gt;&quot;</span>).<span class="ident">is_some</span>()
-        <span class="op">||</span> <span class="ident">find_bytes</span>(<span class="ident">line</span>, <span class="string">b&quot;&lt;/style&gt;&quot;</span>).<span class="ident">is_some</span>()
+        <span class="op">|</span><span class="op">|</span> <span class="ident">find_bytes</span>(<span class="ident">line</span>, <span class="string">b&quot;&lt;/pre&gt;&quot;</span>).<span class="ident">is_some</span>()
+        <span class="op">|</span><span class="op">|</span> <span class="ident">find_bytes</span>(<span class="ident">line</span>, <span class="string">b&quot;&lt;/style&gt;&quot;</span>).<span class="ident">is_some</span>()
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_2</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_2</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="ident">find_bytes</span>(<span class="ident">line</span>, <span class="string">b&quot;--&gt;&quot;</span>).<span class="ident">is_some</span>()
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_3</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_3</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="ident">find_bytes</span>(<span class="ident">line</span>, <span class="string">b&quot;?&gt;&quot;</span>).<span class="ident">is_some</span>()
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_4</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_4</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="ident">line</span>.<span class="ident">contains</span>(<span class="kw-2">&amp;</span><span class="string">b&#39;&gt;&#39;</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_5</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="ident">bool</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_end_5</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="ident">bool</span> {
     <span class="ident">find_bytes</span>(<span class="ident">line</span>, <span class="string">b&quot;]]&gt;&quot;</span>).<span class="ident">is_some</span>()
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_code_fence</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;`&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;~&#39;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">open_code_fence</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;`&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;~&#39;</span> {
         <span class="kw">return</span> <span class="prelude-val">None</span>;
     }
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">open_code_fence</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">close_code_fence</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;`&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;~&#39;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">close_code_fence</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;`&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;~&#39;</span> {
         <span class="kw">return</span> <span class="prelude-val">None</span>;
     }
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">close_code_fence</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_start</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_start</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="macro">lazy_static</span><span class="macro">!</span> {
         <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STR2</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;&lt;!--&quot;</span>;
         <span class="kw">static</span> <span class="kw-2">ref</span> <span class="ident">STR3</span>: <span class="kw-2">&amp;</span><span class="lifetime">&#39;static</span> [<span class="ident">u8</span>] <span class="op">=</span> <span class="string">b&quot;&lt;?&quot;</span>;
@@ -324,7 +324,7 @@
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_start_7</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_block_start_7</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="kw">if</span> <span class="ident">is_match</span>(<span class="ident">Rule</span>::<span class="ident">html_block_start_7</span>, <span class="ident">line</span>) {
         <span class="prelude-val">Some</span>(<span class="number">7</span>)
     } <span class="kw">else</span> {
@@ -338,9 +338,9 @@
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setext_heading_line</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SetextChar</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> (<span class="ident">line</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">b&#39;=&#39;</span> <span class="op">||</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">b&#39;-&#39;</span>) <span class="op">&amp;&amp;</span> <span class="ident">is_match</span>(<span class="ident">Rule</span>::<span class="ident">setext_heading_line</span>, <span class="ident">line</span>) {
-        <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">==</span> <span class="string">b&#39;=&#39;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">setext_heading_line</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">SetextChar</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> (<span class="ident">line</span>[<span class="number">0</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;=&#39;</span> <span class="op">|</span><span class="op">|</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;-&#39;</span>) <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">is_match</span>(<span class="ident">Rule</span>::<span class="ident">setext_heading_line</span>, <span class="ident">line</span>) {
+        <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">=</span><span class="op">=</span> <span class="string">b&#39;=&#39;</span> {
             <span class="prelude-val">Some</span>(<span class="ident">SetextChar</span>::<span class="ident">Equals</span>)
         } <span class="kw">else</span> {
             <span class="prelude-val">Some</span>(<span class="ident">SetextChar</span>::<span class="ident">Hyphen</span>)
@@ -351,70 +351,70 @@
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">thematic_break</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
-    <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;*&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;-&#39;</span> <span class="op">&amp;&amp;</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!=</span> <span class="string">b&#39;_&#39;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">thematic_break</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+    <span class="kw">if</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;*&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;-&#39;</span> <span class="kw-2">&amp;</span><span class="op">&amp;</span> <span class="ident">line</span>[<span class="number">0</span>] <span class="op">!</span><span class="op">=</span> <span class="string">b&#39;_&#39;</span> {
         <span class="kw">return</span> <span class="prelude-val">None</span>;
     }
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">thematic_break</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">footnote_definition</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">footnote_definition</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">footnote_definition</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scheme</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">scheme</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">scheme_rule</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">autolink_uri</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">autolink_uri</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">autolink_uri</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">autolink_email</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">autolink_email</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">autolink_email</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_tag</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">html_tag</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">html_tag</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spacechars</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">spacechars</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">spacechars</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">link_title</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">link_title</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">link_title</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">table_start</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">table_start</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">table_start</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">table_cell</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">table_cell</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">table_cell</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">table_cell_end</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">table_cell_end</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">table_cell_end</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">table_row_end</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">table_row_end</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">table_row_end</span>, <span class="ident">line</span>)
 }
 
 <span class="attribute">#[<span class="ident">inline</span>(<span class="ident">always</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dangerous_url</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">dangerous_url</span>(<span class="ident">line</span>: <span class="kw-2">&amp;</span>[<span class="ident">u8</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Option</span><span class="op">&lt;</span><span class="ident">usize</span><span class="op">&gt;</span> {
     <span class="ident">search</span>(<span class="ident">Rule</span>::<span class="ident">dangerous_url</span>, <span class="ident">line</span>)
 }
 </pre></div>

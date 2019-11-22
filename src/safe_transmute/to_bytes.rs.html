@@ -488,7 +488,7 @@
 <span class="doccomment">///                &amp;[0x42, 0x69]);</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_unchecked</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_unchecked</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
     <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="ident">from</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">S</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>())
 }
 
@@ -546,7 +546,7 @@
 <span class="doccomment">///     x2: 0x69,</span>
 <span class="doccomment">/// });</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_unchecked_mut</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_unchecked_mut</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
     <span class="ident">slice</span>::<span class="ident">from_raw_parts_mut</span>(<span class="ident">from</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">S</span> <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>())
 }
 
@@ -592,7 +592,7 @@
 <span class="doccomment">///                &amp;[0x42, 0x69, 0x12, 0x48]);</span>
 <span class="doccomment">/// }</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_many_unchecked</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span>[<span class="ident">S</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_many_unchecked</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span>[<span class="ident">S</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
     <span class="ident">slice</span>::<span class="ident">from_raw_parts</span>(<span class="ident">from</span>.<span class="ident">as_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw">const</span> <span class="ident">u8</span>, <span class="ident">from</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>())
 }
 
@@ -660,7 +660,7 @@
 <span class="doccomment">///                        x2: 0x0B,</span>
 <span class="doccomment">///                    }]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_many_unchecked_mut</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">S</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">unsafe</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_many_unchecked_mut</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">S</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
     <span class="ident">slice</span>::<span class="ident">from_raw_parts_mut</span>(<span class="ident">from</span>.<span class="ident">as_mut_ptr</span>() <span class="kw">as</span> <span class="kw-2">*</span><span class="kw-2">mut</span> <span class="ident">u8</span>, <span class="ident">from</span>.<span class="ident">len</span>() <span class="op">*</span> <span class="ident">size_of</span>::<span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>())
 }
 
@@ -701,7 +701,7 @@
 <span class="doccomment">///            }),</span>
 <span class="doccomment">///            &amp;[0x42, 0x69]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_one_to_bytes</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_one_to_bytes</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
     <span class="kw">unsafe</span> { <span class="ident">transmute_to_bytes_unchecked</span>(<span class="ident">from</span>) }
 }
 
@@ -752,7 +752,7 @@
 <span class="doccomment">///     x2: 0x69,</span>
 <span class="doccomment">/// });</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_one_to_bytes_mut</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">S</span>) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_one_to_bytes_mut</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> <span class="ident">S</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
     <span class="kw">unsafe</span> { <span class="ident">transmute_to_bytes_unchecked_mut</span>(<span class="ident">from</span>) }
 }
 
@@ -796,7 +796,7 @@
 <span class="doccomment">///                                      }]),</span>
 <span class="doccomment">///            &amp;[0x42, 0x69, 0x12, 0x48]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span>[<span class="ident">S</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span>[<span class="ident">S</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
     <span class="kw">unsafe</span> { <span class="ident">transmute_to_bytes_many_unchecked</span>(<span class="ident">from</span>) }
 }
 
@@ -843,13 +843,13 @@
 <span class="doccomment">///                        x2: 0x0B,</span>
 <span class="doccomment">///                    }]);</span>
 <span class="doccomment">/// ```</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_mut</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">S</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_mut</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">S</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span><span class="kw-2">mut</span> [<span class="ident">u8</span>] {
     <span class="kw">unsafe</span> { <span class="ident">transmute_to_bytes_many_unchecked_mut</span>(<span class="ident">from</span>) }
 }
 
 <span class="doccomment">/// Transmute a slice of arbitrary types into a slice of their bytes.</span>
 <span class="attribute">#[<span class="ident">deprecated</span>(<span class="ident">since</span> <span class="op">=</span> <span class="string">&quot;0.11.0&quot;</span>, <span class="ident">note</span> <span class="op">=</span> <span class="string">&quot;use `transmute_to_bytes()` instead&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guarded_transmute_to_bytes_pod_many</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span>[<span class="ident">S</span>]) <span class="op">-&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">guarded_transmute_to_bytes_pod_many</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="kw-2">&amp;</span>[<span class="ident">S</span>]) <span class="op">-</span><span class="op">&gt;</span> <span class="kw-2">&amp;</span>[<span class="ident">u8</span>] {
     <span class="ident">transmute_to_bytes</span>(<span class="ident">from</span>)
 }
 
@@ -874,7 +874,7 @@
 <span class="doccomment">/// view of the vector or make a copy anyway.</span>
 <span class="doccomment">///</span>
 <span class="attribute">#[<span class="ident">cfg</span>(<span class="ident">feature</span> <span class="op">=</span> <span class="string">&quot;alloc&quot;</span>)]</span>
-<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_vec</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>) <span class="op">-&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">S</span>, <span class="ident">u8</span><span class="op">&gt;&gt;</span> {
+<span class="kw">pub</span> <span class="kw">fn</span> <span class="ident">transmute_to_bytes_vec</span><span class="op">&lt;</span><span class="ident">S</span>: <span class="ident">TriviallyTransmutable</span><span class="op">&gt;</span>(<span class="ident">from</span>: <span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">S</span><span class="op">&gt;</span>) <span class="op">-</span><span class="op">&gt;</span> <span class="prelude-ty">Result</span><span class="op">&lt;</span><span class="ident">Vec</span><span class="op">&lt;</span><span class="ident">u8</span><span class="op">&gt;</span>, <span class="ident">Error</span><span class="op">&lt;</span><span class="lifetime">&#39;static</span>, <span class="ident">S</span>, <span class="ident">u8</span><span class="op">&gt;</span><span class="op">&gt;</span> {
     <span class="kw">super</span>::<span class="ident">full</span>::<span class="ident">transmute_vec</span>::<span class="op">&lt;</span><span class="ident">S</span>, <span class="ident">u8</span><span class="op">&gt;</span>(<span class="ident">from</span>)
 }
 </pre></div>
